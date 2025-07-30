@@ -10,8 +10,8 @@ from pathlib import Path
 # Add src to path
 sys.path.append(str(Path(__file__).parent / "src"))
 
-from nlp_pipeline.hybrid_pipeline import HybridLegalNLPPipeline
-from prolog_engine.legal_engine import LegalAidEngine
+from src.nlp_pipeline.hybrid_pipeline import HybridLegalNLPPipeline
+from src.prolog_engine.legal_engine import LegalAidEngine
 
 
 def main():
