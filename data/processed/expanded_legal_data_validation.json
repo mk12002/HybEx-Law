@@ -1,0 +1,104 @@
+[
+  {
+    "query": "I am disabled. I income is 15066 monthly. Injured in factory accident, company denying liability.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 15066)",
+      "case_type(user, \"accident_compensation\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, true)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "accident_compensation",
+    "social_category": "disabled",
+    "income": 15066,
+    "complexity": "simple",
+    "id": 24,
+    "source": "variation_of_5"
+  },
+  {
+    "id": 10,
+    "query": "My house was destroyed in the recent floods. I need compensation from the government. I used to earn 20000 per month before the disaster.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 20000)",
+      "is_disaster_victim(user, true)",
+      "case_type(user, \"accident_compensation\")",
+      "is_woman(user, false)",
+      "is_sc_st(user, false)"
+    ],
+    "expected_eligible": true,
+    "reason": "Disaster victim - categorical eligibility"
+  },
+  {
+    "query": "I earn 8250 rupees per month. Employer has not paid my salary for 3 months.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 8250)",
+      "case_type(user, \"labor_dispute\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "labor_dispute",
+    "social_category": "general",
+    "income": 8250,
+    "complexity": "simple",
+    "id": 30,
+    "source": "variation_of_7"
+  },
+  {
+    "query": "I am female. I make 331 per month. Factory fired me without proper notice.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 331)",
+      "case_type(user, \"labor_dispute\")",
+      "is_woman(user, true)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "labor_dispute",
+    "social_category": "woman",
+    "income": 331,
+    "complexity": "simple",
+    "id": 29,
+    "source": "variation_of_7"
+  },
+  {
+    "query": "I get 45338 rupees monthly. Business partner cheating me out of profits.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 45338)",
+      "case_type(user, \"business_dispute\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": false,
+    "case_type": "business_dispute",
+    "social_category": "general",
+    "income": 45338,
+    "complexity": "simple",
+    "id": 27,
+    "source": "variation_of_6"
+  }
+]

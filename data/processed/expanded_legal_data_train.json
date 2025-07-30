@@ -1,0 +1,474 @@
+[
+  {
+    "id": 4,
+    "query": "I am from scheduled caste community. I work in a shop and earn 15000 per month. My neighbor has occupied part of my land illegally.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 15000)",
+      "case_type(user, \"property_dispute\")",
+      "is_woman(user, false)",
+      "is_sc_st(user, true)"
+    ],
+    "expected_eligible": true,
+    "reason": "SC/ST categorical eligibility"
+  },
+  {
+    "query": "I salary of 47694. Investor backing out of agreed deal.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 47694)",
+      "case_type(user, \"business_dispute\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": false,
+    "case_type": "business_dispute",
+    "social_category": "general",
+    "income": 47694,
+    "complexity": "simple",
+    "id": 28,
+    "source": "variation_of_6"
+  },
+  {
+    "query": "I am ST. I get 6285 rupees monthly. My landlord is trying to evict me from my apartment.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 6285)",
+      "case_type(user, \"property_dispute\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, true)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "property_dispute",
+    "social_category": "sc_st",
+    "income": 6285,
+    "complexity": "simple",
+    "id": 22,
+    "source": "variation_of_4"
+  },
+  {
+    "query": "I get 64207 rupees monthly. Competitor making false claims about my business.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 64207)",
+      "case_type(user, \"defamation\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": false,
+    "case_type": "defamation",
+    "social_category": "general",
+    "income": 64207,
+    "complexity": "simple",
+    "id": 17,
+    "source": "variation_of_3"
+  },
+  {
+    "query": "I am blind. I earn 4015 rupees per month. Government not providing disaster relief.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 4015)",
+      "case_type(user, \"accident_compensation\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, true)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "accident_compensation",
+    "social_category": "disabled",
+    "income": 4015,
+    "complexity": "simple",
+    "id": 25,
+    "source": "variation_of_5"
+  },
+  {
+    "query": "I am wife. I earn 22738 rupees per month. Victim of theft, need to file FIR.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 22738)",
+      "case_type(user, \"criminal_matter\")",
+      "is_woman(user, true)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "criminal_matter",
+    "social_category": "woman",
+    "income": 22738,
+    "complexity": "simple",
+    "id": 32,
+    "source": "variation_of_8"
+  },
+  {
+    "id": 2,
+    "query": "I am a woman and my husband is demanding dowry. He has been beating me. I earn 30000 rupees per month. Please help me.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 30000)",
+      "case_type(user, \"domestic_violence\")",
+      "is_woman(user, true)",
+      "is_sc_st(user, false)"
+    ],
+    "expected_eligible": true,
+    "reason": "Woman applicant - categorical eligibility"
+  },
+  {
+    "id": 3,
+    "query": "I am a businessman and someone wrote false things about me in the newspaper. This has damaged my reputation. I want to file a defamation case. My annual income is 10 lakhs.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_annual(user, 1000000)",
+      "case_type(user, \"defamation\")",
+      "is_woman(user, false)",
+      "is_sc_st(user, false)"
+    ],
+    "expected_eligible": false,
+    "reason": "Defamation case excluded from legal aid"
+  },
+  {
+    "query": "I salary of 14750. My brother died in road accident, insurance not paying.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 14750)",
+      "case_type(user, \"accident_compensation\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "accident_compensation",
+    "social_category": "general",
+    "income": 14750,
+    "complexity": "simple",
+    "id": 36,
+    "source": "variation_of_10"
+  },
+  {
+    "query": "I income is 13125 monthly. Property owner refusing to return security deposit.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 13125)",
+      "case_type(user, \"property_dispute\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "property_dispute",
+    "social_category": "general",
+    "income": 13125,
+    "complexity": "simple",
+    "id": 12,
+    "source": "variation_of_1"
+  },
+  {
+    "query": "I make 23506 per month. Victim of theft, need to file FIR.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 23506)",
+      "case_type(user, \"criminal_matter\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "criminal_matter",
+    "social_category": "general",
+    "income": 23506,
+    "complexity": "simple",
+    "id": 34,
+    "source": "variation_of_8"
+  },
+  {
+    "query": "I am flood victim. I get 24303 rupees monthly. Injured in factory accident, company denying liability.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 24303)",
+      "case_type(user, \"accident_compensation\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, true)"
+    ],
+    "expected_eligible": true,
+    "case_type": "accident_compensation",
+    "social_category": "disaster_victim",
+    "income": 24303,
+    "complexity": "simple",
+    "id": 37,
+    "source": "variation_of_10"
+  },
+  {
+    "query": "I am scheduled tribe. I salary of 2421. Neighbor has occupied part of my land illegally.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 2421)",
+      "case_type(user, \"property_dispute\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, true)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "property_dispute",
+    "social_category": "sc_st",
+    "income": 2421,
+    "complexity": "simple",
+    "id": 20,
+    "source": "variation_of_4"
+  },
+  {
+    "query": "I am scheduled caste. I income is 3810 monthly. Landlord demanding illegal rent increase.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 3810)",
+      "case_type(user, \"property_dispute\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, true)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "property_dispute",
+    "social_category": "sc_st",
+    "income": 3810,
+    "complexity": "simple",
+    "id": 11,
+    "source": "variation_of_1"
+  },
+  {
+    "query": "I am wife. I earn 1348 rupees per month. Employer has not paid my salary for 2 months.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 1348)",
+      "case_type(user, \"labor_dispute\")",
+      "is_woman(user, true)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "labor_dispute",
+    "social_category": "woman",
+    "income": 1348,
+    "complexity": "simple",
+    "id": 31,
+    "source": "variation_of_7"
+  },
+  {
+    "query": "I 13304 income per month. I was arrested and am in police custody.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 13304)",
+      "case_type(user, \"criminal_matter\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "criminal_matter",
+    "social_category": "general",
+    "income": 13304,
+    "complexity": "simple",
+    "id": 33,
+    "source": "variation_of_8"
+  },
+  {
+    "query": "I am under 18. I earn 982 rupees per month. In-laws harassing me for dowry.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 982)",
+      "case_type(user, \"family_matter\")",
+      "is_woman(user, false)",
+      "is_child(user, true)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "family_matter",
+    "social_category": "child",
+    "income": 982,
+    "complexity": "simple",
+    "id": 15,
+    "source": "variation_of_2"
+  },
+  {
+    "id": 9,
+    "query": "I am disabled and use a wheelchair. The government office is not accessible. I want to file a case for my rights. I get disability pension of 2000 per month.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 2000)",
+      "is_disabled(user, true)",
+      "is_woman(user, false)",
+      "is_sc_st(user, false)"
+    ],
+    "expected_eligible": true,
+    "reason": "Disabled person - categorical eligibility"
+  },
+  {
+    "id": 6,
+    "query": "I run a small business. My partner is cheating me out of profits. I make about 50000 per month from the business.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 50000)",
+      "case_type(user, \"business_dispute\")",
+      "is_woman(user, false)",
+      "is_sc_st(user, false)"
+    ],
+    "expected_eligible": false,
+    "reason": "Business dispute excluded and income exceeds limit"
+  },
+  {
+    "query": "I earn 6919 rupees per month. My landlord is trying to evict me from my apartment.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 6919)",
+      "case_type(user, \"property_dispute\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "property_dispute",
+    "social_category": "general",
+    "income": 6919,
+    "complexity": "simple",
+    "id": 13,
+    "source": "variation_of_1"
+  },
+  {
+    "id": 5,
+    "query": "I am 16 years old. My father died in an accident and the insurance company is not paying compensation. We have no income now.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 0)",
+      "case_type(user, \"accident_compensation\")",
+      "is_child(user, true)",
+      "is_woman(user, false)",
+      "is_sc_st(user, false)"
+    ],
+    "expected_eligible": true,
+    "reason": "Minor - categorical eligibility"
+  },
+  {
+    "id": 8,
+    "query": "I was arrested last week and I am in police custody. My family has no money for a lawyer. I am innocent.",
+    "expected_facts": [
+      "applicant(user)",
+      "case_type(user, \"criminal_matter\")",
+      "is_in_custody(user, true)",
+      "is_woman(user, false)",
+      "is_sc_st(user, false)"
+    ],
+    "expected_eligible": true,
+    "reason": "Person in custody - categorical eligibility"
+  },
+  {
+    "query": "I get 28040 rupees monthly. Business rival damaging my reputation.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 28040)",
+      "case_type(user, \"defamation\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": false,
+    "case_type": "defamation",
+    "social_category": "general",
+    "income": 28040,
+    "complexity": "simple",
+    "id": 19,
+    "source": "variation_of_3"
+  },
+  {
+    "id": 7,
+    "query": "I am unemployed for 6 months. My former employer has not paid my salary. I am a woman with two children.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 0)",
+      "case_type(user, \"labor_dispute\")",
+      "is_woman(user, true)",
+      "is_sc_st(user, false)"
+    ],
+    "expected_eligible": true,
+    "reason": "Woman applicant and zero income"
+  },
+  {
+    "id": 1,
+    "query": "I lost my factory job last month and have no income right now. My landlord is trying to evict me from my house in Delhi. I am from the general category. Can I get a free government lawyer?",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 0)",
+      "case_type(user, \"property_dispute\")",
+      "is_woman(user, false)",
+      "is_sc_st(user, false)",
+      "is_industrial_workman(user, true)",
+      "location(user, \"delhi\")"
+    ],
+    "expected_eligible": true,
+    "reason": "Zero income and industrial worker status"
+  }
+]

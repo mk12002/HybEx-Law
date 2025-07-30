@@ -1,0 +1,156 @@
+[
+  {
+    "query": "I am wife. I income is 10281 monthly. Wife filed false case against me.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 10281)",
+      "case_type(user, \"family_matter\")",
+      "is_woman(user, true)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "family_matter",
+    "social_category": "woman",
+    "income": 10281,
+    "complexity": "simple",
+    "id": 16,
+    "source": "variation_of_2"
+  },
+  {
+    "query": "I salary of 16149. Government not providing disaster relief.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 16149)",
+      "case_type(user, \"accident_compensation\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "accident_compensation",
+    "social_category": "general",
+    "income": 16149,
+    "complexity": "simple",
+    "id": 23,
+    "source": "variation_of_5"
+  },
+  {
+    "query": "I am mother. I income is 9011 monthly. Need help with child custody after divorce.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 9011)",
+      "case_type(user, \"family_matter\")",
+      "is_woman(user, true)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "family_matter",
+    "social_category": "woman",
+    "income": 9011,
+    "complexity": "simple",
+    "id": 14,
+    "source": "variation_of_2"
+  },
+  {
+    "query": "I get 25612 rupees monthly. Business partner cheating me out of profits.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 25612)",
+      "case_type(user, \"business_dispute\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": false,
+    "case_type": "business_dispute",
+    "social_category": "general",
+    "income": 25612,
+    "complexity": "simple",
+    "id": 26,
+    "source": "variation_of_6"
+  },
+  {
+    "query": "I salary of 8441. My landlord is trying to evict me from my flat.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 8441)",
+      "case_type(user, \"property_dispute\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "property_dispute",
+    "social_category": "general",
+    "income": 8441,
+    "complexity": "simple",
+    "id": 21,
+    "source": "variation_of_4"
+  },
+  {
+    "query": "I earn 27610 rupees per month. Neighbor spreading rumors about my character.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 27610)",
+      "case_type(user, \"defamation\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, false)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": false,
+    "case_type": "defamation",
+    "social_category": "general",
+    "income": 27610,
+    "complexity": "simple",
+    "id": 18,
+    "source": "variation_of_3"
+  },
+  {
+    "query": "I am handicapped. I get 15345 rupees monthly. Government not providing disaster relief.",
+    "expected_facts": [
+      "applicant(user)",
+      "income_monthly(user, 15345)",
+      "case_type(user, \"accident_compensation\")",
+      "is_woman(user, false)",
+      "is_child(user, false)",
+      "is_sc_st(user, false)",
+      "is_disabled(user, true)",
+      "is_industrial_workman(user, false)",
+      "is_in_custody(user, false)",
+      "is_disaster_victim(user, false)"
+    ],
+    "expected_eligible": true,
+    "case_type": "accident_compensation",
+    "social_category": "disabled",
+    "income": 15345,
+    "complexity": "simple",
+    "id": 35,
+    "source": "variation_of_10"
+  }
+]
