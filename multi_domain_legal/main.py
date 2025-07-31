@@ -1,8 +1,8 @@
 """
 Multi-Domain Legal AI System - Main Application.
 
-This is the main entry point for the multi-domain legal AI system that handles
-legal queries across 5 major domains of Indian law.
+This is the main entry point for the hybrid multi-domain legal AI system that handles
+legal queries across 5 major domains of Indian law using neural-symbolic approaches.
 """
 
 import logging
@@ -25,14 +25,20 @@ logging.basicConfig(
 
 class MultiDomainLegalAI:
     """
-    Main application class for multi-domain legal AI system.
+    Main application class for hybrid multi-domain legal AI system.
     
-    Provides a complete interface for processing legal queries across:
+    Combines neural and symbolic approaches for processing legal queries across:
     - Legal Aid and Access to Justice
     - Family Law and Personal Status
     - Consumer Protection and Rights  
     - Fundamental Rights and Constitutional Law
     - Employment Law and Labor Rights
+    
+    Key Features:
+    - Hybrid neural-symbolic architecture
+    - Cross-domain legal analysis
+    - Confidence-weighted decision making
+    - Explainable AI for legal decisions
     """
     
     def __init__(self, config_path: Optional[str] = None):
@@ -105,11 +111,14 @@ class MultiDomainLegalAI:
             
             # Add system metadata
             result['system_info'] = {
-                'version': '1.0.0',
+                'version': '2.0.0-hybrid',
+                'architecture': 'neural_symbolic_hybrid',
                 'domains_available': 5,
                 'confidence_threshold': self.config['confidence_threshold'],
                 'timestamp': str(Path().resolve()),
-                'status': 'success'
+                'status': 'success',
+                'neural_components': self._check_neural_components(),
+                'processing_mode': 'hybrid' if self._check_neural_components() else 'rule_based'
             }
             
             self.logger.info("Query processed successfully")

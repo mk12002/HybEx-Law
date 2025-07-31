@@ -10,8 +10,15 @@ from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import asdict
 
 from .domain_registry import LegalDomain, DOMAIN_REGISTRY
-from .domain_classifier import DomainClassifier
+from .domain_classifier import HybridDomainClassifier
 from .text_preprocessor import TextPreprocessor
+
+# Import neural components
+try:
+    from .neural_components import NeuralFactExtractor, HybridConfidenceEstimator
+    NEURAL_COMPONENTS_AVAILABLE = True
+except ImportError:
+    NEURAL_COMPONENTS_AVAILABLE = False
 
 # Import domain processors
 from ..domains.legal_aid.processor import LegalAidProcessor
@@ -43,7 +50,18 @@ class MultiDomainLegalPipeline:
         
         # Initialize core components
         self.preprocessor = TextPreprocessor()
-        self.domain_classifier = DomainClassifier()
+        self.domain_classifier = HybridDomainClassifier(use_neural=True)
+        
+        # Initialize neural components if available
+        self.neural_fact_extractor = None
+        self.confidence_estimator = None
+        
+        if NEURAL_COMPONENTS_AVAILABLE:
+            try:
+                self.neural_fact_extractor = NeuralFactExtractor()
+                self.confidence_estimator = HybridConfidenceEstimator()
+            except Exception as e:
+                logging.warning(f"Could not initialize neural components: {e}")
         
         # Initialize domain processors
         self.processors = {
@@ -74,18 +92,34 @@ class MultiDomainLegalPipeline:
             processed_text = self.preprocessor.preprocess_text(query)
             entities = self.preprocessor.extract_entities(query)
             
-            # Step 2: Classify legal domains
-            domain_predictions = self.domain_classifier.predict(query)
+            # Step 2: Classify legal domains using hybrid approach
+            domain_predictions = self.domain_classifier.predict_hybrid(query)
+            
+            # Convert string domain names back to LegalDomain enums
+            domain_enum_predictions = {}
+            for domain_str, confidence in domain_predictions.items():
+                try:
+                    domain_enum = LegalDomain(domain_str)
+                    domain_enum_predictions[domain_enum] = confidence
+                except ValueError:
+                    # Skip invalid domain names
+                    continue
             
             # Filter domains by confidence threshold
             relevant_domains = [
-                domain for domain, confidence in domain_predictions.items()
+                domain for domain, confidence in domain_enum_predictions.items()
                 if confidence >= self.confidence_threshold
             ]
             
             if not relevant_domains:
                 # If no domains meet threshold, use highest confidence domain
-                relevant_domains = [max(domain_predictions.items(), key=lambda x: x[1])[0]]
+                if domain_enum_predictions:
+                    relevant_domains = [max(domain_enum_predictions.items(), key=lambda x: x[1])[0]]
+                else:
+                    # Fallback: try rule-based classification
+                    rule_based_results = self.domain_classifier.classify_rule_based(query)
+                    if rule_based_results:
+                        relevant_domains = [rule_based_results[0][0]]
             
             # Step 3: Process query in each relevant domain
             domain_results = {}
@@ -95,18 +129,58 @@ class MultiDomainLegalPipeline:
                 if domain in self.processors:
                     processor = self.processors[domain]
                     
-                    # Extract domain-specific facts
-                    facts = processor.extract_facts(query)
-                    all_facts.extend(facts)
+                    # Extract domain-specific facts (traditional approach)
+                    traditional_facts = processor.extract_facts(query)
+                    
+                    # Enhance with neural fact extraction if available
+                    all_facts_for_domain = traditional_facts.copy()
+                    neural_confidence_scores = {}
+                    
+                    if self.neural_fact_extractor:
+                        try:
+                            neural_facts = self.neural_fact_extractor.extract_legal_facts_neural(
+                                query, domain.value
+                            )
+                            # Combine neural and traditional facts
+                            all_facts_for_domain.extend(neural_facts)
+                            
+                            # Get neural entity confidence scores
+                            neural_entities = self.neural_fact_extractor.extract_entities_neural(query)
+                            for entity_type, entities_list in neural_entities.items():
+                                for entity in entities_list:
+                                    neural_confidence_scores[entity['text']] = entity['confidence']
+                        
+                        except Exception as e:
+                            self.logger.warning(f"Neural fact extraction failed for {domain.value}: {e}")
+                    
+                    all_facts.extend(all_facts_for_domain)
                     
                     # Perform domain-specific analysis
-                    analysis = processor.analyze_legal_position(facts)
+                    analysis = processor.analyze_legal_position(all_facts_for_domain)
+                    
+                    # Calculate hybrid confidence score
+                    hybrid_confidence = domain_enum_predictions[domain]
+                    if self.confidence_estimator and neural_confidence_scores:
+                        try:
+                            hybrid_confidence = self.confidence_estimator.estimate_confidence(
+                                neural_domain_scores={domain.value: domain_enum_predictions[domain]},
+                                neural_fact_scores=neural_confidence_scores,
+                                symbolic_reasoning_success=len(all_facts_for_domain) > 2,
+                                prolog_facts_count=len(all_facts_for_domain)
+                            )
+                        except Exception as e:
+                            self.logger.warning(f"Confidence estimation failed: {e}")
                     
                     domain_results[domain.value] = {
-                        'confidence': domain_predictions[domain],
-                        'facts': facts,
+                        'confidence': hybrid_confidence,
+                        'facts': all_facts_for_domain,
                         'analysis': analysis,
-                        'applicable_acts': self._get_domain_acts(domain)
+                        'applicable_acts': self._get_domain_acts(domain),
+                        'neural_enhancement': self.neural_fact_extractor is not None,
+                        'fact_sources': {
+                            'traditional_facts': len(traditional_facts),
+                            'neural_facts': len(all_facts_for_domain) - len(traditional_facts)
+                        }
                     }
             
             # Step 4: Generate unified analysis
@@ -126,7 +200,13 @@ class MultiDomainLegalPipeline:
                 'unified_analysis': unified_analysis,
                 'recommendations': recommendations,
                 'all_facts': all_facts,
-                'confidence_threshold': self.confidence_threshold
+                'confidence_threshold': self.confidence_threshold,
+                'system_info': {
+                    'hybrid_mode': True,
+                    'neural_components_active': NEURAL_COMPONENTS_AVAILABLE and self.neural_fact_extractor is not None,
+                    'classification_method': 'hybrid',
+                    'fact_extraction_method': 'hybrid' if self.neural_fact_extractor else 'traditional'
+                }
             }
             
             self.logger.info(f"Successfully processed query with {len(relevant_domains)} relevant domains")

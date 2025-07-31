@@ -1,10 +1,10 @@
-# Multi-Domain Legal AI System
+# Multi-Domain Legal AI System - Hybrid Neural-Symbolic Architecture
 
-A comprehensive legal analysis system covering multiple domains of Indian law with advanced natural language processing, domain classification, and legal reasoning capabilities.
+A comprehensive hybrid legal analysis system combining neural networks with symbolic reasoning to cover multiple domains of Indian law with advanced natural language processing, domain classification, and legal reasoning capabilities.
 
 ## 🎯 Overview
 
-This system addresses the limitation of single-act legal AI systems by providing comprehensive coverage across 5 major domains of Indian law:
+This system addresses the limitation of single-act legal AI systems by providing comprehensive coverage across 5 major domains of Indian law using a **hybrid neural-symbolic approach**:
 
 - **Legal Aid and Access to Justice**
 - **Family Law and Personal Status**  
@@ -12,14 +12,21 @@ This system addresses the limitation of single-act legal AI systems by providing
 - **Fundamental Rights and Constitutional Law**
 - **Employment Law and Labor Rights**
 
-The system uses a hybrid neural-symbolic approach combining machine learning classification with rule-based legal reasoning to provide accurate, actionable legal advice.
+The system combines neural networks (BERT, transformers) with symbolic reasoning (Prolog) to provide accurate, explainable, and actionable legal advice.
 
 ## ✨ Key Features
 
-### 🔍 **Multi-Domain Classification**
+### 🧠 **Hybrid Neural-Symbolic Architecture**
+- **Neural Domain Classification**: BERT-based models for understanding legal context
+- **Neural Fact Extraction**: Transformer models for extracting structured legal facts
+- **Symbolic Reasoning**: Prolog-based rule engine for legal logic and precedence
+- **Confidence Fusion**: Weighted combination of neural and symbolic confidence scores
+
+### 🔍 **Advanced Multi-Domain Classification**
 - Automatic identification of relevant legal domains from natural language queries
-- Confidence-based domain selection with cross-domain issue detection
-- Support for complex queries spanning multiple legal areas
+- Hybrid classification combining neural networks with rule-based patterns
+- Cross-domain issue detection for complex legal scenarios
+- Confidence-based domain selection with fallback mechanisms
 
 ### 🧠 **Intelligent Legal Analysis**
 - Domain-specific fact extraction from legal queries

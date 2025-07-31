@@ -1,33 +1,49 @@
 """
 Domain Classification System for Multi-Domain Legal AI.
 
-This module implements a sophisticated domain classifier that can identify
-which legal domain(s) a query belongs to, supporting both single-domain
-and multi-domain queries.
+This module implements a sophisticated hybrid domain classifier that combines
+neural and symbolic approaches to identify which legal domain(s) a query belongs to.
 """
 
 import re
 from typing import List, Dict, Any, Tuple, Optional
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.pipeline import Pipeline
 import numpy as np
 import pickle
 from pathlib import Path
 
+try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.multiclass import OneVsRestClassifier
+    from sklearn.pipeline import Pipeline
+    SKLEARN_AVAILABLE = True
+except ImportError:
+    SKLEARN_AVAILABLE = False
+
 from .domain_registry import LegalDomain, LegalDomainRegistry
 
-class DomainClassifier:
+# Import neural components if available
+try:
+    from .neural_components import NeuralDomainClassifier, HybridConfidenceEstimator
+    NEURAL_COMPONENTS_AVAILABLE = True
+except ImportError:
+    NEURAL_COMPONENTS_AVAILABLE = False
+
+class HybridDomainClassifier:
     """
-    Multi-label classifier for identifying legal domains in queries.
+    Hybrid multi-label classifier for identifying legal domains in queries.
     
-    Uses TF-IDF features with logistic regression to classify queries
-    into one or more legal domains. Supports both rule-based and ML-based
-    classification approaches.
+    Combines neural domain classification with rule-based approaches and
+    symbolic reasoning for improved accuracy and explainability.
     """
     
-    def __init__(self):
+    def __init__(self, use_neural: bool = True):
+        """
+        Initialize hybrid domain classifier.
+        
+        Args:
+            use_neural: Whether to use neural components if available
+        """
         self.registry = LegalDomainRegistry()
         self.pipeline = None
         self.label_encoder = {domain: idx for idx, domain in enumerate(LegalDomain)}
@@ -354,3 +370,147 @@ class DomainClassifier:
         self.label_encoder = save_data['label_encoder']
         self.label_decoder = save_data['label_decoder']
         self.is_trained = save_data['is_trained']
+    
+    def predict_hybrid(self, query: str, confidence_threshold: float = 0.3) -> Dict[str, float]:
+        """
+        Hybrid prediction combining neural and rule-based approaches.
+        
+        Args:
+            query: Legal query text
+            confidence_threshold: Minimum confidence for domain inclusion
+            
+        Returns:
+            Dictionary mapping domain names to confidence scores
+        """
+        domain_confidences = {}
+        
+        # 1. Rule-based classification (always available)
+        rule_based_results = self.classify_rule_based(query)
+        for domain, confidence in rule_based_results:
+            domain_confidences[domain.value] = confidence
+        
+        # 2. Neural classification (if available)
+        neural_confidences = {}
+        if self.use_neural and hasattr(self, 'neural_classifier') and self.neural_classifier:
+            try:
+                neural_confidences = self.neural_classifier.predict(query, confidence_threshold)
+            except Exception as e:
+                print(f"Warning: Neural classification failed: {e}")
+        
+        # 3. ML-based classification (if trained)
+        ml_confidences = {}
+        if self.is_trained:
+            try:
+                ml_results = self.predict(query)
+                for domain, confidence in ml_results:
+                    ml_confidences[domain.value] = confidence
+            except Exception as e:
+                print(f"Warning: ML classification failed: {e}")
+        
+        # 4. Combine all approaches using weighted average
+        all_domains = set()
+        all_domains.update(domain_confidences.keys())
+        all_domains.update(neural_confidences.keys())
+        all_domains.update(ml_confidences.keys())
+        
+        final_confidences = {}
+        for domain in all_domains:
+            scores = []
+            weights = []
+            
+            # Rule-based score
+            if domain in domain_confidences:
+                scores.append(domain_confidences[domain])
+                weights.append(0.4)  # Rule-based gets 40% weight
+            
+            # Neural score
+            if domain in neural_confidences:
+                scores.append(neural_confidences[domain])
+                weights.append(0.4)  # Neural gets 40% weight
+            
+            # ML score
+            if domain in ml_confidences:
+                scores.append(ml_confidences[domain])
+                weights.append(0.2)  # ML gets 20% weight
+            
+            if scores:
+                # Weighted average
+                weighted_score = sum(s * w for s, w in zip(scores, weights)) / sum(weights)
+                
+                # Boost confidence if multiple approaches agree
+                agreement_bonus = (len(scores) - 1) * 0.1
+                final_score = min(1.0, weighted_score + agreement_bonus)
+                
+                if final_score >= confidence_threshold:
+                    final_confidences[domain] = final_score
+        
+        return final_confidences
+    
+    def set_classification_mode(self, mode: str):
+        """
+        Set the classification mode.
+        
+        Args:
+            mode: One of 'neural', 'rule_based', 'hybrid'
+        """
+        if mode not in self.classification_modes:
+            raise ValueError(f"Mode must be one of {self.classification_modes}")
+        
+        if mode == 'neural' and not self.use_neural:
+            raise ValueError("Neural mode not available - neural components not initialized")
+        
+        self.current_mode = mode
+    
+    def get_classification_explanation(self, query: str) -> Dict[str, Any]:
+        """
+        Get detailed explanation of classification decision.
+        
+        Args:
+            query: Legal query text
+            
+        Returns:
+            Dictionary with classification explanations
+        """
+        explanation = {
+            'query': query,
+            'rule_based_results': [],
+            'neural_results': {},
+            'ml_results': [],
+            'final_decision': {},
+            'reasoning': []
+        }
+        
+        # Rule-based explanation
+        rule_results = self.classify_rule_based(query)
+        explanation['rule_based_results'] = [(domain.value, conf) for domain, conf in rule_results]
+        
+        if rule_results:
+            explanation['reasoning'].append("Rule-based classification found pattern matches")
+        
+        # Neural explanation (if available)
+        if self.use_neural and hasattr(self, 'neural_classifier') and self.neural_classifier:
+            try:
+                neural_results = self.neural_classifier.predict(query, 0.1)
+                explanation['neural_results'] = neural_results
+                if neural_results:
+                    explanation['reasoning'].append("Neural classifier detected domain indicators")
+            except Exception as e:
+                explanation['reasoning'].append(f"Neural classification failed: {e}")
+        
+        # ML explanation (if trained)
+        if self.is_trained:
+            try:
+                ml_results = self.predict(query)
+                explanation['ml_results'] = [(domain.value, conf) for domain, conf in ml_results]
+                if ml_results:
+                    explanation['reasoning'].append("Traditional ML classifier provided additional confidence")
+            except Exception as e:
+                explanation['reasoning'].append(f"ML classification failed: {e}")
+        
+        # Final hybrid decision
+        explanation['final_decision'] = self.predict_hybrid(query)
+        
+        return explanation
+
+# For backward compatibility, create an alias
+DomainClassifier = HybridDomainClassifier

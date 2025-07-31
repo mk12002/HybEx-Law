@@ -13,7 +13,24 @@ python-dateutil>=2.8.0
 regex>=2021.8.3
 joblib>=1.1.0
 
-# Optional: For advanced NLP features
+# Neural/ML components for hybrid system (REQUIRED for hybrid functionality)
 transformers>=4.20.0
 torch>=1.11.0
 datasets>=2.0.0
+
+# Additional neural dependencies
+accelerate>=0.20.0
+sentencepiece>=0.1.95
+tokenizers>=0.13.0
+
+# Testing and development
+pytest>=7.0.0
+pytest-cov>=3.0.0
+
+# Optional: GPU acceleration (uncomment for CUDA support)
+# torch[cuda]>=1.11.0
+
+# Development tools
+black>=22.0.0
+flake8>=4.0.0
+isort>=5.10.0
