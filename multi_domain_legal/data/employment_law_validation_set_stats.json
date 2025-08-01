@@ -1,0 +1,19 @@
+{
+  "total_samples": 500,
+  "domain_distribution": {
+    "employment_law": 500
+  },
+  "eligibility_distribution": {
+    "eligible": 407,
+    "not_eligible": 93
+  },
+  "complexity_distribution": {
+    "very_high": 177,
+    "high": 323
+  },
+  "priority_distribution": {
+    "normal": 316,
+    "urgent": 38,
+    "high": 146
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "total_samples": 500,
+  "domain_distribution": {
+    "consumer_protection": 500
+  },
+  "eligibility_distribution": {
+    "eligible": 401,
+    "not_eligible": 99
+  },
+  "complexity_distribution": {
+    "high": 260,
+    "very_high": 112,
+    "medium": 128
+  },
+  "priority_distribution": {
+    "urgent": 75,
+    "normal": 276,
+    "high": 149
+  }
+}
