@@ -1,0 +1,14 @@
+2025-08-02 14:57:02,736 - hybex_system.prolog_engine - INFO - [Session:e8be668e] Added file handler to PrologEngine logger.
+2025-08-02 14:57:02,736 - hybex_system.prolog_engine - INFO - [Session:e8be668e] ======================================================================
+2025-08-02 14:57:02,736 - hybex_system.prolog_engine - INFO - [Session:e8be668e] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-02 14:57:02,736 - hybex_system.prolog_engine - INFO - [Session:e8be668e] Session ID: e8be668e
+2025-08-02 14:57:02,736 - hybex_system.prolog_engine - INFO - [Session:e8be668e] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-02 14:57:02,736 - hybex_system.prolog_engine - INFO - [Session:e8be668e] ======================================================================
+2025-08-02 14:57:02,736 - hybex_system.prolog_engine - INFO - [Session:e8be668e] Attempting to load rules from: d:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-02 14:57:02,751 - hybex_system.prolog_engine - INFO - [Session:e8be668e] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-02 14:57:02,752 - hybex_system.prolog_engine - INFO - [Session:e8be668e] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-02 14:57:02,757 - hybex_system.prolog_engine - INFO - [Session:e8be668e] Initialized Comprehensive PrologEngine (Session: e8be668e, Available: True)
+2025-08-02 14:57:02,758 - hybex_system.prolog_engine - INFO - [Session:e8be668e] Loaded 9 rule categories with 15 total rules
+2025-08-02 14:57:02,758 - hybex_system.prolog_engine - INFO - [Session:e8be668e] Comprehensive rules actually loaded: True
+2025-08-02 14:57:02,768 - hybex_system.prolog_engine - INFO - [Session:e8be668e] Cleaning up PrologEngine session e8be668e
+2025-08-02 14:57:02,769 - hybex_system.prolog_engine - INFO - [Session:e8be668e] PrologEngine cleanup completed

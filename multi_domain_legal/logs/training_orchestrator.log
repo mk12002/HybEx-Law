@@ -1,0 +1,126 @@
+2025-08-02 13:10:56,761 - hybex_system.trainer - INFO - Added file handler to TrainingOrchestrator logger.
+2025-08-02 13:10:56,761 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 13:10:56,761 - hybex_system.trainer - INFO - HybEx-Law Complete Training Pipeline Started
+2025-08-02 13:10:56,763 - hybex_system.trainer - INFO - Timestamp: 2025-08-02T13:10:56.763709
+2025-08-02 13:10:56,763 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 13:10:56,763 - hybex_system.trainer - INFO - Initializing training components...
+2025-08-02 13:12:58,449 - hybex_system.trainer - INFO - Added file handler to TrainingOrchestrator logger.
+2025-08-02 13:12:58,465 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 13:12:58,466 - hybex_system.trainer - INFO - HybEx-Law Complete Training Pipeline Started
+2025-08-02 13:12:58,466 - hybex_system.trainer - INFO - Timestamp: 2025-08-02T13:12:58.466319
+2025-08-02 13:12:58,466 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 13:12:58,467 - hybex_system.trainer - INFO - Initializing training components...
+2025-08-02 13:13:05,192 - hybex_system.trainer - INFO - Configuration: {'base_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal', 'data_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\data', 'models_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\models\\hybex_system', 'logs_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\logs', 'results_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\results', 'model_configs': {'domain_classifier': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 8, 'learning_rate': 1e-05, 'epochs': 10, 'warmup_steps': 200, 'weight_decay': 0.01, 'early_stopping_patience': 3, 'gradient_clip_val': 1.0}, 'entity_extractor': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 8, 'learning_rate': 2e-05, 'epochs': 12, 'warmup_steps': 300, 'weight_decay': 0.01, 'early_stopping_patience': 4, 'gradient_clip_val': 1.0}, 'eligibility_predictor': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 12, 'learning_rate': 5e-06, 'epochs': 15, 'warmup_steps': 500, 'weight_decay': 0.02, 'early_stopping_patience': 5, 'gradient_clip_val': 0.5}}, 'data_config': {'train_split': 0.7, 'val_split': 0.15, 'test_split': 0.15, 'random_seed': 42, 'min_samples_per_domain': 100, 'max_sequence_length': 512}, 'entity_config': {'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'social_categories': ['General', 'Scheduled Caste', 'Scheduled Tribe', 'Other Backward Class', 'Economically Weaker Section', 'Below Poverty Line', 'Above Poverty Line'], 'case_types': ['Criminal', 'Civil', 'Family Law', 'Consumer Protection', 'Employment Law', 'Fundamental Rights', 'General'], 'domains': ['legal_aid', 'family_law', 'consumer_protection', 'employment_law', 'fundamental_rights']}, 'prolog_config': {'enable_reasoning': True, 'confidence_threshold': 0.7, 'rule_weight': 0.4, 'neural_weight': 0.6}, 'neural_config': {'min_confidence_for_override': 0.9, 'entity_extraction_model': 'en_core_web_sm'}, 'logging_config': {'level': 'INFO', 'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s', 'log_file': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\logs\\hybex_training.log', 'max_log_size': 10485760, 'backup_count': 5}, 'eval_config': {'metrics': ['accuracy', 'precision', 'recall', 'f1', 'confusion_matrix'], 'save_predictions': True, 'save_attention_weights': False, 'generate_plots': True}, 'legal_sources': {'primary_act': 'Legal Services Authorities Act, 1987', 'last_updated': None, 'data_source': 'verified_fallback', 'validation_status': 'unvalidated'}}
+2025-08-02 13:13:05,206 - hybex_system.trainer - INFO - Data Directory: data/organized
+2025-08-02 13:13:05,206 - hybex_system.trainer - INFO - 
+================================================================================
+2025-08-02 13:13:05,207 - hybex_system.trainer - INFO - STAGE 1: DATA PREPROCESSING
+2025-08-02 13:13:05,207 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 13:13:05,770 - hybex_system.trainer - INFO - Cleaning up training resources...
+2025-08-02 13:14:51,495 - hybex_system.trainer - INFO - Added file handler to TrainingOrchestrator logger.
+2025-08-02 13:14:51,499 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 13:14:51,500 - hybex_system.trainer - INFO - HybEx-Law Complete Training Pipeline Started
+2025-08-02 13:14:51,501 - hybex_system.trainer - INFO - Timestamp: 2025-08-02T13:14:51.501325
+2025-08-02 13:14:51,501 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 13:14:51,501 - hybex_system.trainer - INFO - Initializing training components...
+2025-08-02 13:14:54,314 - hybex_system.trainer - INFO - Configuration: {'base_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal', 'data_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\data', 'models_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\models\\hybex_system', 'logs_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\logs', 'results_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\results', 'model_configs': {'domain_classifier': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 8, 'learning_rate': 1e-05, 'epochs': 10, 'warmup_steps': 200, 'weight_decay': 0.01, 'early_stopping_patience': 3, 'gradient_clip_val': 1.0}, 'entity_extractor': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 8, 'learning_rate': 2e-05, 'epochs': 12, 'warmup_steps': 300, 'weight_decay': 0.01, 'early_stopping_patience': 4, 'gradient_clip_val': 1.0}, 'eligibility_predictor': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 12, 'learning_rate': 5e-06, 'epochs': 15, 'warmup_steps': 500, 'weight_decay': 0.02, 'early_stopping_patience': 5, 'gradient_clip_val': 0.5}}, 'data_config': {'train_split': 0.7, 'val_split': 0.15, 'test_split': 0.15, 'random_seed': 42, 'min_samples_per_domain': 100, 'max_sequence_length': 512}, 'entity_config': {'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'social_categories': ['General', 'Scheduled Caste', 'Scheduled Tribe', 'Other Backward Class', 'Economically Weaker Section', 'Below Poverty Line', 'Above Poverty Line'], 'case_types': ['Criminal', 'Civil', 'Family Law', 'Consumer Protection', 'Employment Law', 'Fundamental Rights', 'General'], 'domains': ['legal_aid', 'family_law', 'consumer_protection', 'employment_law', 'fundamental_rights']}, 'prolog_config': {'enable_reasoning': True, 'confidence_threshold': 0.7, 'rule_weight': 0.4, 'neural_weight': 0.6}, 'neural_config': {'min_confidence_for_override': 0.9, 'entity_extraction_model': 'en_core_web_sm'}, 'logging_config': {'level': 'INFO', 'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s', 'log_file': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\logs\\hybex_training.log', 'max_log_size': 10485760, 'backup_count': 5}, 'eval_config': {'metrics': ['accuracy', 'precision', 'recall', 'f1', 'confusion_matrix'], 'save_predictions': True, 'save_attention_weights': False, 'generate_plots': True}, 'legal_sources': {'primary_act': 'Legal Services Authorities Act, 1987', 'last_updated': None, 'data_source': 'verified_fallback', 'validation_status': 'unvalidated'}}
+2025-08-02 13:14:54,335 - hybex_system.trainer - INFO - Data Directory: data/organized
+2025-08-02 13:14:54,335 - hybex_system.trainer - INFO - 
+================================================================================
+2025-08-02 13:14:54,335 - hybex_system.trainer - INFO - STAGE 1: DATA PREPROCESSING
+2025-08-02 13:14:54,335 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 13:19:52,084 - hybex_system.trainer - INFO - Loading processed data...
+2025-08-02 13:19:52,459 - hybex_system.trainer - INFO - Loaded 14700 train samples
+2025-08-02 13:19:52,546 - hybex_system.trainer - INFO - Loaded 3150 val samples
+2025-08-02 13:19:52,626 - hybex_system.trainer - INFO - Loaded 3150 test samples
+2025-08-02 13:19:52,626 - hybex_system.trainer - INFO - Samples in train_samples contain 'extracted_entities'.
+2025-08-02 13:19:52,626 - hybex_system.trainer - INFO - Samples in val_samples contain 'extracted_entities'.
+2025-08-02 13:19:52,626 - hybex_system.trainer - INFO - Samples in test_samples contain 'extracted_entities'.
+2025-08-02 13:19:52,626 - hybex_system.trainer - INFO - 
+================================================================================
+2025-08-02 13:19:52,626 - hybex_system.trainer - INFO - STAGE 2: NEURAL MODEL TRAINING
+2025-08-02 13:19:52,626 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 13:24:27,601 - hybex_system.trainer - INFO - Cleaning up training resources...
+2025-08-02 14:01:23,643 - hybex_system.trainer - INFO - Added file handler to TrainingOrchestrator logger.
+2025-08-02 14:01:23,645 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 14:01:23,645 - hybex_system.trainer - INFO - HybEx-Law Complete Training Pipeline Started
+2025-08-02 14:01:23,647 - hybex_system.trainer - INFO - Timestamp: 2025-08-02T14:01:23.645739
+2025-08-02 14:01:23,647 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 14:01:23,647 - hybex_system.trainer - INFO - Initializing training components...
+2025-08-02 14:01:25,867 - hybex_system.trainer - INFO - Configuration: {'base_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal', 'data_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\data', 'models_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\models\\hybex_system', 'logs_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\logs', 'results_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\results', 'model_configs': {'domain_classifier': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 8, 'learning_rate': 1e-05, 'epochs': 10, 'warmup_steps': 200, 'weight_decay': 0.01, 'early_stopping_patience': 3, 'gradient_clip_val': 1.0}, 'entity_extractor': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 8, 'learning_rate': 2e-05, 'epochs': 12, 'warmup_steps': 300, 'weight_decay': 0.01, 'early_stopping_patience': 4, 'gradient_clip_val': 1.0}, 'eligibility_predictor': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 12, 'learning_rate': 5e-06, 'epochs': 15, 'warmup_steps': 500, 'weight_decay': 0.02, 'early_stopping_patience': 5, 'gradient_clip_val': 0.5}}, 'data_config': {'train_split': 0.7, 'val_split': 0.15, 'test_split': 0.15, 'random_seed': 42, 'min_samples_per_domain': 100, 'max_sequence_length': 512}, 'entity_config': {'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'social_categories': ['General', 'Scheduled Caste', 'Scheduled Tribe', 'Other Backward Class', 'Economically Weaker Section', 'Below Poverty Line', 'Above Poverty Line'], 'case_types': ['Criminal', 'Civil', 'Family Law', 'Consumer Protection', 'Employment Law', 'Fundamental Rights', 'General'], 'domains': ['legal_aid', 'family_law', 'consumer_protection', 'employment_law', 'fundamental_rights']}, 'prolog_config': {'enable_reasoning': True, 'confidence_threshold': 0.7, 'rule_weight': 0.4, 'neural_weight': 0.6}, 'neural_config': {'min_confidence_for_override': 0.9, 'entity_extraction_model': 'en_core_web_sm'}, 'logging_config': {'level': 'INFO', 'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s', 'log_file': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\logs\\hybex_training.log', 'max_log_size': 10485760, 'backup_count': 5}, 'eval_config': {'metrics': ['accuracy', 'precision', 'recall', 'f1', 'confusion_matrix'], 'save_predictions': True, 'save_attention_weights': False, 'generate_plots': True}, 'legal_sources': {'primary_act': 'Legal Services Authorities Act, 1987', 'last_updated': None, 'data_source': 'verified_fallback', 'validation_status': 'unvalidated'}}
+2025-08-02 14:01:25,867 - hybex_system.trainer - INFO - Data Directory: data/organized
+2025-08-02 14:01:25,872 - hybex_system.trainer - INFO - 
+================================================================================
+2025-08-02 14:01:25,872 - hybex_system.trainer - INFO - STAGE 1: DATA PREPROCESSING
+2025-08-02 14:01:25,872 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 14:10:27,982 - hybex_system.trainer - INFO - Loading processed data...
+2025-08-02 14:10:28,300 - hybex_system.trainer - INFO - Loaded 14700 train samples
+2025-08-02 14:10:28,379 - hybex_system.trainer - INFO - Loaded 3150 val samples
+2025-08-02 14:10:28,444 - hybex_system.trainer - INFO - Loaded 3150 test samples
+2025-08-02 14:10:28,444 - hybex_system.trainer - INFO - Samples in train_samples contain 'extracted_entities'.
+2025-08-02 14:10:28,444 - hybex_system.trainer - INFO - Samples in val_samples contain 'extracted_entities'.
+2025-08-02 14:10:28,447 - hybex_system.trainer - INFO - Samples in test_samples contain 'extracted_entities'.
+2025-08-02 14:10:28,448 - hybex_system.trainer - INFO - 
+================================================================================
+2025-08-02 14:10:28,448 - hybex_system.trainer - INFO - STAGE 2: NEURAL MODEL TRAINING
+2025-08-02 14:10:28,449 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 14:10:39,061 - hybex_system.trainer - INFO - Cleaning up training resources...
+2025-08-02 15:13:54,225 - hybex_system.trainer - INFO - Added file handler to TrainingOrchestrator logger.
+2025-08-02 15:13:54,228 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 15:13:54,229 - hybex_system.trainer - INFO - HybEx-Law Complete Training Pipeline Started
+2025-08-02 15:13:54,230 - hybex_system.trainer - INFO - Timestamp: 2025-08-02T15:13:54.230722
+2025-08-02 15:13:54,230 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 15:13:54,232 - hybex_system.trainer - INFO - Initializing training components...
+2025-08-02 15:13:54,823 - hybex_system.trainer - INFO - Data Preprocessor initialized
+2025-08-02 15:13:55,715 - hybex_system.trainer - INFO - Neural Model Trainer initialized
+2025-08-02 15:13:55,788 - hybex_system.trainer - INFO - Prolog Reasoning Engine initialized
+2025-08-02 15:13:56,579 - hybex_system.trainer - INFO - Model Evaluator initialized
+2025-08-02 15:13:56,579 - hybex_system.trainer - INFO - All components initialized successfully
+2025-08-02 15:13:56,579 - hybex_system.trainer - INFO - HybEx-Law Training Orchestrator Initialized
+2025-08-02 15:13:56,579 - hybex_system.trainer - INFO - Configuration: {'base_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal', 'data_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\data', 'models_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\models\\hybex_system', 'logs_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\logs', 'results_dir': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\results', 'model_configs': {'domain_classifier': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 8, 'learning_rate': 1e-05, 'epochs': 10, 'warmup_steps': 200, 'weight_decay': 0.01, 'early_stopping_patience': 3, 'gradient_clip_val': 1.0}, 'entity_extractor': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 8, 'learning_rate': 2e-05, 'epochs': 12, 'warmup_steps': 300, 'weight_decay': 0.01, 'early_stopping_patience': 4, 'gradient_clip_val': 1.0}, 'eligibility_predictor': {'model_name': 'distilbert-base-uncased', 'max_length': 512, 'batch_size': 12, 'learning_rate': 5e-06, 'epochs': 15, 'warmup_steps': 500, 'weight_decay': 0.02, 'early_stopping_patience': 5, 'gradient_clip_val': 0.5}}, 'data_config': {'train_split': 0.7, 'val_split': 0.15, 'test_split': 0.15, 'random_seed': 42, 'min_samples_per_domain': 100, 'max_sequence_length': 512}, 'entity_config': {'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'social_categories': ['General', 'Scheduled Caste', 'Scheduled Tribe', 'Other Backward Class', 'Economically Weaker Section', 'Below Poverty Line', 'Above Poverty Line'], 'case_types': ['Criminal', 'Civil', 'Family Law', 'Consumer Protection', 'Employment Law', 'Fundamental Rights', 'General'], 'domains': ['legal_aid', 'family_law', 'consumer_protection', 'employment_law', 'fundamental_rights']}, 'prolog_config': {'enable_reasoning': True, 'confidence_threshold': 0.7, 'rule_weight': 0.4, 'neural_weight': 0.6}, 'neural_config': {'min_confidence_for_override': 0.9, 'entity_extraction_model': 'en_core_web_sm'}, 'logging_config': {'level': 'INFO', 'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s', 'log_file': 'd:\\Code_stuff\\NLP\\multi_domain_legal\\logs\\hybex_training.log', 'max_log_size': 10485760, 'backup_count': 5}, 'eval_config': {'metrics': ['accuracy', 'precision', 'recall', 'f1', 'confusion_matrix'], 'save_predictions': True, 'save_attention_weights': False, 'generate_plots': True}, 'legal_sources': {'primary_act': 'Legal Services Authorities Act, 1987', 'last_updated': None, 'data_source': 'verified_fallback', 'validation_status': 'unvalidated'}}
+2025-08-02 15:13:56,579 - hybex_system.trainer - INFO - Starting Complete HybEx-Law Training Pipeline
+2025-08-02 15:13:56,579 - hybex_system.trainer - INFO - Data Directory: data\organized
+2025-08-02 15:13:56,590 - hybex_system.trainer - INFO - 
+================================================================================
+2025-08-02 15:13:56,591 - hybex_system.trainer - INFO - STAGE 1: DATA PREPROCESSING
+2025-08-02 15:13:56,591 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 15:17:39,466 - hybex_system.trainer - INFO - Data preprocessing completed in 222.87 seconds
+2025-08-02 15:17:39,467 - hybex_system.trainer - INFO - Loading processed data...
+2025-08-02 15:17:39,590 - hybex_system.trainer - INFO - Loaded 14700 train samples
+2025-08-02 15:17:39,697 - hybex_system.trainer - INFO - Loaded 3150 val samples
+2025-08-02 15:17:39,779 - hybex_system.trainer - INFO - Loaded 3150 test samples
+2025-08-02 15:17:39,779 - hybex_system.trainer - INFO - Samples in train_samples contain 'extracted_entities'.
+2025-08-02 15:17:39,779 - hybex_system.trainer - INFO - Samples in val_samples contain 'extracted_entities'.
+2025-08-02 15:17:39,779 - hybex_system.trainer - INFO - Samples in test_samples contain 'extracted_entities'.
+2025-08-02 15:17:39,782 - hybex_system.trainer - INFO - 
+================================================================================
+2025-08-02 15:17:39,782 - hybex_system.trainer - INFO - STAGE 2: NEURAL MODEL TRAINING
+2025-08-02 15:17:39,782 - hybex_system.trainer - INFO - ================================================================================
+2025-08-02 15:17:51,210 - hybex_system.trainer - ERROR - Pipeline failed: CUDA error: unknown error
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+Traceback (most recent call last):
+  File "d:\Code_stuff\NLP\multi_domain_legal\hybex_system\trainer.py", line 146, in run_complete_training_pipeline
+    training_results = self.components['model_trainer'].train_all_models(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\Code_stuff\NLP\multi_domain_legal\hybex_system\neural_models.py", line 496, in train_all_models
+    domain_results = self.train_model(domain_classifier, domain_train_loader, domain_val_loader, "domain_classifier", "domain_classification")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\Code_stuff\NLP\multi_domain_legal\hybex_system\neural_models.py", line 220, in train_model
+    loss.backward()
+  File "D:\Code_stuff\.main\Lib\site-packages\torch\_tensor.py", line 648, in backward
+    torch.autograd.backward(
+  File "D:\Code_stuff\.main\Lib\site-packages\torch\autograd\__init__.py", line 353, in backward
+    _engine_run_backward(
+  File "D:\Code_stuff\.main\Lib\site-packages\torch\autograd\graph.py", line 824, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: CUDA error: unknown error
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-08-02 15:17:51,315 - hybex_system.trainer - INFO - Pipeline results saved to d:\Code_stuff\NLP\multi_domain_legal\results\pipeline_results_20250802_151751.json
+2025-08-02 15:17:51,320 - hybex_system.trainer - INFO - Cleaning up training resources...
+2025-08-02 15:17:51,321 - hybex_system.trainer - INFO - Cleanup completed

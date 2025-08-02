@@ -1,0 +1,14 @@
+2025-08-02 15:09:33,500 - hybex_system.prolog_engine - INFO - [Session:ed135822] Added file handler to PrologEngine logger.
+2025-08-02 15:09:33,500 - hybex_system.prolog_engine - INFO - [Session:ed135822] ======================================================================
+2025-08-02 15:09:33,502 - hybex_system.prolog_engine - INFO - [Session:ed135822] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-02 15:09:33,502 - hybex_system.prolog_engine - INFO - [Session:ed135822] Session ID: ed135822
+2025-08-02 15:09:33,502 - hybex_system.prolog_engine - INFO - [Session:ed135822] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-02 15:09:33,513 - hybex_system.prolog_engine - INFO - [Session:ed135822] ======================================================================
+2025-08-02 15:09:33,515 - hybex_system.prolog_engine - INFO - [Session:ed135822] Attempting to load rules from: d:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-02 15:09:33,517 - hybex_system.prolog_engine - INFO - [Session:ed135822] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-02 15:09:33,517 - hybex_system.prolog_engine - INFO - [Session:ed135822] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-02 15:09:33,528 - hybex_system.prolog_engine - INFO - [Session:ed135822] Initialized Comprehensive PrologEngine (Session: ed135822, Available: True)
+2025-08-02 15:09:33,528 - hybex_system.prolog_engine - INFO - [Session:ed135822] Loaded 9 rule categories with 162 total rules
+2025-08-02 15:09:33,530 - hybex_system.prolog_engine - INFO - [Session:ed135822] Comprehensive rules actually loaded: True
+2025-08-02 15:09:33,538 - hybex_system.prolog_engine - INFO - [Session:ed135822] Cleaning up PrologEngine session ed135822
+2025-08-02 15:09:33,538 - hybex_system.prolog_engine - INFO - [Session:ed135822] PrologEngine cleanup completed

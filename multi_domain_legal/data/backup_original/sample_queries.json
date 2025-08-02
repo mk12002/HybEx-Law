@@ -1,0 +1,210 @@
+{
+  "legal_aid_queries": [
+    {
+      "query": "I earn Rs. 20,000 per month and need legal help for a family dispute. Am I eligible for free legal aid?",
+      "expected_domain": "legal_aid",
+      "context": {
+        "income": 20000,
+        "case_type": "family"
+      }
+    },
+    {
+      "query": "I belong to SC category and facing criminal charges. Can I get government lawyer?",
+      "expected_domain": "legal_aid",
+      "context": {
+        "social_category": "sc",
+        "case_type": "criminal"
+      }
+    },
+    {
+      "query": "My husband died and I need help with property case but cannot afford lawyer fees",
+      "expected_domain": "legal_aid",
+      "context": {
+        "vulnerable_group": "women",
+        "case_type": "property"
+      }
+    }
+  ],
+  "family_law_queries": [
+    {
+      "query": "My husband is demanding dowry and threatening me. I want to file for divorce under Hindu law.",
+      "expected_domain": "family_law",
+      "context": {
+        "personal_law": "hindu",
+        "marriage_status": "married",
+        "issues": ["dowry", "cruelty"]
+      }
+    },
+    {
+      "query": "I got married 2 years ago but my husband deserted me. Can I get maintenance from him?",
+      "expected_domain": "family_law",
+      "context": {
+        "marriage_duration": "2 years",
+        "issues": ["desertion", "maintenance"]
+      }
+    },
+    {
+      "query": "My wife and I want mutual divorce. We have one child. What is the process?",
+      "expected_domain": "family_law",
+      "context": {
+        "divorce_type": "mutual",
+        "children": 1
+      }
+    },
+    {
+      "query": "I am 19 year old girl. My parents want me to marry a 45 year old man. Is this legal?",
+      "expected_domain": "family_law",
+      "context": {
+        "age": 19,
+        "gender": "female",
+        "marriage_type": "arranged"
+      }
+    }
+  ],
+  "consumer_protection_queries": [
+    {
+      "query": "I bought a mobile phone worth Rs. 50,000 but it's defective. The shop is refusing refund.",
+      "expected_domain": "consumer_protection",
+      "context": {
+        "transaction_amount": 50000,
+        "issue_type": "defective_goods",
+        "product_category": "electronics"
+      }
+    },
+    {
+      "query": "Online food delivery service charged me Rs. 2,500 but never delivered food. Where to complain?",
+      "expected_domain": "consumer_protection",
+      "context": {
+        "transaction_amount": 2500,
+        "issue_type": "deficient_services",
+        "service_type": "online_delivery"
+      }
+    },
+    {
+      "query": "Real estate builder took Rs. 15 lakh but project is delayed by 3 years. What are my rights?",
+      "expected_domain": "consumer_protection",
+      "context": {
+        "transaction_amount": 1500000,
+        "issue_type": "project_delay",
+        "service_type": "real_estate"
+      }
+    },
+    {
+      "query": "Insurance company is not settling my claim of Rs. 3 lakh despite valid documents",
+      "expected_domain": "consumer_protection",
+      "context": {
+        "transaction_amount": 300000,
+        "issue_type": "claim_rejection",
+        "service_type": "insurance"
+      }
+    }
+  ],
+  "fundamental_rights_queries": [
+    {
+      "query": "Police arrested me without warrant and tortured me in custody. What are my constitutional rights?",
+      "expected_domain": "fundamental_rights",
+      "context": {
+        "rights_violated": ["right_to_life", "right_against_torture"],
+        "authority": "police"
+      }
+    },
+    {
+      "query": "Government office is not giving me information under RTI Act. How to complain?",
+      "expected_domain": "fundamental_rights",
+      "context": {
+        "right_type": "right_to_information",
+        "authority": "government_office"
+      }
+    },
+    {
+      "query": "I was denied job because of my religion. This is discrimination. Where to file case?",
+      "expected_domain": "fundamental_rights",
+      "context": {
+        "discrimination_ground": "religion",
+        "context": "employment"
+      }
+    },
+    {
+      "query": "Local authorities demolished slum without notice affecting 500 families. Can we file PIL?",
+      "expected_domain": "fundamental_rights",
+      "context": {
+        "issue_type": "housing_rights",
+        "affected_people": 500,
+        "case_type": "pil"
+      }
+    }
+  ],
+  "employment_law_queries": [
+    {
+      "query": "My company fired me without notice after 5 years of service. Is this legal?",
+      "expected_domain": "employment_law",
+      "context": {
+        "employment_type": "permanent",
+        "service_duration": "5 years",
+        "termination_type": "without_notice"
+      }
+    },
+    {
+      "query": "My boss is sexually harassing me at workplace. Where can I file complaint?",
+      "expected_domain": "employment_law",
+      "context": {
+        "harassment_type": "sexual",
+        "workplace_issue": true
+      }
+    },
+    {
+      "query": "I work 12 hours daily but company pays only for 8 hours. What about overtime payment?",
+      "expected_domain": "employment_law",
+      "context": {
+        "working_hours": 12,
+        "paid_hours": 8,
+        "issue_type": "overtime"
+      }
+    },
+    {
+      "query": "My salary is Rs. 150 per day but minimum wage is Rs. 200. Can I demand difference?",
+      "expected_domain": "employment_law",
+      "context": {
+        "actual_wage": 150,
+        "minimum_wage": 200,
+        "issue_type": "wage_violation"
+      }
+    },
+    {
+      "query": "Female colleague gets Rs. 5000 less than me for same work. Is this legal?",
+      "expected_domain": "employment_law",
+      "context": {
+        "wage_gap": 5000,
+        "issue_type": "gender_discrimination",
+        "same_work": true
+      }
+    }
+  ],
+  "multi_domain_queries": [
+    {
+      "query": "I am poor woman whose husband left her. Need divorce and legal aid. Also facing workplace harassment.",
+      "expected_domains": ["legal_aid", "family_law", "employment_law"],
+      "context": {
+        "gender": "female",
+        "economic_status": "poor",
+        "multiple_issues": true
+      }
+    },
+    {
+      "query": "Company terminated me for filing RTI against corruption. This violates my rights and employment law.",
+      "expected_domains": ["fundamental_rights", "employment_law"],
+      "context": {
+        "termination_reason": "rti_filing",
+        "rights_issue": true
+      }
+    },
+    {
+      "query": "Bank sold me defective insurance and then denied claim. I also faced discrimination from bank staff.",
+      "expected_domains": ["consumer_protection", "fundamental_rights"],
+      "context": {
+        "financial_service": true,
+        "discrimination": true
+      }
+    }
+  ]
+}

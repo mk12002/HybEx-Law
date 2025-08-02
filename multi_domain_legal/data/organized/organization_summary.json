@@ -1,0 +1,41 @@
+{
+  "organization_date": "2025-08-02T13:02:53.214531",
+  "data_splits": {
+    "train": {
+      "file": "organized/train_data.json",
+      "samples": 14000,
+      "sources": [
+        "comprehensive_dataset"
+      ]
+    },
+    "validation": {
+      "file": "organized/validation_data.json",
+      "samples": 3500,
+      "main_samples": 3000,
+      "edge_cases": 500,
+      "sources": [
+        "comprehensive_dataset",
+        "edge_cases"
+      ]
+    },
+    "test": {
+      "file": "organized/test_data.json",
+      "samples": 3500,
+      "main_samples": 3000,
+      "edge_cases": 500,
+      "sources": [
+        "comprehensive_dataset",
+        "edge_cases"
+      ]
+    }
+  },
+  "domain_validation_sets": {
+    "legal_aid": 500,
+    "family_law": 500,
+    "consumer_protection": 500,
+    "employment_law": 500,
+    "fundamental_rights": 500
+  },
+  "total_organized_samples": 21000,
+  "recommended_training_command": "python -m hybex_system.main train --data-dir data/organized"
+}

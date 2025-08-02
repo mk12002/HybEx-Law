@@ -1,0 +1,20 @@
+2025-08-02 13:13:05,172 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-02 13:13:05,173 - hybex_system.evaluator - INFO - ============================================================
+2025-08-02 13:13:05,173 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-02 13:13:05,174 - hybex_system.evaluator - INFO - ============================================================
+2025-08-02 13:13:05,174 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-02 13:14:54,293 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-02 13:14:54,295 - hybex_system.evaluator - INFO - ============================================================
+2025-08-02 13:14:54,295 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-02 13:14:54,295 - hybex_system.evaluator - INFO - ============================================================
+2025-08-02 13:14:54,295 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-02 14:01:25,854 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-02 14:01:25,854 - hybex_system.evaluator - INFO - ============================================================
+2025-08-02 14:01:25,854 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-02 14:01:25,854 - hybex_system.evaluator - INFO - ============================================================
+2025-08-02 14:01:25,854 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-02 15:13:56,566 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-02 15:13:56,579 - hybex_system.evaluator - INFO - ============================================================
+2025-08-02 15:13:56,579 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-02 15:13:56,579 - hybex_system.evaluator - INFO - ============================================================
+2025-08-02 15:13:56,579 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
