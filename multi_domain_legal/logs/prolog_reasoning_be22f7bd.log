@@ -10,3 +10,5 @@
 2025-08-02 15:24:29,702 - hybex_system.prolog_engine - INFO - [Session:be22f7bd] Initialized Comprehensive PrologEngine (Session: be22f7bd, Available: True)
 2025-08-02 15:24:29,703 - hybex_system.prolog_engine - INFO - [Session:be22f7bd] Loaded 9 rule categories with 162 total rules
 2025-08-02 15:24:29,704 - hybex_system.prolog_engine - INFO - [Session:be22f7bd] Comprehensive rules actually loaded: True
+2025-08-02 15:28:52,578 - hybex_system.prolog_engine - INFO - [Session:be22f7bd] Cleaning up PrologEngine session be22f7bd
+2025-08-02 15:28:52,579 - hybex_system.prolog_engine - INFO - [Session:be22f7bd] PrologEngine cleanup completed

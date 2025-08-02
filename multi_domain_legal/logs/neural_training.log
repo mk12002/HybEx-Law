@@ -37,3 +37,9 @@
 2025-08-02 15:24:29,592 - hybex_system.neural_models - INFO - Starting HybEx-Law Neural Model Training
 2025-08-02 15:24:29,592 - hybex_system.neural_models - INFO - ============================================================
 2025-08-02 15:24:29,592 - hybex_system.neural_models - INFO - ModelTrainer initialized on device: cuda
+2025-08-02 15:28:43,527 - hybex_system.neural_models - INFO - Training Domain Classifier and Eligibility Predictor models.
+2025-08-02 15:28:43,528 - hybex_system.neural_models - INFO - 
+--- Training Domain Classifier ---
+2025-08-02 15:28:48,282 - hybex_system.neural_models - INFO - Created domain_classification dataset with 14700 samples
+2025-08-02 15:28:48,282 - hybex_system.neural_models - INFO - Created domain_classification dataset with 3150 samples
+2025-08-02 15:28:48,826 - hybex_system.neural_models - INFO - Starting training for domain_classifier for 10 epochs.

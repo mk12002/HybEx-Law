@@ -114,3 +114,12 @@
 2025-08-02 15:24:31,105 - hybex_system.data_processor - ERROR - File validation_data.json: Expected a list of samples, got <class 'dict'>
 2025-08-02 15:24:31,105 - hybex_system.data_processor - WARNING - Data quality validation found issues. Proceeding but review errors.
 2025-08-02 15:24:31,105 - hybex_system.data_processor - INFO - Extracting entities and enriching samples...
+2025-08-02 15:28:41,665 - hybex_system.data_processor - INFO - Samples enriched with extracted_entities.
+2025-08-02 15:28:41,665 - hybex_system.data_processor - INFO - Splitting data into train, validation, and test sets...
+2025-08-02 15:28:41,705 - hybex_system.data_processor - INFO - Train samples: 14700
+2025-08-02 15:28:41,705 - hybex_system.data_processor - INFO - Validation samples: 3150
+2025-08-02 15:28:41,705 - hybex_system.data_processor - INFO - Test samples: 3150
+2025-08-02 15:28:42,774 - hybex_system.data_processor - INFO - Saved train samples to: d:\Code_stuff\NLP\multi_domain_legal\results\processed_data\train_samples.json
+2025-08-02 15:28:42,965 - hybex_system.data_processor - INFO - Saved val samples to: d:\Code_stuff\NLP\multi_domain_legal\results\processed_data\val_samples.json
+2025-08-02 15:28:43,114 - hybex_system.data_processor - INFO - Saved test samples to: d:\Code_stuff\NLP\multi_domain_legal\results\processed_data\test_samples.json
+2025-08-02 15:28:43,116 - hybex_system.data_processor - INFO - Data preprocessing pipeline completed.
