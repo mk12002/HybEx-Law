@@ -95,3 +95,22 @@
 2025-08-02 15:17:39,221 - hybex_system.data_processor - INFO - Saved val samples to: d:\Code_stuff\NLP\multi_domain_legal\results\processed_data\val_samples.json
 2025-08-02 15:17:39,421 - hybex_system.data_processor - INFO - Saved test samples to: d:\Code_stuff\NLP\multi_domain_legal\results\processed_data\test_samples.json
 2025-08-02 15:17:39,421 - hybex_system.data_processor - INFO - Data preprocessing pipeline completed.
+2025-08-02 15:24:28,685 - hybex_system.data_processor - INFO - Added file handler to DataPreprocessor logger.
+2025-08-02 15:24:28,685 - hybex_system.data_processor - INFO - ==================================================
+2025-08-02 15:24:28,685 - hybex_system.data_processor - INFO - Starting HybEx-Law Data Preprocessing
+2025-08-02 15:24:28,685 - hybex_system.data_processor - INFO - ==================================================
+2025-08-02 15:24:28,685 - hybex_system.data_processor - INFO - DataPreprocessor initialized.
+2025-08-02 15:24:30,487 - hybex_system.data_processor - INFO - Running preprocessing pipeline for data in: data\organized
+2025-08-02 15:24:30,496 - hybex_system.data_processor - WARNING - Skipping organization_summary.json: Expected a list of samples or dict with 'samples' key, got <class 'dict'>
+2025-08-02 15:24:30,545 - hybex_system.data_processor - INFO - Loaded 3500 samples from test_data.json (structured format)
+2025-08-02 15:24:30,858 - hybex_system.data_processor - INFO - Loaded 14000 samples from train_data.json (structured format)
+2025-08-02 15:24:30,906 - hybex_system.data_processor - INFO - Loaded 3500 samples from validation_data.json (structured format)
+2025-08-02 15:24:30,906 - hybex_system.data_processor - INFO - Loaded 21000 raw samples from 4 files.
+2025-08-02 15:24:30,906 - hybex_system.data_processor - INFO - Validating data quality in data\organized...
+2025-08-02 15:24:31,105 - hybex_system.data_processor - ERROR - Data validation completed with 4 errors/warnings.
+2025-08-02 15:24:31,105 - hybex_system.data_processor - ERROR - File organization_summary.json: Expected a list of samples, got <class 'dict'>
+2025-08-02 15:24:31,105 - hybex_system.data_processor - ERROR - File test_data.json: Expected a list of samples, got <class 'dict'>
+2025-08-02 15:24:31,105 - hybex_system.data_processor - ERROR - File train_data.json: Expected a list of samples, got <class 'dict'>
+2025-08-02 15:24:31,105 - hybex_system.data_processor - ERROR - File validation_data.json: Expected a list of samples, got <class 'dict'>
+2025-08-02 15:24:31,105 - hybex_system.data_processor - WARNING - Data quality validation found issues. Proceeding but review errors.
+2025-08-02 15:24:31,105 - hybex_system.data_processor - INFO - Extracting entities and enriching samples...
