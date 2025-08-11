@@ -1,0 +1,19 @@
+2025-08-07 16:43:34,917 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Added file handler to PrologEngine logger.
+2025-08-07 16:43:34,919 - hybex_system.prolog_engine - INFO - [Session:28df68e4] ======================================================================
+2025-08-07 16:43:34,919 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-07 16:43:34,920 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Session ID: 28df68e4
+2025-08-07 16:43:34,921 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-07 16:43:34,929 - hybex_system.prolog_engine - INFO - [Session:28df68e4] ======================================================================
+2025-08-07 16:43:34,930 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Attempting to load CLEAN rules from: d:\Code_stuff\NLP\multi_domain_legal\knowledge_base\clean_multi_domain_rules.py
+2025-08-07 16:43:34,936 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Successfully loaded CLEAN MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-07 16:43:34,938 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-07 16:43:34,942 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Initialized Comprehensive PrologEngine (Session: 28df68e4, Available: True)
+2025-08-07 16:43:34,943 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Loaded 6 rule categories with 57 total rules
+2025-08-07 16:43:34,943 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Comprehensive rules actually loaded: True
+2025-08-07 16:43:34,947 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Created comprehensive Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpk6ij41bx.pl with 4 facts.
+2025-08-07 16:43:34,984 - hybex_system.prolog_engine - INFO - [Session:28df68e4] DEBUG: Saved copy of Prolog file to debug_prolog_output.pl for analysis
+2025-08-07 16:43:45,022 - hybex_system.prolog_engine - ERROR - [Session:28df68e4] Prolog query timeout (attempt 1): eligible_for_legal_aid('test_case')
+2025-08-07 16:43:55,047 - hybex_system.prolog_engine - ERROR - [Session:28df68e4] Prolog query timeout (attempt 2): eligible_for_legal_aid('test_case')
+2025-08-07 16:44:05,069 - hybex_system.prolog_engine - ERROR - [Session:28df68e4] Prolog query timeout (attempt 3): eligible_for_legal_aid('test_case')
+2025-08-07 16:44:05,070 - hybex_system.prolog_engine - INFO - [Session:28df68e4] Cleaning up PrologEngine session 28df68e4
+2025-08-07 16:44:05,071 - hybex_system.prolog_engine - INFO - [Session:28df68e4] PrologEngine cleanup completed

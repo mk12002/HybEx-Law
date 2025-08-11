@@ -1,0 +1,260 @@
+2025-08-09 21:05:14,098 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Added file handler to PrologEngine logger.
+2025-08-09 21:05:14,098 - hybex_system.prolog_engine - INFO - [Session:92e7895e] ======================================================================
+2025-08-09 21:05:14,098 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-09 21:05:14,098 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Session ID: 92e7895e
+2025-08-09 21:05:14,098 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-09 21:05:14,110 - hybex_system.prolog_engine - INFO - [Session:92e7895e] ======================================================================
+2025-08-09 21:05:14,111 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-09 21:05:14,111 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Attempting to load rules from: d:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-09 21:05:14,113 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-09 21:05:14,113 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-09 21:05:14,116 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Initialized Comprehensive PrologEngine (Session: 92e7895e, Available: True)
+2025-08-09 21:05:14,116 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Loaded 9 rule categories with 145 total rules
+2025-08-09 21:05:14,116 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Comprehensive rules actually loaded: True
+2025-08-09 21:05:14,118 - hybex_system.prolog_engine - INFO - [Session:92e7895e] 🧠 Starting comprehensive legal analysis for case_92e7895e_210514
+2025-08-09 21:05:14,118 - hybex_system.prolog_engine - INFO - [Session:92e7895e] 🎯 Detected domain 'general_legal_aid' for case type ''
+2025-08-09 21:05:14,119 - hybex_system.prolog_engine - INFO - [Session:92e7895e] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-09 21:05:14,119 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Generated 6 comprehensive Prolog facts for case_92e7895e_210514
+2025-08-09 21:05:14,122 - hybex_system.prolog_engine - INFO - [Session:92e7895e] 🔍 DEBUG: Generated Prolog file content:
+2025-08-09 21:05:14,159 - hybex_system.prolog_engine - INFO - [Session:92e7895e] File content (4240 chars):
+% HybEx-Law Domain-Specific Legal Reasoning Session: 92e7895e
+% Domain: general_legal_aid
+% Generated: 2025-08-09T21:05:14.121166
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous income_eligible/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous eligible_with_confidence/3.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous legal_aid_applicable/2.
+:- discontiguous covered_case_type/1.
+:- discontiguous excluded_case_type/1.
+:- discontiguous valid_marriage/3.
+:- discontiguous marriage_conditions_met/3.
+:- discontiguous age_requirement_met/2.
+:- discontiguous divorce_grounds_exist/3.
+:- discontiguous valid_divorce_ground/2.
+:- discontiguous maintenance_eligible/1.
+:- discontiguous child_custody_preference/2.
+:- discontiguous consumer_forum_jurisdiction/2.
+:- discontiguous valid_consumer_complaint/2.
+:- discontiguous consumer_issue/1.
+:- discontiguous complaint_within_time_limit/2.
+:- discontiguous consumer_compensation/3.
+:- discontiguous defective_goods_compensation/2.
+:- discontiguous fundamental_right_violated/2.
+:- discontiguous constitutional_right/1.
+:- discontiguous right_violation_occurred/2.
+:- discontiguous prohibited_discrimination_ground/1.
+:- discontiguous rti_applicable/2.
+:- discontiguous exempt_information/1.
+:- discontiguous pil_standing/2.
+:- discontiguous public_interest_issue/1.
+:- discontiguous wrongful_termination/1.
+:- discontiguous improper_procedure/1.
+:- discontiguous sufficient_notice_period/2.
+:- discontiguous retrenchment_compensation/2.
+:- discontiguous valid_harassment_complaint/1.
+:- discontiguous harassment_remedy_available/2.
+:- discontiguous harassment_remedy/1.
+:- discontiguous minimum_wage_violation/1.
+:- discontiguous minimum_wage_rate/2.
+:- discontiguous overtime_payment_due/2.
+:- discontiguous overtime_hours/2.
+:- discontiguous legal_aid_employment_case/1.
+:- discontiguous legal_aid_family_case/1.
+:- discontiguous legal_aid_consumer_case/1.
+:- discontiguous constitutional_employment_remedy/1.
+:- discontiguous employment_pil_standing/2.
+:- discontiguous employment_related_issue/1.
+:- discontiguous days_between/3.
+:- discontiguous appeal_court/2.
+:- discontiguous legal_costs_estimate/3.
+:- discontiguous base_court_fee/2.
+:- discontiguous lawyer_fee_estimate/2.
+:- discontiguous required_documents/2.
+:- discontiguous case_timeline_estimate/2.
+:- discontiguous income_threshold/2.
+:- discontiguous income_within_threshold/2.
+:- discontiguous income_ratio/3.
+:- discontiguous applicable_rule/3.
+:- discontiguous rule_priority/3.
+:- discontiguous best_applicable_rule/3.
+:- discontiguous resolve_conflict/3.
+:- discontiguous confidence_score/2.
+:- discontiguous legal_aid_factor/2.
+:- discontiguous individual_reason/2.
+:- discontiguous annual_income/2.
+:- discontiguous monthly_income/2.
+:- discontiguous applicant_social_category/2.
+:- discontiguous social_category/2.
+:- discontiguous case_type/2.
+:- discontiguous applicant_location/2.
+:- discontiguous vulnerable_group/2.
+
+% LEGAL RULES
+% LEGAL_AID_RULES
+eligible_for_legal_aid(Person) :- person(Person), ( income_eligible(Person) ; categorically_eligible(Person) ).
+income_eligible(Person) :- annual_income(Person, Income), Income =< 300000. % Rs. 3 lakh per annum income_eligible(Person) :- monthly_income(Person, Income), Income =< 25000. % Rs. 25,000 per month.
+categorically_eligible(Person) :- social_category(Person, Category), member(Category, [sc, st, obc]).
+categorically_eligible(Person) :- vulnerable_group(Person, Group), member(Group, [women, children, disabled, industrial_workers]).
+legal_aid_applicable(Person, CaseType) :- eligible_for_legal_aid(Person), covered_case_type(CaseType).
+covered_case_type(CaseType) :- member(CaseType, [criminal, family, labor, consumer, constitutional]).
+excluded_case_type(CaseType) :- member(CaseType, [defamation, corporate_disputes, tax_evasion]).
+
+% CASE FACTS
+person('case_92e7895e_210514').
+annual_income('case_92e7895e_210514', 250000).
+monthly_income('case_92e7895e_210514', 20833).
+social_category('case_92e7895e_210514', sc).
+vulnerable_group('case_92e7895e_210514', social_category).
+person('case_92e7895e_210514').
+
+2025-08-09 21:05:14,162 - hybex_system.prolog_engine - INFO - [Session:92e7895e] ✅ Created robust Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpbb9uocxj.pl with 7 rules and 6 facts
+2025-08-09 21:05:14,163 - hybex_system.prolog_engine - INFO - [Session:92e7895e] 🎯 Step 1: Quick eligibility check for case_92e7895e_210514
+2025-08-09 21:05:24,192 - hybex_system.prolog_engine - ERROR - [Session:92e7895e] Prolog query timeout (attempt 1): eligible_for_legal_aid('case_92e7895e_210514')
+2025-08-09 21:05:34,208 - hybex_system.prolog_engine - ERROR - [Session:92e7895e] Prolog query timeout (attempt 2): eligible_for_legal_aid('case_92e7895e_210514')
+2025-08-09 21:05:44,227 - hybex_system.prolog_engine - ERROR - [Session:92e7895e] Prolog query timeout (attempt 3): eligible_for_legal_aid('case_92e7895e_210514')
+2025-08-09 21:05:44,227 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] ❌ Basic eligibility check failed: Query timeout after 3 attempts
+2025-08-09 21:05:44,290 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 1). Stderr: 
+2025-08-09 21:05:44,290 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 1): primary_eligibility_reason('case_92e7895e_210514', Reason). Output: . Stderr: 
+2025-08-09 21:05:44,370 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 2). Stderr: 
+2025-08-09 21:05:44,370 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 2): primary_eligibility_reason('case_92e7895e_210514', Reason). Output: . Stderr: 
+2025-08-09 21:05:44,428 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 3). Stderr: 
+2025-08-09 21:05:44,428 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 3): primary_eligibility_reason('case_92e7895e_210514', Reason). Output: . Stderr: 
+2025-08-09 21:05:44,484 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 1). Stderr: 
+2025-08-09 21:05:44,484 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 1): generate_detailed_reasoning('case_92e7895e_210514', DetailedReason). Output: . Stderr: 
+2025-08-09 21:05:44,553 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 2). Stderr: 
+2025-08-09 21:05:44,554 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 2): generate_detailed_reasoning('case_92e7895e_210514', DetailedReason). Output: . Stderr: 
+2025-08-09 21:05:44,610 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 3). Stderr: 
+2025-08-09 21:05:44,610 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 3): generate_detailed_reasoning('case_92e7895e_210514', DetailedReason). Output: . Stderr: 
+2025-08-09 21:06:44,605 - hybex_system.prolog_engine - ERROR - [Session:92e7895e] Prolog query timeout (attempt 1): findall(Rule, applicable_rule('case_92e7895e_210514', Rule, legal_aid), Rules)
+2025-08-09 21:07:44,634 - hybex_system.prolog_engine - ERROR - [Session:92e7895e] Prolog query timeout (attempt 2): findall(Rule, applicable_rule('case_92e7895e_210514', Rule, legal_aid), Rules)
+2025-08-09 21:08:44,653 - hybex_system.prolog_engine - ERROR - [Session:92e7895e] Prolog query timeout (attempt 3): findall(Rule, applicable_rule('case_92e7895e_210514', Rule, legal_aid), Rules)
+2025-08-09 21:08:44,653 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Comprehensive legal analysis complete for case_92e7895e_210514: Eligible=False, Confidence=0.30
+2025-08-09 21:08:44,655 - hybex_system.prolog_engine - INFO - [Session:92e7895e] 🧠 Starting comprehensive legal analysis for case_92e7895e_210844
+2025-08-09 21:08:44,655 - hybex_system.prolog_engine - INFO - [Session:92e7895e] 🎯 Detected domain 'general_legal_aid' for case type ''
+2025-08-09 21:08:44,657 - hybex_system.prolog_engine - INFO - [Session:92e7895e] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-09 21:08:44,657 - hybex_system.prolog_engine - INFO - [Session:92e7895e] Generated 5 comprehensive Prolog facts for case_92e7895e_210844
+2025-08-09 21:08:44,660 - hybex_system.prolog_engine - INFO - [Session:92e7895e] 🔍 DEBUG: Generated Prolog file content:
+2025-08-09 21:08:44,694 - hybex_system.prolog_engine - INFO - [Session:92e7895e] File content (4186 chars):
+% HybEx-Law Domain-Specific Legal Reasoning Session: 92e7895e
+% Domain: general_legal_aid
+% Generated: 2025-08-09T21:08:44.659867
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous income_eligible/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous eligible_with_confidence/3.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous legal_aid_applicable/2.
+:- discontiguous covered_case_type/1.
+:- discontiguous excluded_case_type/1.
+:- discontiguous valid_marriage/3.
+:- discontiguous marriage_conditions_met/3.
+:- discontiguous age_requirement_met/2.
+:- discontiguous divorce_grounds_exist/3.
+:- discontiguous valid_divorce_ground/2.
+:- discontiguous maintenance_eligible/1.
+:- discontiguous child_custody_preference/2.
+:- discontiguous consumer_forum_jurisdiction/2.
+:- discontiguous valid_consumer_complaint/2.
+:- discontiguous consumer_issue/1.
+:- discontiguous complaint_within_time_limit/2.
+:- discontiguous consumer_compensation/3.
+:- discontiguous defective_goods_compensation/2.
+:- discontiguous fundamental_right_violated/2.
+:- discontiguous constitutional_right/1.
+:- discontiguous right_violation_occurred/2.
+:- discontiguous prohibited_discrimination_ground/1.
+:- discontiguous rti_applicable/2.
+:- discontiguous exempt_information/1.
+:- discontiguous pil_standing/2.
+:- discontiguous public_interest_issue/1.
+:- discontiguous wrongful_termination/1.
+:- discontiguous improper_procedure/1.
+:- discontiguous sufficient_notice_period/2.
+:- discontiguous retrenchment_compensation/2.
+:- discontiguous valid_harassment_complaint/1.
+:- discontiguous harassment_remedy_available/2.
+:- discontiguous harassment_remedy/1.
+:- discontiguous minimum_wage_violation/1.
+:- discontiguous minimum_wage_rate/2.
+:- discontiguous overtime_payment_due/2.
+:- discontiguous overtime_hours/2.
+:- discontiguous legal_aid_employment_case/1.
+:- discontiguous legal_aid_family_case/1.
+:- discontiguous legal_aid_consumer_case/1.
+:- discontiguous constitutional_employment_remedy/1.
+:- discontiguous employment_pil_standing/2.
+:- discontiguous employment_related_issue/1.
+:- discontiguous days_between/3.
+:- discontiguous appeal_court/2.
+:- discontiguous legal_costs_estimate/3.
+:- discontiguous base_court_fee/2.
+:- discontiguous lawyer_fee_estimate/2.
+:- discontiguous required_documents/2.
+:- discontiguous case_timeline_estimate/2.
+:- discontiguous income_threshold/2.
+:- discontiguous income_within_threshold/2.
+:- discontiguous income_ratio/3.
+:- discontiguous applicable_rule/3.
+:- discontiguous rule_priority/3.
+:- discontiguous best_applicable_rule/3.
+:- discontiguous resolve_conflict/3.
+:- discontiguous confidence_score/2.
+:- discontiguous legal_aid_factor/2.
+:- discontiguous individual_reason/2.
+:- discontiguous annual_income/2.
+:- discontiguous monthly_income/2.
+:- discontiguous applicant_social_category/2.
+:- discontiguous social_category/2.
+:- discontiguous case_type/2.
+:- discontiguous applicant_location/2.
+:- discontiguous vulnerable_group/2.
+
+% LEGAL RULES
+% LEGAL_AID_RULES
+eligible_for_legal_aid(Person) :- person(Person), ( income_eligible(Person) ; categorically_eligible(Person) ).
+income_eligible(Person) :- annual_income(Person, Income), Income =< 300000. % Rs. 3 lakh per annum income_eligible(Person) :- monthly_income(Person, Income), Income =< 25000. % Rs. 25,000 per month.
+categorically_eligible(Person) :- social_category(Person, Category), member(Category, [sc, st, obc]).
+categorically_eligible(Person) :- vulnerable_group(Person, Group), member(Group, [women, children, disabled, industrial_workers]).
+legal_aid_applicable(Person, CaseType) :- eligible_for_legal_aid(Person), covered_case_type(CaseType).
+covered_case_type(CaseType) :- member(CaseType, [criminal, family, labor, consumer, constitutional]).
+excluded_case_type(CaseType) :- member(CaseType, [defamation, corporate_disputes, tax_evasion]).
+
+% CASE FACTS
+person('case_92e7895e_210844').
+annual_income('case_92e7895e_210844', 800000).
+monthly_income('case_92e7895e_210844', 66666).
+social_category('case_92e7895e_210844', general).
+person('case_92e7895e_210844').
+
+2025-08-09 21:08:44,695 - hybex_system.prolog_engine - INFO - [Session:92e7895e] ✅ Created robust Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpzdu60lwu.pl with 7 rules and 5 facts
+2025-08-09 21:08:44,695 - hybex_system.prolog_engine - INFO - [Session:92e7895e] 🎯 Step 1: Quick eligibility check for case_92e7895e_210844
+2025-08-09 21:08:44,810 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 1). Stderr: 
+2025-08-09 21:08:44,810 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 1): eligible_for_legal_aid('case_92e7895e_210844'). Output: . Stderr: 
+2025-08-09 21:08:44,868 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 2). Stderr: 
+2025-08-09 21:08:44,868 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 2): eligible_for_legal_aid('case_92e7895e_210844'). Output: . Stderr: 
+2025-08-09 21:08:44,939 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 3). Stderr: 
+2025-08-09 21:08:44,939 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 3): eligible_for_legal_aid('case_92e7895e_210844'). Output: . Stderr: 
+2025-08-09 21:08:44,939 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] ❌ Basic eligibility check failed: Prolog query failed after 3 attempts: 
+2025-08-09 21:08:44,995 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 1). Stderr: 
+2025-08-09 21:08:45,007 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 1): primary_eligibility_reason('case_92e7895e_210844', Reason). Output: . Stderr: 
+2025-08-09 21:08:45,069 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 2). Stderr: 
+2025-08-09 21:08:45,069 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 2): primary_eligibility_reason('case_92e7895e_210844', Reason). Output: . Stderr: 
+2025-08-09 21:08:45,129 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 3). Stderr: 
+2025-08-09 21:08:45,129 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 3): primary_eligibility_reason('case_92e7895e_210844', Reason). Output: . Stderr: 
+2025-08-09 21:08:45,174 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 1). Stderr: 
+2025-08-09 21:08:45,174 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 1): generate_detailed_reasoning('case_92e7895e_210844', DetailedReason). Output: . Stderr: 
+2025-08-09 21:08:45,219 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 2). Stderr: 
+2025-08-09 21:08:45,219 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 2): generate_detailed_reasoning('case_92e7895e_210844', DetailedReason). Output: . Stderr: 
+2025-08-09 21:08:45,274 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] SWI-Prolog exited with code 1 (attempt 3). Stderr: 
+2025-08-09 21:08:45,274 - hybex_system.prolog_engine - WARNING - [Session:92e7895e] Prolog query returned false/no or empty (attempt 3): generate_detailed_reasoning('case_92e7895e_210844', DetailedReason). Output: . Stderr: 
+2025-08-09 21:09:45,289 - hybex_system.prolog_engine - ERROR - [Session:92e7895e] Prolog query timeout (attempt 1): findall(Rule, applicable_rule('case_92e7895e_210844', Rule, legal_aid), Rules)

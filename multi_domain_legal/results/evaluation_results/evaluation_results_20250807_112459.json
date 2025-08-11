@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-08-07T11:24:59.078783",
+  "overall_status": "Failed",
+  "neural_metrics": {},
+  "prolog_metrics": {},
+  "hybrid_metrics": {},
+  "component_agreement": {},
+  "error_analysis": [],
+  "sample_size": 3150,
+  "config_summary": "HybEx-Law Config - Data: verified_fallback, Models: 3, Legal Sources: Unknown"
+}

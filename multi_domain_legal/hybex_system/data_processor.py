@@ -62,29 +62,37 @@ class DataPreprocessor:
         doc = self.nlp(text) if self.nlp else None
 
         # 1. Income Extraction
-        # Improved regex to handle various formats (e.g., "3 lakhs", "Rs. 5,00,000", "500000")
+        # Fixed regex to handle various formats (e.g., "3 lakhs", "Rs. 5,00,000", "500000")
+        # Order matters: most specific patterns first!
         income_patterns = [
-            r'(\d+(?:[\\.,]\\d+)*)\\s*(?:lakhs?|lac(?:s)?|million)?\\s*(?:rupees|rs\\.?|k)?(?:\\s*per\\s*year|annual|monthly)?',
-            r'rs\\.?\\s*(\d+(?:[\\.,]\\d+)*)',
-            r'(\d+(?:[\\.,]\\d+)*)\\s*(?:k|thousand)?(?:\\s*per\\s*year|annual|monthly)?'
+            r'rs\.?\s*(\d+(?:[,.]?\d+)*)',  # Rs. 15,000 or Rs 15000
+            r'(\d+(?:[,.]?\d+)*)\s*rupees', # 15000 rupees
+            r'(\d+(?:[,.]?\d+)*)\s*(?:lakhs?|lac(?:s)?)', # 3 lakhs
+            r'income.*?(\d+(?:[,.]?\d+)*)', # income of 15000
+            r'(\d+(?:[,.]?\d+)*)\s*(?:k|thousand)', # 15k or 15 thousand
+            r'(\d+(?:[,.]?\d+)*)\s*(?:per\s*year|annual|yearly)', # 15000 per year
         ]
         
         for pattern in income_patterns:
             match = re.search(pattern, text_lower)
             if match:
                 amount_str = match.group(1).replace(',', '').replace('.', '') # Remove commas/dots initially
-                unit = match.group(0).lower() # Get the full matched string to check for units
+                full_match = match.group(0).lower() # Get the full matched string to check for units
                 
                 try:
                     amount = float(amount_str)
-                    if 'lakh' in unit or 'lac' in unit:
+                    
+                    # Apply unit multipliers
+                    if 'lakh' in full_match or 'lac' in full_match:
                         amount *= 100000
-                    elif 'million' in unit:
+                    elif 'million' in full_match:
                         amount *= 1000000
-                    elif 'k' in unit or 'thousand' in unit: # Basic handling for 'k'
+                    elif 'k' in full_match or 'thousand' in full_match:
                         amount *= 1000
+                    # Note: Rs. and rupees are just currency indicators, no multiplication needed
                     
                     entities['income'] = int(amount) # Store as integer
+                    logger.debug(f"Extracted income: {amount} from '{full_match}'")
                     break # Stop after first successful match
                 except ValueError:
                     logger.warning(f"Could not convert extracted income '{amount_str}' to number.")
@@ -115,7 +123,28 @@ class DataPreprocessor:
                 entities['case_type'] = case_type
                 break
         
-        # 4. Location Extraction (basic, can be improved with GeoPy/more robust NER)
+        # 4. Age Extraction
+        age_patterns = [
+            r'(\d+)[-\s]*year[-\s]*old',
+            r'age\s+(?:is\s+)?(\d+)',
+            r'(\d+)\s+years?\s+(?:of\s+)?age'
+        ]
+        for pattern in age_patterns:
+            match = re.search(pattern, text_lower)
+            if match:
+                try:
+                    entities['age'] = int(match.group(1))
+                    break
+                except ValueError:
+                    continue
+
+        # 5. Gender Extraction
+        if 'woman' in text_lower or 'female' in text_lower:
+            entities['gender'] = 'female'
+        elif 'man' in text_lower or 'male' in text_lower:
+            entities['gender'] = 'male'
+
+        # 6. Location Extraction (basic, can be improved with GeoPy/more robust NER)
         # Prioritize spaCy GPE entities
         if doc:
             for ent in doc.ents:

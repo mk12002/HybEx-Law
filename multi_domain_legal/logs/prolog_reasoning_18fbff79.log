@@ -1,0 +1,151 @@
+2025-08-11 11:47:35,098 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Added file handler to PrologEngine logger.
+2025-08-11 11:47:35,098 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ======================================================================
+2025-08-11 11:47:35,098 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-11 11:47:35,099 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Session ID: 18fbff79
+2025-08-11 11:47:35,099 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-11 11:47:35,099 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ======================================================================
+2025-08-11 11:47:35,099 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-11 11:47:35,099 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Attempting to load rules from: d:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-11 11:47:35,103 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-11 11:47:35,103 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-11 11:47:35,107 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Initialized Comprehensive PrologEngine (Session: 18fbff79, Available: True)
+2025-08-11 11:47:35,109 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Loaded 9 rule categories with 145 total rules
+2025-08-11 11:47:35,109 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Comprehensive rules actually loaded: True
+2025-08-11 11:47:35,110 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🧠 Starting comprehensive legal analysis for case_18fbff79_114735
+2025-08-11 11:47:35,110 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🎯 Detected domain 'general_legal_aid' for case type ''
+2025-08-11 11:47:35,110 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-11 11:47:35,110 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Generated 12 comprehensive Prolog facts for case_18fbff79_114735
+2025-08-11 11:47:35,111 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 📂 Selected files for domain 'general_legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl']
+2025-08-11 11:47:35,113 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ Loaded modular file: foundational_rules_clean.pl
+2025-08-11 11:47:35,114 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ Loaded modular file: legal_aid_clean_v2.pl
+2025-08-11 11:47:35,115 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🔍 DEBUG: Modular Prolog file content:
+2025-08-11 11:47:35,147 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Modular file (6333 chars):
+% HybEx-Law Modular Legal Reasoning Session: 18fbff79
+% Domain: general_legal_aid
+% Generated: 2025-08-11T11:47:35.111871
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+% LOADING: foundational_rules_clean.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND UTILITY RULES - CORRECTED AND ROBUST
+% This file contains only generic, reusable predicates.
+% All case-specific facts (e.g., age, income) must be provided by Python.
+% ================================================================...
+2025-08-11 11:47:35,149 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ Created MODULAR Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpfgwp971u.pl with 2 domain modules
+2025-08-11 11:47:35,149 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🎯 Ultra-fast eligibility check for case_18fbff79_114735
+2025-08-11 11:47:35,150 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpfgwp971u.pl'], eligible_for_legal_aid('case_18fbff79_114735'), halt --stack-limit=2g --traditional
+2025-08-11 11:47:35,219 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): eligible_for_legal_aid('case_18fbff79_114735')
+2025-08-11 11:47:35,219 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ FAST SUCCESS: Basic eligibility confirmed for case_18fbff79_114735
+2025-08-11 11:47:35,219 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpfgwp971u.pl'], primary_eligibility_reason('case_18fbff79_114735', Reason), halt --stack-limit=2g --traditional
+2025-08-11 11:47:35,283 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): primary_eligibility_reason('case_18fbff79_114735', Reason)
+2025-08-11 11:47:35,283 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpfgwp971u.pl'], generate_detailed_reasoning('case_18fbff79_114735', DetailedReason), halt --stack-limit=2g --traditional
+2025-08-11 11:47:35,327 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): generate_detailed_reasoning('case_18fbff79_114735', DetailedReason)
+2025-08-11 11:47:35,328 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpfgwp971u.pl'], findall(Rule, applicable_rule('case_18fbff79_114735', Rule, legal_aid), Rules), halt --stack-limit=2g --traditional
+2025-08-11 11:47:35,407 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): findall(Rule, applicable_rule('case_18fbff79_114735', Rule, legal_aid), Rules)
+2025-08-11 11:47:35,407 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Comprehensive legal analysis complete for case_18fbff79_114735: Eligible=True, Confidence=0.85
+2025-08-11 11:47:35,426 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🧠 Starting comprehensive legal analysis for case_18fbff79_114735
+2025-08-11 11:47:35,426 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🎯 Detected domain 'general_legal_aid' for case type 'family law'
+2025-08-11 11:47:35,426 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-11 11:47:35,426 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Generated 13 comprehensive Prolog facts for case_18fbff79_114735
+2025-08-11 11:47:35,426 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 📂 Selected files for domain 'general_legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl']
+2025-08-11 11:47:35,434 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ Loaded modular file: foundational_rules_clean.pl
+2025-08-11 11:47:35,435 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ Loaded modular file: legal_aid_clean_v2.pl
+2025-08-11 11:47:35,435 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🔍 DEBUG: Modular Prolog file content:
+2025-08-11 11:47:35,462 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Modular file (6381 chars):
+% HybEx-Law Modular Legal Reasoning Session: 18fbff79
+% Domain: general_legal_aid
+% Generated: 2025-08-11T11:47:35.426597
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+% LOADING: foundational_rules_clean.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND UTILITY RULES - CORRECTED AND ROBUST
+% This file contains only generic, reusable predicates.
+% All case-specific facts (e.g., age, income) must be provided by Python.
+% ================================================================...
+2025-08-11 11:47:35,464 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ Created MODULAR Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpveys36uu.pl with 2 domain modules
+2025-08-11 11:47:35,464 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🎯 Ultra-fast eligibility check for case_18fbff79_114735
+2025-08-11 11:47:35,464 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpveys36uu.pl'], eligible_for_legal_aid('case_18fbff79_114735'), halt --stack-limit=2g --traditional
+2025-08-11 11:47:35,520 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): eligible_for_legal_aid('case_18fbff79_114735')
+2025-08-11 11:47:35,520 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ FAST SUCCESS: Basic eligibility confirmed for case_18fbff79_114735
+2025-08-11 11:47:35,520 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpveys36uu.pl'], primary_eligibility_reason('case_18fbff79_114735', Reason), halt --stack-limit=2g --traditional
+2025-08-11 11:47:35,593 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): primary_eligibility_reason('case_18fbff79_114735', Reason)
+2025-08-11 11:47:35,594 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpveys36uu.pl'], generate_detailed_reasoning('case_18fbff79_114735', DetailedReason), halt --stack-limit=2g --traditional
+2025-08-11 11:47:35,655 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): generate_detailed_reasoning('case_18fbff79_114735', DetailedReason)
+2025-08-11 11:47:35,655 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpveys36uu.pl'], findall(Rule, applicable_rule('case_18fbff79_114735', Rule, legal_aid), Rules), halt --stack-limit=2g --traditional
+2025-08-11 11:47:35,711 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): findall(Rule, applicable_rule('case_18fbff79_114735', Rule, legal_aid), Rules)
+2025-08-11 11:47:35,711 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Comprehensive legal analysis complete for case_18fbff79_114735: Eligible=True, Confidence=0.85
+2025-08-11 11:47:35,731 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🧠 Starting comprehensive legal analysis for case_18fbff79_114735
+2025-08-11 11:47:35,731 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🎯 Detected domain 'general_legal_aid' for case type ''
+2025-08-11 11:47:35,732 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-11 11:47:35,732 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Generated 12 comprehensive Prolog facts for case_18fbff79_114735
+2025-08-11 11:47:35,734 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 📂 Selected files for domain 'general_legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl']
+2025-08-11 11:47:35,734 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ Loaded modular file: foundational_rules_clean.pl
+2025-08-11 11:47:35,734 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ Loaded modular file: legal_aid_clean_v2.pl
+2025-08-11 11:47:35,737 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🔍 DEBUG: Modular Prolog file content:
+2025-08-11 11:47:35,760 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Modular file (6336 chars):
+% HybEx-Law Modular Legal Reasoning Session: 18fbff79
+% Domain: general_legal_aid
+% Generated: 2025-08-11T11:47:35.734441
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+% LOADING: foundational_rules_clean.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND UTILITY RULES - CORRECTED AND ROBUST
+% This file contains only generic, reusable predicates.
+% All case-specific facts (e.g., age, income) must be provided by Python.
+% ================================================================...
+2025-08-11 11:47:35,761 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ Created MODULAR Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp9kxp4e2g.pl with 2 domain modules
+2025-08-11 11:47:35,761 - hybex_system.prolog_engine - INFO - [Session:18fbff79] 🎯 Ultra-fast eligibility check for case_18fbff79_114735
+2025-08-11 11:47:35,763 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmp9kxp4e2g.pl'], eligible_for_legal_aid('case_18fbff79_114735'), halt --stack-limit=2g --traditional
+2025-08-11 11:47:35,828 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): eligible_for_legal_aid('case_18fbff79_114735')
+2025-08-11 11:47:35,828 - hybex_system.prolog_engine - INFO - [Session:18fbff79] ✅ FAST SUCCESS: Basic eligibility confirmed for case_18fbff79_114735
+2025-08-11 11:47:35,828 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmp9kxp4e2g.pl'], primary_eligibility_reason('case_18fbff79_114735', Reason), halt --stack-limit=2g --traditional
+2025-08-11 11:47:35,900 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): primary_eligibility_reason('case_18fbff79_114735', Reason)
+2025-08-11 11:47:35,900 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmp9kxp4e2g.pl'], generate_detailed_reasoning('case_18fbff79_114735', DetailedReason), halt --stack-limit=2g --traditional
+2025-08-11 11:47:35,957 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): generate_detailed_reasoning('case_18fbff79_114735', DetailedReason)
+2025-08-11 11:47:35,957 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmp9kxp4e2g.pl'], findall(Rule, applicable_rule('case_18fbff79_114735', Rule, legal_aid), Rules), halt --stack-limit=2g --traditional
+2025-08-11 11:47:36,023 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Prolog query successful (attempt 1): findall(Rule, applicable_rule('case_18fbff79_114735', Rule, legal_aid), Rules)
+2025-08-11 11:47:36,023 - hybex_system.prolog_engine - INFO - [Session:18fbff79] Comprehensive legal analysis complete for case_18fbff79_114735: Eligible=True, Confidence=0.85

@@ -322,7 +322,6 @@ class ModelTrainer:
         labels = np.array(labels)
         
         if task_type == "domain_classification":
-            # Multi-label metrics
             accuracy = accuracy_score(labels, predictions)
             f1 = f1_score(labels, predictions, average='macro', zero_division=0)
             precision = precision_score(labels, predictions, average='macro', zero_division=0)
@@ -335,10 +334,9 @@ class ModelTrainer:
                 logger.warning(f"Could not generate classification report for domain classification: {e}")
                 class_report = {}
             
-            # Corrected: Set confusion matrix to None for multi-label as it's not a single 2x2 matrix
-            cm = None 
+            cm = None
             
-        else: # eligibility_prediction (binary)
+        else:
             accuracy = accuracy_score(labels, predictions)
             f1 = f1_score(labels, predictions, zero_division=0)
             precision = precision_score(labels, predictions, zero_division=0)
@@ -351,14 +349,15 @@ class ModelTrainer:
                 logger.warning(f"Could not generate classification report for eligibility prediction: {e}")
                 class_report = {}
 
+            # Changed to store the NumPy array directly
             cm = confusion_matrix(labels, predictions)
-        
+            
         return ModelMetrics(
             accuracy=accuracy,
             f1_score=f1,
             precision=precision,
             recall=recall,
-            loss=0.0,  # Will be set separately during training loop
+            loss=0.0,
             classification_report=class_report,
             confusion_matrix=cm
         )

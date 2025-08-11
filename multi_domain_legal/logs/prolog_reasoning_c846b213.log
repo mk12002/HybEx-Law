@@ -1,0 +1,18 @@
+2025-08-07 16:17:21,376 - hybex_system.prolog_engine - INFO - [Session:c846b213] Added file handler to PrologEngine logger.
+2025-08-07 16:17:21,376 - hybex_system.prolog_engine - INFO - [Session:c846b213] ======================================================================
+2025-08-07 16:17:21,376 - hybex_system.prolog_engine - INFO - [Session:c846b213] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-07 16:17:21,376 - hybex_system.prolog_engine - INFO - [Session:c846b213] Session ID: c846b213
+2025-08-07 16:17:21,381 - hybex_system.prolog_engine - INFO - [Session:c846b213] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-07 16:17:21,382 - hybex_system.prolog_engine - INFO - [Session:c846b213] ======================================================================
+2025-08-07 16:17:21,383 - hybex_system.prolog_engine - INFO - [Session:c846b213] Attempting to load rules from: d:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-07 16:17:21,384 - hybex_system.prolog_engine - INFO - [Session:c846b213] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-07 16:17:21,384 - hybex_system.prolog_engine - INFO - [Session:c846b213] Fixed 2 Prolog syntax issues: 'not' -> '\+'
+2025-08-07 16:17:21,384 - hybex_system.prolog_engine - INFO - [Session:c846b213] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-07 16:17:21,390 - hybex_system.prolog_engine - INFO - [Session:c846b213] Initialized Comprehensive PrologEngine (Session: c846b213, Available: True)
+2025-08-07 16:17:21,390 - hybex_system.prolog_engine - INFO - [Session:c846b213] Loaded 9 rule categories with 162 total rules
+2025-08-07 16:17:21,390 - hybex_system.prolog_engine - INFO - [Session:c846b213] Comprehensive rules actually loaded: True
+2025-08-07 16:17:31,418 - hybex_system.prolog_engine - ERROR - [Session:c846b213] Prolog query timeout (attempt 1): eligible_with_confidence('test_case', Eligible, Confidence)
+2025-08-07 16:17:41,444 - hybex_system.prolog_engine - ERROR - [Session:c846b213] Prolog query timeout (attempt 2): eligible_with_confidence('test_case', Eligible, Confidence)
+2025-08-07 16:17:51,475 - hybex_system.prolog_engine - ERROR - [Session:c846b213] Prolog query timeout (attempt 3): eligible_with_confidence('test_case', Eligible, Confidence)
+2025-08-07 16:17:51,480 - hybex_system.prolog_engine - INFO - [Session:c846b213] Cleaning up PrologEngine session c846b213
+2025-08-07 16:17:51,481 - hybex_system.prolog_engine - INFO - [Session:c846b213] PrologEngine cleanup completed

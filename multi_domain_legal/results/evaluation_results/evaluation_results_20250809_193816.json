@@ -1,0 +1,518 @@
+{
+  "timestamp": "2025-08-09T19:38:16.248653",
+  "overall_status": "Completed",
+  "neural_metrics": {
+    "domain_classifier": {
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "loss": 0.0006959726964537205,
+      "classification_report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1054.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 796.0
+        },
+        "2": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 592.0
+        },
+        "3": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 442.0
+        },
+        "4": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 323.0
+        },
+        "micro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 3207.0
+        },
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 3207.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 3207.0
+        },
+        "samples avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 3207.0
+        }
+      },
+      "confusion_matrix": null
+    },
+    "eligibility_predictor": {
+      "accuracy": 0.8441269841269842,
+      "f1_score": 0.8009564745030862,
+      "precision": 0.8647410895561536,
+      "recall": 0.7763704801332654,
+      "loss": 0.4088175039399754,
+      "classification_report": {
+        "0.0": {
+          "precision": 0.9003021148036254,
+          "recall": 0.5837414299706171,
+          "f1-score": 0.7082590612002376,
+          "support": 1021.0
+        },
+        "1.0": {
+          "precision": 0.8291800643086816,
+          "recall": 0.9689995302959136,
+          "f1-score": 0.8936538878059346,
+          "support": 2129.0
+        },
+        "accuracy": 0.8441269841269842,
+        "macro avg": {
+          "precision": 0.8647410895561536,
+          "recall": 0.7763704801332654,
+          "f1-score": 0.8009564745030862,
+          "support": 3150.0
+        },
+        "weighted avg": {
+          "precision": 0.8522326400405349,
+          "recall": 0.8441269841269842,
+          "f1-score": 0.8335624217854849,
+          "support": 3150.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          596,
+          425
+        ],
+        [
+          66,
+          2063
+        ]
+      ]
+    }
+  },
+  "prolog_metrics": {
+    "accuracy": 0.34,
+    "f1_score": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "classification_report": {
+      "False": {
+        "precision": 0.34,
+        "recall": 1.0,
+        "f1-score": 0.5074626865671642,
+        "support": 34.0
+      },
+      "True": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 66.0
+      },
+      "accuracy": 0.34,
+      "macro avg": {
+        "precision": 0.17,
+        "recall": 0.5,
+        "f1-score": 0.2537313432835821,
+        "support": 100.0
+      },
+      "weighted avg": {
+        "precision": 0.11560000000000001,
+        "recall": 0.34,
+        "f1-score": 0.17253731343283582,
+        "support": 100.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        34,
+        0
+      ],
+      [
+        66,
+        0
+      ]
+    ],
+    "evaluated_samples": 100
+  },
+  "hybrid_metrics": {
+    "accuracy": 0.82,
+    "f1_score": 0.8767123287671232,
+    "precision": 0.8,
+    "recall": 0.9696969696969697,
+    "classification_report": {
+      "False": {
+        "precision": 0.9,
+        "recall": 0.5294117647058824,
+        "f1-score": 0.6666666666666666,
+        "support": 34.0
+      },
+      "True": {
+        "precision": 0.8,
+        "recall": 0.9696969696969697,
+        "f1-score": 0.8767123287671232,
+        "support": 66.0
+      },
+      "accuracy": 0.82,
+      "macro avg": {
+        "precision": 0.8500000000000001,
+        "recall": 0.749554367201426,
+        "f1-score": 0.7716894977168949,
+        "support": 100.0
+      },
+      "weighted avg": {
+        "precision": 0.8340000000000001,
+        "recall": 0.82,
+        "f1-score": 0.805296803652968,
+        "support": 100.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        18,
+        16
+      ],
+      [
+        2,
+        64
+      ]
+    ],
+    "evaluated_samples": 100
+  },
+  "component_agreement": {
+    "neural_prolog_agreement_rate": 0.2,
+    "total_hybrid_samples": 100,
+    "neural_accuracy": 0.82,
+    "prolog_accuracy": 0.34
+  },
+  "error_analysis": [
+    {
+      "sample_id": "sample_12893",
+      "query": "I am a separated wife but husband is stalking me and sexual abuse also happening and threatening with photos/videos. What is provision for maintenance and compensation under Domestic Violence Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8324077129364014,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_11445",
+      "query": "I am security guard and have been working in manufacturing unit for 1 year. not paying overtime despite 10-12 hours daily work. Can I file complaint with Labor Commissioner for wage recovery?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8942112326622009,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_17714",
+      "query": "While working as contract laborer at construction site, company suddenly terminated contract without notice. Is remedy available against unfair termination? under labor laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8510540127754211,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_11862",
+      "query": "I am factory worker and have been working in construction company for 1 year. sudden termination without notice period and due process. Can I take separate enforcement action for PF/ESI non-compliance?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8581493496894836,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_14765",
+      "query": "During net banking usage, insurance claim rejected without proper reason. I have suffered loss of Rs 100000. Is cyber crime police complaint and consumer case together possible?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7700846791267395,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_16015",
+      "query": "I booked commercial space from reputed builder by paying Rs 50 lakh advance. Amenities promised in brochure are not being provided. How to get project completion timeline enforced",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8068195581436157,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_10611",
+      "query": "Sir, I am a construction worker earning monthly 5000 rupees. Employer has not deducted PF and ESI for years. Am I eligible for legal aid? I belong to SC community.",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.09252611547708511,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_17737",
+      "query": "I am woman professional in consulting firm and at workplace boss is making physical contact without consent creating uncomfortable environment. Can I file complaint in Internal Complaints Committee? under POSH Act 2013?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8368192911148071,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_20352",
+      "query": "We are Christian married under Indian Christian Marriage Act. Marriage was not consummated due to impotency issues. Can we get divorce under our personal law?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7797689437866211,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_17309",
+      "query": "Respected sir, I am daily wage laborer unemployed since corona pandemic. Educational institute discriminating against me for being disabled. Can I file court case without paying lawyer fees?",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.11684116721153259,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_14603",
+      "query": "While working as part-time employee at retail store, safety equipment not provided for hazardous work. Are collective bargaining rights available to contractual workers? under labor laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8472198247909546,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_14772",
+      "query": "During MRI/CT scan at diagnostic center, insurance was cashless approved but they forced extra payment. I spent Rs 10 lakh. How to file medical negligence case in consumer court?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7895681858062744,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_35",
+      "query": "During marriage catering service, non-veg item served in vegetarian food. Had to stay admitted in hospital for 1 week. Can I file criminal case also for food safety violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8520860075950623,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_1658",
+      "query": "I am female domestic worker in residential society and at workplace sexual favors are being demanded for career advancement. What compensation amount can I get for harassment? under POSH Act 2013?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8281856775283813,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_8356",
+      "query": "After divorce/separation court gave joint custody but ex-husband is not cooperating. Can father's parental rights be terminated under Guardians and Wards Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8041946291923523,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_8777",
+      "query": "I booked 2 BHK flat from local builder by paying Rs 75 lakh advance. Amenities promised in brochure are not being provided. How to file complaint with RERA authority",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8253822326660156,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_12037",
+      "query": "I am office staff and have been working in private company for 1 year. deducting PF and ESI but not contributing. Can I file salary recovery case under Payment of Wages Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8448783755302429,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_18020",
+      "query": "After publishing newspaper article, media house was pressured to remove content. Can I apply for anticipatory bail in speech cases? under Article 19(1)(a) freedom of speech?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7351870536804199,
+      "prolog_pred": false,
+      "prolog_confidence": 0.3,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    }
+  ],
+  "sample_size": 3150,
+  "config_summary": "HybEx-Law Config - Data: verified_fallback, Models: 3, Legal Sources: Unknown"
+}

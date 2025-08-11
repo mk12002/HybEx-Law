@@ -11,6 +11,58 @@ This module contains Prolog rules for legal reasoning across all domains:
 
 MULTI_DOMAIN_LEGAL_RULES = """
 % ============================================================================
+% FOUNDATIONAL PREDICATES AND FACTS
+% ============================================================================
+
+% Foundational predicates that are referenced throughout the rules
+% These must be defined to avoid "Unknown procedure" errors
+
+% Vulnerable group definitions
+vulnerable_group(Person, women) :-
+    gender(Person, female).
+
+vulnerable_group(Person, children) :-
+    age(Person, Age),
+    Age < 18.
+
+vulnerable_group(Person, disabled) :-
+    disability_status(Person, true).
+
+vulnerable_group(Person, industrial_workers) :-
+    occupation(Person, industrial_worker).
+
+vulnerable_group(Person, senior_citizens) :-
+    age(Person, Age),
+    Age >= 60.
+
+% Basic person predicate - true for any valid case identifier
+person(Person) :-
+    atom(Person).
+
+% Missing reasoning predicates
+generate_detailed_reasoning(Person, 'Legal analysis completed based on available facts') :-
+    person(Person).
+
+applicable_rule(Person, legal_aid_income_check, legal_aid) :-
+    income_eligible(Person).
+
+applicable_rule(Person, legal_aid_categorical, legal_aid) :-
+    categorically_eligible(Person).
+
+applicable_rule(Person, basic_eligibility, legal_aid) :-
+    eligible_for_legal_aid(Person).
+
+% Primary eligibility reason
+primary_eligibility_reason(Person, 'Income eligibility met') :-
+    income_eligible(Person), !.
+
+primary_eligibility_reason(Person, 'Categorical eligibility met') :-
+    categorically_eligible(Person), !.
+
+primary_eligibility_reason(Person, 'No eligibility criteria met') :-
+    person(Person).
+
+% ============================================================================
 % LEGAL AID DOMAIN RULES
 % ============================================================================
 
@@ -339,6 +391,50 @@ employment_pil_standing(Person, Issue) :-
 employment_related_issue(widespread_minimum_wage_violation).
 employment_related_issue(systemic_workplace_harassment).
 employment_related_issue(mass_illegal_terminations).
+
+% ============================================================================
+% REASONING RULES (Manually added for completeness)
+% ============================================================================
+
+% Primary reason for eligibility
+primary_eligibility_reason(Person, Reason) :-
+    categorically_eligible(Person),
+    social_category(Person, Category),
+    format(atom(Reason), 'Categorically eligible: Due to %w status.', [Category]).
+
+primary_eligibility_reason(Person, Reason) :-
+    \\+ categorically_eligible(Person),
+    income_eligible(Person),
+    annual_income(Person, Income),
+    income_threshold(Category, Threshold),
+    format(atom(Reason), 'Income eligible: Annual income Rs. %w is below threshold Rs. %w.', [Income, Threshold]).
+
+primary_eligibility_reason(Person, Reason) :-
+    \\+ eligible_for_legal_aid(Person),
+    Reason = 'Not eligible: Does not meet income or categorical criteria.'.
+
+% Detailed reasoning
+generate_detailed_reasoning(Person, DetailedReason) :-
+    findall(Reason, individual_reason(Person, Reason), Reasons),
+    (Reasons = [] -> DetailedReason = 'No specific detailed reasons found';
+     atomic_list_concat(Reasons, '; ', DetailedReason)).
+
+individual_reason(Person, Reason) :-
+    annual_income(Person, Income),
+    income_threshold(Category, Threshold),
+    Income =< Threshold,
+    format(atom(Reason), 'Income condition met: Annual income (Rs. %w) is within the legal aid threshold (Rs. %w).', [Income, Threshold]).
+
+individual_reason(Person, Reason) :-
+    social_category(Person, Category),
+    (Category = sc; Category = st; Category = bpl),
+    format(atom(Reason), 'Categorical eligibility: Applicant belongs to %w, which grants automatic legal aid.', [Category]).
+
+individual_reason(Person, Reason) :-
+    case_type(Person, Type),
+    covered_case_type(Type),
+    format(atom(Reason), 'Case type covered: Legal aid is applicable for %w cases.', [Type]).
+
 
 % ============================================================================
 % UTILITY RULES

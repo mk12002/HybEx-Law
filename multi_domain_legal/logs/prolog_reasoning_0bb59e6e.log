@@ -1,0 +1,63 @@
+2025-08-11 12:32:06,804 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Added file handler to PrologEngine logger.
+2025-08-11 12:32:06,805 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] ======================================================================
+2025-08-11 12:32:06,806 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-11 12:32:06,807 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Session ID: 0bb59e6e
+2025-08-11 12:32:06,810 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-11 12:32:06,812 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] ======================================================================
+2025-08-11 12:32:06,813 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-11 12:32:06,815 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Attempting to load rules from: d:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-11 12:32:06,838 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-11 12:32:06,844 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-11 12:32:06,860 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Initialized Comprehensive PrologEngine (Session: 0bb59e6e, Available: True)
+2025-08-11 12:32:06,860 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Loaded 9 rule categories with 145 total rules
+2025-08-11 12:32:06,860 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Comprehensive rules actually loaded: True
+2025-08-11 12:32:06,866 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] 🧠 Starting comprehensive legal analysis for case_0bb59e6e_123206
+2025-08-11 12:32:06,866 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] 🎯 Detected domain 'general_legal_aid' for case type ''
+2025-08-11 12:32:06,867 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-11 12:32:06,867 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Generated 12 comprehensive Prolog facts for case_0bb59e6e_123206
+2025-08-11 12:32:06,867 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] 📂 Selected files for domain 'general_legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl']
+2025-08-11 12:32:06,867 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] ✅ Loaded modular file: foundational_rules_clean.pl
+2025-08-11 12:32:06,873 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] ✅ Loaded modular file: legal_aid_clean_v2.pl
+2025-08-11 12:32:06,874 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] 🔍 DEBUG: Modular Prolog file content:
+2025-08-11 12:32:06,911 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Modular file (6959 chars):
+% HybEx-Law Modular Legal Reasoning Session: 0bb59e6e
+% Domain: general_legal_aid
+% Generated: 2025-08-11T12:32:06.867951
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+% LOADING: foundational_rules_clean.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND UTILITY RULES - CORRECTED AND ROBUST
+% This file contains only generic, reusable predicates.
+% All case-specific facts (e.g., age, income) must be provided by Python.
+% ================================================================...
+2025-08-11 12:32:06,911 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] ✅ Created MODULAR Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp54dvagsy.pl with 2 domain modules
+2025-08-11 12:32:06,912 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] 🎯 Ultra-fast eligibility check for case_0bb59e6e_123206
+2025-08-11 12:32:06,914 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmp54dvagsy.pl'], eligible_for_legal_aid('case_0bb59e6e_123206'), halt --stack-limit=2g --traditional
+2025-08-11 12:32:06,969 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Prolog query successful (attempt 1): eligible_for_legal_aid('case_0bb59e6e_123206')
+2025-08-11 12:32:06,969 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] ✅ FAST SUCCESS: Basic eligibility confirmed for case_0bb59e6e_123206
+2025-08-11 12:32:06,971 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp54dvagsy.pl'), primary_eligibility_reason('case_0bb59e6e_123206', Reason), format('Reason:~q~n', [Reason]), halt.
+2025-08-11 12:32:07,053 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] DEBUG: Primary reasoning results: [{'Reason': 'Eligible due to vulnerable group status.'}]
+2025-08-11 12:32:07,053 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] DEBUG: Parsed primary_reason: Eligible due to vulnerable group status.
+2025-08-11 12:32:07,053 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp54dvagsy.pl'), generate_detailed_reasoning('case_0bb59e6e_123206', DetailedReason), format('DetailedReason:~q~n', [DetailedReason]), halt.
+2025-08-11 12:32:07,144 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] DEBUG: Detailed reasoning results: [{'DetailedReason': 'Eligible due to vulnerable group status. Vulnerable group eligibility under Section 12 of Legal Services Authorities Act for women, children, seniors, disabled, etc.'}]
+2025-08-11 12:32:07,145 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] DEBUG: Parsed detailed_reason: Eligible due to vulnerable group status. Vulnerable group eligibility under Section 12 of Legal Services Authorities Act for women, children, seniors, disabled, etc.
+2025-08-11 12:32:07,146 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp54dvagsy.pl'), findall(Rule, applicable_rule('case_0bb59e6e_123206', Rule, legal_aid), Rules), format('Rules:~q~n', [Rules]), halt.
+2025-08-11 12:32:07,225 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] DEBUG: Rules results: [{'Rules': '[vulnerable_group_eligibility,vulnerable_group_eligibility,vulnerable_group_eligibility,income_based_eligibility]'}]
+2025-08-11 12:32:07,225 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] DEBUG: Raw rules string: vulnerable_group_eligibility,vulnerable_group_eligibility,vulnerable_group_eligibility,income_based_eligibility
+2025-08-11 12:32:07,225 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] DEBUG: Parsed applicable_rules: ['vulnerable_group_eligibility', 'vulnerable_group_eligibility', 'vulnerable_group_eligibility', 'income_based_eligibility']
+2025-08-11 12:32:07,233 - hybex_system.prolog_engine - INFO - [Session:0bb59e6e] Comprehensive legal analysis complete for case_0bb59e6e_123206: Eligible=True, Confidence=0.90

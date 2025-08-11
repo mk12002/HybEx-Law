@@ -1,0 +1,14 @@
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] Added file handler to PrologEngine logger.
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] ======================================================================
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] Session ID: b51a798a
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] ======================================================================
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] Attempting to load rules from: C:\Users\Student\Documents\22BLC1058\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] Initialized Comprehensive PrologEngine (Session: b51a798a, Available: True)
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] Loaded 9 rule categories with 162 total rules
+2025-08-05 07:34:09,152 - hybex_system.prolog_engine - INFO - [Session:b51a798a] Comprehensive rules actually loaded: True
+2025-08-05 07:36:26,309 - hybex_system.prolog_engine - INFO - [Session:b51a798a] Cleaning up PrologEngine session b51a798a
+2025-08-05 07:36:26,309 - hybex_system.prolog_engine - INFO - [Session:b51a798a] PrologEngine cleanup completed

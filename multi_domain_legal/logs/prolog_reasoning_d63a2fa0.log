@@ -1,0 +1,316 @@
+2025-08-09 20:37:54,787 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Added file handler to PrologEngine logger.
+2025-08-09 20:37:54,788 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] ======================================================================
+2025-08-09 20:37:54,788 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-09 20:37:54,788 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Session ID: d63a2fa0
+2025-08-09 20:37:54,788 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-09 20:37:54,788 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] ======================================================================
+2025-08-09 20:37:54,788 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-09 20:37:54,788 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Attempting to load rules from: D:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-09 20:37:54,788 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-09 20:37:54,788 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-09 20:37:54,795 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Initialized Comprehensive PrologEngine (Session: d63a2fa0, Available: True)
+2025-08-09 20:37:54,795 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Loaded 9 rule categories with 145 total rules
+2025-08-09 20:37:54,795 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Comprehensive rules actually loaded: True
+2025-08-09 20:37:54,795 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 🧠 Starting comprehensive legal analysis for case_d63a2fa0_203754
+2025-08-09 20:37:54,796 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 🎯 Detected domain 'general_legal_aid' for case type ''
+2025-08-09 20:37:54,796 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-09 20:37:54,796 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Generated 3 comprehensive Prolog facts for case_d63a2fa0_203754
+2025-08-09 20:37:54,796 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 📋 Loading full rule set for domain 'general_legal_aid' to ensure all predicates are available
+2025-08-09 20:37:54,797 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-09 20:37:54,797 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Attempting to load rules from: D:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-09 20:37:54,798 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-09 20:37:54,799 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] ✅ Created domain-specific Prolog file for 'general_legal_aid': C:\Users\OMEN19~1\AppData\Local\Temp\tmpdxfk7zw_.pl with 3 facts.
+2025-08-09 20:37:54,921 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpdxfk7zw_.pl'], eligible_with_confidence('case_d63a2fa0_203754', Eligible, Confidence).: '<meta-call>'/1: Unknown procedure: eligible_with_confidence/3
+2025-08-09 20:37:54,921 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] Failed to get confident eligibility from Prolog. Trying basic 'eligible_for_legal_aid'.
+2025-08-09 20:37:54,976 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpdxfk7zw_.pl'], eligible_for_legal_aid('case_d63a2fa0_203754').: income_eligible/1: Unknown procedure: annual_income/2
+2025-08-09 20:37:55,081 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpdxfk7zw_.pl'], primary_eligibility_reason('case_d63a2fa0_203754', Reason).: format/3: Format error: too many arguments
+2025-08-09 20:37:55,171 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpdxfk7zw_.pl'], generate_detailed_reasoning('case_d63a2fa0_203754', DetailedReason).: individual_reason/2: Unknown procedure: annual_income/2
+2025-08-09 20:37:55,226 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpdxfk7zw_.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpdxfk7zw_.pl'], findall(Rule, applicable_rule('case_d63a2fa0_203754', Rule, legal_aid), Rules).: findall_loop/4: Unknown procedure: applicable_rule/3
+2025-08-09 20:37:55,226 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Comprehensive legal analysis complete for case_d63a2fa0_203754: Eligible=False, Confidence=0.30
+2025-08-09 20:37:55,226 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 🧠 Starting comprehensive legal analysis for case_d63a2fa0_203755
+2025-08-09 20:37:55,226 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 🎯 Detected domain 'general_legal_aid' for case type ''
+2025-08-09 20:37:55,226 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-09 20:37:55,234 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Generated 3 comprehensive Prolog facts for case_d63a2fa0_203755
+2025-08-09 20:37:55,234 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 📋 Loading full rule set for domain 'general_legal_aid' to ensure all predicates are available
+2025-08-09 20:37:55,234 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-09 20:37:55,234 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Attempting to load rules from: D:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-09 20:37:55,234 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-09 20:37:55,234 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] ✅ Created domain-specific Prolog file for 'general_legal_aid': C:\Users\OMEN19~1\AppData\Local\Temp\tmptbuprksv.pl with 3 facts.
+2025-08-09 20:37:55,338 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmptbuprksv.pl'], eligible_with_confidence('case_d63a2fa0_203755', Eligible, Confidence).: '<meta-call>'/1: Unknown procedure: eligible_with_confidence/3
+2025-08-09 20:37:55,338 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] Failed to get confident eligibility from Prolog. Trying basic 'eligible_for_legal_aid'.
+2025-08-09 20:37:55,415 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmptbuprksv.pl'], eligible_for_legal_aid('case_d63a2fa0_203755').: income_eligible/1: Unknown procedure: annual_income/2
+2025-08-09 20:37:55,491 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmptbuprksv.pl'], primary_eligibility_reason('case_d63a2fa0_203755', Reason).: categorically_eligible/1: Unknown procedure: vulnerable_group/2
+2025-08-09 20:37:55,555 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmptbuprksv.pl'], generate_detailed_reasoning('case_d63a2fa0_203755', DetailedReason).: individual_reason/2: Unknown procedure: annual_income/2
+2025-08-09 20:37:55,632 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmptbuprksv.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmptbuprksv.pl'], findall(Rule, applicable_rule('case_d63a2fa0_203755', Rule, legal_aid), Rules).: findall_loop/4: Unknown procedure: applicable_rule/3
+2025-08-09 20:37:55,633 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Comprehensive legal analysis complete for case_d63a2fa0_203755: Eligible=False, Confidence=0.30
+2025-08-09 20:37:55,633 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 🧠 Starting comprehensive legal analysis for case_d63a2fa0_203755
+2025-08-09 20:37:55,633 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 🎯 Detected domain 'general_legal_aid' for case type ''
+2025-08-09 20:37:55,634 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-09 20:37:55,634 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Generated 3 comprehensive Prolog facts for case_d63a2fa0_203755
+2025-08-09 20:37:55,634 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] 📋 Loading full rule set for domain 'general_legal_aid' to ensure all predicates are available
+2025-08-09 20:37:55,635 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-09 20:37:55,635 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Attempting to load rules from: D:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-09 20:37:55,635 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-09 20:37:55,635 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] ✅ Created domain-specific Prolog file for 'general_legal_aid': C:\Users\OMEN19~1\AppData\Local\Temp\tmpa_8ggwg_.pl with 3 facts.
+2025-08-09 20:37:55,719 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpa_8ggwg_.pl'], eligible_with_confidence('case_d63a2fa0_203755', Eligible, Confidence).: '<meta-call>'/1: Unknown procedure: eligible_with_confidence/3
+2025-08-09 20:37:55,719 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] Failed to get confident eligibility from Prolog. Trying basic 'eligible_for_legal_aid'.
+2025-08-09 20:37:55,788 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpa_8ggwg_.pl'], eligible_for_legal_aid('case_d63a2fa0_203755').: income_eligible/1: Unknown procedure: annual_income/2
+2025-08-09 20:37:55,877 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpa_8ggwg_.pl'], primary_eligibility_reason('case_d63a2fa0_203755', Reason).: categorically_eligible/1: Unknown procedure: vulnerable_group/2
+2025-08-09 20:37:55,975 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpa_8ggwg_.pl'], generate_detailed_reasoning('case_d63a2fa0_203755', DetailedReason).: individual_reason/2: Unknown procedure: annual_income/2
+2025-08-09 20:37:56,041 - hybex_system.prolog_engine - WARNING - [Session:d63a2fa0] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpa_8ggwg_.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpa_8ggwg_.pl'], findall(Rule, applicable_rule('case_d63a2fa0_203755', Rule, legal_aid), Rules).: findall_loop/4: Unknown procedure: applicable_rule/3
+2025-08-09 20:37:56,041 - hybex_system.prolog_engine - INFO - [Session:d63a2fa0] Comprehensive legal analysis complete for case_d63a2fa0_203755: Eligible=False, Confidence=0.30
