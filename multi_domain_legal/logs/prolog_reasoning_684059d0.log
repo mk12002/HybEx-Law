@@ -1,0 +1,139 @@
+2025-08-12 11:39:46,742 - hybex_system.prolog_engine - INFO - [Session:684059d0] Added file handler to PrologEngine logger.
+2025-08-12 11:39:46,742 - hybex_system.prolog_engine - INFO - [Session:684059d0] ======================================================================
+2025-08-12 11:39:46,742 - hybex_system.prolog_engine - INFO - [Session:684059d0] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-12 11:39:46,742 - hybex_system.prolog_engine - INFO - [Session:684059d0] Session ID: 684059d0
+2025-08-12 11:39:46,742 - hybex_system.prolog_engine - INFO - [Session:684059d0] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-12 11:39:46,742 - hybex_system.prolog_engine - INFO - [Session:684059d0] ======================================================================
+2025-08-12 11:39:46,742 - hybex_system.prolog_engine - INFO - [Session:684059d0] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-12 11:39:46,742 - hybex_system.prolog_engine - INFO - [Session:684059d0] Attempting to load rules from: C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-12 11:39:46,742 - hybex_system.prolog_engine - INFO - [Session:684059d0] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-12 11:39:46,742 - hybex_system.prolog_engine - INFO - [Session:684059d0] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-12 11:39:46,752 - hybex_system.prolog_engine - INFO - [Session:684059d0] Initialized Comprehensive PrologEngine (Session: 684059d0, Available: True)
+2025-08-12 11:39:46,753 - hybex_system.prolog_engine - INFO - [Session:684059d0] Loaded 9 rule categories with 145 total rules
+2025-08-12 11:39:46,753 - hybex_system.prolog_engine - INFO - [Session:684059d0] Comprehensive rules actually loaded: True
+2025-08-12 11:39:46,753 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🧠 Starting comprehensive legal analysis for case_684059d0_113946
+2025-08-12 11:39:46,754 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🎯 Using domain-specific rules for: ['legal_aid']
+2025-08-12 11:39:46,754 - hybex_system.prolog_engine - INFO - [Session:684059d0] Generated 12 comprehensive Prolog facts for case_684059d0_113946
+2025-08-12 11:39:46,754 - hybex_system.prolog_engine - INFO - [Session:684059d0] 📂 Selected files for domain 'legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl']
+2025-08-12 11:39:46,754 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ Loaded modular file: foundational_rules_clean.pl
+2025-08-12 11:39:46,754 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ Loaded modular file: legal_aid_clean_v2.pl
+2025-08-12 11:39:46,754 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🔍 DEBUG: Modular Prolog file content:
+2025-08-12 11:39:46,754 - hybex_system.prolog_engine - INFO - [Session:684059d0] Modular file (6951 chars):
+% HybEx-Law Modular Legal Reasoning Session: 684059d0
+% Domain: legal_aid
+% Generated: 2025-08-12T11:39:46.754471
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+% LOADING: foundational_rules_clean.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND UTILITY RULES - CORRECTED AND ROBUST
+% This file contains only generic, reusable predicates.
+% All case-specific facts (e.g., age, income) must be provided by Python.
+% ========================================================================...
+2025-08-12 11:39:46,759 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ Created MODULAR Prolog file: C:\Users\Student\AppData\Local\Temp\tmp0a2ypqvf.pl with 2 domain modules
+2025-08-12 11:39:46,759 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🎯 Ultra-fast eligibility check for case_684059d0_113946
+2025-08-12 11:39:46,759 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g ['C:/Users/Student/AppData/Local/Temp/tmp0a2ypqvf.pl'], eligible_for_legal_aid('case_684059d0_113946'), halt --stack-limit=2g --traditional
+2025-08-12 11:39:46,792 - hybex_system.prolog_engine - INFO - [Session:684059d0] Prolog query successful (attempt 1): eligible_for_legal_aid('case_684059d0_113946')
+2025-08-12 11:39:46,792 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ FAST SUCCESS: Basic eligibility confirmed for case_684059d0_113946
+2025-08-12 11:39:46,792 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/Student/AppData/Local/Temp/tmp0a2ypqvf.pl'), primary_eligibility_reason('case_684059d0_113946', Reason), format('Reason:~q~n', [Reason]), halt.
+2025-08-12 11:39:46,837 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/Student/AppData/Local/Temp/tmp0a2ypqvf.pl'), generate_detailed_reasoning('case_684059d0_113946', DetailedReason), format('DetailedReason:~q~n', [DetailedReason]), halt.
+2025-08-12 11:39:46,870 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/Student/AppData/Local/Temp/tmp0a2ypqvf.pl'), findall(Rule, applicable_rule('case_684059d0_113946', Rule, legal_aid), Rules), format('Rules:~q~n', [Rules]), halt.
+2025-08-12 11:39:46,903 - hybex_system.prolog_engine - INFO - [Session:684059d0] Comprehensive legal analysis complete for case_684059d0_113946: Eligible=True, Confidence=0.90
+2025-08-12 11:39:46,937 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🧠 Starting comprehensive legal analysis for case_684059d0_113946
+2025-08-12 11:39:46,937 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🎯 Using domain-specific rules for: ['legal_aid']
+2025-08-12 11:39:46,938 - hybex_system.prolog_engine - INFO - [Session:684059d0] Generated 13 comprehensive Prolog facts for case_684059d0_113946
+2025-08-12 11:39:46,939 - hybex_system.prolog_engine - INFO - [Session:684059d0] 📂 Selected files for domain 'legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl']
+2025-08-12 11:39:46,939 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ Loaded modular file: foundational_rules_clean.pl
+2025-08-12 11:39:46,940 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ Loaded modular file: legal_aid_clean_v2.pl
+2025-08-12 11:39:46,942 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🔍 DEBUG: Modular Prolog file content:
+2025-08-12 11:39:46,942 - hybex_system.prolog_engine - INFO - [Session:684059d0] Modular file (6999 chars):
+% HybEx-Law Modular Legal Reasoning Session: 684059d0
+% Domain: legal_aid
+% Generated: 2025-08-12T11:39:46.939254
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+% LOADING: foundational_rules_clean.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND UTILITY RULES - CORRECTED AND ROBUST
+% This file contains only generic, reusable predicates.
+% All case-specific facts (e.g., age, income) must be provided by Python.
+% ========================================================================...
+2025-08-12 11:39:46,943 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ Created MODULAR Prolog file: C:\Users\Student\AppData\Local\Temp\tmpr326xydc.pl with 2 domain modules
+2025-08-12 11:39:46,943 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🎯 Ultra-fast eligibility check for case_684059d0_113946
+2025-08-12 11:39:46,943 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g ['C:/Users/Student/AppData/Local/Temp/tmpr326xydc.pl'], eligible_for_legal_aid('case_684059d0_113946'), halt --stack-limit=2g --traditional
+2025-08-12 11:39:46,976 - hybex_system.prolog_engine - INFO - [Session:684059d0] Prolog query successful (attempt 1): eligible_for_legal_aid('case_684059d0_113946')
+2025-08-12 11:39:46,976 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ FAST SUCCESS: Basic eligibility confirmed for case_684059d0_113946
+2025-08-12 11:39:46,976 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/Student/AppData/Local/Temp/tmpr326xydc.pl'), primary_eligibility_reason('case_684059d0_113946', Reason), format('Reason:~q~n', [Reason]), halt.
+2025-08-12 11:39:47,022 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/Student/AppData/Local/Temp/tmpr326xydc.pl'), generate_detailed_reasoning('case_684059d0_113946', DetailedReason), format('DetailedReason:~q~n', [DetailedReason]), halt.
+2025-08-12 11:39:47,053 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/Student/AppData/Local/Temp/tmpr326xydc.pl'), findall(Rule, applicable_rule('case_684059d0_113946', Rule, legal_aid), Rules), format('Rules:~q~n', [Rules]), halt.
+2025-08-12 11:39:47,087 - hybex_system.prolog_engine - INFO - [Session:684059d0] Comprehensive legal analysis complete for case_684059d0_113946: Eligible=True, Confidence=0.90
+2025-08-12 11:39:47,121 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🧠 Starting comprehensive legal analysis for case_684059d0_113947
+2025-08-12 11:39:47,121 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🎯 Using domain-specific rules for: ['legal_aid']
+2025-08-12 11:39:47,121 - hybex_system.prolog_engine - INFO - [Session:684059d0] Generated 12 comprehensive Prolog facts for case_684059d0_113947
+2025-08-12 11:39:47,128 - hybex_system.prolog_engine - INFO - [Session:684059d0] 📂 Selected files for domain 'legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl']
+2025-08-12 11:39:47,129 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ Loaded modular file: foundational_rules_clean.pl
+2025-08-12 11:39:47,130 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ Loaded modular file: legal_aid_clean_v2.pl
+2025-08-12 11:39:47,132 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🔍 DEBUG: Modular Prolog file content:
+2025-08-12 11:39:47,132 - hybex_system.prolog_engine - INFO - [Session:684059d0] Modular file (6954 chars):
+% HybEx-Law Modular Legal Reasoning Session: 684059d0
+% Domain: legal_aid
+% Generated: 2025-08-12T11:39:47.128230
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+% LOADING: foundational_rules_clean.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND UTILITY RULES - CORRECTED AND ROBUST
+% This file contains only generic, reusable predicates.
+% All case-specific facts (e.g., age, income) must be provided by Python.
+% ========================================================================...
+2025-08-12 11:39:47,133 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ Created MODULAR Prolog file: C:\Users\Student\AppData\Local\Temp\tmpyukbmmxh.pl with 2 domain modules
+2025-08-12 11:39:47,133 - hybex_system.prolog_engine - INFO - [Session:684059d0] 🎯 Ultra-fast eligibility check for case_684059d0_113947
+2025-08-12 11:39:47,133 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g ['C:/Users/Student/AppData/Local/Temp/tmpyukbmmxh.pl'], eligible_for_legal_aid('case_684059d0_113947'), halt --stack-limit=2g --traditional
+2025-08-12 11:39:47,172 - hybex_system.prolog_engine - INFO - [Session:684059d0] Prolog query successful (attempt 1): eligible_for_legal_aid('case_684059d0_113947')
+2025-08-12 11:39:47,172 - hybex_system.prolog_engine - INFO - [Session:684059d0] ✅ FAST SUCCESS: Basic eligibility confirmed for case_684059d0_113947
+2025-08-12 11:39:47,173 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/Student/AppData/Local/Temp/tmpyukbmmxh.pl'), primary_eligibility_reason('case_684059d0_113947', Reason), format('Reason:~q~n', [Reason]), halt.
+2025-08-12 11:39:47,209 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/Student/AppData/Local/Temp/tmpyukbmmxh.pl'), generate_detailed_reasoning('case_684059d0_113947', DetailedReason), format('DetailedReason:~q~n', [DetailedReason]), halt.
+2025-08-12 11:39:47,237 - hybex_system.prolog_engine - INFO - [Session:684059d0] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/Student/AppData/Local/Temp/tmpyukbmmxh.pl'), findall(Rule, applicable_rule('case_684059d0_113947', Rule, legal_aid), Rules), format('Rules:~q~n', [Rules]), halt.
+2025-08-12 11:39:47,285 - hybex_system.prolog_engine - INFO - [Session:684059d0] Comprehensive legal analysis complete for case_684059d0_113947: Eligible=True, Confidence=0.95

@@ -1,3 +1,4 @@
 .github/
 .vscode/
 __pycache__/
+*.pt
