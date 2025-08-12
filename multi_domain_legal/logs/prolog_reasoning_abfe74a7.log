@@ -1,0 +1,91 @@
+2025-08-10 08:47:20,241 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Added file handler to PrologEngine logger.
+2025-08-10 08:47:20,242 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] ======================================================================
+2025-08-10 08:47:20,242 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-10 08:47:20,242 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Session ID: abfe74a7
+2025-08-10 08:47:20,244 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-10 08:47:20,245 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] ======================================================================
+2025-08-10 08:47:20,247 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-10 08:47:20,247 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Attempting to load rules from: d:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-10 08:47:20,251 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-10 08:47:20,254 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-10 08:47:20,270 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Initialized Comprehensive PrologEngine (Session: abfe74a7, Available: True)
+2025-08-10 08:47:20,273 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Loaded 9 rule categories with 145 total rules
+2025-08-10 08:47:20,273 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Comprehensive rules actually loaded: True
+2025-08-10 08:47:20,276 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] 🧠 Starting comprehensive legal analysis for case_abfe74a7_084720
+2025-08-10 08:47:20,277 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] 🎯 Detected domain 'family_law' for case type 'family'
+2025-08-10 08:47:20,277 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] 🎯 Using domain-specific rules for: ['family_law']
+2025-08-10 08:47:20,280 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Generated 6 comprehensive Prolog facts for case_abfe74a7_084720
+2025-08-10 08:47:20,283 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] 🔍 DEBUG: Minimal Prolog file content:
+2025-08-10 08:47:20,324 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] Minimal file (2553 chars):
+% HybEx-Law Minimal Legal Reasoning Session: abfe74a7
+% Domain: family_law
+% Generated: 2025-08-10T08:47:20.283332
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous applicable_rule/3.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous income_threshold/2.
+
+% MINIMAL ESSENTIAL RULES
+member(X, [X|_]).
+member(X, [_|T]) :- member(X, T).
+
+% OPTIMIZED CORE ELIGIBILITY RULES
+eligible_for_legal_aid(Person) :- categorically_eligible(Person), !.
+eligible_for_legal_aid(Person) :- income_eligible(Person), !.
+
+categorically_eligible(Person) :- social_category(Person, sc), !.
+categorically_eligible(Person) :- social_category(Person, st), !.
+categorically_eligible(Person) :- social_category(Person, obc), !.
+
+% DYNAMIC INCOME THRESHOLDS
+income_threshold('general', 500000).
+income_threshold('sc', 800000).
+income_threshold('st', 800000).
+income_threshold('obc', 600000).
+income_threshold('bpl', 0).
+income_threshold('ews', 800000).
+
+% INCOME ELIGIBILITY (dynamic thresholds)
+income_eligible(Person) :-
+    social_category(Person, Category),
+    income_threshold(Category, Threshold),
+    annual_income(Person, Income),
+    Income =< Threshold, !.
+income_eligible(Person) :-
+    \+ social_category(Person, _),
+    income_threshold(general, Threshold),
+    annual_income(Person, Income),
+    Income =< Threshold, !.
+
+% SIMPLE REASONING
+primary_eligibility_reason(Person, 'Eligible: SC/ST/OBC category') :- categorically_eligible(Person), !.
+primary_eligibility_reason(Person, 'Eligible: Income below threshold') :- income_eligible(Person), !.
+primary_eligibility_reason(Person, 'Not eligible') :- \+ eligible_for_legal_aid(Person), !.
+
+generate_detailed_reasoning(Person, 'Legal aid evaluation completed') :- person(Person), !.
+
+% APPLICABLE RULES (to fix missing predicate error)
+applicable_rule(Person, 'categorical_eligibility', legal_aid) :- categorically_eligible(Person), !.
+applicable_rule(Person, 'income_eligibility', legal_aid) :- income_eligible(Person), !.
+applicable_rule(Person, 'not_eligible', legal_aid) :- \+ eligible_for_legal_aid(Person), !.
+applicable_rule(_, _, _) :- fail.
+
+% CASE FACTS
+person('case_abfe74a7_084720').
+annual_income('case_abfe74a7_084720', 250000).
+monthly_income('case_abfe74a7_084720', 20833).
+social_category('case_abfe74a7_084720', sc).
+vulnerable_group('case_abfe74a7_084720', social_category).
+case_type('case_abfe74a7_084720', family).
+
+2025-08-10 08:47:20,326 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] ✅ Created MINIMAL Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpeus0oode.pl with essential rules only
+2025-08-10 08:47:20,327 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] 🎯 Ultra-fast eligibility check for case_abfe74a7_084720
+2025-08-10 08:47:23,334 - hybex_system.prolog_engine - ERROR - [Session:abfe74a7] Prolog query timeout (attempt 1): eligible_for_legal_aid('case_abfe74a7_084720')
+2025-08-10 08:47:23,340 - hybex_system.prolog_engine - INFO - [Session:abfe74a7] ❌ FAST RESULT: Not eligible - Query timeout after 1 attempts
+2025-08-10 08:48:23,364 - hybex_system.prolog_engine - ERROR - [Session:abfe74a7] Prolog query timeout (attempt 1): primary_eligibility_reason('case_abfe74a7_084720', Reason)

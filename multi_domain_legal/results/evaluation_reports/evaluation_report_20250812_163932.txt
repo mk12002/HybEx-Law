@@ -1,0 +1,61 @@
+HybEx-Law System Evaluation Report - 2025-08-12T16:39:32.282937
+================================================================================
+
+📊 Overall Status: Completed
+Total Test Samples: 5850
+
+🧠 Neural Model Performance:
+  - Domain Classifier:
+    Accuracy: 0.8803
+    F1 Score (Macro): 0.9491
+    Precision (Macro): 0.9897
+    Recall (Macro): 0.9147
+    Loss: 0.1049
+  - Eligibility Predictor:
+    Accuracy: 0.5019
+    F1 Score (Macro): 0.5017
+    Precision (Macro): 0.5019
+    Recall (Macro): 0.5019
+    Loss: 0.6936
+
+⚖️ Prolog Reasoning Performance:
+  Accuracy: 0.5000
+  F1 Score: 0.5763
+  Precision: 0.5231
+  Recall: 0.6415
+
+🤝 Hybrid System Performance:
+  Accuracy: 0.5100
+  F1 Score: 0.6316
+
+🔗 Component Agreement:
+  Neural-Prolog Agreement Rate: 60.00%
+
+Error Analysis (49 cases with disagreement):
+  Error 1 (Sample ID: sample_10866):
+    Query: Namaste, I am a divorced woman farmer earning Rs 114102 per year. Sarpanch demanding bribe for schem...
+    True: False, Neural Pred: True, Prolog Pred: True, Hybrid Pred: True
+    Type: False Positive
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 2 (Sample ID: sample_4842):
+    Query: I am a victim of domestic violence. My live-in partner is physIcally Abusive. I live in a joint faMi...
+    True: False, Neural Pred: True, Prolog Pred: True, Hybrid Pred: True
+    Type: False Positive
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 3 (Sample ID: sample_19867):
+    Query: Hello ji, I am a tribal woman housewife earning Rs 254909 daily but total yearly. Child custody batt...
+    True: False, Neural Pred: False, Prolog Pred: True, Hybrid Pred: True
+    Type: False Positive
+    Disagreements: {"neural_prolog": true, "neural_gt": false, "prolog_gt": true}
+  Error 4 (Sample ID: sample_17402):
+    Query: I wrote a blog pOst criticizing a government policy and now I am facing a police inquiry. Is my free...
+    True: False, Neural Pred: False, Prolog Pred: True, Hybrid Pred: True
+    Type: False Positive
+    Disagreements: {"neural_prolog": true, "neural_gt": false, "prolog_gt": true}
+  Error 5 (Sample ID: sample_9699):
+    Query: Namaste, I am a disabled person housewife earning Rs 831279 daily but total yearly. Doctor did negli...
+    True: False, Neural Pred: True, Prolog Pred: True, Hybrid Pred: True
+    Type: False Positive
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  ... and 44 more errors. See full results JSON for details.
+

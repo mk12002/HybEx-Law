@@ -17,25 +17,29 @@ from .config import HybExConfig
 
 # Setup logging
 logger = logging.getLogger(__name__)
+def prolog_escape(text: str) -> str:
+    """
+    Escape single quotes and backslashes for safe Prolog strings.
+    """
+    return text.replace("\\", "\\\\").replace("'", "''").replace("\n", " ")
 
 @dataclass
 class LegalReasoning:
-    """Structure for legal reasoning results"""
     case_id: str
     eligible: bool
     confidence: float
     primary_reason: str
-    detailed_reasoning: List[Dict[str, Any]]
+    detailed_reasoning: List  # more general, or List[Dict[str, Any]]
     applicable_rules: List[str]
     legal_citations: List[str]
-    method: str  # 'prolog', 'fallback', 'hybrid'
+    method: str
 
 @dataclass
 class PrologQuery:
     """Structure for Prolog queries"""
     query_text: str
     expected_variables: List[str]
-    timeout: int = 30
+    timeout: int = 60  # Increased from 30 to 60 seconds
     retry_count: int = 3
 
 class PrologEngine:
@@ -52,12 +56,11 @@ class PrologEngine:
         
         # Load comprehensive legal rules from the knowledge base or use fallback
         self.legal_rules = self._load_comprehensive_legal_rules()
-        # Ensure income_thresholds are taken from the config, which should be updated by scraper
         self.income_thresholds = self.config.ENTITY_CONFIG['income_thresholds']
         
         logger.info(f"Initialized Comprehensive PrologEngine (Session: {self.session_id}, Available: {self.prolog_available})")
         logger.info(f"Loaded {len(self.legal_rules)} rule categories with {sum(len(rules) for rules in self.legal_rules.values())} total rules")
-        if any(self.legal_rules.get(k) for k in ['legal_aid_rules', 'family_law_rules']):
+        if any(self.legal_rules.get(k) for k in ['legal_aid_rules', 'family_law_rules', 'reasoning_rules']): # Added reasoning_rules
             self.rules_loaded = True
         logger.info(f"Comprehensive rules actually loaded: {self.rules_loaded}")
 
@@ -65,7 +68,8 @@ class PrologEngine:
         """Setup comprehensive Prolog engine logging"""
         if not any(isinstance(h, logging.FileHandler) and h.baseFilename.endswith(f'prolog_reasoning_{self.session_id}.log') for h in logger.handlers):
             log_file = self.config.get_log_path(f'prolog_reasoning_{self.session_id}')
-            file_handler = logging.FileHandler(log_file)
+            file_handler = logging.FileHandler(log_file, encoding='utf-8')
+
             file_handler.setLevel(logging.INFO)
             formatter = logging.Formatter(
                 f'%(asctime)s - %(name)s - %(levelname)s - [Session:{self.session_id}] %(message)s'
@@ -120,11 +124,12 @@ class PrologEngine:
                 rule_sections = {}
                 
                 section_regex_map = {
-                    'legal_aid_rules': r'% LEGAL AID DOMAIN RULES(.*?)(?:% FAMILY LAW DOMAIN RULES|% CONSUMER PROTECTION DOMAIN RULES|% EMPLOYMENT LAW DOMAIN RULES|% FUNDAMENTAL RIGHTS DOMAIN RULES|\Z)',
-                    'family_law_rules': r'% FAMILY LAW DOMAIN RULES(.*?)(?:% CONSUMER PROTECTION DOMAIN RULES|% EMPLOYMENT LAW DOMAIN RULES|% FUNDAMENTAL RIGHTS DOMAIN RULES|\Z)',
-                    'consumer_protection_rules': r'% CONSUMER PROTECTION DOMAIN RULES(.*?)(?:% EMPLOYMENT LAW DOMAIN RULES|% FUNDAMENTAL RIGHTS DOMAIN RULES|\Z)',
-                    'employment_law_rules': r'% EMPLOYMENT LAW DOMAIN RULES(.*?)(?:% FUNDAMENTAL RIGHTS DOMAIN RULES|\Z)',
-                    'fundamental_rights_rules': r'% FUNDAMENTAL RIGHTS DOMAIN RULES(.*?)(?:\Z)',
+                    'legal_aid_rules': r'% LEGAL AID DOMAIN RULES(.*?)(?:% FAMILY LAW DOMAIN RULES|% CONSUMER PROTECTION DOMAIN RULES|% EMPLOYMENT LAW DOMAIN RULES|% FUNDAMENTAL RIGHTS DOMAIN RULES|% REASONING RULES|\Z)',
+                    'family_law_rules': r'% FAMILY LAW DOMAIN RULES(.*?)(?:% CONSUMER PROTECTION DOMAIN RULES|% EMPLOYMENT LAW DOMAIN RULES|% FUNDAMENTAL RIGHTS DOMAIN RULES|% REASONING RULES|\Z)',
+                    'consumer_protection_rules': r'% CONSUMER PROTECTION DOMAIN RULES(.*?)(?:% EMPLOYMENT LAW DOMAIN RULES|% FUNDAMENTAL RIGHTS DOMAIN RULES|% REASONING RULES|\Z)',
+                    'employment_law_rules': r'% EMPLOYMENT LAW DOMAIN RULES(.*?)(?:% FUNDAMENTAL RIGHTS DOMAIN RULES|% REASONING RULES|\Z)',
+                    'fundamental_rights_rules': r'% FUNDAMENTAL RIGHTS DOMAIN RULES(.*?)(?:% REASONING RULES|\Z)',
+                    'reasoning_rules': r'% REASONING RULES(.*?)(?:\Z)'
                 }
 
                 for key, pattern in section_regex_map.items():
@@ -132,13 +137,12 @@ class PrologEngine:
                     if match:
                         content = match.group(1).strip()
                         if content:
-                            # Parse the section content into individual rules
                             individual_rules = self._parse_prolog_rules_from_section(content)
                             rule_sections[key] = individual_rules
                             logger.debug(f"Extracted section: {key} with {len(individual_rules)} rules")
                 
                 rule_sections['eligibility_rules'] = self._extract_eligibility_rules(comprehensive_rules_str)
-                rule_sections['reasoning_rules'] = self._extract_reasoning_rules(comprehensive_rules_str)
+                # The reasoning rules are now extracted directly from the main rule string
                 rule_sections['threshold_rules'] = self._generate_threshold_rules()
                 rule_sections['meta_rules'] = self._generate_meta_rules()
 
@@ -154,14 +158,59 @@ class PrologEngine:
             self.rules_loaded = False
             return self._get_enhanced_fallback_rules()
     
-    def _load_multi_domain_rules(self) -> Optional[str]:
-        """Load multi-domain rules from knowledge base (multi_domain_rules.py)."""
-        try:
-            rules_file_path = Path(__file__).parent.parent / "knowledge_base" / "multi_domain_rules.py"
+    def _detect_query_domain(self, extracted_entities: Dict[str, Any]) -> str:
+        """Detect the legal domain based on case type and entities."""
+        case_type = extracted_entities.get('case_type', '').lower()
+        
+        # Domain mapping based on case type
+        domain_mappings = {
+            'family': 'family_law',
+            'divorce': 'family_law',
+            'custody': 'family_law',
+            'maintenance': 'family_law',
+            'domestic_violence': 'family_law',
             
-            if rules_file_path.exists():
-                logger.info(f"Attempting to load rules from: {rules_file_path}")
-                spec = importlib.util.spec_from_file_location("multi_domain_rules", rules_file_path)
+            'consumer': 'consumer_protection',
+            'fraud': 'consumer_protection',
+            'defective_goods': 'consumer_protection',
+            'service_deficiency': 'consumer_protection',
+            
+            'employment': 'employment_law',
+            'wrongful_termination': 'employment_law',
+            'wage_dispute': 'employment_law',
+            'harassment': 'employment_law',
+            
+            'criminal': 'criminal_law',
+            'bail': 'criminal_law',
+            'defense': 'criminal_law'
+        }
+        
+        detected_domain = domain_mappings.get(case_type, 'general_legal_aid')
+        logger.info(f"🎯 Detected domain '{detected_domain}' for case type '{case_type}'")
+        return detected_domain
+
+    def _load_domain_specific_rules(self, domain: str) -> Optional[str]:
+        """Load only rules specific to the detected domain."""
+        try:
+            # For now, always use the full multi-domain rules to ensure all predicates are available
+            logger.info(f"📋 Loading full rule set for domain '{domain}' to ensure all predicates are available")
+            return self._load_multi_domain_rules()
+            
+        except Exception as e:
+            logger.error(f"Error loading domain-specific rules for '{domain}': {e}")
+            return self._load_multi_domain_rules()  # Fallback to full rule set
+
+    def _load_multi_domain_rules(self) -> Optional[str]:
+        """Load multi-domain rules from enhanced knowledge base."""
+        try:
+            # Force using the working multi_domain_rules.py with 105 rules
+            fallback_rules_path = Path(__file__).parent.parent / "knowledge_base" / "multi_domain_rules.py"
+            
+            logger.info("Using verified fallback knowledge base with 105 comprehensive rules")
+            
+            if fallback_rules_path.exists():
+                logger.info(f"Attempting to load rules from: {fallback_rules_path}")
+                spec = importlib.util.spec_from_file_location("legal_rules", fallback_rules_path)
                 rules_module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(rules_module)
                 
@@ -169,12 +218,15 @@ class PrologEngine:
                     logger.info("Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.")
                     return rules_module.MULTI_DOMAIN_LEGAL_RULES
                 else:
-                    logger.warning(f"File {rules_file_path} found, but 'MULTI_DOMAIN_LEGAL_RULES' variable not found within it.")
+                    logger.warning(f"File {fallback_rules_path} found, but no MULTI_DOMAIN_LEGAL_RULES variable found within it.")
+            else:
+                logger.error("Critical error: multi_domain_rules.py not found!")
                     
         except Exception as e:
-            logger.error(f"Error loading multi-domain rules from {rules_file_path}: {e}", exc_info=True)
+            logger.error(f"Error loading multi-domain rules from knowledge base: {e}", exc_info=True)
         
-        return None
+        logger.warning("No multi-domain rules found in knowledge base. Using enhanced fallback rules.")
+        return self._get_enhanced_fallback_rules()
 
     def _extract_section(self, text: str, section_name: str) -> Optional[str]:
         """Extract a specific section from comprehensive rules text."""
@@ -592,6 +644,382 @@ class PrologEngine:
             '''
         ]
 
+    def create_domain_specific_prolog_file_robust(self, facts: List[str], domain: str) -> str:
+        """Create a robust Prolog file with MINIMAL rules for fast execution."""
+        
+        temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.pl', delete=False, encoding='utf-8')
+        self.temp_files.append(temp_file.name)
+        
+        try:
+            # Header
+            temp_file.write(f'% HybEx-Law Minimal Legal Reasoning Session: {self.session_id}\n')
+            temp_file.write(f'% Domain: {domain}\n')
+            temp_file.write(f'% Generated: {datetime.now().isoformat()}\n\n')
+            
+            # Add essential discontiguous directives to fix warnings
+            temp_file.write('% DISCONTIGUOUS DIRECTIVES\n')
+            temp_file.write(':- discontiguous person/1.\n')
+            temp_file.write(':- discontiguous applicable_rule/3.\n')
+            temp_file.write(':- discontiguous eligible_for_legal_aid/1.\n')
+            temp_file.write(':- discontiguous categorically_eligible/1.\n')
+            temp_file.write(':- discontiguous income_eligible/1.\n')
+            temp_file.write(':- discontiguous social_category/2.\n')
+            temp_file.write(':- discontiguous annual_income/2.\n')
+            temp_file.write(':- discontiguous income_threshold/2.\n\n')
+            
+            # 🚀 CRITICAL OPTIMIZATION: Use only ESSENTIAL rules for this case
+            temp_file.write('% MINIMAL ESSENTIAL RULES\n')
+            
+            # Utility predicates (required)
+            temp_file.write('member(X, [X|_]).\n')
+            temp_file.write('member(X, [_|T]) :- member(X, T).\n\n')
+            
+            # Core eligibility rules (optimized with cuts)
+            temp_file.write('% OPTIMIZED CORE ELIGIBILITY RULES\n')
+            temp_file.write('eligible_for_legal_aid(Person) :- categorically_eligible(Person), !.\n')
+            temp_file.write('eligible_for_legal_aid(Person) :- income_eligible(Person), !.\n\n')
+            
+            # Fast categorical eligibility (check first - most definitive)
+            temp_file.write('categorically_eligible(Person) :- social_category(Person, sc), !.\n')
+            temp_file.write('categorically_eligible(Person) :- social_category(Person, st), !.\n')
+            temp_file.write('categorically_eligible(Person) :- social_category(Person, obc), !.\n\n')
+            
+            # Dynamic income thresholds from config
+            temp_file.write('% DYNAMIC INCOME THRESHOLDS\n')
+            for category, threshold in self.income_thresholds.items():
+                # Handle combined 'sc_st' category from config
+                if category == 'sc_st':
+                    temp_file.write(f"income_threshold('sc', {threshold}).\n")
+                    temp_file.write(f"income_threshold('st', {threshold}).\n")
+                else:
+                    temp_file.write(f"income_threshold('{category.lower()}', {threshold}).\n")
+            temp_file.write('\n')
+
+            # Income eligibility using dynamic thresholds
+            temp_file.write('% INCOME ELIGIBILITY (dynamic thresholds)\n')
+            temp_file.write('income_eligible(Person) :-\n')
+            temp_file.write('    social_category(Person, Category),\n')
+            temp_file.write('    income_threshold(Category, Threshold),\n')
+            temp_file.write('    annual_income(Person, Income),\n')
+            temp_file.write('    Income =< Threshold, !.\n')
+            
+            # Fallback for cases with no social category
+            temp_file.write('income_eligible(Person) :-\n')
+            temp_file.write('    \\+ social_category(Person, _),\n')
+            temp_file.write("    income_threshold(general, Threshold),\n")
+            temp_file.write('    annual_income(Person, Income),\n')
+            temp_file.write('    Income =< Threshold, !.\n\n')
+            
+            # Simple reasoning predicates
+            temp_file.write('% SIMPLE REASONING\n')
+            temp_file.write("primary_eligibility_reason(Person, 'Eligible: SC/ST/OBC category') :- categorically_eligible(Person), !.\n")
+            temp_file.write("primary_eligibility_reason(Person, 'Eligible: Income below threshold') :- income_eligible(Person), !.\n")
+            temp_file.write("primary_eligibility_reason(Person, 'Not eligible') :- \\+ eligible_for_legal_aid(Person), !.\n\n")
+            
+            temp_file.write("generate_detailed_reasoning(Person, 'Legal aid evaluation completed') :- person(Person), !.\n\n")
+            
+            # Add missing applicable_rule predicates to fix Unknown procedure error
+            temp_file.write('% APPLICABLE RULES (to fix missing predicate error)\n')
+            temp_file.write("applicable_rule(Person, 'categorical_eligibility', legal_aid) :- categorically_eligible(Person), !.\n")
+            temp_file.write("applicable_rule(Person, 'income_eligibility', legal_aid) :- income_eligible(Person), !.\n")
+            temp_file.write("applicable_rule(Person, 'not_eligible', legal_aid) :- \\+ eligible_for_legal_aid(Person), !.\n")
+            temp_file.write("applicable_rule(_, _, _) :- fail.\n\n")
+            
+            # Write facts
+            temp_file.write('% CASE FACTS\n')
+            for fact in facts:
+                clean_fact = fact.strip()
+                if clean_fact and not clean_fact.startswith('%'):
+                    if not clean_fact.endswith('.'):
+                        temp_file.write(f"{clean_fact}.\n")
+                    else:
+                        temp_file.write(f"{clean_fact}\n")
+            
+            temp_file.close()
+            
+            # DEBUG: Show the minimal file
+            logger.info("🔍 DEBUG: Minimal Prolog file content:")
+            try:
+                with open(temp_file.name, 'r', encoding='utf-8') as debug_file:
+                    content = debug_file.read()
+                    logger.info(f"Minimal file ({len(content)} chars):\n{content}")
+            except Exception as debug_e:
+                logger.error(f"Failed to read debug content: {debug_e}")
+            
+            logger.info(f"✅ Created MINIMAL Prolog file: {temp_file.name} with essential rules only")
+            
+            return temp_file.name
+            
+        except Exception as e:
+            temp_file.close()
+            logger.error(f"Error creating minimal Prolog file: {e}", exc_info=True)
+            return None
+
+    def create_domain_specific_prolog_file_modular(self, facts: List[str], domain: str) -> str:
+        """🚀 MODULAR APPROACH: Create Prolog file by loading only domain-specific .pl files."""
+        
+        temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.pl', delete=False, encoding='utf-8')
+        self.temp_files.append(temp_file.name)
+        
+        try:
+            # Header
+            temp_file.write(f'% HybEx-Law Modular Legal Reasoning Session: {self.session_id}\n')
+            temp_file.write(f'% Domain: {domain}\n')
+            temp_file.write(f'% Generated: {datetime.now().isoformat()}\n\n')
+            
+            # Essential discontiguous directives
+            temp_file.write('% DISCONTIGUOUS DIRECTIVES\n')
+            essential_directives = [
+                ':- discontiguous person/1.',
+                ':- discontiguous eligible_for_legal_aid/1.',
+                ':- discontiguous categorically_eligible/1.',
+                ':- discontiguous income_eligible/1.',
+                ':- discontiguous social_category/2.',
+                ':- discontiguous annual_income/2.',
+                ':- discontiguous case_type/2.',
+                ':- discontiguous generate_detailed_reasoning/2.',
+                ':- discontiguous primary_eligibility_reason/2.',
+                ':- discontiguous applicable_rule/3.',
+                ':- discontiguous vulnerable_group/2.',
+                ':- discontiguous gender/2.',
+                ':- discontiguous age/2.'
+            ]
+            for directive in essential_directives:
+                temp_file.write(directive + '\n')
+            temp_file.write('\n')
+            
+            # 🚀 MODULAR LOADING: Load only required domain files
+            domain_files = self._get_domain_files(domain)
+            
+            for domain_file in domain_files:
+                domain_file_path = Path(__file__).parent.parent / "knowledge_base" / domain_file
+                if domain_file_path.exists():
+                    temp_file.write(f'% LOADING: {domain_file}\n')
+                    with open(domain_file_path, 'r', encoding='utf-8') as df:
+                        content = df.read()
+                        temp_file.write(content)
+                        temp_file.write('\n')
+                    logger.info(f"✅ Loaded modular file: {domain_file}")
+                else:
+                    logger.warning(f"⚠️ Domain file not found: {domain_file}")
+            
+            # Write case facts
+            temp_file.write('\n% CASE FACTS\n')
+            for fact in facts:
+                clean_fact = fact.strip()
+                if clean_fact and not clean_fact.startswith('%'):
+                    if not clean_fact.endswith('.'):
+                        temp_file.write(f"{clean_fact}.\n")
+                    else:
+                        temp_file.write(f"{clean_fact}\n")
+            
+            temp_file.close()
+            
+            # DEBUG output
+            logger.info("🔍 DEBUG: Modular Prolog file content:")
+            try:
+                with open(temp_file.name, 'r', encoding='utf-8') as debug_file:
+                    content = debug_file.read()
+                    logger.info(f"Modular file ({len(content)} chars):\n{content[:1000]}...")  # First 1000 chars only
+            except Exception as debug_e:
+                logger.error(f"Failed to read debug content: {debug_e}")
+            
+            logger.info(f"✅ Created MODULAR Prolog file: {temp_file.name} with {len(domain_files)} domain modules")
+            
+            return temp_file.name
+            
+        except Exception as e:
+            temp_file.close()
+            logger.error(f"Error creating modular Prolog file: {e}", exc_info=True)
+            return None
+
+    def _get_domain_files(self, domain: str) -> List[str]:
+        """Get the required .pl files for a specific domain."""
+        
+        # Always include foundational rules first (contains essential predicates)
+        base_files = []  # Let domain_mappings handle file loading completely
+        
+        # Define domain-to-file mappings (only load what's needed!)
+        domain_mappings = {
+            'legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl'],
+            'family_law': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl', 'family_law.pl', 'cross_domain_rules.pl'],
+            'consumer_protection': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl', 'consumer_protection.pl', 'cross_domain_rules.pl'],
+            'employment_law': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl', 'employment_law.pl', 'cross_domain_rules.pl'],
+            'general_legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl']  # Use corrected versions
+        }
+        
+        # Get domain-specific files and combine with base files
+        domain_files = domain_mappings.get(domain, ['legal_aid.pl'])
+        files = base_files + domain_files
+        
+        logger.info(f"📂 Selected files for domain '{domain}': {files}")
+        return files
+
+    def _is_relevant_domain(self, rule_category: str, domain: str) -> bool:
+        """Check if a rule category is relevant to the specified domain for performance optimization."""
+        
+        # Define domain-to-category mappings for selective loading
+        domain_mappings = {
+            'legal_aid': ['legal_aid_rules', 'general_legal_rules', 'income_assessment', 'core_predicates'],
+            'family_law': ['family_law_rules', 'legal_aid_rules', 'general_legal_rules', 'core_predicates'],
+            'consumer_protection': ['consumer_protection_rules', 'legal_aid_rules', 'general_legal_rules', 'core_predicates'],
+            'employment_law': ['employment_law_rules', 'legal_aid_rules', 'general_legal_rules', 'core_predicates'],
+            'criminal_law': ['criminal_law_rules', 'legal_aid_rules', 'general_legal_rules', 'core_predicates'],
+            'fundamental_rights': ['fundamental_rights_rules', 'legal_aid_rules', 'general_legal_rules', 'core_predicates'],
+            'general_legal_aid': ['legal_aid_rules', 'general_legal_rules', 'income_assessment', 'core_predicates']
+        }
+        
+        # Get relevant categories for this domain
+        relevant_categories = domain_mappings.get(domain, [])
+        
+        # Always include core predicates and general rules
+        if rule_category in ['core_predicates', 'general_legal_rules', 'legal_aid_rules']:
+            return True
+            
+        # Check if this category is specifically relevant to the domain
+        return rule_category in relevant_categories
+    
+    def _clean_prolog_rule(self, rule: str) -> str:
+        """Clean and validate a Prolog rule for proper syntax."""
+        if not rule or not rule.strip():
+            return ""
+        
+        rule = rule.strip()
+        
+        # Skip comments and empty lines
+        if rule.startswith('%') or not rule:
+            return rule
+        
+        # Fix common syntax issues before processing
+        rule = rule.replace('\\\\+', '\\+')
+        rule = rule.replace('\\"', '"')  # Fix escaped quotes
+        
+        # 🔧 CRITICAL FIX: Split compound rules that got merged into one line
+        # Look for patterns like: "rule1. comment rule2 :-" or "rule1.rule2 :-"
+        if '. ' in rule and ':-' in rule:
+            # Find the first complete rule ending with a period
+            parts = rule.split('. ')
+            if len(parts) > 1:
+                first_rule = parts[0].strip() + '.'
+                # Log that we're splitting and return only the first valid rule
+                logger.debug(f"Split compound rule, using first part: {first_rule}")
+                return first_rule
+        
+        # Handle rules that are concatenated without space: "rule1.rule2 :-"
+        if '.' in rule and ':-' in rule and rule.count('.') > 1:
+            dot_index = rule.find('.')
+            if dot_index > 0:
+                first_rule = rule[:dot_index + 1].strip()
+                logger.debug(f"Extracted first rule from concatenated: {first_rule}")
+                return first_rule
+        
+        # Remove extra whitespace and normalize
+        rule = ' '.join(rule.split())
+        
+        # Ensure rule ends with period if it's a complete rule (not a comment)
+        if rule and not rule.startswith('%'):
+            if (':-' in rule or '(' in rule) and not rule.endswith('.'):
+                rule += '.'
+            # Handle facts (no :- operator)
+            elif ':-' not in rule and '(' in rule and not rule.endswith('.'):
+                rule += '.'
+        
+        # Validate basic Prolog syntax
+        if rule and not rule.startswith('%'):
+            # Check for unmatched parentheses
+            if rule.count('(') != rule.count(')'):
+                logger.warning(f"Unmatched parentheses in rule: {rule[:50]}...")
+                return ""
+            
+            # Check for unmatched quotes
+            if rule.count('"') % 2 != 0 and rule.count("'") % 2 != 0:
+                logger.warning(f"Unmatched quotes in rule: {rule[:50]}...")
+                return ""
+        
+        return rule
+
+    def _split_compound_rules(self, rule_text: str) -> List[str]:
+        """Split compound rules that are merged on one line into separate rules."""
+        if not rule_text or not rule_text.strip():
+            return []
+        
+        rule_text = rule_text.strip()
+        
+        # Skip comments
+        if rule_text.startswith('%'):
+            return [rule_text]
+        
+        # Look for patterns where multiple rules are on one line
+        # Pattern 1: "rule1. % comment rule2 :-"
+        # Pattern 2: "rule1. rule2 :-" 
+        # Pattern 3: "rule1.rule2 :-"
+        
+        rules = []
+        
+        # First, try to split by ". " followed by a new rule (contains :- or starts with predicate)
+        if '. ' in rule_text and rule_text.count('.') > 1:
+            parts = rule_text.split('. ')
+            
+            for i, part in enumerate(parts):
+                part = part.strip()
+                if not part:
+                    continue
+                    
+                # Add the period back except for the last part
+                if i < len(parts) - 1:
+                    if not part.endswith('.'):
+                        part += '.'
+                
+                # Check if this looks like a new rule (has :- or is a fact)
+                if (':-' in part or 
+                    (part.endswith('.') and '(' in part and not part.startswith('%'))):
+                    rules.append(part)
+        else:
+            # No splitting needed, return as single rule
+            rules.append(rule_text)
+        
+        # Filter out empty rules and clean up
+        cleaned_rules = []
+        for rule in rules:
+            rule = rule.strip()
+            if rule and not rule.startswith('%'):
+                # Ensure rule ends with period
+                if not rule.endswith('.') and (':-' in rule or '(' in rule):
+                    rule += '.'
+                cleaned_rules.append(rule)
+            elif rule.startswith('%'):
+                cleaned_rules.append(rule)
+        
+        return cleaned_rules if cleaned_rules else [rule_text]
+
+    def _parse_confidence_result(self, result: str) -> float:
+        """Parse confidence score from Prolog result."""
+        try:
+            # Extract numeric value from result string
+            import re
+            confidence_match = re.search(r'Confidence\s*=\s*([0-9.]+)', result)
+            if confidence_match:
+                return float(confidence_match.group(1))
+            else:
+                return 0.75  # Default medium confidence
+        except:
+            return 0.75
+
+    def _get_quick_reasoning(self, case_id: str, prolog_file: str) -> List[Dict[str, Any]]:
+        """Get quick reasoning details with short timeout."""
+        try:
+            reasoning_query = f"primary_eligibility_reason('{case_id}', Reason)"
+            # Short timeout for reasoning - this is optional
+            result = self._execute_prolog_query_with_retry(reasoning_query, prolog_file, max_attempts=1, timeout=5)
+            
+            if result:
+                return [{'type': 'primary_reason', 'content': result, 'confidence': 0.8}]
+            else:
+                return [{'type': 'basic_eligibility', 'content': 'Eligible based on legal aid criteria', 'confidence': 0.75}]
+        except:
+            return [{'type': 'fallback', 'content': 'Standard legal aid eligibility', 'confidence': 0.7}]
+
+    
     def create_comprehensive_prolog_file(self, facts: List[str], rules: List[str] = None, 
                                        domains: Optional[List[str]] = None) -> str:
         """Create comprehensive Prolog file with domain-specific rules.
@@ -605,8 +1033,14 @@ class PrologEngine:
             temp_file.write(f'% HybEx-Law Legal Reasoning Session: {self.session_id}\n')
             temp_file.write(f'% Generated: {datetime.now().isoformat()}\n\n')
             
+            # Add discontiguous directives at the top to avoid warnings
+            for directive in self._get_discontiguous_directives():
+                temp_file.write(f"{directive}\n")
+            temp_file.write('\n')
+
+            # Write all rules first
+            temp_file.write('% RULES\n')
             if rules:
-                temp_file.write('% CUSTOM RULES\n')
                 for rule in rules:
                     temp_file.write(rule.strip() + '\n\n')
             elif domains:
@@ -616,16 +1050,14 @@ class PrologEngine:
                         temp_file.write(f'% {domain.upper()} DOMAIN RULES\n')
                         for rule in self.legal_rules[domain_key]:
                             temp_file.write(rule.strip() + '\n\n')
-                        logger.debug(f"Added rules for domain: {domain_key}")
-                    else:
-                        logger.warning(f"No rules found for specified domain: {domain}")
             else:
                 for rule_category, rule_list in self.legal_rules.items():
                     temp_file.write(f'% {rule_category.upper()}\n')
                     for rule in rule_list:
                         temp_file.write(rule.strip() + '\n\n')
-            
-            temp_file.write('% CASE FACTS\n')
+
+            # Write all facts at the end
+            temp_file.write('\n% CASE FACTS\n')
             for fact in facts:
                 if fact.strip():
                     if not fact.strip().endswith('.'):
@@ -643,24 +1075,95 @@ class PrologEngine:
             logger.error(f"Error creating comprehensive Prolog file: {e}", exc_info=True)
             return None
 
-    def execute_prolog_query(self, prolog_file: str, query: PrologQuery) -> Tuple[bool, List[Dict], str]:
-        """Execute Prolog query with enhanced error handling and retries."""
+    def _execute_prolog_query(self, file_path: str, query: str, variables: List[str]) -> Tuple[bool, List[Dict[str, Any]]]:
+        """Execute Prolog query with format-based output to avoid JSON dependency issues."""
+        
+        # Use forward slashes in path for Prolog compatibility
+        prolog_file = file_path.replace('\\', '/')
+        
+        if variables:
+            # Build format statements, e.g., format('Reason:~q~n', [Reason])
+            output_parts = []
+            for v in variables:
+                output_parts.append(f"format('{v}:~q~n', [{v}])")
+            output_part = f", {', '.join(output_parts)}"
+        else:
+            output_part = ""
+        
+        # Build the goal with consult, the query, and halt
+        goal = f"consult('{prolog_file}'), {query}{output_part}, halt."
+        
+        command = ['swipl', '-q', '-g', goal]
+        
+        logger.info(f"Executing SWI-Prolog command: {' '.join(command)}")
+        
+        try:
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                timeout=self.config.PROLOG_CONFIG.get('timeout', 120)  # Use config timeout with fallback
+            )
+            
+            # Success if return code is 0 (query succeeded), else false (query failed)
+            success = (result.returncode == 0)
+            
+            stdout = result.stdout.strip()
+            stderr = result.stderr.strip()
+            
+            if stderr:
+                logger.warning(f"Prolog warning/error: {stderr}")
+                success = False if 'ERROR' in stderr.upper() else success
+            
+            results = []
+            if variables and stdout:
+                try:
+                    lines = stdout.split('\n')
+                    res_dict = {}
+                    for line in lines:
+                        if ':' in line:
+                            key, value = line.split(':', 1)
+                            # Remove quotes and clean the value
+                            clean_value = value.strip().strip("'\"")
+                            res_dict[key.strip()] = clean_value
+                    if res_dict:
+                        results = [res_dict]
+                except Exception as e:
+                    logger.warning(f"Failed to parse Prolog output: {stdout} | Error: {e}")
+                    results = []
+            else:
+                results = []
+            
+            return success, results
+        
+        except subprocess.TimeoutExpired:
+            logger.error(f"Prolog query timed out after {self.config.PROLOG_CONFIG.get('timeout', 120)} seconds: {query}")
+            return False, []
+        except Exception as e:
+            logger.error(f"Prolog execution failed: {e}")
+            return False, []
+
+    def execute_prolog_query(self, prolog_file: str, query: PrologQuery, timeout_seconds: int = 60) -> Tuple[bool, List[Dict], str]:
         if not self.prolog_available:
             return self._advanced_fallback_reasoning(query.query_text)
-        
+
         if not Path(prolog_file).exists():
             logger.error(f"Prolog file not found: {prolog_file}. Cannot execute query.")
             return False, [], "Prolog file not found."
 
+        # Correctly format the path for Prolog, which may be on a different OS
+        safe_prolog_path = Path(prolog_file).as_posix()
         for attempt in range(query.retry_count):
             try:
-                prolog_query_cmd = f"['{prolog_file}'], {query.query_text}."
-                
+                # Use single quotes around the file path in the command to handle spaces and special characters
+                # Add halt at the end to prevent SWI-Prolog from entering interactive mode
+                prolog_query_cmd = f"['{safe_prolog_path}'], {query.query_text}, halt"
+                # The -g flag requires a single goal, so we pass the whole thing as a string
                 cmd = ['swipl', '-q', '-g', prolog_query_cmd, '--stack-limit=2g', '--traditional']
                 
-                logger.debug(f"Executing SWI-Prolog command: {' '.join(cmd)}")
+                logger.info(f"Executing SWI-Prolog command: {' '.join(cmd)}")
                 
-                result = subprocess.run(cmd, capture_output=True, text=True, timeout=query.timeout, check=False)
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_seconds, check=False, encoding='utf-8')
                 
                 if result.returncode != 0:
                     logger.warning(f"SWI-Prolog exited with code {result.returncode} (attempt {attempt + 1}). Stderr: {result.stderr.strip()}")
@@ -668,7 +1171,18 @@ class PrologEngine:
                         return False, [], f"Prolog syntax or fatal error: {result.stderr.strip()}"
                 
                 output = result.stdout.strip()
-                success = self._evaluate_prolog_success(output)
+                
+                # Enhanced success evaluation: consider exit code 0 as success even with empty output
+                if result.returncode == 0:
+                    # For boolean queries (like eligible_for_legal_aid), exit code 0 means TRUE
+                    if not output.strip():
+                        success = True  # Empty output with exit code 0 = success
+                        output = "true"  # Set meaningful output
+                    else:
+                        success = self._evaluate_prolog_success(output)
+                else:
+                    success = False
+                
                 parsed_results = self._parse_prolog_output(output, query.expected_variables)
                 
                 if success:
@@ -776,18 +1290,33 @@ class PrologEngine:
 
     def comprehensive_legal_analysis(self, extracted_entities: Dict[str, Any], 
                                    domains: Optional[List[str]] = None) -> LegalReasoning:
-        """Perform comprehensive legal analysis with detailed reasoning."""
+        """Perform comprehensive legal analysis with domain-specific rule selection."""
         
         case_id = f"case_{self.session_id}_{datetime.now().strftime('%H%M%S')}"
         logger.info(f"🧠 Starting comprehensive legal analysis for {case_id}")
         
+        # Detect the domain if not specified
+        if not domains:
+            detected_domain = self._detect_query_domain(extracted_entities)
+            domains = [detected_domain]
+        
+        logger.info(f"🎯 Using domain-specific rules for: {domains}")
+        
         facts = self._generate_comprehensive_facts(extracted_entities, case_id)
         
-        prolog_file = self.create_comprehensive_prolog_file(facts, domains=domains)
+        # 🚀 USE MODULAR APPROACH: Create Prolog file with only domain-specific rules
+        prolog_file = self.create_domain_specific_prolog_file_modular(facts, domains[0])
+        
+        # Fallback to robust approach if modular fails
+        if not prolog_file:
+            logger.warning("🔄 Modular approach failed, falling back to robust approach")
+            prolog_file = self.create_domain_specific_prolog_file_robust(facts, domains[0])
         
         if not prolog_file:
-            logger.error(f"Failed to create Prolog file for {case_id}. Using fallback analysis.")
+            logger.error(f"Failed to create domain-specific Prolog file for {case_id}. Using fallback analysis.")
             eligible, parsed_results, reason = self._advanced_fallback_reasoning(extracted_entities.get('query', ''))
+            
+            # Construct the LegalReasoning object correctly using the fallback results
             return LegalReasoning(
                 case_id=case_id,
                 eligible=eligible,
@@ -804,10 +1333,24 @@ class PrologEngine:
             reasoning_result = self._analyze_reasoning(prolog_file, case_id)
             rule_analysis = self._analyze_applicable_rules(prolog_file, case_id)
             
+            # Dynamic confidence based on primary reason
+            primary_reason = reasoning_result['primary_reason']
+            if primary_reason:
+                if 'categorical' in primary_reason.lower():
+                    confidence = 0.95
+                elif 'vulnerable' in primary_reason.lower():
+                    confidence = 0.90
+                elif 'income' in primary_reason.lower():
+                    confidence = 0.85
+                else:
+                    confidence = 0.80  # Fallback for not eligible or unknown
+            else:
+                confidence = 0.80 if self.prolog_available else 0.50
+            
             legal_reasoning = LegalReasoning(
                 case_id=case_id,
                 eligible=eligibility_result['eligible'],
-                confidence=eligibility_result['confidence'],
+                confidence=confidence,  # Use dynamic confidence instead of eligibility_result['confidence']
                 primary_reason=reasoning_result['primary_reason'],
                 detailed_reasoning=reasoning_result['detailed_reasoning'],
                 applicable_rules=rule_analysis['applicable_rules'],
@@ -836,74 +1379,69 @@ class PrologEngine:
             self._cleanup_temp_files()
 
     def _analyze_eligibility(self, prolog_file: str, case_id: str) -> Dict[str, Any]:
-        """Analyze eligibility with confidence scoring using Prolog."""
-        eligibility_query = PrologQuery(
-            query_text=f"eligible_with_confidence('{case_id}', Eligible, Confidence)",
-            expected_variables=['Eligible', 'Confidence']
-        )
+        """Analyze eligibility with ultra-fast optimized strategy."""
         
-        success, results, explanation = self.execute_prolog_query(prolog_file, eligibility_query)
-        
-        if success and results:
-            for res_dict in results:
-                if 'Eligible' in res_dict and 'Confidence' in res_dict:
-                    eligible_str = res_dict['Eligible']
-                    confidence_str = res_dict['Confidence']
-                    
-                    try:
-                        eligible_bool = (eligible_str.lower() == 'true')
-                        confidence_val = float(confidence_str)
-                        return {
-                            'eligible': eligible_bool,
-                            'confidence': confidence_val,
-                            'explanation': explanation
-                        }
-                    except ValueError:
-                        logger.warning(f"Could not parse Eligible/Confidence from Prolog output: {res_dict}. Falling back.")
-
-        logger.warning(f"Failed to get confident eligibility from Prolog. Trying basic 'eligible_for_legal_aid'.")
-        basic_eligibility_query = PrologQuery(
+        # 🚀 STEP 1: Ultra-fast basic eligibility check (3s timeout)
+        logger.info(f"🎯 Ultra-fast eligibility check for {case_id}")
+        basic_query = PrologQuery(
             query_text=f"eligible_for_legal_aid('{case_id}')",
-            expected_variables=[]
+            expected_variables=[],
+            timeout=3,
+            retry_count=1
         )
-        basic_success, _, basic_explanation = self.execute_prolog_query(prolog_file, basic_eligibility_query)
         
-        return {
-            'eligible': basic_success,
-            'confidence': 0.7 if basic_success else 0.3,
-            'explanation': basic_explanation if basic_success else "Basic eligibility check failed."
-        }
+        success, results, explanation = self.execute_prolog_query(prolog_file, basic_query, timeout_seconds=3)
+        
+        if success:
+            logger.info(f"✅ FAST SUCCESS: Basic eligibility confirmed for {case_id}")
+            return {
+                'eligible': True,
+                'confidence': 0.85,  # High confidence for fast success
+                'explanation': f"Fast Prolog eligibility confirmed: {explanation}"
+            }
+        else:
+            logger.info(f"❌ FAST RESULT: Not eligible - {explanation}")
+            return {
+                'eligible': False,
+                'confidence': 0.9,   # High confidence for definitive no
+                'explanation': f"Fast Prolog check failed: {explanation}"
+            }
     
     def _analyze_reasoning(self, prolog_file: str, case_id: str) -> Dict[str, Any]:
         """Analyze detailed reasoning for the decision using Prolog."""
-        primary_reason_query = PrologQuery(
-            query_text=f"primary_eligibility_reason('{case_id}', Reason)",
-            expected_variables=['Reason']
+        
+        # Get primary reason using new JSON method
+        success_primary, results_primary = self._execute_prolog_query(
+            prolog_file, 
+            f"primary_eligibility_reason('{case_id}', Reason)",
+            ['Reason']
         )
         
-        success_primary, results_primary, _ = self.execute_prolog_query(prolog_file, primary_reason_query)
         primary_reason = "System analysis"
         if success_primary and results_primary:
             for res_dict in results_primary:
                 if 'Reason' in res_dict:
-                    primary_reason = res_dict['Reason'].replace("'", "")
+                    primary_reason = res_dict['Reason'].strip("'\"")  # Strip any outer quotes
                     break
         
-        detailed_reasoning_query = PrologQuery(
-            query_text=f"generate_detailed_reasoning('{case_id}', DetailedReason)",
-            expected_variables=['DetailedReason']
+        # Get detailed reasoning using new JSON method
+        success_detailed, results_detailed = self._execute_prolog_query(
+            prolog_file,
+            f"generate_detailed_reasoning('{case_id}', DetailedReason)",
+            ['DetailedReason']
         )
         
-        success_detailed, results_detailed, _ = self.execute_prolog_query(prolog_file, detailed_reasoning_query)
         detailed_reasoning_list = []
         if success_detailed and results_detailed:
             for res_dict in results_detailed:
                 if 'DetailedReason' in res_dict:
+                    detailed_reason = res_dict['DetailedReason'].strip("'\"")  # Strip any outer quotes
                     detailed_reasoning_list.append({
                         'type': 'prolog_reasoning',
-                        'content': res_dict['DetailedReason'].replace("'", ""),
+                        'content': detailed_reason,
                         'confidence': 0.95
                     })
+                    break
         
         return {
             'primary_reason': primary_reason,
@@ -912,20 +1450,21 @@ class PrologEngine:
 
     def _analyze_applicable_rules(self, prolog_file: str, case_id: str) -> Dict[str, Any]:
         """Analyze applicable rules and legal citations using Prolog."""
-        rules_query = PrologQuery(
-            query_text=f"findall(Rule, applicable_rule('{case_id}', Rule, legal_aid), Rules)",
-            expected_variables=['Rules']
+        
+        # Use new JSON method for rules
+        success, results = self._execute_prolog_query(
+            prolog_file,
+            f"findall(Rule, applicable_rule('{case_id}', Rule, legal_aid), Rules)",
+            ['Rules']
         )
         
-        success, results, _ = self.execute_prolog_query(prolog_file, rules_query)
         applicable_rules = []
         if success and results:
             for res_dict in results:
                 if 'Rules' in res_dict:
-                    raw_rules = res_dict['Rules'].strip("[]")
-                    if raw_rules:
-                        applicable_rules = [r.strip().replace("'", "") for r in raw_rules.split(',')]
-                        applicable_rules = [r for r in applicable_rules if r]
+                    rules_str = res_dict['Rules'].strip('[]')  # Strip list brackets
+                    applicable_rules = [r.strip().strip("'\"") for r in rules_str.split(',') if r.strip()] if rules_str else []
+                    break
 
         legal_citations = [
             "Legal Services Authorities Act, 1987 - Section 12",
@@ -937,34 +1476,111 @@ class PrologEngine:
             'legal_citations': legal_citations
         }
 
+    # In hybex_system/prolog_engine.py
+# REPLACE the entire _generate_comprehensive_facts method with this final version.
+
     def _generate_comprehensive_facts(self, entities: Dict[str, Any], case_id: str) -> List[str]:
-        """Generate comprehensive Prolog facts from extracted entities and config."""
-        facts = [f"person('{case_id}')"]
+        """
+        Generate comprehensive Prolog facts from extracted and pre-normalized entities.
+        This version trusts that the DataProcessor has already cleaned the data.
+        """
+        facts = [f"person('{case_id}')."]
         
-        if 'income' in entities and entities['income'] is not None:
-            income_value = entities['income']
-            facts.append(f"annual_income('{case_id}', {income_value})")
-            if income_value is not None and isinstance(income_value, (int, float)) and income_value > 0:
-                facts.append(f"monthly_income('{case_id}', {int(income_value / 12)})")
+        # General & Demographic facts
+        if 'income' in entities:
+            facts.append(f"annual_income('{case_id}', {entities['income']}).")
+        if 'social_category' in entities:
+            # No normalization needed here, as data_processor now provides the correct short-form
+            facts.append(f"social_category('{case_id}', '{entities['social_category']}').")
+        if 'age' in entities:
+            facts.append(f"age('{case_id}', {entities['age']}).")
+        if 'gender' in entities:
+            facts.append(f"gender('{case_id}', '{entities['gender']}').")
         
-        if 'social_category' in entities and entities['social_category']:
-            category = entities['social_category'].replace(" ", "_").lower()
-            facts.append(f"applicant_social_category('{case_id}', '{category}')")
-            facts.append(f"social_category('{case_id}', {category})")
+        # Employment Law Facts
+        if 'employment_duration' in entities:
+            facts.append(f"employment_duration('{case_id}', {entities['employment_duration']}).")
+        if 'daily_wage' in entities:
+            facts.append(f"daily_wage('{case_id}', {entities['daily_wage']}).")
+            # Derive hourly wage for overtime calculations
+            facts.append(f"hourly_wage('{case_id}', {int(entities['daily_wage'] / 8)}).")
+        if 'notice_period_given' in entities:
+            facts.append(f"notice_period_given('{case_id}', {entities['notice_period_given']}).")
+        if entities.get('disciplinary_hearing_conducted', True): # Default to True unless explicitly False
+            facts.append(f"disciplinary_hearing_conducted('{case_id}').")
+
+        # Family Law Facts
+        if entities.get('is_married'):
+            facts.append(f"married('{case_id}', 'spouse_of_{case_id}').")
+        if entities.get('has_children', 0) > 0:
+             facts.append(f"parent('{case_id}', 'child_of_{case_id}').")
+
+        # Consumer Protection Facts
+        if 'goods_value' in entities:
+            facts.append(f"goods_value('{case_id}', {entities['goods_value']}).")
+            facts.append(f"transaction_amount('{case_id}', {entities['goods_value']}).")
         
-        if 'case_type' in entities and entities['case_type']:
-            case_type = entities['case_type'].replace(" ", "_").lower()
-            facts.append(f"case_type('{case_id}', '{case_type}')")
-        
-        if 'location' in entities and entities['location']:
-            location = entities['location'].replace(" ", "_").lower()
-            facts.append(f"applicant_location('{case_id}', '{location}')")
-        
+        if 'incident_date' in entities:
+            try:
+                y, m, d = map(int, entities['incident_date'].split('-'))
+                facts.append(f"incident_date('{case_id}', general_complaint, date({y}, {m}, {d})).")
+                today = datetime.now()
+                facts.append(f"complaint_date('{case_id}', general_complaint, date({today.year}, {today.month}, {today.day})).")
+            except (ValueError, IndexError):
+                logger.warning(f"Could not parse incident_date: {entities['incident_date']}")
+
+        # Add income threshold facts (essential for legal_aid_clean_v2.pl)
+        facts.extend(self._generate_income_threshold_facts())
         facts.extend(self._generate_derived_facts(entities, case_id))
         
         logger.info(f"Generated {len(facts)} comprehensive Prolog facts for {case_id}")
+        logger.debug(f"Facts generated: {facts}")
         return facts
 
+    def _generate_income_threshold_facts(self) -> List[str]:
+        """Generate income threshold facts needed by legal_aid_clean_v2.pl"""
+        threshold_facts = [
+            "income_threshold('sc', 800000).",
+            "income_threshold('st', 800000).", 
+            "income_threshold('obc', 600000).",
+            "income_threshold('bpl', 0).",
+            "income_threshold('ews', 800000).",
+            "income_threshold('general', 500000)."
+        ]
+        return threshold_facts
+    def _get_discontiguous_directives(self) -> List[str]:
+        """Generate discontiguous directives for all known multi-clause predicates."""
+        predicates = [
+            'person/1', 'eligible_for_legal_aid/1', 'income_eligible/1', 'categorically_eligible/1',
+            'eligible_with_confidence/3', 'primary_eligibility_reason/2', 'generate_detailed_reasoning/2',
+            'legal_aid_applicable/2', 'covered_case_type/1', 'excluded_case_type/1',
+            'valid_marriage/3', 'marriage_conditions_met/3', 'age_requirement_met/2',
+            'divorce_grounds_exist/3', 'valid_divorce_ground/2', 'maintenance_eligible/1',
+            'child_custody_preference/2', 'consumer_forum_jurisdiction/2',
+            'valid_consumer_complaint/2', 'consumer_issue/1', 'complaint_within_time_limit/2',
+            'consumer_compensation/3', 'defective_goods_compensation/2',
+            'fundamental_right_violated/2', 'constitutional_right/1',
+            'right_violation_occurred/2', 'prohibited_discrimination_ground/1',
+            'rti_applicable/2', 'exempt_information/1', 'pil_standing/2',
+            'public_interest_issue/1', 'wrongful_termination/1', 'improper_procedure/1',
+            'sufficient_notice_period/2', 'retrenchment_compensation/2',
+            'valid_harassment_complaint/1', 'harassment_remedy_available/2',
+            'harassment_remedy/1', 'minimum_wage_violation/1', 'minimum_wage_rate/2',
+            'overtime_payment_due/2', 'overtime_hours/2',
+            'legal_aid_employment_case/1', 'legal_aid_family_case/1', 'legal_aid_consumer_case/1',
+            'constitutional_employment_remedy/1', 'employment_pil_standing/2',
+            'employment_related_issue/1', 'days_between/3', 'appeal_court/2',
+            'legal_costs_estimate/3', 'base_court_fee/2', 'lawyer_fee_estimate/2',
+            'required_documents/2', 'case_timeline_estimate/2',
+            'income_threshold/2', 'income_within_threshold/2', 'income_ratio/3',
+            'applicable_rule/3', 'rule_priority/3', 'best_applicable_rule/3',
+            'resolve_conflict/3', 'confidence_score/2',
+            'legal_aid_factor/2', 'individual_reason/2',
+            'annual_income/2', 'monthly_income/2', 'applicant_social_category/2',
+            'social_category/2', 'case_type/2', 'applicant_location/2',
+            'vulnerable_group/2'
+        ]
+        return [f":- discontiguous {p}." for p in predicates]
     def _generate_derived_facts(self, entities: Dict[str, Any], case_id: str) -> List[str]:
         """Generate additional derived facts based on extracted entities."""
         derived_facts = []
@@ -1168,6 +1784,32 @@ class PrologEngine:
         except Exception as e:
             logger.error(f"Failed to save reasoning results: {e}", exc_info=True)
             raise
+
+    def get_comprehensive_rule_summary(self) -> Dict[str, Any]:
+        """Get comprehensive summary of loaded rules"""
+        if not self.legal_rules:
+            return {
+                'total_rules': 0,
+                'rule_counts': {},
+                'status': 'no_rules_loaded'
+            }
+        
+        rule_counts = {}
+        total_rules = 0
+        
+        for category, rules in self.legal_rules.items():
+            if rules:
+                count = len(rules)
+                rule_counts[category] = count
+                total_rules += count
+        
+        return {
+            'total_rules': total_rules,
+            'rule_counts': rule_counts,
+            'rules_loaded_from_kb': self.rules_loaded,
+            'prolog_available': self.prolog_available,
+            'status': 'loaded' if self.rules_loaded else 'fallback'
+        }
 
     def cleanup(self):
         """Clean up Prolog engine resources"""

@@ -1,0 +1,57 @@
+2025-08-10 12:03:43,852 - hybex_system.prolog_engine - INFO - [Session:9c239150] Added file handler to PrologEngine logger.
+2025-08-10 12:03:43,852 - hybex_system.prolog_engine - INFO - [Session:9c239150] ======================================================================
+2025-08-10 12:03:43,852 - hybex_system.prolog_engine - INFO - [Session:9c239150] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-10 12:03:43,852 - hybex_system.prolog_engine - INFO - [Session:9c239150] Session ID: 9c239150
+2025-08-10 12:03:43,852 - hybex_system.prolog_engine - INFO - [Session:9c239150] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-10 12:03:43,872 - hybex_system.prolog_engine - INFO - [Session:9c239150] ======================================================================
+2025-08-10 12:03:43,872 - hybex_system.prolog_engine - INFO - [Session:9c239150] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-10 12:03:43,873 - hybex_system.prolog_engine - INFO - [Session:9c239150] Attempting to load rules from: d:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-10 12:03:43,874 - hybex_system.prolog_engine - INFO - [Session:9c239150] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-10 12:03:43,874 - hybex_system.prolog_engine - INFO - [Session:9c239150] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-10 12:03:43,879 - hybex_system.prolog_engine - INFO - [Session:9c239150] Initialized Comprehensive PrologEngine (Session: 9c239150, Available: True)
+2025-08-10 12:03:43,880 - hybex_system.prolog_engine - INFO - [Session:9c239150] Loaded 9 rule categories with 145 total rules
+2025-08-10 12:03:43,880 - hybex_system.prolog_engine - INFO - [Session:9c239150] Comprehensive rules actually loaded: True
+2025-08-10 12:03:43,880 - hybex_system.prolog_engine - INFO - [Session:9c239150] 🧠 Starting comprehensive legal analysis for case_9c239150_120343
+2025-08-10 12:03:43,880 - hybex_system.prolog_engine - INFO - [Session:9c239150] 🎯 Detected domain 'general_legal_aid' for case type ''
+2025-08-10 12:03:43,882 - hybex_system.prolog_engine - INFO - [Session:9c239150] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-10 12:03:43,882 - hybex_system.prolog_engine - INFO - [Session:9c239150] Generated 1 comprehensive Prolog facts for case_9c239150_120343
+2025-08-10 12:03:43,883 - hybex_system.prolog_engine - INFO - [Session:9c239150] 📂 Selected files for domain 'general_legal_aid': ['foundational_rules.pl', 'legal_aid.pl']
+2025-08-10 12:03:43,885 - hybex_system.prolog_engine - INFO - [Session:9c239150] ✅ Loaded modular file: foundational_rules.pl
+2025-08-10 12:03:43,885 - hybex_system.prolog_engine - INFO - [Session:9c239150] ✅ Loaded modular file: legal_aid.pl
+2025-08-10 12:03:43,886 - hybex_system.prolog_engine - INFO - [Session:9c239150] 🔍 DEBUG: Modular Prolog file content:
+2025-08-10 12:03:43,921 - hybex_system.prolog_engine - INFO - [Session:9c239150] Modular file (11171 chars):
+% HybEx-Law Modular Legal Reasoning Session: 9c239150
+% Domain: general_legal_aid
+% Generated: 2025-08-10T12:03:43.883112
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+% LOADING: foundational_rules.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND FACTS
+% This file contains all basic predicates used across domains
+% MUST be loaded first to avoid "Unknown procedure" errors
+% ============================================================================
+
+% ==============================...
+2025-08-10 12:03:43,921 - hybex_system.prolog_engine - INFO - [Session:9c239150] ✅ Created MODULAR Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpnend496g.pl with 2 domain modules
+2025-08-10 12:03:43,923 - hybex_system.prolog_engine - INFO - [Session:9c239150] 🎯 Ultra-fast eligibility check for case_9c239150_120343
+2025-08-10 12:03:46,952 - hybex_system.prolog_engine - ERROR - [Session:9c239150] Prolog query timeout (attempt 1): eligible_for_legal_aid('case_9c239150_120343')
+2025-08-10 12:03:46,953 - hybex_system.prolog_engine - INFO - [Session:9c239150] ❌ FAST RESULT: Not eligible - Query timeout after 1 attempts
+2025-08-10 12:04:46,957 - hybex_system.prolog_engine - ERROR - [Session:9c239150] Prolog query timeout (attempt 1): primary_eligibility_reason('case_9c239150_120343', Reason)
+2025-08-10 12:05:46,985 - hybex_system.prolog_engine - ERROR - [Session:9c239150] Prolog query timeout (attempt 2): primary_eligibility_reason('case_9c239150_120343', Reason)
+2025-08-10 12:06:46,987 - hybex_system.prolog_engine - ERROR - [Session:9c239150] Prolog query timeout (attempt 3): primary_eligibility_reason('case_9c239150_120343', Reason)
+2025-08-10 12:07:47,026 - hybex_system.prolog_engine - ERROR - [Session:9c239150] Prolog query timeout (attempt 1): generate_detailed_reasoning('case_9c239150_120343', DetailedReason)

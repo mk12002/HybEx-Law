@@ -23,3 +23,697 @@
 2025-08-02 15:24:30,487 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
 2025-08-02 15:24:30,487 - hybex_system.evaluator - INFO - ============================================================
 2025-08-02 15:24:30,487 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-05 07:30:44,769 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-05 07:30:44,769 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 07:30:44,769 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-05 07:30:44,770 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 07:30:44,770 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-05 07:34:09,921 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-05 07:34:09,921 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 07:34:09,921 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-05 07:34:09,921 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 07:34:09,921 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-05 08:17:00,700 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-05 08:17:00,700 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 08:17:00,700 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-05 08:17:00,700 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 08:17:00,700 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-05 08:22:36,072 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-05 08:22:36,072 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 08:22:36,072 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-05 08:22:36,072 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 08:22:36,072 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-05 11:17:47,473 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-05 11:17:47,473 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 11:17:47,473 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-05 11:17:47,473 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 11:17:47,473 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-05 11:19:02,132 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-05 11:19:02,132 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 11:19:02,132 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-05 11:19:02,132 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 11:19:02,132 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-05 11:24:59,839 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-05 11:24:59,839 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 11:24:59,839 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-05 11:24:59,839 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 11:24:59,839 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-05 11:24:59,841 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-05 11:41:07,121 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-05 11:41:07,121 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 11:41:07,121 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-05 11:41:07,121 - hybex_system.evaluator - INFO - ============================================================
+2025-08-05 11:41:07,121 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-05 11:41:07,121 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-05 11:41:10,088 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-05 11:41:10,088 - hybex_system.evaluator - ERROR - Failed to load or evaluate neural model domain_classifier: 'HybExConfig' object has no attribute 'TRAINING_CONFIG'
+2025-08-05 11:41:10,683 - hybex_system.evaluator - INFO - Evaluating neural model: EligibilityPredictor for eligibility_prediction
+2025-08-05 11:41:10,683 - hybex_system.evaluator - ERROR - Failed to load or evaluate neural model eligibility_predictor: 'HybExConfig' object has no attribute 'TRAINING_CONFIG'
+2025-08-05 11:41:10,683 - hybex_system.evaluator - INFO - End-to-end evaluation completed.
+2025-08-07 11:24:51,011 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-07 11:24:51,011 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 11:24:51,011 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-07 11:24:51,011 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 11:24:51,011 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-07 11:24:51,011 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-07 11:24:57,953 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-07 11:24:57,956 - hybex_system.evaluator - ERROR - Failed to load or evaluate neural model domain_classifier: 'HybExConfig' object has no attribute 'TRAINING_CONFIG'
+2025-08-07 11:24:59,078 - hybex_system.evaluator - INFO - Evaluating neural model: EligibilityPredictor for eligibility_prediction
+2025-08-07 11:24:59,078 - hybex_system.evaluator - ERROR - Failed to load or evaluate neural model eligibility_predictor: 'HybExConfig' object has no attribute 'TRAINING_CONFIG'
+2025-08-07 11:24:59,078 - hybex_system.evaluator - INFO - End-to-end evaluation completed.
+2025-08-07 11:33:44,691 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-07 11:33:44,691 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 11:33:44,691 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-07 11:33:44,691 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 11:33:44,691 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-07 11:33:44,691 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-07 11:33:49,358 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from D:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-07 11:33:49,358 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-07 11:34:45,807 - hybex_system.evaluator - INFO - Evaluation complete for DomainClassifier: Acc=1.0000, F1=1.0000, Loss=0.0007
+2025-08-07 11:34:46,692 - hybex_system.evaluator - INFO - ✅ Loaded eligibility_predictor from D:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\eligibility_predictor
+2025-08-07 11:34:46,692 - hybex_system.evaluator - INFO - Evaluating neural model: EligibilityPredictor for eligibility_prediction
+2025-08-07 11:35:40,106 - hybex_system.evaluator - INFO - Evaluation complete for EligibilityPredictor: Acc=0.8441, F1=0.8010, Loss=0.4088
+2025-08-07 11:35:40,111 - hybex_system.evaluator - INFO - End-to-end evaluation completed.
+2025-08-07 11:35:40,113 - hybex_system.evaluator - ERROR - Failed to save evaluation results: Object of type ndarray is not JSON serializable
+2025-08-07 12:01:43,570 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-07 12:01:43,570 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 12:01:43,571 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-07 12:01:43,571 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 12:01:43,571 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-07 12:01:43,571 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-07 12:01:49,169 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from D:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-07 12:01:49,169 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-07 12:02:45,973 - hybex_system.evaluator - INFO - Evaluation complete for DomainClassifier: Acc=1.0000, F1=1.0000, Loss=0.0007
+2025-08-07 12:02:47,210 - hybex_system.evaluator - INFO - ✅ Loaded eligibility_predictor from D:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\eligibility_predictor
+2025-08-07 12:02:47,211 - hybex_system.evaluator - INFO - Evaluating neural model: EligibilityPredictor for eligibility_prediction
+2025-08-07 12:03:52,385 - hybex_system.evaluator - ERROR - Failed to load or evaluate neural model eligibility_predictor: CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0 has a total capacity of 6.00 GiB of which 4.08 GiB is free. Of the allocated memory 842.12 MiB is allocated by PyTorch, and 27.88 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+2025-08-07 12:03:52,387 - hybex_system.evaluator - INFO - End-to-end evaluation completed.
+2025-08-07 12:03:52,391 - hybex_system.evaluator - INFO - ✅ Evaluation results saved to D:\Code_stuff\NLP\multi_domain_legal\results\evaluation_results\evaluation_results_20250807_120352.json
+2025-08-07 12:03:52,392 - hybex_system.evaluator - INFO - ✅ Evaluation report generated: D:\Code_stuff\NLP\multi_domain_legal\results\evaluation_reports\evaluation_report_20250807_120352.txt
+2025-08-07 12:03:52,395 - hybex_system.evaluator - INFO - ✅ Evaluation visualizations saved to D:\Code_stuff\NLP\multi_domain_legal\results\evaluation_plots
+2025-08-07 12:41:17,003 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-07 12:41:17,003 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 12:41:17,004 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-07 12:41:17,004 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 12:41:17,004 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-07 12:41:17,004 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-07 12:41:23,750 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from d:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-07 12:41:23,750 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-07 12:42:20,197 - hybex_system.evaluator - INFO - Evaluation complete for DomainClassifier: Acc=1.0000, F1=1.0000, Loss=0.0007
+2025-08-07 12:42:20,400 - hybex_system.evaluator - INFO - ✅ Domain classifier evaluation completed and memory cleared
+2025-08-07 12:42:21,763 - hybex_system.evaluator - INFO - ✅ Loaded eligibility_predictor from d:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\eligibility_predictor
+2025-08-07 12:42:21,764 - hybex_system.evaluator - INFO - Evaluating neural model: EligibilityPredictor for eligibility_prediction
+2025-08-07 12:43:19,419 - hybex_system.evaluator - INFO - Evaluation complete for EligibilityPredictor: Acc=0.8441, F1=0.8010, Loss=0.4095
+2025-08-07 12:43:19,641 - hybex_system.evaluator - INFO - ✅ Eligibility predictor evaluation completed and memory cleared
+2025-08-07 12:43:19,643 - hybex_system.evaluator - INFO - End-to-end evaluation completed.
+2025-08-07 12:43:19,647 - hybex_system.evaluator - INFO - ✅ Evaluation results saved to d:\Code_stuff\NLP\multi_domain_legal\results\evaluation_results\evaluation_results_20250807_124319.json
+2025-08-07 12:43:19,648 - hybex_system.evaluator - INFO - ✅ Evaluation report generated: d:\Code_stuff\NLP\multi_domain_legal\results\evaluation_reports\evaluation_report_20250807_124319.txt
+2025-08-07 12:43:21,747 - hybex_system.evaluator - INFO - Generated Neural Eligibility Predictor Confusion Matrix.
+2025-08-07 12:43:21,748 - hybex_system.evaluator - INFO - ✅ Evaluation visualizations saved to d:\Code_stuff\NLP\multi_domain_legal\results\evaluation_plots
+2025-08-07 12:56:14,274 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-07 12:56:14,276 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 12:56:14,276 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-07 12:56:14,276 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 12:56:14,277 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-07 12:56:14,277 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-07 12:56:14,277 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-07 12:57:31,288 - hybex_system.evaluator - INFO - Completed Prolog reasoning for 100 samples
+2025-08-07 12:57:37,250 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from d:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-07 12:57:37,250 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-07 12:58:35,119 - hybex_system.evaluator - INFO - Evaluation complete for DomainClassifier: Acc=1.0000, F1=1.0000, Loss=0.0007
+2025-08-07 12:58:35,296 - hybex_system.evaluator - INFO - ✅ Domain classifier evaluation completed and memory cleared
+2025-08-07 12:58:36,739 - hybex_system.evaluator - INFO - ✅ Loaded eligibility_predictor from d:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\eligibility_predictor
+2025-08-07 12:58:36,740 - hybex_system.evaluator - INFO - Evaluating neural model: EligibilityPredictor for eligibility_prediction
+2025-08-07 12:59:38,096 - hybex_system.evaluator - INFO - Evaluation complete for EligibilityPredictor: Acc=0.8441, F1=0.8010, Loss=0.4095
+2025-08-07 12:59:38,096 - hybex_system.evaluator - INFO - ✅ Eligibility predictor evaluation completed
+2025-08-07 12:59:38,097 - hybex_system.evaluator - INFO - Evaluating Prolog reasoning accuracy...
+2025-08-07 12:59:38,097 - hybex_system.evaluator - INFO - Processing 100 Prolog reasoning results...
+2025-08-07 12:59:38,098 - hybex_system.evaluator - INFO - Created sample map with 3150 test samples
+2025-08-07 12:59:38,099 - hybex_system.evaluator - INFO - Successfully matched 100 Prolog results with test samples
+2025-08-07 12:59:38,119 - hybex_system.evaluator - INFO - ✅ Prolog Evaluation Complete: Acc=0.3400, F1=0.0000, Precision=0.0000, Recall=0.0000
+2025-08-07 12:59:38,120 - hybex_system.evaluator - INFO - Performing hybrid decision fusion and agreement analysis...
+2025-08-07 12:59:38,120 - hybex_system.evaluator - INFO - Running hybrid evaluation with neural model and 100 Prolog results
+2025-08-07 12:59:38,120 - hybex_system.evaluator - INFO - Created Prolog results map with 100 entries
+2025-08-07 12:59:38,140 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_19803: 'min_confidence_for_override'
+2025-08-07 12:59:38,156 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_18634: 'min_confidence_for_override'
+2025-08-07 12:59:38,172 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_2908: 'min_confidence_for_override'
+2025-08-07 12:59:38,188 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_18604: 'min_confidence_for_override'
+2025-08-07 12:59:38,207 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_20498: 'min_confidence_for_override'
+2025-08-07 12:59:38,222 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_12893: 'min_confidence_for_override'
+2025-08-07 12:59:38,234 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_8926: 'min_confidence_for_override'
+2025-08-07 12:59:38,247 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_13492: 'min_confidence_for_override'
+2025-08-07 12:59:38,259 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_12129: 'min_confidence_for_override'
+2025-08-07 12:59:38,273 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_9025: 'min_confidence_for_override'
+2025-08-07 12:59:38,289 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_12407: 'min_confidence_for_override'
+2025-08-07 12:59:38,303 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_11445: 'min_confidence_for_override'
+2025-08-07 12:59:38,317 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_16710: 'min_confidence_for_override'
+2025-08-07 12:59:38,331 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_20987: 'min_confidence_for_override'
+2025-08-07 12:59:38,346 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_12031: 'min_confidence_for_override'
+2025-08-07 12:59:38,359 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_2518: 'min_confidence_for_override'
+2025-08-07 12:59:38,372 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_11618: 'min_confidence_for_override'
+2025-08-07 12:59:38,385 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_5755: 'min_confidence_for_override'
+2025-08-07 12:59:38,400 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_12036: 'min_confidence_for_override'
+2025-08-07 12:59:38,413 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_17714: 'min_confidence_for_override'
+2025-08-07 12:59:38,427 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_11862: 'min_confidence_for_override'
+2025-08-07 12:59:38,442 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_5692: 'min_confidence_for_override'
+2025-08-07 12:59:38,458 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_1759: 'min_confidence_for_override'
+2025-08-07 12:59:38,473 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_14765: 'min_confidence_for_override'
+2025-08-07 12:59:38,485 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_16015: 'min_confidence_for_override'
+2025-08-07 12:59:38,496 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_10611: 'min_confidence_for_override'
+2025-08-07 12:59:38,507 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_18173: 'min_confidence_for_override'
+2025-08-07 12:59:38,519 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_17737: 'min_confidence_for_override'
+2025-08-07 12:59:38,532 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_12506: 'min_confidence_for_override'
+2025-08-07 12:59:38,546 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_13740: 'min_confidence_for_override'
+2025-08-07 12:59:38,557 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_12443: 'min_confidence_for_override'
+2025-08-07 12:59:38,568 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_9101: 'min_confidence_for_override'
+2025-08-07 12:59:38,582 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_20352: 'min_confidence_for_override'
+2025-08-07 12:59:38,594 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_10966: 'min_confidence_for_override'
+2025-08-07 12:59:38,605 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_10909: 'min_confidence_for_override'
+2025-08-07 12:59:38,616 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_17369: 'min_confidence_for_override'
+2025-08-07 12:59:38,628 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_10597: 'min_confidence_for_override'
+2025-08-07 12:59:38,638 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_5908: 'min_confidence_for_override'
+2025-08-07 12:59:38,649 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_2163: 'min_confidence_for_override'
+2025-08-07 12:59:38,660 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_17309: 'min_confidence_for_override'
+2025-08-07 12:59:38,673 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_4374: 'min_confidence_for_override'
+2025-08-07 12:59:38,683 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_9936: 'min_confidence_for_override'
+2025-08-07 12:59:38,694 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_15815: 'min_confidence_for_override'
+2025-08-07 12:59:38,706 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_1724: 'min_confidence_for_override'
+2025-08-07 12:59:38,717 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_2319: 'min_confidence_for_override'
+2025-08-07 12:59:38,729 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_14603: 'min_confidence_for_override'
+2025-08-07 12:59:38,740 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_10460: 'min_confidence_for_override'
+2025-08-07 12:59:38,752 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_4371: 'min_confidence_for_override'
+2025-08-07 12:59:38,763 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_5336: 'min_confidence_for_override'
+2025-08-07 12:59:38,776 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_13712: 'min_confidence_for_override'
+2025-08-07 12:59:38,786 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_13246: 'min_confidence_for_override'
+2025-08-07 12:59:38,799 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_1235: 'min_confidence_for_override'
+2025-08-07 12:59:38,811 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_11525: 'min_confidence_for_override'
+2025-08-07 12:59:38,822 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_13845: 'min_confidence_for_override'
+2025-08-07 12:59:38,834 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_15513: 'min_confidence_for_override'
+2025-08-07 12:59:38,847 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_18109: 'min_confidence_for_override'
+2025-08-07 12:59:38,860 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_16074: 'min_confidence_for_override'
+2025-08-07 12:59:38,876 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_4188: 'min_confidence_for_override'
+2025-08-07 12:59:38,889 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_10380: 'min_confidence_for_override'
+2025-08-07 12:59:38,901 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_20296: 'min_confidence_for_override'
+2025-08-07 12:59:38,943 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_2844: 'min_confidence_for_override'
+2025-08-07 12:59:38,973 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_19585: 'min_confidence_for_override'
+2025-08-07 12:59:38,991 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_2378: 'min_confidence_for_override'
+2025-08-07 12:59:39,008 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_19859: 'min_confidence_for_override'
+2025-08-07 12:59:39,020 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_7442: 'min_confidence_for_override'
+2025-08-07 12:59:39,032 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_3309: 'min_confidence_for_override'
+2025-08-07 12:59:39,043 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_3317: 'min_confidence_for_override'
+2025-08-07 12:59:39,054 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_2288: 'min_confidence_for_override'
+2025-08-07 12:59:39,065 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_11874: 'min_confidence_for_override'
+2025-08-07 12:59:39,076 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_17439: 'min_confidence_for_override'
+2025-08-07 12:59:39,088 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_10903: 'min_confidence_for_override'
+2025-08-07 12:59:39,098 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_10057: 'min_confidence_for_override'
+2025-08-07 12:59:39,109 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_1610: 'min_confidence_for_override'
+2025-08-07 12:59:39,122 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_14772: 'min_confidence_for_override'
+2025-08-07 12:59:39,133 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_6545: 'min_confidence_for_override'
+2025-08-07 12:59:39,145 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_35: 'min_confidence_for_override'
+2025-08-07 12:59:39,157 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_17314: 'min_confidence_for_override'
+2025-08-07 12:59:39,168 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_8397: 'min_confidence_for_override'
+2025-08-07 12:59:39,180 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_1215: 'min_confidence_for_override'
+2025-08-07 12:59:39,192 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_3986: 'min_confidence_for_override'
+2025-08-07 12:59:39,203 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_18495: 'min_confidence_for_override'
+2025-08-07 12:59:39,214 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_8156: 'min_confidence_for_override'
+2025-08-07 12:59:39,227 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_19862: 'min_confidence_for_override'
+2025-08-07 12:59:39,239 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_15111: 'min_confidence_for_override'
+2025-08-07 12:59:39,252 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_1658: 'min_confidence_for_override'
+2025-08-07 12:59:39,262 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_8356: 'min_confidence_for_override'
+2025-08-07 12:59:39,272 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_12318: 'min_confidence_for_override'
+2025-08-07 12:59:39,288 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_5596: 'min_confidence_for_override'
+2025-08-07 12:59:39,299 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_8777: 'min_confidence_for_override'
+2025-08-07 12:59:39,310 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_20788: 'min_confidence_for_override'
+2025-08-07 12:59:39,322 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_20691: 'min_confidence_for_override'
+2025-08-07 12:59:39,333 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_4386: 'min_confidence_for_override'
+2025-08-07 12:59:39,344 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_14632: 'min_confidence_for_override'
+2025-08-07 12:59:39,356 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_9002: 'min_confidence_for_override'
+2025-08-07 12:59:39,367 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_17164: 'min_confidence_for_override'
+2025-08-07 12:59:39,377 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_1930: 'min_confidence_for_override'
+2025-08-07 12:59:39,388 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_12037: 'min_confidence_for_override'
+2025-08-07 12:59:39,402 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_18020: 'min_confidence_for_override'
+2025-08-07 12:59:39,414 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_18722: 'min_confidence_for_override'
+2025-08-07 12:59:39,424 - hybex_system.evaluator - WARNING - Hybrid evaluation failed for sample sample_15140: 'min_confidence_for_override'
+2025-08-07 12:59:39,425 - hybex_system.evaluator - INFO - ✅ Hybrid evaluation completed for 0 samples
+2025-08-07 12:59:39,425 - hybex_system.evaluator - WARNING - No samples processed for hybrid evaluation.
+2025-08-07 12:59:39,689 - hybex_system.evaluator - INFO - ✅ Eligibility predictor cleaned up after hybrid evaluation
+2025-08-07 12:59:39,690 - hybex_system.evaluator - INFO - End-to-end evaluation completed.
+2025-08-07 12:59:39,699 - hybex_system.evaluator - INFO - ✅ Evaluation results saved to d:\Code_stuff\NLP\multi_domain_legal\results\evaluation_results\evaluation_results_20250807_125939.json
+2025-08-07 12:59:39,711 - hybex_system.evaluator - INFO - ✅ Evaluation report generated: d:\Code_stuff\NLP\multi_domain_legal\results\evaluation_reports\evaluation_report_20250807_125939.txt
+2025-08-07 12:59:40,214 - hybex_system.evaluator - INFO - Generated Neural Eligibility Predictor Confusion Matrix.
+2025-08-07 12:59:40,452 - hybex_system.evaluator - INFO - Generated Prolog Reasoning Confusion Matrix.
+2025-08-07 12:59:40,452 - hybex_system.evaluator - INFO - ✅ Evaluation visualizations saved to d:\Code_stuff\NLP\multi_domain_legal\results\evaluation_plots
+2025-08-07 17:19:16,961 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-07 17:19:16,962 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 17:19:16,962 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-07 17:19:16,963 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 17:19:16,963 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-07 17:19:16,963 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-07 17:19:16,963 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-07 17:19:18,145 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 0: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:18,553 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 1: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:18,862 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 2: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:19,134 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 3: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:19,422 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 4: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:19,797 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 5: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:20,104 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 6: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:20,388 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 7: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:20,695 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 8: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:21,035 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 9: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:21,340 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 10: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:21,602 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 11: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:21,957 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 12: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:22,304 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 13: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:22,594 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 14: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:22,862 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 15: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:23,179 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 16: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:23,473 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 17: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:23,795 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 18: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:24,143 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 19: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:24,425 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 20: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:24,654 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 21: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:24,921 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 22: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:25,173 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 23: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:25,502 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 24: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:25,710 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 25: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:25,924 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 26: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:26,255 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 27: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:26,559 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 28: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:26,855 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 29: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:27,176 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 30: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:27,488 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 31: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:27,808 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 32: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:28,107 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 33: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:28,415 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 34: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:28,782 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 35: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:29,124 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 36: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:29,441 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 37: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:29,734 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 38: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:30,083 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 39: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:30,447 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 40: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:30,732 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 41: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:31,028 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 42: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:31,330 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 43: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:31,654 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 44: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:32,041 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 45: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:32,475 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 46: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:32,817 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 47: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:33,181 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 48: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:33,618 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 49: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:33,974 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 50: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:34,324 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 51: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:34,617 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 52: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:34,968 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 53: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:35,362 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 54: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:35,665 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 55: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:36,062 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 56: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:36,423 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 57: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:36,816 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 58: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:37,090 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 59: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:37,326 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 60: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:37,633 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 61: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:37,953 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 62: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:38,310 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 63: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:38,627 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 64: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:38,924 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 65: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:39,218 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 66: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:39,547 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 67: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:39,878 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 68: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:40,156 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 69: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:40,482 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 70: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:40,771 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 71: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:41,041 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 72: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:41,376 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 73: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:41,698 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 74: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:41,980 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 75: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:42,284 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 76: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:42,590 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 77: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:43,016 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 78: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:43,284 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 79: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:43,675 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 80: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:44,080 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 81: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:44,497 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 82: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:44,881 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 83: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:45,315 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 84: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:45,798 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 85: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:46,198 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 86: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:46,516 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 87: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:46,802 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 88: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:47,117 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 89: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:47,421 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 90: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:47,751 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 91: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:48,064 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 92: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:48,427 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 93: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:48,743 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 94: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:49,053 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 95: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:49,450 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 96: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:49,759 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 97: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:50,082 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 98: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:50,383 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 99: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:19:50,384 - hybex_system.evaluator - INFO - Completed Prolog reasoning for 0 samples
+2025-08-07 17:19:56,780 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from d:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-07 17:19:56,781 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-07 17:22:37,023 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-07 17:22:37,023 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 17:22:37,023 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-07 17:22:37,024 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 17:22:37,024 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-07 17:22:37,024 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-07 17:22:37,024 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-07 17:22:38,013 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 0: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:38,347 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 1: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:38,657 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 2: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:39,042 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 3: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:39,330 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 4: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:39,646 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 5: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:39,950 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 6: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:40,281 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 7: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:40,627 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 8: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:40,951 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 9: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:41,261 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 10: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:41,544 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 11: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:41,875 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 12: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:42,180 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 13: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:42,454 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 14: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:42,721 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 15: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:43,072 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 16: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:43,369 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 17: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:43,666 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 18: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:43,956 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 19: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:44,306 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 20: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:44,586 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 21: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:44,879 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 22: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:45,199 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 23: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:45,590 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 24: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:45,844 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 25: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:46,152 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 26: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:46,450 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 27: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:46,828 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 28: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:47,147 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 29: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:47,413 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 30: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:47,680 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 31: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:47,896 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 32: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:48,226 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 33: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:48,551 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 34: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:48,900 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 35: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:49,216 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 36: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:49,581 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 37: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:49,856 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 38: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:50,180 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 39: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:50,507 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 40: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:50,750 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 41: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:51,041 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 42: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:51,372 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 43: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:51,701 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 44: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:52,000 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 45: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:52,293 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 46: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:52,642 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 47: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:52,925 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 48: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:53,195 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 49: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:53,449 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 50: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:53,780 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 51: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:54,061 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 52: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:54,345 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 53: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:54,629 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 54: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:54,952 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 55: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:55,256 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 56: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:55,548 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 57: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:55,825 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 58: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:56,141 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 59: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:56,448 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 60: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:56,749 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 61: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:57,035 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 62: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:57,346 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 63: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:57,636 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 64: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:57,923 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 65: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:58,222 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 66: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:58,517 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 67: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:58,848 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 68: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:59,153 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 69: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:59,454 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 70: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:22:59,814 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 71: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:00,129 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 72: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:00,387 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 73: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:00,664 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 74: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:00,945 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 75: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:01,279 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 76: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:01,596 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 77: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:01,877 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 78: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:02,211 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 79: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:02,517 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 80: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:02,795 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 81: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:03,110 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 82: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:03,419 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 83: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:03,718 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 84: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:04,018 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 85: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:04,296 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 86: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:04,550 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 87: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:04,884 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 88: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:05,167 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 89: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:05,398 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 90: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:05,664 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 91: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:05,954 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 92: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:06,273 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 93: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:06,574 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 94: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:06,853 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 95: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:07,211 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 96: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:07,529 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 97: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:07,863 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 98: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:08,105 - hybex_system.evaluator - WARNING - Prolog reasoning failed for sample 99: LegalReasoning.__init__() got an unexpected keyword argument 'applicable_rules'
+2025-08-07 17:23:08,106 - hybex_system.evaluator - INFO - Completed Prolog reasoning for 0 samples
+2025-08-07 17:23:12,973 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from D:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-07 17:23:12,973 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-07 17:24:07,634 - hybex_system.evaluator - ERROR - Failed to load or evaluate neural model domain_classifier: CUDA error: unknown error
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-08-07 18:13:33,301 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-07 18:13:33,302 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 18:13:33,302 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-07 18:13:33,302 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 18:13:33,303 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-07 18:13:33,303 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-07 18:13:33,303 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-07 18:14:30,523 - hybex_system.evaluator - INFO - Completed Prolog reasoning for 100 samples
+2025-08-07 18:14:43,024 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from D:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-07 18:14:43,026 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-07 18:33:10,707 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-07 18:33:10,708 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 18:33:10,708 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-07 18:33:10,708 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 18:33:10,708 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-07 18:33:10,708 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-07 18:33:10,708 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-07 18:34:10,604 - hybex_system.evaluator - INFO - Completed Prolog reasoning for 100 samples
+2025-08-07 18:34:22,110 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from D:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-07 18:34:22,112 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-07 18:36:15,923 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-07 18:36:15,926 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 18:36:15,927 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-07 18:36:15,928 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 18:36:15,929 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-07 18:36:15,929 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-07 18:36:15,929 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-07 18:37:07,704 - hybex_system.evaluator - INFO - Completed Prolog reasoning for 100 samples
+2025-08-07 18:37:14,063 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from D:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-07 18:37:14,064 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-07 18:37:42,651 - hybex_system.evaluator - ERROR - Failed to load or evaluate neural model domain_classifier: CUDA error: unknown error
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-08-07 18:37:44,588 - hybex_system.evaluator - INFO - ✅ Loaded eligibility_predictor from D:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\eligibility_predictor
+2025-08-07 18:37:44,589 - hybex_system.evaluator - INFO - Evaluating neural model: EligibilityPredictor for eligibility_prediction
+2025-08-07 18:52:39,837 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-07 18:52:39,838 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 18:52:39,838 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-07 18:52:39,838 - hybex_system.evaluator - INFO - ============================================================
+2025-08-07 18:52:39,839 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-07 18:52:39,839 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-07 18:52:39,839 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-08 01:31:59,574 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-08 01:31:59,575 - hybex_system.evaluator - INFO - ============================================================
+2025-08-08 01:31:59,575 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-08 01:31:59,576 - hybex_system.evaluator - INFO - ============================================================
+2025-08-08 01:31:59,576 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-08 01:31:59,576 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-08 01:31:59,577 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-09 19:35:21,751 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-09 19:35:21,751 - hybex_system.evaluator - INFO - ============================================================
+2025-08-09 19:35:21,751 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-09 19:35:21,751 - hybex_system.evaluator - INFO - ============================================================
+2025-08-09 19:35:21,751 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-09 19:35:21,756 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-09 19:35:21,756 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-09 19:36:09,537 - hybex_system.evaluator - INFO - Completed Prolog reasoning for 100 samples
+2025-08-09 19:36:20,600 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from D:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-09 19:36:20,600 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-09 19:37:20,334 - hybex_system.evaluator - INFO - Evaluation complete for DomainClassifier: Acc=1.0000, F1=1.0000, Loss=0.0007
+2025-08-09 19:37:20,587 - hybex_system.evaluator - INFO - ✅ Domain classifier evaluation completed and memory cleared
+2025-08-09 19:37:21,807 - hybex_system.evaluator - INFO - ✅ Loaded eligibility_predictor from D:\Code_stuff\NLP\multi_domain_legal\models\hybex_system\eligibility_predictor
+2025-08-09 19:37:21,807 - hybex_system.evaluator - INFO - Evaluating neural model: EligibilityPredictor for eligibility_prediction
+2025-08-09 19:38:14,692 - hybex_system.evaluator - INFO - Evaluation complete for EligibilityPredictor: Acc=0.8441, F1=0.8010, Loss=0.4088
+2025-08-09 19:38:14,693 - hybex_system.evaluator - INFO - ✅ Eligibility predictor evaluation completed
+2025-08-09 19:38:14,694 - hybex_system.evaluator - INFO - Evaluating Prolog reasoning accuracy...
+2025-08-09 19:38:14,694 - hybex_system.evaluator - INFO - Processing 100 Prolog reasoning results...
+2025-08-09 19:38:14,695 - hybex_system.evaluator - INFO - Created sample map with 3150 test samples
+2025-08-09 19:38:14,695 - hybex_system.evaluator - INFO - Successfully matched 100 Prolog results with test samples
+2025-08-09 19:38:14,712 - hybex_system.evaluator - INFO - ✅ Prolog Evaluation Complete: Acc=0.3400, F1=0.0000, Precision=0.0000, Recall=0.0000
+2025-08-09 19:38:14,712 - hybex_system.evaluator - INFO - Performing hybrid decision fusion and agreement analysis...
+2025-08-09 19:38:14,716 - hybex_system.evaluator - INFO - Running hybrid evaluation with neural model and 100 Prolog results
+2025-08-09 19:38:14,717 - hybex_system.evaluator - INFO - Created Prolog results map with 100 entries
+2025-08-09 19:38:16,030 - hybex_system.evaluator - INFO - ✅ Hybrid evaluation completed for 100 samples
+2025-08-09 19:38:16,045 - hybex_system.evaluator - INFO - ✅ Hybrid System Performance: Acc=0.8200, F1=0.8767
+2025-08-09 19:38:16,046 - hybex_system.evaluator - INFO - ✅ Component Agreement: Neural-Prolog=0.2000
+2025-08-09 19:38:16,248 - hybex_system.evaluator - INFO - ✅ Eligibility predictor cleaned up after hybrid evaluation
+2025-08-09 19:38:16,248 - hybex_system.evaluator - INFO - End-to-end evaluation completed.
+2025-08-09 19:38:16,270 - hybex_system.evaluator - INFO - ✅ Evaluation results saved to D:\Code_stuff\NLP\multi_domain_legal\results\evaluation_results\evaluation_results_20250809_193816.json
+2025-08-09 19:38:16,272 - hybex_system.evaluator - INFO - ✅ Evaluation report generated: D:\Code_stuff\NLP\multi_domain_legal\results\evaluation_reports\evaluation_report_20250809_193816.txt
+2025-08-09 19:38:18,448 - hybex_system.evaluator - INFO - Generated Neural Eligibility Predictor Confusion Matrix.
+2025-08-09 19:38:18,707 - hybex_system.evaluator - INFO - Generated Prolog Reasoning Confusion Matrix.
+2025-08-09 19:38:18,707 - hybex_system.evaluator - INFO - ✅ Evaluation visualizations saved to D:\Code_stuff\NLP\multi_domain_legal\results\evaluation_plots
+2025-08-11 13:14:16,565 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-11 13:14:16,565 - hybex_system.evaluator - INFO - ============================================================
+2025-08-11 13:14:16,565 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-11 13:14:16,565 - hybex_system.evaluator - INFO - ============================================================
+2025-08-11 13:14:16,565 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-11 13:18:21,142 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-11 13:18:21,142 - hybex_system.evaluator - INFO - ============================================================
+2025-08-11 13:18:21,142 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-11 13:18:21,142 - hybex_system.evaluator - INFO - ============================================================
+2025-08-11 13:18:21,142 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-11 13:27:38,301 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-11 13:27:38,301 - hybex_system.evaluator - INFO - ============================================================
+2025-08-11 13:27:38,301 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-11 13:27:38,301 - hybex_system.evaluator - INFO - ============================================================
+2025-08-11 13:27:38,301 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-11 13:27:38,301 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-11 13:27:38,306 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-12 11:31:47,827 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-12 11:31:47,827 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 11:31:47,827 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-12 11:31:47,827 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 11:31:47,827 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-12 11:31:47,827 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-12 11:31:47,827 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-12 11:32:02,745 - hybex_system.evaluator - INFO - Completed Prolog reasoning for 100 samples
+2025-08-12 11:32:05,314 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-12 11:32:05,314 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-12 11:32:36,371 - hybex_system.evaluator - INFO - Evaluation complete for DomainClassifier: Acc=1.0000, F1=1.0000, Loss=0.0007
+2025-08-12 11:32:36,531 - hybex_system.evaluator - INFO - ✅ Domain classifier evaluation completed and memory cleared
+2025-08-12 11:32:37,265 - hybex_system.evaluator - INFO - ✅ Loaded eligibility_predictor from C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\models\hybex_system\eligibility_predictor
+2025-08-12 11:32:37,265 - hybex_system.evaluator - INFO - Evaluating neural model: EligibilityPredictor for eligibility_prediction
+2025-08-12 11:33:06,368 - hybex_system.evaluator - INFO - Evaluation complete for EligibilityPredictor: Acc=0.8441, F1=0.8010, Loss=0.4088
+2025-08-12 11:33:06,368 - hybex_system.evaluator - INFO - ✅ Eligibility predictor evaluation completed
+2025-08-12 11:33:06,368 - hybex_system.evaluator - INFO - Evaluating Prolog reasoning accuracy...
+2025-08-12 11:33:06,368 - hybex_system.evaluator - INFO - Processing 100 Prolog reasoning results...
+2025-08-12 11:33:06,368 - hybex_system.evaluator - INFO - Created sample map with 3150 test samples
+2025-08-12 11:33:06,368 - hybex_system.evaluator - INFO - Successfully matched 100 Prolog results with test samples
+2025-08-12 11:33:06,368 - hybex_system.evaluator - INFO - ✅ Prolog Evaluation Complete: Acc=0.6100, F1=0.7310, Precision=0.6709, Recall=0.8030
+2025-08-12 11:33:06,368 - hybex_system.evaluator - INFO - Performing hybrid decision fusion and agreement analysis...
+2025-08-12 11:33:06,368 - hybex_system.evaluator - INFO - Running hybrid evaluation with neural model and 100 Prolog results
+2025-08-12 11:33:06,368 - hybex_system.evaluator - INFO - Created Prolog results map with 100 entries
+2025-08-12 11:33:06,984 - hybex_system.evaluator - INFO - ✅ Hybrid evaluation completed for 100 samples
+2025-08-12 11:33:06,984 - hybex_system.evaluator - INFO - ✅ Hybrid System Performance: Acc=0.7400, F1=0.8354
+2025-08-12 11:33:06,984 - hybex_system.evaluator - INFO - ✅ Component Agreement: Neural-Prolog=0.6700
+2025-08-12 11:33:07,149 - hybex_system.evaluator - INFO - ✅ Eligibility predictor cleaned up after hybrid evaluation
+2025-08-12 11:33:07,149 - hybex_system.evaluator - INFO - End-to-end evaluation completed.
+2025-08-12 11:33:07,167 - hybex_system.evaluator - INFO - ✅ Evaluation results saved to C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\evaluation_results\evaluation_results_20250812_113307.json
+2025-08-12 11:33:07,169 - hybex_system.evaluator - INFO - ✅ Evaluation report generated: C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\evaluation_reports\evaluation_report_20250812_113307.txt
+2025-08-12 11:33:07,451 - hybex_system.evaluator - INFO - Generated Neural Eligibility Predictor Confusion Matrix.
+2025-08-12 11:33:07,566 - hybex_system.evaluator - INFO - Generated Prolog Reasoning Confusion Matrix.
+2025-08-12 11:33:07,566 - hybex_system.evaluator - INFO - ✅ Evaluation visualizations saved to C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\evaluation_plots
+2025-08-12 12:16:31,913 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-12 12:16:31,913 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 12:16:31,913 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-12 12:16:31,913 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 12:16:31,913 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-12 14:44:40,701 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-12 14:44:40,702 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 14:44:40,702 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-12 14:44:40,702 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 14:44:40,702 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-12 14:58:12,454 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-12 14:58:12,454 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 14:58:12,454 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-12 14:58:12,454 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 14:58:12,454 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-12 15:05:27,928 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-12 15:05:27,932 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 15:05:27,932 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-12 15:05:27,932 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 15:05:27,932 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-12 15:13:36,213 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-12 15:13:36,213 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 15:13:36,213 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-12 15:13:36,213 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 15:13:36,229 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-12 16:37:45,996 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-12 16:37:45,996 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 16:37:45,996 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-12 16:37:45,996 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 16:37:45,996 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-12 16:37:45,996 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-12 16:37:45,996 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-12 16:38:00,267 - hybex_system.evaluator - INFO - Completed Prolog reasoning for 100 samples
+2025-08-12 16:38:02,880 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-12 16:38:02,880 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-12 16:38:47,456 - hybex_system.evaluator - INFO - Evaluation complete for DomainClassifier: Acc=0.8803, F1=0.9491, Loss=0.1049
+2025-08-12 16:38:47,616 - hybex_system.evaluator - INFO - ✅ Domain classifier evaluation completed and memory cleared
+2025-08-12 16:38:48,341 - hybex_system.evaluator - INFO - ✅ Loaded eligibility_predictor from C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\models\hybex_system\eligibility_predictor
+2025-08-12 16:38:48,341 - hybex_system.evaluator - INFO - Evaluating neural model: EligibilityPredictor for eligibility_prediction
+2025-08-12 16:39:31,514 - hybex_system.evaluator - INFO - Evaluation complete for EligibilityPredictor: Acc=0.5019, F1=0.5017, Loss=0.6936
+2025-08-12 16:39:31,514 - hybex_system.evaluator - INFO - ✅ Eligibility predictor evaluation completed
+2025-08-12 16:39:31,514 - hybex_system.evaluator - INFO - Evaluating Prolog reasoning accuracy...
+2025-08-12 16:39:31,517 - hybex_system.evaluator - INFO - Processing 100 Prolog reasoning results...
+2025-08-12 16:39:31,518 - hybex_system.evaluator - INFO - Created sample map with 5850 test samples
+2025-08-12 16:39:31,518 - hybex_system.evaluator - INFO - Successfully matched 100 Prolog results with test samples
+2025-08-12 16:39:31,518 - hybex_system.evaluator - INFO - ✅ Prolog Evaluation Complete: Acc=0.5000, F1=0.5763, Precision=0.5231, Recall=0.6415
+2025-08-12 16:39:31,518 - hybex_system.evaluator - INFO - Performing hybrid decision fusion and agreement analysis...
+2025-08-12 16:39:31,518 - hybex_system.evaluator - INFO - Running hybrid evaluation with neural model and 100 Prolog results
+2025-08-12 16:39:31,527 - hybex_system.evaluator - INFO - Created Prolog results map with 100 entries
+2025-08-12 16:39:32,126 - hybex_system.evaluator - INFO - ✅ Hybrid evaluation completed for 100 samples
+2025-08-12 16:39:32,134 - hybex_system.evaluator - INFO - ✅ Hybrid System Performance: Acc=0.5100, F1=0.6316
+2025-08-12 16:39:32,135 - hybex_system.evaluator - INFO - ✅ Component Agreement: Neural-Prolog=0.6000
+2025-08-12 16:39:32,282 - hybex_system.evaluator - INFO - ✅ Eligibility predictor cleaned up after hybrid evaluation
+2025-08-12 16:39:32,282 - hybex_system.evaluator - INFO - End-to-end evaluation completed.
+2025-08-12 16:39:32,301 - hybex_system.evaluator - INFO - ✅ Evaluation results saved to C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\evaluation_results\evaluation_results_20250812_163932.json
+2025-08-12 16:39:32,303 - hybex_system.evaluator - INFO - ✅ Evaluation report generated: C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\evaluation_reports\evaluation_report_20250812_163932.txt
+2025-08-12 16:39:32,496 - hybex_system.evaluator - INFO - Generated Neural Eligibility Predictor Confusion Matrix.
+2025-08-12 16:39:32,638 - hybex_system.evaluator - INFO - Generated Prolog Reasoning Confusion Matrix.
+2025-08-12 16:39:32,639 - hybex_system.evaluator - INFO - ✅ Evaluation visualizations saved to C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\evaluation_plots
+2025-08-12 17:03:24,255 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-08-12 17:03:24,255 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 17:03:24,255 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-08-12 17:03:24,255 - hybex_system.evaluator - INFO - ============================================================
+2025-08-12 17:03:24,255 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-08-12 17:03:24,255 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
+2025-08-12 17:03:24,255 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
+2025-08-12 17:03:38,321 - hybex_system.evaluator - INFO - Completed Prolog reasoning for 100 samples
+2025-08-12 17:03:40,898 - hybex_system.evaluator - INFO - ✅ Loaded domain_classifier from C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\models\hybex_system\domain_classifier
+2025-08-12 17:03:40,899 - hybex_system.evaluator - INFO - Evaluating neural model: DomainClassifier for domain_classification
+2025-08-12 17:04:25,537 - hybex_system.evaluator - INFO - Evaluation complete for DomainClassifier: Acc=0.8803, F1=0.9491, Loss=0.1049
+2025-08-12 17:04:25,701 - hybex_system.evaluator - INFO - ✅ Domain classifier evaluation completed and memory cleared
+2025-08-12 17:04:26,438 - hybex_system.evaluator - INFO - ✅ Loaded eligibility_predictor from C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\models\hybex_system\eligibility_predictor
+2025-08-12 17:04:26,439 - hybex_system.evaluator - INFO - Evaluating neural model: EligibilityPredictor for eligibility_prediction
+2025-08-12 17:05:08,920 - hybex_system.evaluator - INFO - Evaluation complete for EligibilityPredictor: Acc=0.5019, F1=0.5017, Loss=0.6936
+2025-08-12 17:05:08,920 - hybex_system.evaluator - INFO - ✅ Eligibility predictor evaluation completed
+2025-08-12 17:05:08,921 - hybex_system.evaluator - INFO - Evaluating Prolog reasoning accuracy...
+2025-08-12 17:05:08,921 - hybex_system.evaluator - INFO - Processing 100 Prolog reasoning results...
+2025-08-12 17:05:08,923 - hybex_system.evaluator - INFO - Created sample map with 5850 test samples
+2025-08-12 17:05:08,923 - hybex_system.evaluator - INFO - Successfully matched 100 Prolog results with test samples
+2025-08-12 17:05:08,923 - hybex_system.evaluator - INFO - ✅ Prolog Evaluation Complete: Acc=0.5200, F1=0.6000, Precision=0.5373, Recall=0.6792
+2025-08-12 17:05:08,923 - hybex_system.evaluator - INFO - Performing hybrid decision fusion and agreement analysis...
+2025-08-12 17:05:08,923 - hybex_system.evaluator - INFO - Running hybrid evaluation with neural model and 100 Prolog results
+2025-08-12 17:05:08,923 - hybex_system.evaluator - INFO - Created Prolog results map with 100 entries
+2025-08-12 17:05:09,543 - hybex_system.evaluator - INFO - ✅ Hybrid evaluation completed for 100 samples
+2025-08-12 17:05:09,551 - hybex_system.evaluator - INFO - ✅ Hybrid System Performance: Acc=0.5100, F1=0.6316
+2025-08-12 17:05:09,551 - hybex_system.evaluator - INFO - ✅ Component Agreement: Neural-Prolog=0.6000
+2025-08-12 17:05:09,702 - hybex_system.evaluator - INFO - ✅ Eligibility predictor cleaned up after hybrid evaluation
+2025-08-12 17:05:09,702 - hybex_system.evaluator - INFO - End-to-end evaluation completed.
+2025-08-12 17:05:09,718 - hybex_system.evaluator - INFO - ✅ Evaluation results saved to C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\evaluation_results\evaluation_results_20250812_170509.json
+2025-08-12 17:05:09,724 - hybex_system.evaluator - INFO - ✅ Evaluation report generated: C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\evaluation_reports\evaluation_report_20250812_170509.txt
+2025-08-12 17:05:09,919 - hybex_system.evaluator - INFO - Generated Neural Eligibility Predictor Confusion Matrix.
+2025-08-12 17:05:10,037 - hybex_system.evaluator - INFO - Generated Prolog Reasoning Confusion Matrix.
+2025-08-12 17:05:10,037 - hybex_system.evaluator - INFO - ✅ Evaluation visualizations saved to C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\evaluation_plots

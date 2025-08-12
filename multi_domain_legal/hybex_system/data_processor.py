@@ -50,86 +50,115 @@ class DataPreprocessor:
             logger.error(f"Failed to load spaCy model: {e}. Entity extraction might be limited.")
             return None
 
+    # In hybex_system/data_processor.py
+# REPLACE the entire extract_entities method with this final version.
+
     def extract_entities(self, text: str) -> Dict[str, Any]:
         """
-        Extracts legal entities (income, social category, case type, location) from text.
-        This is a rule-based/regex-based entity extraction, can be enhanced with NER models.
+        Extracts a wide range of legal entities using domain-specific regex and spaCy.
+        This is the core of providing facts to the Prolog engine.
         """
         entities = {}
         text_lower = text.lower()
-        
-        # Using spaCy for initial NER to get general entities, then refine with regex
         doc = self.nlp(text) if self.nlp else None
 
-        # 1. Income Extraction
-        # Improved regex to handle various formats (e.g., "3 lakhs", "Rs. 5,00,000", "500000")
-        income_patterns = [
-            r'(\d+(?:[\\.,]\\d+)*)\\s*(?:lakhs?|lac(?:s)?|million)?\\s*(?:rupees|rs\\.?|k)?(?:\\s*per\\s*year|annual|monthly)?',
-            r'rs\\.?\\s*(\d+(?:[\\.,]\\d+)*)',
-            r'(\d+(?:[\\.,]\\d+)*)\\s*(?:k|thousand)?(?:\\s*per\\s*year|annual|monthly)?'
-        ]
+        # =================================================================
+        # General & Demographic Entities
+        # =================================================================
         
+        # 1. Income Extraction (Robust: handles monthly vs. annual)
+        income_patterns = [
+            r'rs\.?\s*(\d[\d,]+(?:\.\d{2})?)\s*(?:per month|monthly)',
+            r'rs\.?\s*(\d[\d,]+(?:\.\d{2})?)\s*(?:per year|annually|yearly)',
+            r'(\d+)\s*lakhs? an?nual',
+            r'income.*?(\d[\d,]+)',
+            r'earning\s*rs\.?\s*(\d[\d,]+)'
+        ]
+        annual_income = None
         for pattern in income_patterns:
             match = re.search(pattern, text_lower)
             if match:
-                amount_str = match.group(1).replace(',', '').replace('.', '') # Remove commas/dots initially
-                unit = match.group(0).lower() # Get the full matched string to check for units
-                
+                amount_str = match.group(1).replace(',', '')
                 try:
                     amount = float(amount_str)
-                    if 'lakh' in unit or 'lac' in unit:
-                        amount *= 100000
-                    elif 'million' in unit:
-                        amount *= 1000000
-                    elif 'k' in unit or 'thousand' in unit: # Basic handling for 'k'
-                        amount *= 1000
-                    
-                    entities['income'] = int(amount) # Store as integer
-                    break # Stop after first successful match
+                    if 'month' in match.group(0):
+                        annual_income = amount * 12
+                    else:
+                        annual_income = amount
+                    entities['income'] = int(annual_income)
+                    break
                 except ValueError:
-                    logger.warning(f"Could not convert extracted income '{amount_str}' to number.")
+                    continue
 
-        # 2. Social Category Extraction (prioritize specific terms)
+        # 2. Social Category Extraction (Normalized for Prolog)
         social_category_mapping = {
-            'scheduled caste': 'Scheduled Caste', 'sc': 'Scheduled Caste', 'dalit': 'Scheduled Caste',
-            'scheduled tribe': 'Scheduled Tribe', 'st': 'Scheduled Tribe', 'tribal': 'Scheduled Tribe',
-            'below poverty line': 'Below Poverty Line', 'bpl': 'Below Poverty Line', 'poor': 'Below Poverty Line',
-            'economically weaker section': 'Economically Weaker Section', 'ews': 'Economically Weaker Section',
-            'other backward class': 'Other Backward Class', 'obc': 'Other Backward Class'
+            'scheduled caste': 'sc', 'sc': 'sc', 'dalit': 'sc',
+            'scheduled tribe': 'st', 'st': 'st', 'tribal': 'st',
+            'below poverty line': 'bpl', 'bpl': 'bpl', 'poor': 'bpl',
+            'economically weaker': 'ews', 'ews': 'ews',
+            'other backward class': 'obc', 'obc': 'obc'
         }
         for term, category in social_category_mapping.items():
             if term in text_lower:
                 entities['social_category'] = category
                 break
         
-        # 3. Case Type Extraction
-        case_type_mapping = {
-            'criminal': 'Criminal', 'crime': 'Criminal', 'murder': 'Criminal', 'theft': 'Criminal', 'assault': 'Criminal',
-            'family': 'Family Law', 'divorce': 'Family Law', 'custody': 'Family Law', 'matrimonial': 'Family Law', 'marriage': 'Family Law',
-            'consumer': 'Consumer Protection', 'product defect': 'Consumer Protection', 'warranty': 'Consumer Protection',
-            'employment': 'Employment Law', 'job': 'Employment Law', 'workplace': 'Employment Law', 'labor': 'Employment Law',
-            'fundamental rights': 'Fundamental Rights', 'human rights': 'Fundamental Rights', 'constitutional': 'Fundamental Rights'
-        }
-        for term, case_type in case_type_mapping.items():
-            if term in text_lower:
-                entities['case_type'] = case_type
-                break
-        
-        # 4. Location Extraction (basic, can be improved with GeoPy/more robust NER)
-        # Prioritize spaCy GPE entities
-        if doc:
-            for ent in doc.ents:
-                if ent.label_ == 'GPE': # Geo-political entity (cities, states, countries)
-                    entities['location'] = ent.text
-                    break # Take the first one for simplicity
-        
-        # Fallback regex for common Indian cities/states if spaCy misses
-        if 'location' not in entities:
-            indian_locations = ['delhi', 'mumbai', 'bengaluru', 'chennai', 'kolkata', 'hyderabad', 'pune', 'gujarat', 'maharashtra', 'karnataka', 'tamil nadu']
-            for loc in indian_locations:
-                if loc in text_lower:
-                    entities['location'] = loc.title()
-                    break
+        # 3. Age & Gender Extraction
+        age_match = re.search(r'(\d+)\s*years?\s*old', text_lower)
+        if age_match:
+            entities['age'] = int(age_match.group(1))
+            
+        if 'woman' in text_lower or 'female' in text_lower or 'wife' in text_lower or 'mother' in text_lower:
+            entities['gender'] = 'female'
+        elif 'man' in text_lower or 'male' in text_lower or 'husband' in text_lower or 'father' in text_lower:
+            entities['gender'] = 'male'
+
+        # =================================================================
+        # Employment Law Entities
+        # =================================================================
+        duration_match = re.search(r'(\d+)\s*(day|month|year)s?', text_lower)
+        if duration_match:
+            value, unit = int(duration_match.group(1)), duration_match.group(2)
+            if 'month' in unit:
+                entities['employment_duration'] = value * 30
+            elif 'year' in unit:
+                entities['employment_duration'] = value * 365
+            else:
+                entities['employment_duration'] = value
+
+        wage_match = re.search(r'(\d+)\s*(?:per day|daily)', text_lower)
+        if wage_match:
+            entities['daily_wage'] = int(wage_match.group(1))
+
+        notice_match = re.search(r'(\d+)\s*days?\s*notice', text_lower)
+        if notice_match:
+            entities['notice_period_given'] = int(notice_match.group(1))
+            
+        if "no hearing" in text_lower or "without a hearing" in text_lower:
+            entities['disciplinary_hearing_conducted'] = False
+
+        # =================================================================
+        # Family Law Entities
+        # =================================================================
+        if 'married' in text_lower or 'husband' in text_lower or 'wife' in text_lower:
+            entities['is_married'] = True
+            
+        children_match = re.search(r'(\d+)\s*(child|children|kids)', text_lower)
+        if children_match:
+            entities['has_children'] = int(children_match.group(1))
+        elif 'my son' in text_lower or 'my daughter' in text_lower:
+            entities['has_children'] = 1
+
+        # =================================================================
+        # Consumer Protection Entities
+        # =================================================================
+        value_match = re.search(r'(?:worth|value|paid|for|cost)\s*(?:rs\.?)?\s*(\d[\d,]+)', text_lower)
+        if value_match:
+            entities['goods_value'] = int(value_match.group(1).replace(',', ''))
+
+        date_match = re.search(r'on\s*(\d{4}-\d{2}-\d{2})', text_lower)
+        if date_match:
+            entities['incident_date'] = date_match.group(1)
 
         logger.debug(f"Extracted entities: {entities}")
         return entities

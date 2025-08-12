@@ -1,0 +1,18 @@
+HybEx-Law System Evaluation Report - 2025-08-07T12:03:52.387167
+================================================================================
+
+📊 Overall Status: Failed
+Total Test Samples: 3150
+
+🧠 Neural Model Performance:
+  - Domain Classifier:
+    Accuracy: 1.0000
+    F1 Score (Macro): 1.0000
+    Precision (Macro): 1.0000
+    Recall (Macro): 1.0000
+    Loss: 0.0007
+
+⚠️ Prolog Reasoning Performance: Not available or not evaluated.
+
+⚠️ Hybrid System Performance: Not available or not evaluated.
+

@@ -17,7 +17,9 @@ from .evaluator import ModelEvaluator
 from .data_processor import DataPreprocessor
 # from .neu            print(f"  Eligible: {'Yes' if final_dec.get('eligible') else 'No'}")al_models import ModelTrainer # Not needed here, ModelTrainer is part of TrainingOrchestrator
 from .prolog_engine import PrologEngine # Corrected import for the updated engine
-from .legal_scraper import LegalDataScraper # To integrate scraper into main CLI flow
+from .neural_models import DomainClassifier, EligibilityPredictor  # Add neural models
+from transformers import AutoTokenizer
+from dataclasses import asdict
 
 # Setup logging
 logging.basicConfig(
@@ -42,12 +44,12 @@ class HybExLawSystem:
         # Create necessary directories
         self.config.create_directories()
         
-        # Initialize components (lazy loading, but ensure scraper is potentially run early)
+        # Initialize components (lazy loading)
         self._trainer = None
         self._evaluator = None
         self._data_processor = None
         self._prolog_engine = None
-        self._legal_scraper = None # Add scraper
+        self._master_scraper = None # Only master scraper now
         
         logger.info("HybEx-Law System Initialized")
         logger.info(f"Configuration: {self.config.get_summary()}")
@@ -81,25 +83,269 @@ class HybExLawSystem:
         return self._prolog_engine
 
     @property
-    def legal_scraper(self) -> LegalDataScraper: # Add scraper property
-        """Lazy-load legal data scraper"""
-        if self._legal_scraper is None:
-            self._legal_scraper = LegalDataScraper(self.config)
-        return self._legal_scraper
-    
-    def update_legal_knowledge(self) -> Dict[str, Any]: # New method for scraping
-        """Update legal knowledge from external sources using the scraper."""
-        logger.info("Starting legal knowledge update...")
+    def domain_classifier(self):
+        """Lazy-load domain classifier neural model"""
+        if not hasattr(self, '_domain_classifier'):
+            try:
+                import torch
+                model_path = self.config.MODELS_DIR / "domain_classifier" / "model.pt"
+                if model_path.exists():
+                    self._domain_classifier = DomainClassifier(self.config)
+                    self._domain_classifier.load_state_dict(torch.load(model_path, map_location='cpu'))
+                    self._domain_classifier.eval()
+                    logger.info("Domain classifier loaded successfully")
+                else:
+                    logger.warning(f"Domain classifier model not found at {model_path}")
+                    self._domain_classifier = None
+            except Exception as e:
+                logger.error(f"Failed to load domain classifier: {e}")
+                self._domain_classifier = None
+        return self._domain_classifier
+
+    @property
+    def eligibility_predictor(self):
+        """Lazy-load eligibility predictor neural model"""
+        if not hasattr(self, '_eligibility_predictor'):
+            try:
+                import torch
+                model_path = self.config.MODELS_DIR / "eligibility_predictor" / "model.pt"
+                if model_path.exists():
+                    self._eligibility_predictor = EligibilityPredictor(self.config)
+                    self._eligibility_predictor.load_state_dict(torch.load(model_path, map_location='cpu'))
+                    self._eligibility_predictor.eval()
+                    logger.info("Eligibility predictor loaded successfully")
+                else:
+                    logger.warning(f"Eligibility predictor model not found at {model_path}")
+                    self._eligibility_predictor = None
+            except Exception as e:
+                logger.error(f"Failed to load eligibility predictor: {e}")
+                self._eligibility_predictor = None
+        return self._eligibility_predictor
+
+    @property
+    def tokenizer(self):
+        """Lazy-load tokenizer for neural models"""
+        if not hasattr(self, '_tokenizer'):
+            try:
+                self._tokenizer = AutoTokenizer.from_pretrained(self.config.MODEL_CONFIG['base_model'])
+                logger.info("Tokenizer loaded successfully")
+            except Exception as e:
+                logger.error(f"Failed to load tokenizer: {e}")
+                self._tokenizer = None
+        return self._tokenizer
+
+    def _run_neural_predictions(self, query: str) -> Dict[str, Any]:
+        """Run neural predictions for domain classification and eligibility."""
         try:
-            results = self.legal_scraper.update_legal_knowledge()
+            # Check if neural models are available
+            if self.domain_classifier is None or self.eligibility_predictor is None or self.tokenizer is None:
+                logger.warning("Neural models not available, using fallback")
+                return {
+                    'domains': ['general_legal_aid'],
+                    'eligibility_probability': 0.5,
+                    'confidence': 0.5,
+                    'method': 'fallback',
+                    'available': False
+                }
+            
+            import torch
+            
+            # Tokenize input
+            inputs = self.tokenizer(
+                query, 
+                return_tensors='pt', 
+                truncation=True, 
+                padding=True, 
+                max_length=self.config.MODEL_CONFIG.get('max_length', 512)
+            )
+            
+            with torch.no_grad():
+                # Domain classification
+                domain_outputs = self.domain_classifier(**inputs)
+                domain_logits = domain_outputs['logits']
+                domain_probs = torch.sigmoid(domain_logits).cpu().numpy()[0]
+                predicted_domains = [
+                    self.config.ENTITY_CONFIG['domains'][i]
+                    for i in range(len(domain_probs))
+                    if domain_probs[i] > 0.5
+                ]
+                domain_confidence = float(domain_probs.max()) if predicted_domains else 0.5
+                
+                # Eligibility prediction
+                eligibility_outputs = self.eligibility_predictor(**inputs)
+                eligibility_logits = eligibility_outputs['logits']
+                eligibility_prob = torch.sigmoid(eligibility_logits).cpu().numpy().item()  # FIXED LINE: Use .item()
+                eligibility_confidence = float(eligibility_prob)
+                
+                # Combine results
+                confidence = (domain_confidence + eligibility_confidence) / 2
+                return {
+                    'domains': predicted_domains if predicted_domains else ['general_legal_aid'],
+                    'eligibility_probability': eligibility_prob,
+                    'confidence': confidence,
+                    'method': 'neural',
+                    'available': True
+                }
+                
+        except Exception as e:
+            logger.error(f"Neural prediction failed: {e}")
+            return {
+                'domains': ['general_legal_aid'],
+                'eligibility_probability': 0.5,
+                'confidence': 0.3,
+                'method': 'error_fallback',
+                'available': False,
+                'error': str(e)
+            }
+    
+    def _run_prolog_analysis(self, entities: Dict[str, Any], neural_prediction: Dict[str, Any]) -> Any:
+        """Run Prolog analysis informed by neural predictions."""
+        try:
+            # Use neural-predicted domains to inform Prolog analysis
+            predicted_domains = neural_prediction.get('domains', ['general_legal_aid'])
+            
+            # Run comprehensive legal analysis with domain hints
+            analysis_result = self.prolog_engine.comprehensive_legal_analysis(
+                entities, 
+                domains=predicted_domains
+            )
+            
+            return analysis_result
+            
+        except Exception as e:
+            logger.error(f"Prolog analysis failed: {e}")
+            # Return a fallback result
+            from .prolog_engine import LegalReasoning
+            return LegalReasoning(
+                case_id=f"fallback_{datetime.now().strftime('%H%M%S')}",
+                eligible=False,
+                confidence=0.3,
+                primary_reason=f"Analysis failed: {e}",
+                detailed_reasoning=[],
+                applicable_rules=[],
+                legal_citations=[],
+                method='prolog_fallback'
+            )
+    
+    def _fuse_predictions(self, neural_prediction: Dict[str, Any], prolog_analysis: Any) -> Dict[str, Any]:
+        """Fuse neural and Prolog predictions into final decision."""
+        try:
+            neural_eligible = neural_prediction.get('eligibility_probability', 0.5) > 0.5
+            neural_confidence = neural_prediction.get('confidence', 0.5)
+            
+            prolog_eligible = prolog_analysis.eligible
+            prolog_confidence = prolog_analysis.confidence
+            
+            # Fusion strategies
+            if neural_prediction.get('available', False):
+                # Both systems agree
+                if neural_eligible == prolog_eligible:
+                    final_eligible = neural_eligible
+                    final_confidence = (neural_confidence + prolog_confidence) / 2
+                    explanation = f"Both neural and symbolic reasoning agree: {prolog_analysis.primary_reason}"
+                    fusion_method = "agreement"
+                # Disagreement - trust Prolog for rule-based cases, neural for complex patterns
+                else:
+                    if prolog_confidence > neural_confidence:
+                        final_eligible = prolog_eligible
+                        final_confidence = prolog_confidence * 0.9  # Slight penalty for disagreement
+                        explanation = f"Symbolic reasoning preferred: {prolog_analysis.primary_reason}"
+                        fusion_method = "prolog_preferred"
+                    else:
+                        final_eligible = neural_eligible
+                        final_confidence = neural_confidence * 0.9
+                        explanation = f"Neural prediction preferred (confidence: {neural_confidence:.2f})"
+                        fusion_method = "neural_preferred"
+            else:
+                # Neural not available, use Prolog only
+                final_eligible = prolog_eligible
+                final_confidence = prolog_confidence
+                explanation = prolog_analysis.primary_reason
+                fusion_method = "prolog_only"
+            
+            return {
+                'eligible': final_eligible,
+                'confidence': final_confidence,
+                'explanation': explanation,
+                'fusion_method': fusion_method,
+                'neural_agreement': neural_eligible == prolog_eligible if neural_prediction.get('available') else None
+            }
+            
+        except Exception as e:
+            logger.error(f"Prediction fusion failed: {e}")
+            return {
+                'eligible': False,
+                'confidence': 0.2,
+                'explanation': f"Fusion failed: {e}",
+                'fusion_method': 'error_fallback'
+            }
+
+    @property
+    def master_scraper(self): # Master scraper property
+        """Lazy-load master legal scraper"""
+        if self._master_scraper is None:
+            try:
+                # Add the scripts directory to Python path
+                scripts_dir = Path(__file__).parent.parent / "scripts"
+                if str(scripts_dir) not in sys.path:
+                    sys.path.insert(0, str(scripts_dir))
+                
+                from master_legal_scraper import MasterLegalScraper
+                # Initialize with data directory from config
+                self._master_scraper = MasterLegalScraper(data_dir=self.config.DATA_DIR)
+                logger.info("Master legal scraper initialized successfully")
+            except ImportError as e:
+                logger.error(f"Master legal scraper not available: {e}")
+                logger.error("Please ensure master_legal_scraper.py is in the scripts directory.")
+                raise ImportError("Master legal scraper not available")
+        return self._master_scraper
+    
+    def update_legal_knowledge(self) -> Dict[str, Any]: # Updated method using master scraper
+        """Update legal knowledge from external sources using the master scraper."""
+        logger.info("Starting legal knowledge update with master scraper...")
+        try:
+            # Use master scraper for comprehensive knowledge update
+            results = self.comprehensive_scraping()
             logger.info(f"Legal knowledge update completed: {results.get('status')}")
-            # After scraping, re-initialize PrologEngine to ensure it picks up latest config (thresholds)
-            self._prolog_engine = PrologEngine(self.config) # Re-initialize to load new rules/thresholds
-            logger.info("PrologEngine re-initialized with potentially updated legal knowledge.")
+            # After scraping, re-initialize PrologEngine to ensure it picks up latest scraped data
+            self._prolog_engine = None  # Force reinitialization
+            logger.info("PrologEngine will be re-initialized with updated legal knowledge.")
             return results
         except Exception as e:
             logger.error(f"Legal knowledge update failed: {e}")
             raise
+
+    def comprehensive_scraping(self) -> Dict[str, Any]:
+        """Run comprehensive legal knowledge scraping using the master scraper"""
+        logger.info("Starting comprehensive legal knowledge scraping with master scraper")
+        try:
+            # Use the master scraper for comprehensive data extraction
+            results = self.master_scraper.run_comprehensive_scraping()
+            
+            # Update the config with latest scraping info
+            scraping_summary = {
+                'last_scraping_date': datetime.now().isoformat(),
+                'websites_scraped': len(results),
+                'total_content_extracted': sum(len(content) for content in results.values()),
+                'status': 'completed'
+            }
+            
+            # Re-initialize PrologEngine to ensure it picks up latest scraped data
+            self._prolog_engine = None  # Force reinitialization
+            logger.info("PrologEngine will be re-initialized with updated knowledge base.")
+            
+            return {
+                'master_scraper_results': results,
+                'summary': scraping_summary,
+                'status': 'success'
+            }
+            
+        except Exception as e:
+            logger.error(f"Comprehensive scraping failed: {e}")
+            return {
+                'status': 'failed',
+                'error': str(e)
+            }
 
     def train_complete_system(self, data_directory: str, **kwargs) -> Dict[str, Any]:
         """Train the complete HybEx-Law system"""
@@ -154,8 +400,8 @@ class HybExLawSystem:
             # Assuming ModelEvaluator.evaluate_end_to_end_system can load default models or take explicit paths.
             
             evaluation_results = self.evaluator.evaluate_end_to_end_system(
-                models=model_paths, # Pass explicit paths if provided, else evaluator uses defaults
-                test_samples=test_samples
+                model_paths, # Pass explicit paths if provided, else evaluator uses defaults
+                test_samples
             )
             
             results_file = self.evaluator.save_evaluation_results(evaluation_results)
@@ -189,81 +435,114 @@ class HybExLawSystem:
             raise
     
     def predict_legal_eligibility(self, query: str, case_details: Optional[Dict] = None) -> Dict[str, Any]:
-        """Predict legal aid eligibility for a single query using the hybrid system."""
-        logger.info("Predicting legal eligibility for a single query (hybrid approach)")
-        logger.info(f"Query: {query[:150]}...") # Log a bit more of the query
+        """
+        Predict legal aid eligibility using the hybrid neural + symbolic approach.
+        Can accept pre-gathered case_details to bypass initial entity extraction.
+        """
+        logger.info("Predicting legal eligibility using hybrid neural-symbolic approach")
+        logger.info(f"Query: {query[:150]}...")
         
         try:
-            # Step 1: Extract entities using DataPreprocessor
-            # Assuming DataPreprocessor has an extract_entities method
-            # This method should be available in a trained/loaded DataProcessor
-            extracted_entities = self.data_processor.extract_entities(query)
-            logger.info(f"Extracted Entities: {extracted_entities}")
-
-            # Step 2: Use PrologEngine for comprehensive legal analysis
-            # The PrologEngine should be initialized and ready.
-            # It will use the comprehensive rules loaded during its init.
-            analysis_result = self.prolog_engine.comprehensive_legal_analysis(extracted_entities)
-
-            # Step 3: Integrate Neural Models (Optional, depending on hybrid strategy)
-            # For a true hybrid approach, you'd also run neural predictions here.
-            # This would require loading the trained neural models.
-            # For now, we rely heavily on the Prolog engine for the 'final' decision in this predict function.
-            # If a neural prediction is *also* needed for fusion, it would be done by the evaluator's predict method.
+            # Step 1: Use pre-existing entities if provided, otherwise extract them from the query.
+            if case_details:
+                extracted_entities = case_details
+                logger.info("Using pre-gathered entities for analysis.")
+            else:
+                extracted_entities = self.data_processor.extract_entities(query)
             
-            # Example (if you wanted to run a neural predictor here too):
-            # domain_model = self.evaluator.load_trained_model(str(self.config.MODELS_DIR / "domain_classifier"), "domain_classifier")
-            # eligibility_model = self.evaluator.load_trained_model(str(self.config.MODELS_DIR / "eligibility_predictor"), "eligibility_predictor")
-            #
-            # tokenizer = self.evaluator.tokenizer # Assuming evaluator has tokenizer
-            # encoding = tokenizer(query, truncation=True, padding='max_length', max_length=self.config.MODEL_CONFIG['max_length'], return_tensors='pt')
-            #
-            # # Run neural predictions (simplified)
-            # with torch.no_grad():
-            #     domain_logits = domain_model(encoding['input_ids'].to(self.evaluator.device), encoding['attention_mask'].to(self.evaluator.device))['logits']
-            #     neural_domains = [self.config.ENTITY_CONFIG['domains'][i] for i, val in enumerate((torch.sigmoid(domain_logits) > 0.5).squeeze().cpu().numpy()) if val]
-            #     
-            #     eligibility_logits = eligibility_model(encoding['input_ids'].to(self.evaluator.device), encoding['attention_mask'].to(self.evaluator.device))['logits']
-            #     neural_eligibility_prob = torch.sigmoid(eligibility_logits).item()
-            #
-            # neural_prediction_info = {
-            #     'domains': neural_domains,
-            #     'eligibility_probability': neural_eligibility_prob,
-            #     'confidence': neural_eligibility_prob if neural_eligibility_prob > 0.5 else (1 - neural_eligibility_prob)
-            # }
+            logger.info(f"Entities for Analysis: {extracted_entities}")
 
+            # Step 2: Neural Predictions (Domain Classification + Eligibility)
+            neural_prediction = self._run_neural_predictions(query)
+            logger.info(f"Neural Predictions: {neural_prediction}")
+
+            # Step 3: Enhanced Prolog Analysis with Neural-informed domains and full facts
+            prolog_analysis = self._run_prolog_analysis(extracted_entities, neural_prediction)
+            logger.info(f"Prolog Analysis: {prolog_analysis.eligible} (confidence: {prolog_analysis.confidence:.2f})")
+
+            # Step 4: Hybrid Fusion
+            final_decision = self._fuse_predictions(neural_prediction, prolog_analysis)
+            logger.info(f"Final Hybrid Decision: {final_decision}")
+
+            # Step 5: Construct comprehensive result
             prediction_result = {
                 'query': query,
                 'timestamp': datetime.now().isoformat(),
                 'extracted_entities': extracted_entities,
-                # 'neural_prediction': neural_prediction_info, # Uncomment if you implement the neural part
-                'prolog_reasoning': {
-                    'eligible': analysis_result.eligible,
-                    'reasoning': analysis_result.primary_reason,
-                    'confidence': analysis_result.confidence,
-                    'applied_rules': analysis_result.applicable_rules,
-                    'detailed_reasoning': analysis_result.detailed_reasoning,
-                    'legal_citations': analysis_result.legal_citations,
-                    'method': analysis_result.method
-                },
-                'final_decision': {
-                    'eligible': analysis_result.eligible,
-                    'confidence': analysis_result.confidence,
-                    'explanation': analysis_result.primary_reason # For now, direct from Prolog
-                },
+                'neural_prediction': neural_prediction,
+                'prolog_reasoning': asdict(prolog_analysis),
+                'final_decision': final_decision,
+                'system_type': 'hybrid_neural_symbolic'
             }
             
-            logger.info("Single query prediction completed.")
+            logger.info("Hybrid prediction completed successfully.")
             return prediction_result
 
         except Exception as e:
-            logger.error(f"Single query prediction failed: {e}", exc_info=True)
+            logger.error(f"Hybrid prediction failed: {e}", exc_info=True)
             return {
                 'query': query,
                 'timestamp': datetime.now().isoformat(),
-                'error': f'Prediction failed: {e}'
+                'error': f'Hybrid prediction failed: {e}',
+                'system_type': 'hybrid_neural_symbolic'
             }
-    
+        
+    def _get_required_facts_for_domain(self, domain: str) -> list:
+        """Determines the list of required facts for a given domain."""
+        required = set(self.config.REQUIRED_FACTS_CONFIG.get('default', []))
+        required.update(self.config.REQUIRED_FACTS_CONFIG.get(domain, []))
+        return list(required)
+
+    def run_interactive_session(self):
+        """Starts an interactive conversational session for legal aid analysis."""
+        print("\nWelcome to the HybEx-Law Interactive Assistant.")
+        print("You can type 'quit' at any time to exit.")
+        initial_query = input("System: Please describe your legal issue in a sentence or two.\nUser: ")
+
+        if initial_query.lower().strip() == 'quit':
+            return
+
+        gathered_facts = {}
+        
+        # 1. Initial analysis to extract facts and determine domain
+        initial_entities = self.data_processor.extract_entities(initial_query)
+        gathered_facts.update(initial_entities)
+        
+        neural_pred = self._run_neural_predictions(initial_query)
+        domain = neural_pred['domains'][0] if neural_pred.get('domains') else 'default'
+        print(f"System: Based on your query, this seems to be a '{domain.replace('_', ' ')}' issue. To give you the most accurate analysis, I need to ask a few more questions.")
+
+        # 2. Determine what information is missing
+        required_facts = self._get_required_facts_for_domain(domain)
+        missing_facts = [fact for fact in required_facts if fact not in gathered_facts]
+
+        # 3. Conversational loop to gather missing facts
+        while missing_facts:
+            fact_to_find = missing_facts.pop(0)
+            question = self.config.QUESTION_MAPPING.get(fact_to_find, f"Could you please provide information about your {fact_to_find.replace('_', ' ')}?")
+            
+            user_response = input(f"System: {question}\nUser: ")
+            
+            if user_response.lower().strip() == 'quit':
+                print("System: Session ended by user.")
+                return
+            
+            # Extract entities from the user's latest response and update our knowledge
+            new_entities = self.data_processor.extract_entities(user_response)
+            if new_entities:
+                gathered_facts.update(new_entities)
+                print(f"System: Understood. I've noted the following: {new_entities}")
+            
+            # Re-check what's still missing
+            missing_facts = [fact for fact in required_facts if fact not in gathered_facts]
+
+        # 4. Final Analysis
+        print("\nSystem: Thank you. I have all the necessary information. Analyzing your case now...")
+        final_result = self.predict_legal_eligibility(initial_query, case_details=gathered_facts)
+
+        # 5. Display Final Result
+        print_prediction_result(final_result)
+
     def get_system_status(self) -> Dict[str, Any]:
         """Get current system status and health check"""
         logger.info("Checking system status")
@@ -295,10 +574,13 @@ class HybExLawSystem:
                 'cuda_available': False,
                 'version': 'Unknown'
             },
-            'legal_scraper': { # New status for scraper
-                'db_path': str(self.legal_scraper.db_path),
-                'db_exists': self.legal_scraper.db_path.exists(),
-                'last_update_status': self.config.get_legal_data_status().get('last_scraper_update', 'N/A')
+            'master_scraper': { # Status for master scraper
+                'available': True,
+                'db_path': str(self.config.DATA_DIR / "legal_knowledge.db"),
+                'db_exists': (self.config.DATA_DIR / "legal_knowledge.db").exists(),
+                'priority_websites': 7,  # Number of priority websites
+                'last_scraping': 'N/A',
+                'integration_script': str(Path(__file__).parent.parent / "legal_integration.py")
             }
         }
         
@@ -358,6 +640,37 @@ class HybExLawSystem:
         
         logger.info("System cleanup completed")
 
+def print_prediction_result(result: Dict[str, Any]):
+    """Helper function to print the prediction result in a structured way."""
+    if 'error' in result:
+        print(f"\nAn error occurred: {result['error']}")
+        return
+        
+    print("\n" + "="*60)
+    print("      HybEx-Law Final Analysis Report")
+    print("="*60)
+    print(f"\nInitial Query: {result.get('query')}")
+    
+    print("\n--- Gathered Case Facts ---")
+    if result.get('extracted_entities'):
+        for k, v in result['extracted_entities'].items():
+            print(f"  • {k.replace('_', ' ').title()}: {v}")
+    else:
+        print("  • No specific facts were extracted.")
+    
+    prolog_res = result.get('prolog_reasoning', {})
+    print("\n--- Symbolic Reasoning (Prolog) ---")
+    print(f"  • Eligible: {'Yes' if prolog_res.get('eligible') else 'No'}")
+    print(f"  • Confidence: {prolog_res.get('confidence', 0.0):.2f}")
+    print(f"  • Primary Reason: {prolog_res.get('primary_reason', 'N/A')}")
+
+    final_dec = result.get('final_decision', {})
+    print("\n--- Final Hybrid Decision ---")
+    print(f"  • Final Eligibility: {'Yes' if final_dec.get('eligible') else 'No'}")
+    print(f"  • Final Confidence: {final_dec.get('confidence', 0.0):.2f}")
+    print(f"  • Explanation: {final_dec.get('explanation', 'N/A')}")
+    print("="*60)
+
 def create_argument_parser() -> argparse.ArgumentParser:
     """Create command-line argument parser"""
     parser = argparse.ArgumentParser(
@@ -366,7 +679,10 @@ def create_argument_parser() -> argparse.ArgumentParser:
         epilog="""
 Examples:
   # Update legal knowledge from government sources
-  python -m hybex_system.main update_knowledge
+  python -m hybex_system.main scrape                    # Run comprehensive legal knowledge scraping
+  python -m hybex_system.main scrape --priority-only   # Scrape only highest priority sites
+  python -m hybex_system.main scrape --report-only     # Generate report from existing data
+  python -m hybex_system.main update_knowledge         # Same as 'scrape' command (uses master scraper)
 
   # Train complete system
   python -m hybex_system.main train --data-dir data/
@@ -391,6 +707,14 @@ Examples:
     # Update Knowledge command (New)
     update_parser = subparsers.add_parser('update_knowledge', help='Update legal knowledge from external sources')
     update_parser.add_argument('--config', type=str, help='Path to configuration file')
+
+    # Comprehensive scraping command (master scraper)
+    scrape_parser = subparsers.add_parser('scrape', help='Run comprehensive legal knowledge scraping')
+    scrape_parser.add_argument('--config', type=str, help='Path to configuration file')
+    scrape_parser.add_argument('--priority-only', action='store_true', 
+                              help='Only scrape highest priority websites (IndiaCode, NALSA)')
+    scrape_parser.add_argument('--report-only', action='store_true',
+                              help='Generate report from existing scraped data without new scraping')
 
     # Train command
     train_parser = subparsers.add_parser('train', help='Train the complete HybEx-Law system')
@@ -427,6 +751,10 @@ Examples:
     predict_parser.add_argument('--config', type=str,
                               help='Path to configuration file')
     
+    # Interactive Chat command
+    chat_parser = subparsers.add_parser('chat', help='Start an interactive session to determine eligibility')
+    chat_parser.add_argument('--config', type=str, help='Path to configuration file')
+
     return parser
 
 def main():
@@ -449,6 +777,47 @@ def main():
             results = system.update_legal_knowledge()
             print("\nLegal knowledge updated successfully!")
             print(f"Status: {results.get('status')}")
+            
+        elif args.command == 'scrape': # Comprehensive scraping command
+            logger.info("Starting comprehensive scraping command")
+            if getattr(args, 'report_only', False):
+                # Generate report from existing data
+                try:
+                    scraper = system.master_scraper
+                    # Read existing database and generate report
+                    import sqlite3
+                    db_path = system.config.DATA_DIR / "legal_knowledge.db"
+                    if db_path.exists():
+                        conn = sqlite3.connect(db_path)
+                        cursor = conn.cursor()
+                        cursor.execute("SELECT COUNT(*) FROM scraped_content")
+                        total_count = cursor.fetchone()[0]
+                        cursor.execute("SELECT legal_domain, COUNT(*) FROM scraped_content GROUP BY legal_domain")
+                        domain_counts = dict(cursor.fetchall())
+                        conn.close()
+                        
+                        print("\nExisting Scraped Data Report")
+                        print("="*40)
+                        print(f"Total items in database: {total_count}")
+                        print("By domain:")
+                        for domain, count in domain_counts.items():
+                            print(f"  {domain}: {count} items")
+                    else:
+                        print("\nNo existing scraped data found.")
+                except Exception as e:
+                    print(f"Error generating report: {e}")
+            else:
+                # Run actual scraping
+                results = system.comprehensive_scraping()
+                if results['status'] == 'success':
+                    print("\nComprehensive legal knowledge scraping completed successfully!")
+                    summary = results['summary']
+                    print(f"Websites scraped: {summary['websites_scraped']}")
+                    print(f"Total content extracted: {summary['total_content_extracted']}")
+                    print(f"Status: {summary['status']}")
+                    print(f"Completion time: {summary['last_scraping_date']}")
+                else:
+                    print(f"\nScraping failed: {results.get('error', 'Unknown error')}")
             
         elif args.command == 'train':
             logger.info("Starting training command")
@@ -508,14 +877,16 @@ def main():
             for cat, count in status['prolog_engine']['rule_summary'].get('rule_counts', {}).items():
                 print(f"  • {cat}: {count} rules")
             print(f"  • Total Prolog Rules: {status['prolog_engine']['rule_summary'].get('total_rules', 'N/A')}")
-            print("\nLegal Scraper Status:") # New
-            print(f"  • DB Exists: {status['legal_scraper']['db_exists']}")
-            print(f"  • Last Update Status: {status['legal_scraper']['last_update_status']}")
+            print("\nMaster Scraper Status:") # Updated to master scraper
+            print(f"  • Available: {status['master_scraper']['available']}")
+            print(f"  • DB Exists: {status['master_scraper']['db_exists']}")
+            print(f"  • Priority Websites: {status['master_scraper']['priority_websites']}")
+            print(f"  • Integration Script: Available")
             
         elif args.command == 'predict':
             logger.info("Starting prediction command")
             result = system.predict_legal_eligibility(args.query)
-            
+            print_prediction_result(result)
             print("\nLegal Eligibility Prediction")
             print("="*50)
             print(f"Query: {args.query}")
@@ -547,6 +918,18 @@ def main():
             print(f"  Eligible: {'Yes' if final_dec.get('eligible') else 'No'}")
             print(f"  Confidence: {final_dec.get('confidence', 0.0):.2f}")
             print(f"  Explanation: {final_dec.get('explanation', 'N/A')}")
+            
+        # elif args.command == 'status':
+        #     # ... (status command logic remains the same)
+            
+        # elif args.command == 'predict':
+        #     logger.info("Starting prediction command")
+        #     result = system.predict_legal_eligibility(args.query)
+        #     print_prediction_result(result) # Use the helper function
+            
+        elif args.command == 'chat':
+            logger.info("Starting interactive session")
+            system.run_interactive_session()
             
         # Cleanup
         if system:

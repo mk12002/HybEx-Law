@@ -1,0 +1,165 @@
+{
+  "start_time": "2025-08-05T07:34:09.921370",
+  "config": {
+    "base_dir": "C:\\Users\\Student\\Documents\\22BLC1058\\multi_domain_legal",
+    "data_dir": "C:\\Users\\Student\\Documents\\22BLC1058\\multi_domain_legal\\data",
+    "models_dir": "C:\\Users\\Student\\Documents\\22BLC1058\\multi_domain_legal\\models\\hybex_system",
+    "logs_dir": "C:\\Users\\Student\\Documents\\22BLC1058\\multi_domain_legal\\logs",
+    "results_dir": "C:\\Users\\Student\\Documents\\22BLC1058\\multi_domain_legal\\results",
+    "model_configs": {
+      "domain_classifier": {
+        "model_name": "distilbert-base-uncased",
+        "max_length": 512,
+        "batch_size": 8,
+        "learning_rate": 1e-05,
+        "epochs": 20,
+        "warmup_steps": 200,
+        "weight_decay": 0.01,
+        "early_stopping_patience": 3,
+        "gradient_clip_val": 1.0
+      },
+      "entity_extractor": {
+        "model_name": "distilbert-base-uncased",
+        "max_length": 512,
+        "batch_size": 8,
+        "learning_rate": 2e-05,
+        "epochs": 20,
+        "warmup_steps": 300,
+        "weight_decay": 0.01,
+        "early_stopping_patience": 4,
+        "gradient_clip_val": 1.0
+      },
+      "eligibility_predictor": {
+        "model_name": "distilbert-base-uncased",
+        "max_length": 512,
+        "batch_size": 8,
+        "learning_rate": 5e-06,
+        "epochs": 20,
+        "warmup_steps": 500,
+        "weight_decay": 0.02,
+        "early_stopping_patience": 5,
+        "gradient_clip_val": 0.5
+      }
+    },
+    "data_config": {
+      "train_split": 0.7,
+      "val_split": 0.15,
+      "test_split": 0.15,
+      "random_seed": 42,
+      "min_samples_per_domain": 100,
+      "max_sequence_length": 512
+    },
+    "entity_config": {
+      "income_thresholds": {
+        "general": 500000,
+        "sc_st": 800000,
+        "obc": 600000,
+        "bpl": 0,
+        "ews": 800000
+      },
+      "social_categories": [
+        "General",
+        "Scheduled Caste",
+        "Scheduled Tribe",
+        "Other Backward Class",
+        "Economically Weaker Section",
+        "Below Poverty Line",
+        "Above Poverty Line"
+      ],
+      "case_types": [
+        "Criminal",
+        "Civil",
+        "Family Law",
+        "Consumer Protection",
+        "Employment Law",
+        "Fundamental Rights",
+        "General"
+      ],
+      "domains": [
+        "legal_aid",
+        "family_law",
+        "consumer_protection",
+        "employment_law",
+        "fundamental_rights"
+      ]
+    },
+    "prolog_config": {
+      "enable_reasoning": true,
+      "confidence_threshold": 0.7,
+      "rule_weight": 0.4,
+      "neural_weight": 0.6
+    },
+    "neural_config": {
+      "min_confidence_for_override": 0.9,
+      "entity_extraction_model": "en_core_web_sm"
+    },
+    "logging_config": {
+      "level": "INFO",
+      "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+      "log_file": "C:\\Users\\Student\\Documents\\22BLC1058\\multi_domain_legal\\logs\\hybex_training.log",
+      "max_log_size": 10485760,
+      "backup_count": 5
+    },
+    "eval_config": {
+      "metrics": [
+        "accuracy",
+        "precision",
+        "recall",
+        "f1",
+        "confusion_matrix"
+      ],
+      "save_predictions": true,
+      "save_attention_weights": false,
+      "generate_plots": true
+    },
+    "legal_sources": {
+      "primary_act": "Legal Services Authorities Act, 1987",
+      "last_updated": null,
+      "data_source": "verified_fallback",
+      "validation_status": "unvalidated"
+    }
+  },
+  "pipeline_stages": {
+    "preprocessing": {
+      "results": {
+        "total_processed_samples": 21000,
+        "train_samples_count": 14700,
+        "val_samples_count": 3150,
+        "test_samples_count": 3150,
+        "saved_files": {
+          "train_data_file": "C:\\Users\\Student\\Documents\\22BLC1058\\multi_domain_legal\\results\\processed_data\\train_samples.json",
+          "val_data_file": "C:\\Users\\Student\\Documents\\22BLC1058\\multi_domain_legal\\results\\processed_data\\val_samples.json",
+          "test_data_file": "C:\\Users\\Student\\Documents\\22BLC1058\\multi_domain_legal\\results\\processed_data\\test_samples.json"
+        },
+        "validation_stats": {
+          "status": "warnings_or_errors",
+          "total_files_checked": 4,
+          "total_samples_processed": 0,
+          "samples_with_query": 0,
+          "samples_with_domains": 0,
+          "samples_with_eligibility": 0,
+          "errors": [
+            "File organization_summary.json: Expected a list of samples, got <class 'dict'>",
+            "File test_data.json: Expected a list of samples, got <class 'dict'>",
+            "File train_data.json: Expected a list of samples, got <class 'dict'>",
+            "File validation_data.json: Expected a list of samples, got <class 'dict'>"
+          ],
+          "timestamp": "2025-08-05T07:34:10.424613"
+        }
+      },
+      "duration_seconds": 132.73163866996765,
+      "status": "completed"
+    }
+  },
+  "final_models": {},
+  "evaluation_results": {},
+  "errors": [
+    {
+      "error": "distilbert-base-uncased does not appear to have a file named pytorch_model.bin but there is a file for TensorFlow weights. Use `from_tf=True` to load this model from those weights.",
+      "timestamp": "2025-08-05T07:36:26.298318",
+      "stage": "pipeline_execution"
+    }
+  ],
+  "status": "failed",
+  "end_time": "2025-08-05T07:36:26.298318"
+}

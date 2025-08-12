@@ -1,0 +1,46 @@
+2025-08-10 12:00:17,139 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Added file handler to PrologEngine logger.
+2025-08-10 12:00:17,139 - hybex_system.prolog_engine - INFO - [Session:e22062e3] ======================================================================
+2025-08-10 12:00:17,147 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-10 12:00:17,147 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Session ID: e22062e3
+2025-08-10 12:00:17,150 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-10 12:00:17,150 - hybex_system.prolog_engine - INFO - [Session:e22062e3] ======================================================================
+2025-08-10 12:00:17,150 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-10 12:00:17,150 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Attempting to load rules from: d:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-10 12:00:17,150 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-10 12:00:17,150 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-10 12:00:17,165 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Initialized Comprehensive PrologEngine (Session: e22062e3, Available: True)
+2025-08-10 12:00:17,173 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Loaded 9 rule categories with 145 total rules
+2025-08-10 12:00:17,175 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Comprehensive rules actually loaded: True
+2025-08-10 12:00:17,181 - hybex_system.prolog_engine - INFO - [Session:e22062e3] 📂 Selected files for domain 'general_legal_aid': ['foundational_rules.pl', 'legal_aid.pl']
+2025-08-10 12:00:17,181 - hybex_system.prolog_engine - INFO - [Session:e22062e3] ✅ Loaded modular file: foundational_rules.pl
+2025-08-10 12:00:17,181 - hybex_system.prolog_engine - INFO - [Session:e22062e3] ✅ Loaded modular file: legal_aid.pl
+2025-08-10 12:00:17,181 - hybex_system.prolog_engine - INFO - [Session:e22062e3] 🔍 DEBUG: Modular Prolog file content:
+2025-08-10 12:00:17,244 - hybex_system.prolog_engine - INFO - [Session:e22062e3] Modular file (11176 chars):
+% HybEx-Law Modular Legal Reasoning Session: e22062e3
+% Domain: general_legal_aid
+% Generated: 2025-08-10T12:00:17.181204
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+% LOADING: foundational_rules.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND FACTS
+% This file contains all basic predicates used across domains
+% MUST be loaded first to avoid "Unknown procedure" errors
+% ============================================================================
+
+% ==============================...
+2025-08-10 12:00:17,246 - hybex_system.prolog_engine - INFO - [Session:e22062e3] ✅ Created MODULAR Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp0uuxfk36.pl with 2 domain modules

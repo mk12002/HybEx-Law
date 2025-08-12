@@ -1,0 +1,14 @@
+2025-08-07 11:24:08,235 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] Added file handler to PrologEngine logger.
+2025-08-07 11:24:08,235 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] ======================================================================
+2025-08-07 11:24:08,235 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-07 11:24:08,235 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] Session ID: f4cb898d
+2025-08-07 11:24:08,235 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-07 11:24:08,251 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] ======================================================================
+2025-08-07 11:24:08,251 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] Attempting to load rules from: D:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-07 11:24:08,254 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-07 11:24:08,254 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-07 11:24:08,257 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] Initialized Comprehensive PrologEngine (Session: f4cb898d, Available: True)
+2025-08-07 11:24:08,258 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] Loaded 9 rule categories with 162 total rules
+2025-08-07 11:24:08,259 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] Comprehensive rules actually loaded: True
+2025-08-07 11:24:08,262 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] Cleaning up PrologEngine session f4cb898d
+2025-08-07 11:24:08,262 - hybex_system.prolog_engine - INFO - [Session:f4cb898d] PrologEngine cleanup completed

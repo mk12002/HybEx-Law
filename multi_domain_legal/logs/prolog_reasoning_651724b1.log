@@ -1,0 +1,193 @@
+2025-08-11 12:17:27,500 - hybex_system.prolog_engine - INFO - [Session:651724b1] Added file handler to PrologEngine logger.
+2025-08-11 12:17:27,501 - hybex_system.prolog_engine - INFO - [Session:651724b1] ======================================================================
+2025-08-11 12:17:27,501 - hybex_system.prolog_engine - INFO - [Session:651724b1] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-11 12:17:27,502 - hybex_system.prolog_engine - INFO - [Session:651724b1] Session ID: 651724b1
+2025-08-11 12:17:27,502 - hybex_system.prolog_engine - INFO - [Session:651724b1] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-11 12:17:27,504 - hybex_system.prolog_engine - INFO - [Session:651724b1] ======================================================================
+2025-08-11 12:17:27,504 - hybex_system.prolog_engine - INFO - [Session:651724b1] Using verified fallback knowledge base with 105 comprehensive rules
+2025-08-11 12:17:27,504 - hybex_system.prolog_engine - INFO - [Session:651724b1] Attempting to load rules from: d:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-11 12:17:27,505 - hybex_system.prolog_engine - INFO - [Session:651724b1] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-11 12:17:27,505 - hybex_system.prolog_engine - INFO - [Session:651724b1] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-11 12:17:27,508 - hybex_system.prolog_engine - INFO - [Session:651724b1] Initialized Comprehensive PrologEngine (Session: 651724b1, Available: True)
+2025-08-11 12:17:27,508 - hybex_system.prolog_engine - INFO - [Session:651724b1] Loaded 9 rule categories with 145 total rules
+2025-08-11 12:17:27,509 - hybex_system.prolog_engine - INFO - [Session:651724b1] Comprehensive rules actually loaded: True
+2025-08-11 12:17:27,510 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🧠 Starting comprehensive legal analysis for case_651724b1_121727
+2025-08-11 12:17:27,511 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🎯 Detected domain 'general_legal_aid' for case type ''
+2025-08-11 12:17:27,511 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-11 12:17:27,511 - hybex_system.prolog_engine - INFO - [Session:651724b1] Generated 12 comprehensive Prolog facts for case_651724b1_121727
+2025-08-11 12:17:27,514 - hybex_system.prolog_engine - INFO - [Session:651724b1] 📂 Selected files for domain 'general_legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl']
+2025-08-11 12:17:27,515 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ Loaded modular file: foundational_rules_clean.pl
+2025-08-11 12:17:27,516 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ Loaded modular file: legal_aid_clean_v2.pl
+2025-08-11 12:17:27,517 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🔍 DEBUG: Modular Prolog file content:
+2025-08-11 12:17:27,558 - hybex_system.prolog_engine - INFO - [Session:651724b1] Modular file (6990 chars):
+% HybEx-Law Modular Legal Reasoning Session: 651724b1
+% Domain: general_legal_aid
+% Generated: 2025-08-11T12:17:27.514616
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+:- use_module(library(json)).
+
+% LOADING: foundational_rules_clean.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND UTILITY RULES - CORRECTED AND ROBUST
+% This file contains only generic, reusable predicates.
+% All case-specific facts (e.g., age, income) must be provided by Python.
+% =================================...
+2025-08-11 12:17:27,558 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ Created MODULAR Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpqi8nr525.pl with 2 domain modules
+2025-08-11 12:17:27,558 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🎯 Ultra-fast eligibility check for case_651724b1_121727
+2025-08-11 12:17:27,563 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpqi8nr525.pl'], eligible_for_legal_aid('case_651724b1_121727'), halt --stack-limit=2g --traditional
+2025-08-11 12:17:27,793 - hybex_system.prolog_engine - INFO - [Session:651724b1] Prolog query successful (attempt 1): eligible_for_legal_aid('case_651724b1_121727')
+2025-08-11 12:17:27,794 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ FAST SUCCESS: Basic eligibility confirmed for case_651724b1_121727
+2025-08-11 12:17:27,794 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpqi8nr525.pl'), primary_eligibility_reason('case_651724b1_121727', Reason), (json_write_dict(dict("Reason"=Reason), []) ; true), halt.
+2025-08-11 12:17:28,046 - hybex_system.prolog_engine - WARNING - [Session:651724b1] Prolog warning/error: ERROR: c:/users/omen19~1/appdata/local/temp/tmpqi8nr525.pl:20:
+ERROR:    source_sink `library(json)' does not exist
+Warning: c:/users/omen19~1/appdata/local/temp/tmpqi8nr525.pl:20:
+Warning:    Goal (directive) failed: user:use_module(library(json))
+ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpqi8nr525.pl'), primary_eligibility_reason('case_651724b1_121727', Reason), (json_write_dict(dict("Reason"=Reason), []) ; true), halt.: '<meta-call>'/1: Unknown procedure: json_write_dict/2
+2025-08-11 12:17:28,047 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpqi8nr525.pl'), generate_detailed_reasoning('case_651724b1_121727', DetailedReason), (json_write_dict(dict("DetailedReason"=DetailedReason), []) ; true), halt.
+2025-08-11 12:17:28,295 - hybex_system.prolog_engine - WARNING - [Session:651724b1] Prolog warning/error: ERROR: c:/users/omen19~1/appdata/local/temp/tmpqi8nr525.pl:20:
+ERROR:    source_sink `library(json)' does not exist
+Warning: c:/users/omen19~1/appdata/local/temp/tmpqi8nr525.pl:20:
+Warning:    Goal (directive) failed: user:use_module(library(json))
+ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpqi8nr525.pl'), generate_detailed_reasoning('case_651724b1_121727', DetailedReason), (json_write_dict(dict("DetailedReason"=DetailedReason), []) ; true), halt.: '<meta-call>'/1: Unknown procedure: json_write_dict/2
+2025-08-11 12:17:28,296 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpqi8nr525.pl'), findall(Rule, applicable_rule('case_651724b1_121727', Rule, legal_aid), Rules), (json_write_dict(dict("Rules"=Rules), []) ; true), halt.
+2025-08-11 12:17:28,514 - hybex_system.prolog_engine - WARNING - [Session:651724b1] Prolog warning/error: ERROR: c:/users/omen19~1/appdata/local/temp/tmpqi8nr525.pl:20:
+ERROR:    source_sink `library(json)' does not exist
+Warning: c:/users/omen19~1/appdata/local/temp/tmpqi8nr525.pl:20:
+Warning:    Goal (directive) failed: user:use_module(library(json))
+ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpqi8nr525.pl'), findall(Rule, applicable_rule('case_651724b1_121727', Rule, legal_aid), Rules), (json_write_dict(dict("Rules"=Rules), []) ; true), halt.: '<meta-call>'/1: Unknown procedure: json_write_dict/2
+2025-08-11 12:17:28,514 - hybex_system.prolog_engine - INFO - [Session:651724b1] Comprehensive legal analysis complete for case_651724b1_121727: Eligible=True, Confidence=0.80
+2025-08-11 12:17:28,534 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🧠 Starting comprehensive legal analysis for case_651724b1_121728
+2025-08-11 12:17:28,535 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🎯 Detected domain 'general_legal_aid' for case type 'family law'
+2025-08-11 12:17:28,535 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-11 12:17:28,535 - hybex_system.prolog_engine - INFO - [Session:651724b1] Generated 13 comprehensive Prolog facts for case_651724b1_121728
+2025-08-11 12:17:28,537 - hybex_system.prolog_engine - INFO - [Session:651724b1] 📂 Selected files for domain 'general_legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl']
+2025-08-11 12:17:28,538 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ Loaded modular file: foundational_rules_clean.pl
+2025-08-11 12:17:28,539 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ Loaded modular file: legal_aid_clean_v2.pl
+2025-08-11 12:17:28,539 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🔍 DEBUG: Modular Prolog file content:
+2025-08-11 12:17:28,564 - hybex_system.prolog_engine - INFO - [Session:651724b1] Modular file (7038 chars):
+% HybEx-Law Modular Legal Reasoning Session: 651724b1
+% Domain: general_legal_aid
+% Generated: 2025-08-11T12:17:28.537494
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+:- use_module(library(json)).
+
+% LOADING: foundational_rules_clean.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND UTILITY RULES - CORRECTED AND ROBUST
+% This file contains only generic, reusable predicates.
+% All case-specific facts (e.g., age, income) must be provided by Python.
+% =================================...
+2025-08-11 12:17:28,564 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ Created MODULAR Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpaam9oomf.pl with 2 domain modules
+2025-08-11 12:17:28,564 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🎯 Ultra-fast eligibility check for case_651724b1_121728
+2025-08-11 12:17:28,570 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpaam9oomf.pl'], eligible_for_legal_aid('case_651724b1_121728'), halt --stack-limit=2g --traditional
+2025-08-11 12:17:28,819 - hybex_system.prolog_engine - INFO - [Session:651724b1] Prolog query successful (attempt 1): eligible_for_legal_aid('case_651724b1_121728')
+2025-08-11 12:17:28,820 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ FAST SUCCESS: Basic eligibility confirmed for case_651724b1_121728
+2025-08-11 12:17:28,820 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpaam9oomf.pl'), primary_eligibility_reason('case_651724b1_121728', Reason), (json_write_dict(dict("Reason"=Reason), []) ; true), halt.
+2025-08-11 12:17:29,063 - hybex_system.prolog_engine - WARNING - [Session:651724b1] Prolog warning/error: ERROR: c:/users/omen19~1/appdata/local/temp/tmpaam9oomf.pl:20:
+ERROR:    source_sink `library(json)' does not exist
+Warning: c:/users/omen19~1/appdata/local/temp/tmpaam9oomf.pl:20:
+Warning:    Goal (directive) failed: user:use_module(library(json))
+ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpaam9oomf.pl'), primary_eligibility_reason('case_651724b1_121728', Reason), (json_write_dict(dict("Reason"=Reason), []) ; true), halt.: '<meta-call>'/1: Unknown procedure: json_write_dict/2
+2025-08-11 12:17:29,064 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpaam9oomf.pl'), generate_detailed_reasoning('case_651724b1_121728', DetailedReason), (json_write_dict(dict("DetailedReason"=DetailedReason), []) ; true), halt.
+2025-08-11 12:17:29,297 - hybex_system.prolog_engine - WARNING - [Session:651724b1] Prolog warning/error: ERROR: c:/users/omen19~1/appdata/local/temp/tmpaam9oomf.pl:20:
+ERROR:    source_sink `library(json)' does not exist
+Warning: c:/users/omen19~1/appdata/local/temp/tmpaam9oomf.pl:20:
+Warning:    Goal (directive) failed: user:use_module(library(json))
+ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpaam9oomf.pl'), generate_detailed_reasoning('case_651724b1_121728', DetailedReason), (json_write_dict(dict("DetailedReason"=DetailedReason), []) ; true), halt.: '<meta-call>'/1: Unknown procedure: json_write_dict/2
+2025-08-11 12:17:29,298 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpaam9oomf.pl'), findall(Rule, applicable_rule('case_651724b1_121728', Rule, legal_aid), Rules), (json_write_dict(dict("Rules"=Rules), []) ; true), halt.
+2025-08-11 12:17:29,539 - hybex_system.prolog_engine - WARNING - [Session:651724b1] Prolog warning/error: ERROR: c:/users/omen19~1/appdata/local/temp/tmpaam9oomf.pl:20:
+ERROR:    source_sink `library(json)' does not exist
+Warning: c:/users/omen19~1/appdata/local/temp/tmpaam9oomf.pl:20:
+Warning:    Goal (directive) failed: user:use_module(library(json))
+ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpaam9oomf.pl'), findall(Rule, applicable_rule('case_651724b1_121728', Rule, legal_aid), Rules), (json_write_dict(dict("Rules"=Rules), []) ; true), halt.: '<meta-call>'/1: Unknown procedure: json_write_dict/2
+2025-08-11 12:17:29,540 - hybex_system.prolog_engine - INFO - [Session:651724b1] Comprehensive legal analysis complete for case_651724b1_121728: Eligible=True, Confidence=0.80
+2025-08-11 12:17:29,552 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🧠 Starting comprehensive legal analysis for case_651724b1_121729
+2025-08-11 12:17:29,552 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🎯 Detected domain 'general_legal_aid' for case type ''
+2025-08-11 12:17:29,552 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-11 12:17:29,553 - hybex_system.prolog_engine - INFO - [Session:651724b1] Generated 12 comprehensive Prolog facts for case_651724b1_121729
+2025-08-11 12:17:29,553 - hybex_system.prolog_engine - INFO - [Session:651724b1] 📂 Selected files for domain 'general_legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl']
+2025-08-11 12:17:29,554 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ Loaded modular file: foundational_rules_clean.pl
+2025-08-11 12:17:29,554 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ Loaded modular file: legal_aid_clean_v2.pl
+2025-08-11 12:17:29,555 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🔍 DEBUG: Modular Prolog file content:
+2025-08-11 12:17:29,569 - hybex_system.prolog_engine - INFO - [Session:651724b1] Modular file (6993 chars):
+% HybEx-Law Modular Legal Reasoning Session: 651724b1
+% Domain: general_legal_aid
+% Generated: 2025-08-11T12:17:29.553652
+
+% DISCONTIGUOUS DIRECTIVES
+:- discontiguous person/1.
+:- discontiguous eligible_for_legal_aid/1.
+:- discontiguous categorically_eligible/1.
+:- discontiguous income_eligible/1.
+:- discontiguous social_category/2.
+:- discontiguous annual_income/2.
+:- discontiguous case_type/2.
+:- discontiguous generate_detailed_reasoning/2.
+:- discontiguous primary_eligibility_reason/2.
+:- discontiguous applicable_rule/3.
+:- discontiguous vulnerable_group/2.
+:- discontiguous gender/2.
+:- discontiguous age/2.
+
+:- use_module(library(json)).
+
+% LOADING: foundational_rules_clean.pl
+% ============================================================================
+% FOUNDATIONAL PREDICATES AND UTILITY RULES - CORRECTED AND ROBUST
+% This file contains only generic, reusable predicates.
+% All case-specific facts (e.g., age, income) must be provided by Python.
+% =================================...
+2025-08-11 12:17:29,569 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ Created MODULAR Prolog file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpozwdhb9a.pl with 2 domain modules
+2025-08-11 12:17:29,570 - hybex_system.prolog_engine - INFO - [Session:651724b1] 🎯 Ultra-fast eligibility check for case_651724b1_121729
+2025-08-11 12:17:29,571 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpozwdhb9a.pl'], eligible_for_legal_aid('case_651724b1_121729'), halt --stack-limit=2g --traditional
+2025-08-11 12:17:29,752 - hybex_system.prolog_engine - INFO - [Session:651724b1] Prolog query successful (attempt 1): eligible_for_legal_aid('case_651724b1_121729')
+2025-08-11 12:17:29,752 - hybex_system.prolog_engine - INFO - [Session:651724b1] ✅ FAST SUCCESS: Basic eligibility confirmed for case_651724b1_121729
+2025-08-11 12:17:29,753 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpozwdhb9a.pl'), primary_eligibility_reason('case_651724b1_121729', Reason), (json_write_dict(dict("Reason"=Reason), []) ; true), halt.
+2025-08-11 12:17:30,038 - hybex_system.prolog_engine - WARNING - [Session:651724b1] Prolog warning/error: ERROR: c:/users/omen19~1/appdata/local/temp/tmpozwdhb9a.pl:20:
+ERROR:    source_sink `library(json)' does not exist
+Warning: c:/users/omen19~1/appdata/local/temp/tmpozwdhb9a.pl:20:
+Warning:    Goal (directive) failed: user:use_module(library(json))
+ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpozwdhb9a.pl'), primary_eligibility_reason('case_651724b1_121729', Reason), (json_write_dict(dict("Reason"=Reason), []) ; true), halt.: '<meta-call>'/1: Unknown procedure: json_write_dict/2
+2025-08-11 12:17:30,038 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpozwdhb9a.pl'), generate_detailed_reasoning('case_651724b1_121729', DetailedReason), (json_write_dict(dict("DetailedReason"=DetailedReason), []) ; true), halt.
+2025-08-11 12:17:30,218 - hybex_system.prolog_engine - WARNING - [Session:651724b1] Prolog warning/error: ERROR: c:/users/omen19~1/appdata/local/temp/tmpozwdhb9a.pl:20:
+ERROR:    source_sink `library(json)' does not exist
+Warning: c:/users/omen19~1/appdata/local/temp/tmpozwdhb9a.pl:20:
+Warning:    Goal (directive) failed: user:use_module(library(json))
+ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpozwdhb9a.pl'), generate_detailed_reasoning('case_651724b1_121729', DetailedReason), (json_write_dict(dict("DetailedReason"=DetailedReason), []) ; true), halt.: '<meta-call>'/1: Unknown procedure: json_write_dict/2
+2025-08-11 12:17:30,218 - hybex_system.prolog_engine - INFO - [Session:651724b1] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpozwdhb9a.pl'), findall(Rule, applicable_rule('case_651724b1_121729', Rule, legal_aid), Rules), (json_write_dict(dict("Rules"=Rules), []) ; true), halt.
+2025-08-11 12:17:30,411 - hybex_system.prolog_engine - WARNING - [Session:651724b1] Prolog warning/error: ERROR: c:/users/omen19~1/appdata/local/temp/tmpozwdhb9a.pl:20:
+ERROR:    source_sink `library(json)' does not exist
+Warning: c:/users/omen19~1/appdata/local/temp/tmpozwdhb9a.pl:20:
+Warning:    Goal (directive) failed: user:use_module(library(json))
+ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpozwdhb9a.pl'), findall(Rule, applicable_rule('case_651724b1_121729', Rule, legal_aid), Rules), (json_write_dict(dict("Rules"=Rules), []) ; true), halt.: '<meta-call>'/1: Unknown procedure: json_write_dict/2
+2025-08-11 12:17:30,411 - hybex_system.prolog_engine - INFO - [Session:651724b1] Comprehensive legal analysis complete for case_651724b1_121729: Eligible=True, Confidence=0.80

@@ -31,11 +31,11 @@ class HybExConfig:
         
         # Model configurations
         self.MODEL_CONFIG = {
-            'base_model': 'distilbert-base-uncased',  # Base model for tokenizer
-            'max_length': 256,
-            'batch_size': 4,
+            'base_model': 'distilbert-base-uncased', 
+            'max_length': 512,
+            'batch_size': 32,
             'learning_rate': 2e-5,
-            'epochs': 10,
+            'epochs': 30,
             'warmup_steps': 200,
             'weight_decay': 0.01,
             'dropout_prob': 0.3,  # Added missing dropout probability
@@ -46,10 +46,10 @@ class HybExConfig:
         self.MODEL_CONFIGS = {
             'domain_classifier': {
                 'model_name': 'distilbert-base-uncased',
-                'max_length': 256,
-                'batch_size': 4,  # Reduced for stability
+                'max_length': 512,
+                'batch_size': 8,  # Reduced for stabili32y
                 'learning_rate': 1e-5,  # Lower learning rate for better convergence
-                'epochs': 10,  # More epochs for robust training
+                'epochs': 30,  # More epochs for robust training
                 'warmup_steps': 200,
                 'weight_decay': 0.01,
                 'early_stopping_patience': 3,
@@ -57,10 +57,10 @@ class HybExConfig:
             },
             'entity_extractor': {
                 'model_name': 'distilbert-base-uncased',
-                'max_length': 256,
-                'batch_size': 4,
+                'max_length': 512,
+                'batch_size': 32,
                 'learning_rate': 2e-5,
-                'epochs': 12,  # More epochs for NER task
+                'epochs': 30,  # More epochs for NER task
                 'warmup_steps': 300,
                 'weight_decay': 0.01,
                 'early_stopping_patience': 4,
@@ -68,10 +68,10 @@ class HybExConfig:
             },
             'eligibility_predictor': {
                 'model_name': 'distilbert-base-uncased',
-                'max_length': 256,
-                'batch_size': 4,
+                'max_length': 512,
+                'batch_size': 32,
                 'learning_rate': 5e-6,  # Very low for final prediction
-                'epochs': 15,  # Most epochs for main task
+                'epochs': 30,  # Most epochs for main task
                 'warmup_steps': 500,
                 'weight_decay': 0.02,
                 'early_stopping_patience': 5,
@@ -90,7 +90,8 @@ class HybExConfig:
         }
         self.PROLOG_CONFIG = {
             'min_confidence_for_override': 0.95, # Example value, adjust as needed
-            'log_dir': 'logs/prolog' # Ensure a log directory for prolog
+            'log_dir': 'logs/prolog', # Ensure a log directory for prolog
+            'timeout': 120  # Increased timeout for complex queries
         }
 
         self.NEURAL_CONFIG = {
@@ -158,6 +159,27 @@ class HybExConfig:
             'save_predictions': True,
             'save_attention_weights': False,  # Disable for performance
             'generate_plots': True
+        }
+
+        # =================================================================
+        # INTERACTIVE CHATBOT CONFIGURATION
+        # =================================================================
+        self.REQUIRED_FACTS_CONFIG = {
+            'default': ['income', 'social_category'],
+            'family_law': ['gender', 'age'],
+            'employment_law': ['employment_duration', 'daily_wage'],
+            'consumer_protection': ['goods_value', 'incident_date']
+        }
+
+        self.QUESTION_MAPPING = {
+            'income': "What is your approximate total annual household income in Rupees?",
+            'social_category': "Do you belong to a specific social category (e.g., General, SC, ST, OBC)?",
+            'gender': "What is your gender?",
+            'age': "What is your age?",
+            'employment_duration': "How long were you employed at the job, in total days or years?",
+            'daily_wage': "What was your average daily wage in Rupees?",
+            'goods_value': "What was the total value of the goods or services in question, in Rupees?",
+            'incident_date': "On what date (YYYY-MM-DD) did the incident occur?"
         }
 
     def get_model_config(self, model_name: str) -> Dict[str, Any]:

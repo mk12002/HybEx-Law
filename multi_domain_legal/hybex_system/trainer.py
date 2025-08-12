@@ -25,7 +25,7 @@ from .evaluator import ModelEvaluator
 # Setup logging
 logger = logging.getLogger(__name__)
 
-class TrainingOrchestrator:
+class   TrainingOrchestrator:
     """Main training pipeline orchestrator"""
     
     def __init__(self, config: HybExConfig):

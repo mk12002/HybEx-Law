@@ -1,0 +1,1045 @@
+{
+  "timestamp": "2025-08-12T17:05:09.702587",
+  "overall_status": "Completed",
+  "neural_metrics": {
+    "domain_classifier": {
+      "accuracy": 0.8803418803418803,
+      "f1_score": 0.9490917042566493,
+      "precision": 0.9897435897435898,
+      "recall": 0.9147305867417158,
+      "loss": 0.10491213080494874,
+      "classification_report": {
+        "0": {
+          "precision": 0.9487179487179487,
+          "recall": 0.9588565321934277,
+          "f1-score": 0.9537602976348658,
+          "support": 3743.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 0.8216145833333334,
+          "f1-score": 0.902072909220872,
+          "support": 1536.0
+        },
+        "2": {
+          "precision": 1.0,
+          "recall": 0.849025974025974,
+          "f1-score": 0.9183494293239683,
+          "support": 1232.0
+        },
+        "3": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1524.0
+        },
+        "4": {
+          "precision": 1.0,
+          "recall": 0.9441558441558442,
+          "f1-score": 0.9712758851035405,
+          "support": 1540.0
+        },
+        "micro avg": {
+          "precision": 0.9786084463557173,
+          "recall": 0.9268929503916449,
+          "f1-score": 0.9520489165415147,
+          "support": 9575.0
+        },
+        "macro avg": {
+          "precision": 0.9897435897435898,
+          "recall": 0.9147305867417158,
+          "f1-score": 0.9490917042566493,
+          "support": 9575.0
+        },
+        "weighted avg": {
+          "precision": 0.9799531365066613,
+          "recall": 0.9268929503916449,
+          "f1-score": 0.9510893099318166,
+          "support": 9575.0
+        },
+        "samples avg": {
+          "precision": 0.9834188034188034,
+          "recall": 0.9401709401709402,
+          "f1-score": 0.9545868945868947,
+          "support": 9575.0
+        }
+      },
+      "confusion_matrix": null
+    },
+    "eligibility_predictor": {
+      "accuracy": 0.5018803418803419,
+      "f1_score": 0.5017461638584592,
+      "precision": 0.5018712875677638,
+      "recall": 0.501869355830512,
+      "loss": 0.693609973120559,
+      "classification_report": {
+        "0.0": {
+          "precision": 0.5015895443306252,
+          "recall": 0.4858022579541567,
+          "f1-score": 0.49356969064998263,
+          "support": 2923.0
+        },
+        "1.0": {
+          "precision": 0.5021530308049023,
+          "recall": 0.5179364537068671,
+          "f1-score": 0.5099226370669357,
+          "support": 2927.0
+        },
+        "accuracy": 0.5018803418803419,
+        "macro avg": {
+          "precision": 0.5018712875677638,
+          "recall": 0.501869355830512,
+          "f1-score": 0.5017461638584592,
+          "support": 5850.0
+        },
+        "weighted avg": {
+          "precision": 0.5018714802127122,
+          "recall": 0.5018803418803419,
+          "f1-score": 0.5017517546093709,
+          "support": 5850.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          1420,
+          1503
+        ],
+        [
+          1411,
+          1516
+        ]
+      ]
+    }
+  },
+  "prolog_metrics": {
+    "accuracy": 0.52,
+    "f1_score": 0.6,
+    "precision": 0.5373134328358209,
+    "recall": 0.6792452830188679,
+    "classification_report": {
+      "False": {
+        "precision": 0.48484848484848486,
+        "recall": 0.3404255319148936,
+        "f1-score": 0.4,
+        "support": 47.0
+      },
+      "True": {
+        "precision": 0.5373134328358209,
+        "recall": 0.6792452830188679,
+        "f1-score": 0.6,
+        "support": 53.0
+      },
+      "accuracy": 0.52,
+      "macro avg": {
+        "precision": 0.5110809588421529,
+        "recall": 0.5098354074668807,
+        "f1-score": 0.5,
+        "support": 100.0
+      },
+      "weighted avg": {
+        "precision": 0.512654907281773,
+        "recall": 0.52,
+        "f1-score": 0.5059999999999999,
+        "support": 100.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        16,
+        31
+      ],
+      [
+        17,
+        36
+      ]
+    ],
+    "evaluated_samples": 100
+  },
+  "hybrid_metrics": {
+    "accuracy": 0.51,
+    "f1_score": 0.631578947368421,
+    "precision": 0.525,
+    "recall": 0.7924528301886793,
+    "classification_report": {
+      "False": {
+        "precision": 0.45,
+        "recall": 0.19148936170212766,
+        "f1-score": 0.26865671641791045,
+        "support": 47.0
+      },
+      "True": {
+        "precision": 0.525,
+        "recall": 0.7924528301886793,
+        "f1-score": 0.631578947368421,
+        "support": 53.0
+      },
+      "accuracy": 0.51,
+      "macro avg": {
+        "precision": 0.48750000000000004,
+        "recall": 0.49197109594540345,
+        "f1-score": 0.45011783189316573,
+        "support": 100.0
+      },
+      "weighted avg": {
+        "precision": 0.4897500000000001,
+        "recall": 0.51,
+        "f1-score": 0.4610054988216811,
+        "support": 100.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        9,
+        38
+      ],
+      [
+        11,
+        42
+      ]
+    ],
+    "evaluated_samples": 100
+  },
+  "component_agreement": {
+    "neural_prolog_agreement_rate": 0.6,
+    "total_hybrid_samples": 100,
+    "neural_accuracy": 0.52,
+    "prolog_accuracy": 0.52
+  },
+  "error_analysis": [
+    {
+      "sample_id": "sample_10866",
+      "query": "Namaste, I am a divorced woman farmer earning Rs 114102 per year. Sarpanch demanding bribe for scheme. Is free lawyer possible for me? I stay in tehsil in Rajasthan.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5004103183746338,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4842",
+      "query": "I am a victim of domestic violence. My live-in partner is physIcally Abusive. I live in a joint faMily and I am scared. How can I Get a protection order immediately with a free lawyer?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5121825933456421,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_19867",
+      "query": "Hello ji, I am a tribal woman housewife earning Rs 254909 daily but total yearly. Child custody battle with ex-husband. Is free lawyer possible for me? I stay in district in Bihar.",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.49074122309684753,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_17402",
+      "query": "I wrote a blog pOst criticizing a government policy and now I am facing a police inquiry. Is my freedom of speech being violated?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.4886572062969208,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9699",
+      "query": "Namaste, I am a disabled person housewife earning Rs 831279 daily but total yearly. Doctor did negligence in treatment now demanding extra money. Is free lawyer possible for me? I stay in tehsil in Rajasthan.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5077098608016968,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_21126",
+      "query": "I wrote a blog post critIcizing a government policy and now I am facing a suspension from my universiTY. Is my freedom of speech being violated?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5036516189575195,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_38369",
+      "query": "I have a problem with my bank regarding rejection of a valid Insurance claim. I have complained many times but there is no resolution. Can I take them to consumer court? M...",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.498423308134079,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_21976",
+      "query": "My case is about a land dispute. I am from OBC community. Can I get a free government lawyer?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5424374341964722,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_17229",
+      "query": "I have a problem with Airtel regarding unfair bank charges. I have complained many times but there is no resolution. Can I take them to consumer court? My income is low.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5067071914672852,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_14110",
+      "query": "BhaI sahab I am husband divorced but alimony pEnding, husband/wife beats me daily. No job, dependent on hIm/her. We have {num_children} kids. Can I get divorce and mainTenAnce?",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.4998789131641388,
+      "prolog_pred": true,
+      "prolog_confidence": 0.9,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_17382",
+      "query": "I signed an employment contract that promised a promOtion after one year, but my employer is not honoriNg it. TheY are denying my promotion without reason. Can I sue for bReach of contract?",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.48623624444007874,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6768",
+      "query": "My partnEr and I want to adopt a child. We are a single womaN and have a combined income of Rs 622115 annually. WhAt Is the leGal pRocedure and can we ge...",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.4810830056667328,
+      "prolog_pred": true,
+      "prolog_confidence": 0.9,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_21254",
+      "query": "My spouse and I are separating. I want primary custody of my two children, 5 and 8. My spouse is violent. Am I likely to get custody? Is there free legal help for this?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.49284833669662476,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6385",
+      "query": "Bought refrigerator for Rs 797505 from Amazon. it was a fake item. 1 month ago. How do I get compensation without paying high fees?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5034568905830383,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_20655",
+      "query": "I was denied entry into a public temple because of my sexual orientation. Is this not a violation of my right to equality under the Constitution?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5093556642532349,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1524",
+      "query": "I was denied entry into a public temple because of my sexual orientation. Is this not a violation of my right to equality under the Constitution?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5093556642532349,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_18236",
+      "query": "help please... my landlord is a big problem. money is very less, maybe 14054 per month. the city outskirts. what to do?",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.48832687735557556,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_28068",
+      "query": "I am mental health patient from jail. Lost all documents in flood. Free legal support available?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5325417518615723,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_38334",
+      "query": "My partner and I want to adopt a child. We are a single woman and have a combined income of Rs 622115 Annually. What is the leGal procedure and can we get assistance?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.4595852792263031,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6669",
+      "query": "I wrote a blog post criticizing a government policy and now I am facing a police inquiry. Is my freedom of speech being violated?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.4886572062969208,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_38524",
+      "query": "My spouse and I are separating. I want primary custody of my two children, 5 and 8. My spouse is not interested in the child. Am I likely to get custody? Is there free legal help for this?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.48267972469329834,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3014",
+      "query": "Police discriminated against me based on my caste without reason. I am a Christian. My speech was censored online. Is this a violation of Article {article}? Can I get legal aid for a PIL?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5354536175727844,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_25999",
+      "query": "Bought a laptop for Rs 797505 from an online eduCation portal. they never delivered it. 1 month ago. How do I Get compensation withouT paying high fees?",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.4961971044540405,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2625",
+      "query": "I signed an employment contract that promised a promotion after one year, but my employer is not honoring it. They are forcing me to come to the office every day. Can I sue for breach of contract?",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.47721514105796814,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_20710",
+      "query": "Bought mobile phone for Rs 797505 from Amazon. it was an expired product. 1 month ago. Am I eligible for a free lawyer in the consumer forum?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5313368439674377,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_18294",
+      "query": "I wrote a blog post criticizing a government policy and now I am facing threats from political workers. Is my freedom of speech being violated?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.48005950450897217,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_16688",
+      "query": "Bought car for Rs 797505 from Amazon. it was defeCtive from day 1. just yesterday. Am I eligible for a free lawyer in the consumer forum?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5297496318817139,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_16478",
+      "query": "I am a victim of domestic violEnce. My son iS physically abusive. I live in a rented house and I am scared. How can I geT a protection order immediaTely with a freE lawyer?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.51263028383255,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_19623",
+      "query": "I wrote a blog post criticizing a government policy and now I am facing threats from political workers. Is my freedom of speech beIng violated?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.48005950450897217,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_23913",
+      "query": "I wrote a blog post criticizing a government policy and now I am facing Threats froM political workErs. Is my freedom of speech being violated?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.48005950450897217,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_36123",
+      "query": "I am a victim of domestic violence. My in-laws is controlling all my finances. I live in a rented house and I am scared. How can I get a protection order immediately with a free lawyer?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5094700455665588,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6605",
+      "query": "help please... police not listening to my complaint. money is very less, maybe 14054 per month. near tHe railway lines. what to do?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.4925593137741089,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_33500",
+      "query": "I have a problem with Airtel regarding rejection of a valid insurance claim. I have complained many times but there is no resolution. Can I take them to consumer court? My income is low.",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.4952388405799866,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_17416",
+      "query": "I have resigned from my job after working for 15 years, but the company is delaying my Provident Fund (PF) withdrawal. How can I claim it?",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.4817008376121521,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_37940",
+      "query": "I wrote a blog post criticizing a government policy and now I am facing a suspension from my university. Is my freedom of speech being violated?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5036516189575195,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_38455",
+      "query": "I have a problem with the electricity board regarding frequEnt power cuts. I havE complained many times but there is no resolution. Can I take tHem to consumer court? My income is low.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5014894604682922,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_25455",
+      "query": "I was denied entry into a restaurant because of my caste. Is this not a violation of my right to equality under the Constitution?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5107361674308777,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_13962",
+      "query": "I am a woman facing domestic violence and my annual income is Rs 967794. I need legal help for a land rights issue against a corporation. Am I excluded due to my income?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.525320827960968,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_34696",
+      "query": "My spouse and I are separating. I want full Custody of my two chIldren, 5 and 8. My spousE is violent. Am I likely to get custody? Is there free legal help for this?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.49185600876808167,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_20496",
+      "query": "BouGht rEfrigerator for Rs 797505 from Amazon. it's not as advertiseD. 1 month ago. How do I get compensation withouT paying...",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5069612264633179,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_33798",
+      "query": "Hello ji, I am a divorced woman rickshaw driver earning Rs 929415 monthly. Sarpanch demanding bribe for scheme. Legal services free for poor like me? I stay in tribal area in Odisha.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5080378651618958,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_36389",
+      "query": "My problem is I am man married for 5 years, husbAnd/wIfe is mentally cruel. Both working but he/she hides income. One daughter 10 years old. Is lEgal aid available for family court?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5239057540893555,
+      "prolog_pred": true,
+      "prolog_confidence": 0.9,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_15630",
+      "query": "I am senior citizen 70 years from jail. School harassment case. Free legal support available?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5117935538291931,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_13493",
+      "query": "My problem is I am wife separated for 1 year, husband/wife left home 2 years ago. Both working but he/she hides income. No children. Can I get divorce and maintenance?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5067533254623413,
+      "prolog_pred": true,
+      "prolog_confidence": 0.9,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_7407",
+      "query": "I have resigned from my job after working for 15 years, but the company is delaying my Provident Fund (PF) withdrawal. How ...",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.49783089756965637,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_38803",
+      "query": "I have resigned from my job aftEr working for 10 years, but the company is delaying my gratuity payment. How can I clAim it?",
+      "true_label": true,
+      "neural_pred": false,
+      "neural_prob": 0.49154651165008545,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": false,
+      "fusion_method": "default",
+      "error_type": "False Negative",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_33473",
+      "query": "I saw an advertisement for a health supplement that claimed 'guaranteed results in 7 days'. After buying it, I found out it was a lie. This feels like an unfair trade practice. What are my rights?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5067247748374939,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    },
+    {
+      "sample_id": "sample_4782",
+      "query": "My partner and I want to adopt a child. We are a single man and have a combined income of Rs 622115 annually. What is the legal procedure and can we get assistance?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.4579694867134094,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_25741",
+      "query": "I was working as a factory worker for 6 months. My boss makes me work overtime with no extra pay. My salary is Rs 18801. Am I eligible for legal aid at the labor court?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5172260403633118,
+      "prolog_pred": false,
+      "prolog_confidence": 0.8,
+      "hybrid_pred": true,
+      "fusion_method": "default",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": true,
+        "prolog_gt": false
+      }
+    }
+  ],
+  "sample_size": 5850,
+  "config_summary": "HybEx-Law Config - Data: verified_fallback, Models: 3, Legal Sources: Unknown"
+}

@@ -1,0 +1,185 @@
+2025-08-08 19:21:11,065 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Added file handler to PrologEngine logger.
+2025-08-08 19:21:11,065 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] ======================================================================
+2025-08-08 19:21:11,065 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-08 19:21:11,065 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Session ID: f15e8e81
+2025-08-08 19:21:11,065 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-08 19:21:11,065 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] ======================================================================
+2025-08-08 19:21:11,065 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Using ultra-fast minimal knowledge base (testing)
+2025-08-08 19:21:11,065 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Attempting to load rules from: D:\Code_stuff\NLP\multi_domain_legal\knowledge_base\ultra_fast_minimal_rules.py
+2025-08-08 19:21:11,065 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Successfully loaded ENHANCED_MULTI_DOMAIN_LEGAL_RULES with scraped content.
+2025-08-08 19:21:11,065 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-08 19:21:11,065 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Initialized Comprehensive PrologEngine (Session: f15e8e81, Available: True)
+2025-08-08 19:21:11,071 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Loaded 3 rule categories with 9 total rules
+2025-08-08 19:21:11,071 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Comprehensive rules actually loaded: True
+2025-08-08 19:21:11,071 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Detected domain 'family_law' for case type 'divorce'
+2025-08-08 19:21:11,072 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🧠 Starting comprehensive legal analysis for case_f15e8e81_192111
+2025-08-08 19:21:11,072 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Detected domain 'family_law' for case type 'divorce'
+2025-08-08 19:21:11,073 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Using domain-specific rules for: ['family_law']
+2025-08-08 19:21:11,073 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Generated 9 comprehensive Prolog facts for case_f15e8e81_192111
+2025-08-08 19:21:11,077 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 📋 Loaded domain-specific rules for 'family_law'
+2025-08-08 19:21:11,078 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] ✅ Combined 129 core rules with 24 domain-specific rules
+2025-08-08 19:21:11,078 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] ✅ Created domain-specific Prolog file for 'family_law': C:\Users\OMEN19~1\AppData\Local\Temp\tmp53q0ovp4.pl with 9 facts.
+2025-08-08 19:22:11,088 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 1): eligible_with_confidence('case_f15e8e81_192111', Eligible, Confidence)
+2025-08-08 19:23:11,109 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 2): eligible_with_confidence('case_f15e8e81_192111', Eligible, Confidence)
+2025-08-08 19:24:11,120 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 3): eligible_with_confidence('case_f15e8e81_192111', Eligible, Confidence)
+2025-08-08 19:24:11,120 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] Failed to get confident eligibility from Prolog. Trying basic 'eligible_for_legal_aid'.
+2025-08-08 19:25:11,150 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 1): eligible_for_legal_aid('case_f15e8e81_192111')
+2025-08-08 19:26:11,164 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 2): eligible_for_legal_aid('case_f15e8e81_192111')
+2025-08-08 19:27:11,186 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 3): eligible_for_legal_aid('case_f15e8e81_192111')
+2025-08-08 19:28:11,192 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 1): primary_eligibility_reason('case_f15e8e81_192111', Reason)
+2025-08-08 19:29:11,225 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 2): primary_eligibility_reason('case_f15e8e81_192111', Reason)
+2025-08-08 19:30:11,251 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 3): primary_eligibility_reason('case_f15e8e81_192111', Reason)
+2025-08-08 19:31:11,280 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 1): generate_detailed_reasoning('case_f15e8e81_192111', DetailedReason)
+2025-08-08 19:32:11,284 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 2): generate_detailed_reasoning('case_f15e8e81_192111', DetailedReason)
+2025-08-08 19:33:11,303 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 3): generate_detailed_reasoning('case_f15e8e81_192111', DetailedReason)
+2025-08-08 19:33:11,396 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] SWI-Prolog exited with code 2 (attempt 1). Stderr: Warning: c:/users/omen19~1/appdata/local/temp/tmp53q0ovp4.pl:163:
+Warning:    Clauses of person/1 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmp53q0ovp4.pl:126
+Warning:    Current predicate: family_law_reason/2
+Warning:    Use :- discontiguous person/1. to suppress this message
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmp53q0ovp4.pl'], findall(Rule, applicable_rule('case_f15e8e81_192111', Rule, legal_aid), Rules).: findall_loop/4: Unknown procedure: applicable_rule/3
+2025-08-08 19:33:11,396 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Comprehensive legal analysis complete for case_f15e8e81_192111: Eligible=False, Confidence=0.30
+2025-08-08 19:33:11,408 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Detected domain 'consumer_protection' for case type 'fraud'
+2025-08-08 19:33:11,408 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🧠 Starting comprehensive legal analysis for case_f15e8e81_193311
+2025-08-08 19:33:11,409 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Detected domain 'consumer_protection' for case type 'fraud'
+2025-08-08 19:33:11,409 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Using domain-specific rules for: ['consumer_protection']
+2025-08-08 19:33:11,409 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Generated 8 comprehensive Prolog facts for case_f15e8e81_193311
+2025-08-08 19:33:11,415 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 📋 Loaded domain-specific rules for 'consumer_protection'
+2025-08-08 19:33:11,415 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] ✅ Combined 129 core rules with 22 domain-specific rules
+2025-08-08 19:33:11,417 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] ✅ Created domain-specific Prolog file for 'consumer_protection': C:\Users\OMEN19~1\AppData\Local\Temp\tmpi5fgvve0.pl with 8 facts.
+2025-08-08 19:34:11,434 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 1): eligible_with_confidence('case_f15e8e81_193311', Eligible, Confidence)
+2025-08-08 19:35:11,445 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 2): eligible_with_confidence('case_f15e8e81_193311', Eligible, Confidence)
+2025-08-08 19:36:11,453 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 3): eligible_with_confidence('case_f15e8e81_193311', Eligible, Confidence)
+2025-08-08 19:36:11,453 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] Failed to get confident eligibility from Prolog. Trying basic 'eligible_for_legal_aid'.
+2025-08-08 19:37:11,491 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 1): eligible_for_legal_aid('case_f15e8e81_193311')
+2025-08-08 19:38:11,517 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 2): eligible_for_legal_aid('case_f15e8e81_193311')
+2025-08-08 19:39:11,554 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 3): eligible_for_legal_aid('case_f15e8e81_193311')
+2025-08-08 19:40:11,584 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 1): primary_eligibility_reason('case_f15e8e81_193311', Reason)
+2025-08-08 19:41:11,588 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 2): primary_eligibility_reason('case_f15e8e81_193311', Reason)
+2025-08-08 19:42:11,593 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 3): primary_eligibility_reason('case_f15e8e81_193311', Reason)
+2025-08-08 19:43:11,622 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 1): generate_detailed_reasoning('case_f15e8e81_193311', DetailedReason)
+2025-08-08 19:44:11,646 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 2): generate_detailed_reasoning('case_f15e8e81_193311', DetailedReason)
+2025-08-08 19:45:11,668 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 3): generate_detailed_reasoning('case_f15e8e81_193311', DetailedReason)
+2025-08-08 19:45:11,751 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] SWI-Prolog exited with code 2 (attempt 1). Stderr: Warning: c:/users/omen19~1/appdata/local/temp/tmpi5fgvve0.pl:161:
+Warning:    Clauses of person/1 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpi5fgvve0.pl:126
+Warning:    Current predicate: consumer_protection_reason/2
+Warning:    Use :- discontiguous person/1. to suppress this message
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpi5fgvve0.pl'], findall(Rule, applicable_rule('case_f15e8e81_193311', Rule, legal_aid), Rules).: findall_loop/4: Unknown procedure: applicable_rule/3
+2025-08-08 19:45:11,751 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Comprehensive legal analysis complete for case_f15e8e81_193311: Eligible=False, Confidence=0.30
+2025-08-08 19:45:11,751 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Detected domain 'employment_law' for case type 'wrongful_termination'
+2025-08-08 19:45:11,751 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🧠 Starting comprehensive legal analysis for case_f15e8e81_194511
+2025-08-08 19:45:11,751 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Detected domain 'employment_law' for case type 'wrongful_termination'
+2025-08-08 19:45:11,754 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Using domain-specific rules for: ['employment_law']
+2025-08-08 19:45:11,754 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Generated 8 comprehensive Prolog facts for case_f15e8e81_194511
+2025-08-08 19:45:11,754 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] Optimized enhanced rules not found, falling back to full rule set
+2025-08-08 19:45:11,754 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Using fallback knowledge base
+2025-08-08 19:45:11,754 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Attempting to load rules from: D:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-08 19:45:11,769 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-08 19:45:11,770 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] ✅ Created domain-specific Prolog file for 'employment_law': C:\Users\OMEN19~1\AppData\Local\Temp\tmpv3q_nke8.pl with 8 facts.
+2025-08-08 19:45:11,861 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpv3q_nke8.pl'], eligible_with_confidence('case_f15e8e81_194511', Eligible, Confidence).: '<meta-call>'/1: Unknown procedure: eligible_with_confidence/3
+2025-08-08 19:45:11,861 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] Failed to get confident eligibility from Prolog. Trying basic 'eligible_for_legal_aid'.
+2025-08-08 19:46:11,886 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 1): eligible_for_legal_aid('case_f15e8e81_194511')
+2025-08-08 19:47:11,914 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 2): eligible_for_legal_aid('case_f15e8e81_194511')
+2025-08-08 19:48:11,940 - hybex_system.prolog_engine - ERROR - [Session:f15e8e81] Prolog query timeout (attempt 3): eligible_for_legal_aid('case_f15e8e81_194511')
+2025-08-08 19:48:12,050 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpv3q_nke8.pl'], primary_eligibility_reason('case_f15e8e81_194511', Reason).: format/3: Format error: too many arguments
+2025-08-08 19:48:12,136 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpv3q_nke8.pl'], generate_detailed_reasoning('case_f15e8e81_194511', DetailedReason).: individual_reason/2: Unknown procedure: income_threshold/2
+2025-08-08 19:48:12,245 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmpv3q_nke8.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmpv3q_nke8.pl'], findall(Rule, applicable_rule('case_f15e8e81_194511', Rule, legal_aid), Rules).: findall_loop/4: Unknown procedure: applicable_rule/3
+2025-08-08 19:48:12,245 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Comprehensive legal analysis complete for case_f15e8e81_194511: Eligible=False, Confidence=0.30
+2025-08-08 19:48:12,245 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Detected domain 'general_legal_aid' for case type 'other'
+2025-08-08 19:48:12,245 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🧠 Starting comprehensive legal analysis for case_f15e8e81_194812
+2025-08-08 19:48:12,245 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Detected domain 'general_legal_aid' for case type 'other'
+2025-08-08 19:48:12,245 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] 🎯 Using domain-specific rules for: ['general_legal_aid']
+2025-08-08 19:48:12,245 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Generated 8 comprehensive Prolog facts for case_f15e8e81_194812
+2025-08-08 19:48:12,261 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] Optimized enhanced rules not found, falling back to full rule set
+2025-08-08 19:48:12,261 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Using fallback knowledge base
+2025-08-08 19:48:12,264 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Attempting to load rules from: D:\Code_stuff\NLP\multi_domain_legal\knowledge_base\multi_domain_rules.py
+2025-08-08 19:48:12,266 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.
+2025-08-08 19:48:12,267 - hybex_system.prolog_engine - INFO - [Session:f15e8e81] ✅ Created domain-specific Prolog file for 'general_legal_aid': C:\Users\OMEN19~1\AppData\Local\Temp\tmp1bgnk3e8.pl with 8 facts.
+2025-08-08 19:48:12,376 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] SWI-Prolog exited with code 2 (attempt 1). Stderr: ERROR: c:/users/omen19~1/appdata/local/temp/tmp1bgnk3e8.pl:61:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmp1bgnk3e8.pl:82:
+Warning:    Singleton variables: [Spouse]
+Warning: c:/users/omen19~1/appdata/local/temp/tmp1bgnk3e8.pl:191:
+Warning:    Clauses of right_violation_occurred/2 are not together in the source-file
+Warning:    Earlier definition at c:/users/omen19~1/appdata/local/temp/tmp1bgnk3e8.pl:180
+Warning:    Current predicate: prohibited_discrimination_ground/1
+Warning:    Use :- discontiguous right_violation_occurred/2. to suppress this message
+ERROR: c:/users/omen19~1/appdata/local/temp/tmp1bgnk3e8.pl:202:7: Syntax error: Operator expected
+Warning: c:/users/omen19~1/appdata/local/temp/tmp1bgnk3e8.pl:329:
+Warning:    Singleton variables: [Person]
+Warning: c:/users/omen19~1/appdata/local/temp/tmp1bgnk3e8.pl:347:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmp1bgnk3e8.pl:364:
+Warning:    Singleton variables: [Category]
+Warning: c:/users/omen19~1/appdata/local/temp/tmp1bgnk3e8.pl:386:
+Warning:    Singleton variables: [Date1,Date2]
+ERROR: -g ['C:/Users/OMEN19~1/AppData/Local/Temp/tmp1bgnk3e8.pl'], eligible_with_confidence('case_f15e8e81_194812', Eligible, Confidence).: '<meta-call>'/1: Unknown procedure: eligible_with_confidence/3
+2025-08-08 19:48:12,377 - hybex_system.prolog_engine - WARNING - [Session:f15e8e81] Failed to get confident eligibility from Prolog. Trying basic 'eligible_for_legal_aid'.
