@@ -114,6 +114,7 @@
 2025-08-05 09:10:02,028 - hybex_system.neural_models - INFO - Validation F1 did not improve. Patience: 5/5
 2025-08-05 09:10:02,028 - hybex_system.neural_models - INFO - Early stopping triggered.
 2025-08-05 09:10:02,032 - hybex_system.neural_models - INFO - Loaded best model with F1 score: 0.8896
+<<<<<<< HEAD
 2025-08-12 12:16:30,973 - hybex_system.neural_models - INFO - Added file handler to ModelTrainer logger.
 2025-08-12 12:16:30,973 - hybex_system.neural_models - INFO - ============================================================
 2025-08-12 12:16:30,973 - hybex_system.neural_models - INFO - Starting HybEx-Law Neural Model Training
@@ -219,3 +220,5 @@
 2025-08-12 16:34:59,710 - hybex_system.neural_models - INFO - Saved model eligibility_predictor to C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\models\hybex_system\eligibility_predictor
 2025-08-12 16:35:00,887 - hybex_system.neural_models - INFO - Saved training plots to C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\training_plots\eligibility_predictor
 2025-08-12 16:35:00,887 - hybex_system.neural_models - INFO - All neural models trained successfully.
+=======
+>>>>>>> f63cb0c5bec52c3c68eb36a972ccaa75026c0afe

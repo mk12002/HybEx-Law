@@ -1,4 +1,25 @@
+<<<<<<< HEAD
 
+=======
+% EM% =================================================================
+% EMPLOYMENT MISCONDUCT AND TERMINATION RULES
+% =================================================================
+
+wrongful_termination(Employee) :-
+    improper_procedure(Employee).
+wrongful_termination(Employee) :-
+    insufficient_notice(Employee).
+wrongful_termination(Employee) :-
+    discriminatory_termination(Employee).
+
+% Improved procedure checks - avoid problematic negations
+improper_procedure(Employee) :-
+    disciplinary_hearing_conducted(Employee, false).
+improper_procedure(Employee) :-
+    opportunity_to_explain_given(Employee, false).MAIN RULES - CORRECTED
+% Contains wrongful termination, wage disputes, and workplace harassment rules
+% Corrected to avoid problematic cuts that prevent backtracking
+>>>>>>> f63cb0c5bec52c3c68eb36a972ccaa75026c0afe
 
 % =================================================================
 % WRONGFUL TERMINATION - CORRECTED
@@ -11,11 +32,14 @@ wrongful_termination(Employee) :-
 wrongful_termination(Employee) :-
     discriminatory_termination(Employee).
 
+<<<<<<< HEAD
 % Add this new definition
 discriminatory_termination(Employee) :-
     constitutional_employment_remedy(non_discrimination),
     case_type(Employee, discrimination).
     
+=======
+>>>>>>> f63cb0c5bec52c3c68eb36a972ccaa75026c0afe
 improper_procedure(Employee) :-
     \+ disciplinary_hearing_conducted(Employee).
 improper_procedure(Employee) :-
@@ -123,10 +147,13 @@ employment_pil_standing(Person, Issue) :-
     employment_related_issue(Issue),
     public_interest_affected(Issue), !.
 
+<<<<<<< HEAD
 % Define what constitutes a public interest issue for employment
 public_interest_affected(Issue) :-
     employment_related_issue(Issue). % Assumes all defined employment issues affect public interest
 
+=======
+>>>>>>> f63cb0c5bec52c3c68eb36a972ccaa75026c0afe
 employment_related_issue(bonded_labor).
 employment_related_issue(child_labor).
 employment_related_issue(unsafe_working_conditions).

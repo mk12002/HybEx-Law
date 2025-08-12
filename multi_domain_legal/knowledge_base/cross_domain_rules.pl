@@ -81,8 +81,13 @@ comprehensive_legal_aid_eligible(Person) :-
     (   legal_aid_employment_case(Person)
     ;   legal_aid_family_case(Person)
     ;   legal_aid_consumer_case(Person)
+<<<<<<< HEAD
     ;   criminal_case(Person)
     ;   constitutional_case(Person)
+=======
+    ;   criminal_case_eligible(Person)
+    ;   constitutional_case_eligible(Person)
+>>>>>>> f63cb0c5bec52c3c68eb36a972ccaa75026c0afe
     ).
 
 % Multi-domain case complexity
@@ -156,6 +161,7 @@ recommended_forum(Person, high_court) :-
 % Domain-specific forum recommendations (only if not constitutional)
 recommended_forum(Person, consumer_forum) :-
     consumer_case(Person),
+<<<<<<< HEAD
     \+ constitutional_case(Person).
 
 recommended_forum(Person, family_court) :-
@@ -165,11 +171,26 @@ recommended_forum(Person, family_court) :-
 recommended_forum(Person, labor_court) :-
     employment_case(Person),
     \+ constitutional_case(Person).
+=======
+    constitutional_case(Person, false).
+
+recommended_forum(Person, family_court) :-
+    family_case(Person),
+    constitutional_case(Person, false).
+
+recommended_forum(Person, labor_court) :-
+    employment_case(Person),
+    constitutional_case(Person, false).
+>>>>>>> f63cb0c5bec52c3c68eb36a972ccaa75026c0afe
 
 % Multiple forum approach for complex cases
 multiple_forums_required(Person) :-
     complex_multi_domain_case(Person),
+<<<<<<< HEAD
     \+ constitutional_case(Person).
+=======
+    constitutional_case(Person, false).
+>>>>>>> f63cb0c5bec52c3c68eb36a972ccaa75026c0afe
 
 % =================================================================
 % COMPREHENSIVE CASE ANALYSIS
@@ -187,6 +208,7 @@ case_domain(Person, consumer) :- consumer_case(Person).
 case_domain(Person, constitutional) :- constitutional_case(Person).
 case_domain(Person, criminal) :- criminal_case(Person).
 
+<<<<<<< HEAD
 case_priority(Person, urgent) :- urgent_case(Person), !.
 case_priority(Person, high) :- \+ urgent_case(Person), high_priority_case(Person), !.
 case_priority(Person, normal) :- \+ urgent_case(Person), \+ high_priority_case(Person).
@@ -213,3 +235,8 @@ prohibited_discrimination_ground(race).
 prohibited_discrimination_ground(caste).
 prohibited_discrimination_ground(sex).
 prohibited_discrimination_ground(place_of_birth).
+=======
+case_priority(Person, urgent) :- urgent_case(Person).
+case_priority(Person, high) :- high_priority_case(Person).
+% Removed problematic negation - if not urgent or high, Python should explicitly set normal priority
+>>>>>>> f63cb0c5bec52c3c68eb36a972ccaa75026c0afe

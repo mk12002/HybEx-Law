@@ -349,9 +349,8 @@ class ModelTrainer:
                 logger.warning(f"Could not generate classification report for eligibility prediction: {e}")
                 class_report = {}
 
-            # Changed to store the NumPy array directly
-            cm = confusion_matrix(labels, predictions).tolist()
-            
+            cm = confusion_matrix(labels, predictions)
+        
         return ModelMetrics(
             accuracy=accuracy,
             f1_score=f1,
