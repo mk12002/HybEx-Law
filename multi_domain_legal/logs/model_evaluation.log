@@ -590,7 +590,6 @@ Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
 2025-08-11 13:27:38,301 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
 2025-08-11 13:27:38,301 - hybex_system.evaluator - INFO - Starting end-to-end system evaluation.
 2025-08-11 13:27:38,306 - hybex_system.evaluator - INFO - No Prolog reasoning results provided. Running Prolog evaluation on test samples...
-<<<<<<< HEAD
 2025-08-12 11:31:47,827 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
 2025-08-12 11:31:47,827 - hybex_system.evaluator - INFO - ============================================================
 2025-08-12 11:31:47,827 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
@@ -718,5 +717,3 @@ Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
 2025-08-12 17:05:09,919 - hybex_system.evaluator - INFO - Generated Neural Eligibility Predictor Confusion Matrix.
 2025-08-12 17:05:10,037 - hybex_system.evaluator - INFO - Generated Prolog Reasoning Confusion Matrix.
 2025-08-12 17:05:10,037 - hybex_system.evaluator - INFO - ✅ Evaluation visualizations saved to C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\evaluation_plots
-=======
->>>>>>> f63cb0c5bec52c3c68eb36a972ccaa75026c0afe

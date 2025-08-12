@@ -1481,7 +1481,6 @@ class PrologEngine:
 
     def _generate_comprehensive_facts(self, entities: Dict[str, Any], case_id: str) -> List[str]:
         """
-<<<<<<< HEAD
         Generate comprehensive Prolog facts from extracted and pre-normalized entities.
         This version trusts that the DataProcessor has already cleaned the data.
         """
@@ -1520,67 +1519,6 @@ class PrologEngine:
         if 'goods_value' in entities:
             facts.append(f"goods_value('{case_id}', {entities['goods_value']}).")
             facts.append(f"transaction_amount('{case_id}', {entities['goods_value']}).")
-=======
-        Generate comprehensive Prolog facts from extracted entities, with normalization.
-        """
-        facts = [f"person('{case_id}')."]
-        
-        # Handle income
-        income_value = entities.get('income') or entities.get('annual_income')
-        if income_value is not None:
-            facts.append(f"annual_income('{case_id}', {income_value}).")
-            if isinstance(income_value, (int, float)) and income_value > 0:
-                facts.append(f"monthly_income('{case_id}', {int(income_value / 12)}).")
-        
-        # Handle social category (normalization is critical)
-        category = entities.get('category') or entities.get('social_category')
-        if category:
-            category_lower = str(category).lower().replace(" ", "_").replace("scheduled_caste", "sc")
-            category_lower = category_lower.replace("scheduled_tribe", "st")
-            category_lower = category_lower.replace("other_backward_class", "obc")
-            category_lower = category_lower.replace("senior_citizen", "senior_citizens")
-            facts.append(f"social_category('{case_id}', '{category_lower}').")
-            
-            # Add vulnerable group facts for special categories
-            if category_lower in ['sc', 'st', 'obc', 'women', 'children', 'disabled', 'senior_citizens', 'bpl', 'industrial_workers']:
-                facts.append(f"vulnerable_group('{case_id}', '{category_lower}').")
-
-        # Handle age (extract from entity, not hardcoded)
-        age_value = entities.get('age')
-        if age_value:
-            facts.append(f"age('{case_id}', {age_value}).")
-            # Add a vulnerable group fact if age is >= 60
-            if int(age_value) >= 60:
-                facts.append(f"vulnerable_group('{case_id}', 'senior_citizens').")
-            if int(age_value) < 18:
-                facts.append(f"vulnerable_group('{case_id}', 'children').")
-        
-        # Handle case type
-        if 'case_type' in entities and entities['case_type']:
-            case_type = str(entities['case_type']).replace(" ", "_").lower()
-            facts.append(f"case_type('{case_id}', '{case_type}').")
-        
-        # Handle gender
-        if 'gender' in entities and entities['gender']:
-            gender = str(entities['gender']).lower()
-            facts.append(f"gender('{case_id}', '{gender}').")
-            # Add vulnerable group fact if female
-            if gender == 'female':
-                facts.append(f"vulnerable_group('{case_id}', 'women').")
-        
-        # Handle location
-        if 'location' in entities and entities['location']:
-            location = str(entities['location']).replace(" ", "_").lower()
-            facts.append(f"applicant_location('{case_id}', '{location}').")
-        
-        # Handle name
-        if 'name' in entities and entities['name']:
-            name = str(entities['name']).replace(" ", "_")
-            facts.append(f"applicant_name('{case_id}', '{name}').")
-        
-        # Add income threshold facts (essential for legal_aid_clean_v2.pl)
-        facts.extend(self._generate_income_threshold_facts())
->>>>>>> f63cb0c5bec52c3c68eb36a972ccaa75026c0afe
         
         if 'incident_date' in entities:
             try:
