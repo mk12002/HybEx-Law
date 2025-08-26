@@ -1,602 +1,722 @@
 """
-Comprehensive Legal Data Generation for HybEx-Law System - Improved Version.
+Comprehensive and Logically Consistent Legal Data Generation for HybEx-Law System.
 
-This enhanced script generates higher-quality, more diverse training data for the hybrid neural-symbolic
-legal AI system. Improvements include:
-- Increased template diversity with more realistic, varied scenarios in Indian English (formal/informal, regional variations).
-- Better balance: 50% eligible, 50% ineligible per domain.
-- Added noise: Typos, slang, incomplete sentences for robustness.
-- Multi-domain integration: More cross-domain samples with logical connections.
-- Edge cases: Explicitly generate ambiguous, borderline, and negative examples.
-- Larger scale: 30,000 total samples for better generalization.
-- Stratified splits: Generate train (70%), val (15%), test (15%) JSON files directly.
-- Domain-specific enhancements: More nuanced facts tied to Indian laws (e.g., specific acts, thresholds).
+This script generates high-quality, balanced, and varied training data for the
+hybrid neural-symbolic legal AI system. It is a complete rewrite focusing on
+logical consistency by using the Prolog engine to establish ground truth.
+
+Core Principles:
+1.  **Prolog-Driven Ground Truth**: It first generates structured facts, then uses
+    the `PrologEngine` to determine the correct `expected_eligibility`.
+2.  **Fact-to-Text Generation**: The natural language `query` is generated *from*
+    the facts, ensuring the text, facts, and label are always aligned.
+3.  **Balanced & Diverse**: Aims for a 50/50 eligible/ineligible split per domain
+    and uses a wide variety of templates, including noise and edge cases.
+4.  **Stratified Splits**: Automatically generates train (70%), val (15%), and
+    test (15%) JSON files.
 """
 
 import json
 import random
 import logging
 import re
+import sys
+import os
 from pathlib import Path
-from typing import Dict, List, Any, Tuple
+from typing import Dict, List, Any, Tuple, Optional
 from dataclasses import dataclass, asdict
 from enum import Enum
 import itertools
 from sklearn.model_selection import train_test_split
+from faker import Faker
 
-# Setup logging
-logging.basicConfig(level=logging.INFO)
+# --- Path Setup ---
+# Add the project root to the Python path to allow importing from hybex_system
+# Assumes the script is run from `multi_domain_legal/` or the repo root.
+current_dir = Path(__file__).parent.resolve()
+project_root = current_dir.parent 
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+try:
+    from hybex_system.prolog_engine import PrologEngine
+    from hybex_system.config import HybExConfig
+except ImportError as e:
+    print(f"Error: Could not import from hybex_system. Make sure you are running this script from the 'multi_domain_legal' directory or the project root.")
+    print(f"System Path: {sys.path}")
+    print(f"Project Root: {project_root}")
+    raise e
+
+
+# --- Logging Setup ---
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+
+# --- Data Structures ---
 class LegalDomain(Enum):
-    """Legal domains covered by the system"""
+    """Legal domains covered by the system."""
     LEGAL_AID = "legal_aid"
     FAMILY_LAW = "family_law"
     CONSUMER_PROTECTION = "consumer_protection"
-    FUNDAMENTAL_RIGHTS = "fundamental_rights"
     EMPLOYMENT_LAW = "employment_law"
+    FUNDAMENTAL_RIGHTS = "fundamental_rights"
 
 @dataclass
 class LegalTrainingExample:
-    """Structured training example for legal AI system"""
+    """Structured training example for the legal AI system."""
     query: str
     domains: List[str]
-    extracted_facts: List[str]
+    extracted_facts: List[str]  # Human-readable facts
+    prolog_facts: List[str]     # Prolog-formatted facts
     expected_eligibility: bool
     legal_reasoning: str
-    confidence_factors: Dict[str, float]
     user_demographics: Dict[str, Any]
     case_complexity: str
-    priority_level: str
 
-class EnhancedLegalDataGenerator:
+class ComprehensiveLegalDataGenerator:
     """
-    Improved generator for diverse, balanced legal training data.
-    Focuses on realism, diversity, and balance for better model training.
+    Generates diverse, balanced, and logically consistent legal training data
+    by integrating directly with the PrologEngine for ground truth.
     """
-    
     def __init__(self):
-        self.legal_templates = self._initialize_enhanced_templates()
-        self.demographic_profiles = self._initialize_diverse_demographics()
-        self.case_variations = self._initialize_case_variations()
-        self.noise_patterns = self._initialize_noise_patterns()  # New: For robustness
+        logger.info("Initializing ComprehensiveLegalDataGenerator...")
+        self.config = HybExConfig()
+        try:
+            self.prolog_engine = PrologEngine(self.config)
+            self.prolog_engine._load_rules()
+            if not self.prolog_engine.rules_loaded:
+                raise RuntimeError("Prolog knowledge base could not be loaded. Aborting generation.")
+            logger.info("PrologEngine initialized and knowledge base loaded successfully.")
+        except Exception as e:
+            logger.error(f"Failed to initialize PrologEngine: {e}", exc_info=True)
+            self.prolog_engine = None
+        
+        self.faker = Faker('en_IN')
+        self.templates = self._initialize_templates()
+        self.demographics = self._initialize_demographics()
+        self.noise_patterns = self._initialize_noise_patterns()
+        self.negative_snippets = self._initialize_negative_snippets()
+        logger.info("Generator initialized successfully.")
 
-    def _initialize_enhanced_templates(self) -> Dict[str, List[Dict]]:
-        """Initialize diverse legal query templates with improved realism and variations"""
+    def _initialize_templates(self) -> Dict[str, List[Dict]]:
+        """Initializes a wide variety of templates for generating legal queries."""
+        # Note: The 'eligibility_logic' lambdas are removed. Prolog is the source of truth.
+        # Templates now focus on generating text from variables.
         return {
-            "legal_aid": [
-                # Income-based: Balanced eligible/ineligible, varied language
+            LegalDomain.LEGAL_AID.value: [
                 {
-                    "template": "{greeting}, I am a {social_category} {occupation} earning Rs {income} {income_frequency}. {case_description}. {question} I stay in {location}.",
+                    "template_id": "legal_aid_general_001",
+                    "template": "{greeting}, I am a {social_category_desc} earning Rs {income} {income_frequency}. My case is about {case_description}. {question}",
                     "variables": {
-                        "greeting": ["Sir", "Madam", "Respected sir/madam", "Hello ji", "Namaste"],
-                        "social_category": ["poor woman", "dalit woman", "tribal woman", "disabled person", "widow", "divorced woman", "female laborer", "SC man", "ST farmer", "OBC artisan", "general category senior", "EWS youth"],
-                        "occupation": ["daily wage worker", "farmer", "housewife", "street vendor", "construction laborer", "domestic helper", "rickshaw driver", "small shop owner"],
-                        "income": [str(random.randint(0, 1000000)) for _ in range(50)],  # Wide range for balance
-                        "income_frequency": ["monthly", "per year", "annually", "per month", "daily but total yearly"],
-                        "location": ["village in UP", "slum in Mumbai", "remote area in Jharkhand", "tehsil in Rajasthan", "district in Bihar", "city in Delhi", "tribal area in Odisha"],
-                        "case_description": [
-                            "Husband abandoned me and kids no support",
-                            "Landlord evicting without notice wrongfully",
-                            "Police beat me no reason at all",
-                            "Doctor did negligence in treatment now demanding extra money",
-                            "Builder took advance left house half-built",
-                            "Sarpanch demanding bribe for scheme",
-                            "Neighbor grabbed my land with fake papers",
-                            "Boss fired me when pregnant",
-                            "Got fake product online no refund",  # Cross-domain hint
-                            "Job lost due to caste discrimination",  # Cross-domain
-                            "Child custody battle with ex-husband",
-                            "Consumer court case for defective fridge",
-                            "Fundamental right violated by police custody"
-                        ],
-                        "question": ["Am I eligible for free legal help?", "Can I get legal aid?", "How to get pro bono lawyer?", "Is free lawyer possible for me?", "Legal services free for poor like me?"]
+                        "greeting": lambda: random.choice(["Sir", "Madam", "Hello", "Namaste"]),
+                        "social_category_desc": lambda: random.choice(["a poor woman", "a daily wage worker", "a senior citizen", "a disabled person", "a member of the SC community", "a member of the ST community"]),
+                        "income": lambda: random.randint(50000, 500000),
+                        "income_frequency": lambda: random.choice(["annually", "per year"]),
+                        "case_description": lambda: random.choice(["a land dispute", "a family matter", "a police complaint"]),
+                        "question": lambda: random.choice(["Am I eligible for free legal help?", "Can I get a government lawyer?"])
                     },
-                    "eligibility_logic": lambda vars: int(vars['income']) <= 300000 if 'sc' in vars['social_category'].lower() or 'st' in vars['social_category'].lower() else int(vars['income']) <= 100000,  # Balanced thresholds
-                    "expected_domains": ["legal_aid"],
-                    "complexity": random.choice(["low", "medium"])
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"annual_income(case_gen, {v['income']}).",
+                        f"social_category(case_gen, '{self._map_desc_to_prolog_category(v['social_category_desc'])}')."
+                    ]
                 },
-                # Vulnerable group focused
                 {
-                    "template": "I am {vulnerable_group} from {location}. {case_description}. {eligibility_question}",
+                    "template_id": "legal_aid_vulnerable_002",
+                    "template": "I am a {vulnerable_group_desc}. {case_description}. Do I get free legal aid?",
                     "variables": {
-                        "vulnerable_group": ["senior citizen 70 years", "disabled with 50% handicap", "minor child 15 years", "woman victim of violence", "transgender person", "HIV patient", "mental health patient", "person in custody", "victim of a natural disaster"],
-                        "location": ["rural area", "urban slum", "hill station", "coastal village", "a shelter home", "jail"],
-                        "case_description": ["Facing property dispute with relatives", "Denied pension by government", "School harassment case", "Domestic abuse by in-laws", "Discrimination at workplace", "Medical negligence in hospital", "Need to file for bail", "Lost all documents in flood"],
-                        "eligibility_question": ["Do I qualify for legal aid?", "Free legal support available?", "How to apply for legal services?"]
+                        "vulnerable_group_desc": lambda: random.choice(["woman who is a victim of domestic violence", "person in custody", "disabled person", "senior citizen over 60"]),
+                        "case_description": lambda: random.choice(["I need to file for divorce", "I was arrested yesterday", "My landlord is evicting me"]),
                     },
-                    "eligibility_logic": lambda vars: True if any(kw in vars['vulnerable_group'] for kw in ["senior", "disabled", "minor", "woman victim", "custody", "disaster"]) else random.choice([True, False]),  # Bias toward eligible but balanced
-                    "expected_domains": ["legal_aid"],
-                    "complexity": "medium"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"vulnerable_group(case_gen, '{self._map_desc_to_prolog_vulnerability(v['vulnerable_group_desc'])}')."
+                    ]
                 },
-                # Case-specific eligibility
                 {
-                    "template": "My case is about {case_type_specific}. I am from {social_category} community. Can I get a free government lawyer?",
+                    "template_id": "legal_aid_industrial_worker_003",
+                    "template": "I work as an {occupation} in a factory in {location}. My annual income is {income}. Can I avail free legal services?",
                     "variables": {
-                        "case_type_specific": ["defending a criminal case", "a land dispute", "filing for a consumer complaint", "a matter of untouchability", "a bail application"],
-                        "social_category": ["SC", "ST", "OBC", "a minority", "general"],
+                        "occupation": lambda: "industrial workman",
+                        "location": lambda: self.faker.city(),
+                        "income": lambda: random.randint(150000, 700000),
                     },
-                    "eligibility_logic": lambda vars: True if any(kw in vars['social_category'] for kw in ["SC", "ST"]) or "untouchability" in vars['case_type_specific'] else False,
-                    "expected_domains": ["legal_aid", "fundamental_rights"],
-                    "complexity": "medium"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"occupation(case_gen, industrial_workman).",
+                        f"annual_income(case_gen, {v['income']})."
+                    ]
                 },
-                # Informal/confused query
                 {
-                    "template": "help please... {problem}. money is very less, maybe {income} per month. {location}. what to do?",
+                    "template_id": "legal_aid_disaster_victim_004",
+                    "template": "My home was destroyed in the recent {disaster}. I have lost everything. I need legal help to get compensation. Am I eligible for aid?",
                     "variables": {
-                        "problem": ["my landlord is a big problem", "cheated by online seller", "police not listening to my complaint", "family matter is very tense"],
-                        "income": [str(random.randint(2000, 15000))],
-                        "location": ["a small village", "the city outskirts", "near the railway lines"],
+                        "disaster": lambda: random.choice(["flood", "earthquake", "cyclone"]),
+                        "income": lambda: random.randint(20000, 100000), # Usually low income
                     },
-                    "eligibility_logic": lambda vars: int(vars['income']) * 12 <= 100000,
-                    "expected_domains": ["legal_aid"],
-                    "complexity": "low"
-                },
-                # High income but vulnerable category
-                {
-                    "template": "I am a {vulnerable_group} and my annual income is Rs {income}. I need legal help for {case_description}. Am I excluded due to my income?",
-                    "variables": {
-                        "vulnerable_group": ["woman facing domestic violence", "Scheduled Tribe member", "person with a disability"],
-                        "income": [str(random.randint(500000, 1500000))],
-                        "case_description": ["a divorce case", "a land rights issue against a corporation", "a workplace discrimination suit"],
-                    },
-                    "eligibility_logic": lambda vars: True,  # Vulnerable categories are often eligible regardless of income
-                    "expected_domains": ["legal_aid", "family_law", "employment_law"],
-                    "complexity": "high"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"vulnerable_group(case_gen, victim_of_natural_disaster).",
+                        f"annual_income(case_gen, {v['income']})."
+                    ]
                 }
             ],
-            "family_law": [
-                # Divorce/maintenance: Balanced outcomes
+            LegalDomain.FAMILY_LAW.value: [
                 {
-                    "template": "{informal_start} I am {gender} {marital_status}, husband/wife {behavior}. {income_info}. {child_info}. {question}",
+                    "template_id": "family_law_custody_001",
+                    "template": "My husband and I are separating. We were married for {duration} years. He was {behavior}. I am {social_category_desc} and want custody of my child. My income is {income} per year. Can I get legal aid?",
                     "variables": {
-                        "informal_start": ["Bhai sahab", "Didi", "Please help", "My problem is"],
-                        "gender": ["woman", "man", "wife", "husband"],
-                        "marital_status": ["married for 5 years", "in a live-in relationship for 3 years", "separated for 1 year", "divorced but alimony pending"],
-                        "behavior": ["beats me daily", "left home 2 years ago", "has an affair", "doesn't give money for the house", "is mentally cruel", "threatens to kill"],
-                        "income_info": ["I earn Rs {income} but he earns more", "No job, dependent on him/her", "Both working but he/she hides income"],
-                        "child_info": ["We have {num_children} kids", "One daughter 10 years old", "No children"],
-                        "question": ["Can I get divorce and maintenance?", "Is legal aid available for family court?", "How to file a custody case for free?"]
+                        "duration": lambda: random.randint(1, 20),
+                        "behavior": lambda: random.choice(["violent", "an alcoholic", "unemployed"]),
+                        "income": lambda: random.randint(80000, 400000),
+                        "social_category_desc": lambda: random.choice(["a woman from the general category", "a woman from the SC category", "a woman from the ST category"]),
                     },
-                    "eligibility_logic": lambda vars: True if 'woman' in vars['gender'] or int(vars.get('income', 99999)) < 20000 or 'beats' in vars['behavior'] else False,
-                    "expected_domains": ["family_law", "legal_aid"],
-                    "complexity": random.choice(["medium", "high"])
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, family_law).",
+                        f"has_grounds(case_gen, domestic_violence).",
+                        f"annual_income(case_gen, {v['income']}).",
+                        f"social_category(case_gen, '{self._map_desc_to_prolog_category(v['social_category_desc'])}')."
+                    ]
                 },
-                # Child Custody
                 {
-                    "template": "My spouse and I are separating. I want {custody_type} of my {child_details}. My spouse is {spouse_condition}. Am I likely to get custody? Is there free legal help for this?",
+                    "template_id": "family_law_maintenance_002",
+                    "template": "I need help getting child maintenance from my ex-husband. He earns around {father_income} per month but is not paying for our {num_children} child's expenses. My own annual income is {mother_income} and I am from the {social_category_desc}. Can I get a free lawyer for this?",
                     "variables": {
-                        "custody_type": ["sole custody", "full custody", "primary custody"],
-                        "child_details": ["son who is 7 years old", "daughter aged 12", "two children, 5 and 8"],
-                        "spouse_condition": ["an alcoholic", "violent", "unemployed", "a good parent but lives in another city", "not interested in the child"],
-                        "income": [str(random.randint(10000, 500000))],
+                        "father_income": lambda: random.randint(25000, 150000),
+                        "num_children": lambda: random.randint(1, 3),
+                        "mother_income": lambda: random.randint(50000, 400000),
+                        "social_category_desc": lambda: random.choice(["general category", "SC category", "ST category", "OBC category"]),
                     },
-                    "eligibility_logic": lambda vars: True if any(kw in vars['spouse_condition'] for kw in ["alcoholic", "violent"]) else False,
-                    "expected_domains": ["family_law", "legal_aid"],
-                    "complexity": "high"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, family_law).",
+                        f"has_grounds(case_gen, child_maintenance).",
+                        f"annual_income(case_gen, {v['mother_income']}).",
+                        f"social_category(case_gen, '{self._map_desc_to_prolog_category(v['social_category_desc'])}').",
+                        f"respondent_income(case_gen, {v['father_income'] * 12}).",
+                        f"number_of_children(case_gen, {v['num_children']})."
+                    ]
                 },
-                # Adoption
                 {
-                    "template": "My partner and I want to adopt a child. We are {couple_status} and have a combined income of Rs {income} annually. What is the legal procedure and can we get assistance?",
+                    "template_id": "family_law_divorce_mutual_003",
+                    "template": "My wife and I have decided to get a divorce mutually. We have no children. My income is {income} and I am {social_category_desc}. Do we still need a lawyer and can we get legal aid?",
                     "variables": {
-                        "couple_status": ["a married couple", "in a live-in relationship", "a single woman", "a single man"],
-                        "income": [str(random.randint(400000, 2000000))],
+                        "income": lambda: random.randint(200000, 800000),
+                        "social_category_desc": lambda: random.choice(["general category", "OBC category"]),
                     },
-                    "eligibility_logic": lambda vars: int(vars['income']) < 800000, # Adoption procedures themselves don't have eligibility, this is for legal aid
-                    "expected_domains": ["family_law", "legal_aid"],
-                    "complexity": "medium"
-                },
-                # Domestic Violence
-                {
-                    "template": "I am a victim of domestic violence. My {aggressor} is {abusive_action}. I live in {location} and I am scared. How can I get a protection order immediately with a free lawyer?",
-                    "variables": {
-                        "aggressor": ["husband", "in-laws", "live-in partner", "son"],
-                        "abusive_action": ["physically abusive", "emotionally and verbally abusive", "controlling all my finances", "constantly threatening me"],
-                        "location": ["a joint family", "our own flat", "a rented house"],
-                    },
-                    "eligibility_logic": lambda vars: True, # Victims of domestic violence are a priority category
-                    "expected_domains": ["family_law", "legal_aid"],
-                    "complexity": "high"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, family_law).",
+                        f"has_grounds(case_gen, mutual_consent_divorce).",
+                        f"annual_income(case_gen, {v['income']}).",
+                        f"social_category(case_gen, '{self._map_desc_to_prolog_category(v['social_category_desc'])}')."
+                    ]
                 }
             ],
-            "consumer_protection": [
-                # Complaints: Balanced valid/invalid
+            LegalDomain.CONSUMER_PROTECTION.value: [
                 {
-                    "template": "Bought {product} for Rs {amount} from {seller}. {issue}. {time_since}. {question}",
+                    "template_id": "consumer_protection_defective_product_001",
+                    "template": "I bought a {product} for Rs {amount} from {seller}. It stopped working after {time_since}. I am from the {social_category_desc} and my annual income is {income}. Can I file a consumer case and get free legal help?",
                     "variables": {
-                        "product": ["mobile phone", "refrigerator", "car", "online course", "medicines", "groceries", "a laptop"],
-                        "amount": [str(random.randint(500, 1000000))],
-                        "seller": ["Amazon", "a local shop", "Flipkart", "the official dealer", "a pharmacy", "an online education portal"],
-                        "issue": ["it was defective from day 1", "it's not as advertised", "it was an expired product", "they never delivered it", "they overcharged me", "it was a fake item"],
-                        "time_since": ["1 month ago", "2 years back", "just yesterday", "6 months ago"],
-                        "question": ["Can I file a consumer case? Is legal aid possible?", "Am I eligible for a free lawyer in the consumer forum?", "How do I get compensation without paying high fees?"]
+                        "product": lambda: random.choice(["TV", "fridge", "washing machine", "mobile phone"]),
+                        "amount": lambda: random.randint(10000, 50000),
+                        "seller": lambda: random.choice(["a local shop", "an online store"]),
+                        "time_since": lambda: random.choice(["2 months", "6 months"]),
+                        "income": lambda: random.randint(90000, 450000),
+                        "social_category_desc": lambda: random.choice(["general category", "SC category", "ST category", "OBC category"]),
                     },
-                    "eligibility_logic": lambda vars: True if int(vars['amount']) < 2000000 and 'defective' in vars['issue'] and int(re.search(r'\d+', vars['time_since'])[0]) <= 24 else False,  # 2-year limit
-                    "expected_domains": ["consumer_protection", "legal_aid"],
-                    "complexity": "low"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, consumer_protection).",
+                        f"annual_income(case_gen, {v['income']}).",
+                        f"social_category(case_gen, '{self._map_desc_to_prolog_category(v['social_category_desc'])}').",
+                        f"claim_value(case_gen, {v['amount']}).",
+                        f"defect_manifestation_period(case_gen, {int(re.search('[0-9]+', v['time_since']).group())})."
+                    ]
                 },
-                # Deficiency in Service
                 {
-                    "template": "I have a problem with {service_provider} regarding {service_issue}. I have complained many times but there is no resolution. Can I take them to consumer court? My income is low.",
+                    "template_id": "consumer_protection_service_deficiency_002",
+                    "template": "I booked a holiday package to {destination} for Rs {amount} which promised a 5-star hotel, but they gave us a 2-star hotel with no facilities. My income is {income} and I am from the {social_category_desc}. Can I get free legal assistance?",
                     "variables": {
-                        "service_provider": ["my bank", "Airtel", "the electricity board", "an insurance company", "a hospital"],
-                        "service_issue": ["unfair bank charges", "poor network and false billing", "frequent power cuts", "rejection of a valid insurance claim", "medical negligence during treatment"],
+                        "destination": lambda: random.choice(["Goa", "Kerala", "Shimla", "Rajasthan"]),
+                        "amount": lambda: random.randint(20000, 100000),
+                        "income": lambda: random.randint(90000, 450000),
+                        "social_category_desc": lambda: random.choice(["general category", "SC category", "ST category", "OBC category"]),
                     },
-                    "eligibility_logic": lambda vars: True if any(kw in vars['service_issue'] for kw in ["unfair", "false billing", "rejection"]) else False,
-                    "expected_domains": ["consumer_protection", "legal_aid"],
-                    "complexity": "medium"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, consumer_protection).",
+                        f"annual_income(case_gen, {v['income']}).",
+                        f"social_category(case_gen, '{self._map_desc_to_prolog_category(v['social_category_desc'])}').",
+                        f"claim_value(case_gen, {v['amount']}).",
+                        f"has_grounds(case_gen, deficiency_in_service)."
+                    ]
                 },
-                # Unfair Trade Practice
                 {
-                    "template": "I saw an advertisement for {product} that claimed {false_claim}. After buying it, I found out it was a lie. This feels like an unfair trade practice. What are my rights?",
+                    "template_id": "consumer_protection_medical_negligence_003",
+                    "template": "My relative was admitted to {hospital_type} for a minor surgery and died due to negligence. The hospital is demanding a huge bill. My income is {income}. Can I file a case and get legal aid?",
                     "variables": {
-                        "product": ["a face cream", "a health supplement", "a coaching class", "an investment scheme"],
-                        "false_claim": ["'guaranteed results in 7 days'", "'100% risk-free'", "'government approved' but it was not", "'buy one get one free' but the price was doubled"],
+                        "hospital_type": lambda: random.choice(["a private hospital", "a government hospital"]),
+                        "income": lambda: random.randint(100000, 500000),
                     },
-                    "eligibility_logic": lambda vars: True,
-                    "expected_domains": ["consumer_protection"],
-                    "complexity": "medium"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, consumer_protection).",
+                        f"annual_income(case_gen, {v['income']}).",
+                        f"has_grounds(case_gen, medical_negligence)."
+                    ]
                 }
             ],
-            "fundamental_rights": [
-                # Rights violations: Balanced
+            LegalDomain.EMPLOYMENT_LAW.value: [
                 {
-                    "template": "Police {action} without reason. I am {category}. {details}. {question}",
+                    "template_id": "employment_law_termination_001",
+                    "template": "I worked at a company for {duration} years. They fired me without giving a proper notice period. My annual salary was {salary} and I belong to the {social_category_desc}. Am I eligible for legal aid to sue them?",
                     "variables": {
-                        "action": ["arrested me illegally", "beat me in custody", "denied my right to vote", "discriminated against me based on my caste"],
-                        "category": ["a Muslim", "a Christian", "a Dalit", "a woman", "a journalist", "a student activist"],
-                        "details": ["No FIR was shown", "I was tortured for a confession", "My speech was censored online", "My property was seized unfairly"],
-                        "question": ["Is this a violation of Article {article}? Can I get legal aid for a PIL?", "Can I get a free lawyer for a human rights case?"]
+                        "duration": lambda: random.randint(1, 10),
+                        "salary": lambda: random.randint(100000, 600000),
+                        "social_category_desc": lambda: random.choice(["general category", "SC category", "ST category", "OBC category"]),
                     },
-                    "eligibility_logic": lambda vars: True if any(kw in vars['action'] + vars['details'] for kw in ["arrested illegally", "tortured", "censored"]) else False,
-                    "expected_domains": ["fundamental_rights", "legal_aid"],
-                    "complexity": "high"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, employment_law).",
+                        f"annual_income(case_gen, {v['salary']}).",
+                        f"social_category(case_gen, '{self._map_desc_to_prolog_category(v['social_category_desc'])}').",
+                        f"employment_duration(case_gen, {v['duration']}).",
+                        f"has_grounds(case_gen, wrongful_termination)."
+                    ]
                 },
-                # Right to Equality
                 {
-                    "template": "I was denied entry into {place} because of my {reason_for_denial}. Is this not a violation of my right to equality under the Constitution?",
+                    "template_id": "employment_law_harassment_002",
+                    "template": "I am facing severe harassment at my workplace from my manager. I have complained to HR but no action has been taken. My salary is {salary} per year and I am from the {social_category_desc}. Can I get legal aid to file a case?",
                     "variables": {
-                        "place": ["a public temple", "a restaurant", "a housing society"],
-                        "reason_for_denial": ["caste", "religion", "gender", "sexual orientation"],
+                        "salary": lambda: random.randint(100000, 600000),
+                        "social_category_desc": lambda: random.choice(["general category", "SC category", "ST category", "OBC category"]),
                     },
-                    "eligibility_logic": lambda vars: True,
-                    "expected_domains": ["fundamental_rights"],
-                    "complexity": "high"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, employment_law).",
+                        f"annual_income(case_gen, {v['salary']}).",
+                        f"social_category(case_gen, '{self._map_desc_to_prolog_category(v['social_category_desc'])}').",
+                        f"has_grounds(case_gen, workplace_harassment)."
+                    ]
                 },
-                # Freedom of Speech
                 {
-                    "template": "I wrote a blog post criticizing a government policy and now I am facing {consequence}. Is my freedom of speech being violated?",
+                    "template_id": "employment_law_unpaid_salary_003",
+                    "template": "My previous employer has not paid my salary for the last {months} months. The total amount is {amount}. My current financial situation is not good. Can I get free legal help to recover my dues?",
                     "variables": {
-                        "consequence": ["a police inquiry", "threats from political workers", "a suspension from my university"],
+                        "months": lambda: random.randint(2, 6),
+                        "amount": lambda: random.randint(50000, 200000),
+                        "income": lambda: random.randint(80000, 300000),
                     },
-                    "eligibility_logic": lambda vars: True if "threats" in vars['consequence'] else random.choice([True, False]),
-                    "expected_domains": ["fundamental_rights"],
-                    "complexity": "high"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, employment_law).",
+                        f"annual_income(case_gen, {v['income']}).",
+                        f"has_grounds(case_gen, unpaid_salary).",
+                        f"claim_value(case_gen, {v['amount']})."
+                    ]
                 }
             ],
-            "employment_law": [
-                # Labor issues: Balanced
-                {
-                    "template": "I was working as a {job} for {duration}. My boss {issue}. My salary is Rs {salary}. {question}",
+            LegalDomain.FUNDAMENTAL_RIGHTS.value: [
+                 {
+                    "template_id": "fundamental_rights_discrimination_001",
+                    "template": "I was prevented from entering a public temple because of my caste. Is this a violation of my fundamental rights? Can I get a free lawyer to file a case?",
                     "variables": {
-                        "job": ["factory worker", "IT employee", "domestic helper", "delivery driver", "teacher in a private school"],
-                        "duration": ["6 months", "2 years", "5 years"],
-                        "issue": ["fired me without any notice", "did not pay my last two months' salary", "is sexually harassing me at work", "makes me work overtime with no extra pay", "is discriminating against me"],
-                        "salary": [str(random.randint(5000, 50000))],
-                        "question": ["Am I eligible for legal aid at the labor court?", "Can I get a free lawyer for my wage case?", "How do I file a case under the Minimum Wages Act?"]
+                         "income": lambda: random.randint(100000, 600000),
+                         "caste": lambda: random.choice(["a scheduled caste", "a scheduled tribe"])
                     },
-                    "eligibility_logic": lambda vars: True if int(vars['salary']) < 25000 or 'harassing' in vars['issue'] or (int(re.search(r'\d+', vars['duration'])[0]) > 1 and 'fired' in vars['issue']) else False,
-                    "expected_domains": ["employment_law", "legal_aid"],
-                    "complexity": "medium"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, fundamental_rights).",
+                        f"annual_income(case_gen, {v['income']}).",
+                        f"social_category(case_gen, '{self._map_desc_to_prolog_category(v['caste'])}').",
+                        f"has_grounds(case_gen, discrimination)."
+                    ]
                 },
-                # Workplace Safety
                 {
-                    "template": "The conditions at my workplace, a {workplace_type}, are very unsafe. {safety_issue}. I have complained to the manager but nothing has changed. What action can I take?",
+                    "template_id": "fundamental_rights_assembly_002",
+                    "template": "The police are not allowing us to hold a peaceful protest in a public ground. We are protesting against {issue}. Is this a violation of our rights? We are from the {social_category_desc} and our members are low-income. Can we get a free lawyer?",
                     "variables": {
-                        "workplace_type": ["construction site", "chemical factory", "warehouse"],
-                        "safety_issue": ["There is no safety equipment like helmets or gloves", "The machinery is old and faulty", "There is a constant risk of fire"],
+                        "issue": lambda: random.choice(["new government policies", "local corruption", "environmental damage"]),
+                        "income": lambda: random.randint(100000, 600000),
+                        "social_category_desc": lambda: random.choice(["general category", "SC category", "ST category", "OBC category"]),
                     },
-                    "eligibility_logic": lambda vars: True,
-                    "expected_domains": ["employment_law"],
-                    "complexity": "high"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, fundamental_rights).",
+                        f"annual_income(case_gen, {v['income']}).",
+                        f"social_category(case_gen, '{self._map_desc_to_prolog_category(v['social_category_desc'])}').",
+                        f"has_grounds(case_gen, right_to_assemble)."
+                    ]
                 },
-                # Breach of Contract
                 {
-                    "template": "I signed an employment contract that promised {promised_term}, but my employer is not honoring it. They are {breach_action}. Can I sue for breach of contract?",
+                    "template_id": "fundamental_rights_speech_003",
+                    "template": "I wrote a blog post criticizing a government policy and now I am facing a police inquiry. Do I have the right to express my opinion? Can I get legal aid to defend myself?",
                     "variables": {
-                        "promised_term": ["a specific salary", "a work-from-home option", "a promotion after one year"],
-                        "breach_action": ["paying me less than agreed", "forcing me to come to the office every day", "denying my promotion without reason"],
+                        "income": lambda: random.randint(120000, 550000),
                     },
-                    "eligibility_logic": lambda vars: random.choice([True, False]),
-                    "expected_domains": ["employment_law"],
-                    "complexity": "medium"
-                },
-                # PF/Gratuity Issues
-                {
-                    "template": "I have resigned from my job after working for {years_worked} years, but the company is delaying my {payment_type}. How can I claim it?",
-                    "variables": {
-                        "years_worked": ["6", "10", "15"],
-                        "payment_type": ["Provident Fund (PF) withdrawal", "gratuity payment"],
-                    },
-                    "eligibility_logic": lambda vars: int(vars['years_worked']) >= 5,
-                    "expected_domains": ["employment_law"],
-                    "complexity": "medium"
+                    "fact_generator": lambda v: [
+                        f"person(case_gen).",
+                        f"case_type(case_gen, fundamental_rights).",
+                        f"annual_income(case_gen, {v['income']}).",
+                        f"has_grounds(case_gen, freedom_of_speech)."
+                    ]
                 }
             ]
         }
-    
-    # def _initialize_enhanced_templates(self) -> Dict[str, List[Dict]]:
-    #     """Initialize diverse legal query templates with improved realism and variations"""
-    #     return {
-    #         "legal_aid": [
-    #             # Income-based: Balanced eligible/ineligible, varied language
-    #             {
-    #                 "template": "{greeting}, I am a {social_category} {occupation} earning Rs {income} {income_frequency}. {case_description}. {question} I stay in {location}.",
-    #                 "variables": {
-    #                     "greeting": ["Sir", "Madam", "Respected sir/madam", "Hello ji", "Namaste"],
-    #                     "social_category": ["poor woman", "dalit woman", "tribal woman", "disabled person", "widow", "divorced woman", "female laborer", "SC man", "ST farmer", "OBC artisan", "general category senior", "EWS youth"],
-    #                     "occupation": ["daily wage worker", "farmer", "housewife", "street vendor", "construction laborer", "domestic helper", "rickshaw driver", "small shop owner"],
-    #                     "income": [str(random.randint(0, 1000000)) for _ in range(50)],  # Wide range for balance
-    #                     "income_frequency": ["monthly", "per year", "annually", "per month", "daily but total yearly"],
-    #                     "location": ["village in UP", "slum in Mumbai", "remote area in Jharkhand", "tehsil in Rajasthan", "district in Bihar", "city in Delhi", "tribal area in Odisha"],
-    #                     "case_description": [
-    #                         "Husband abandoned me and kids no support", 
-    #                         "Landlord evicting without notice wrongfully",
-    #                         "Police beat me no reason at all",
-    #                         "Doctor did negligence in treatment now demanding extra money",
-    #                         "Builder took advance left house half-built",
-    #                         "Sarpanch demanding bribe for scheme",
-    #                         "Neighbor grabbed my land with fake papers",
-    #                         "Boss fired me when pregnant",
-    #                         "Got fake product online no refund",  # Cross-domain hint
-    #                         "Job lost due to caste discrimination",  # Cross-domain
-    #                         "Child custody battle with ex-husband",
-    #                         "Consumer court case for defective fridge",
-    #                         "Fundamental right violated by police custody"
-    #                     ],
-    #                     "question": ["Am I eligible for free legal help?", "Can I get legal aid?", "How to get pro bono lawyer?", "Is free lawyer possible for me?", "Legal services free for poor like me?"]
-    #                 },
-    #                 "eligibility_logic": lambda vars: int(vars['income']) <= 300000 if 'sc' in vars['social_category'].lower() or 'st' in vars['social_category'].lower() else int(vars['income']) <= 100000,  # Balanced thresholds
-    #                 "expected_domains": ["legal_aid"],
-    #                 "complexity": random.choice(["low", "medium"])
-    #             },
-    #             # Vulnerable group focused
-    #             {
-    #                 "template": "I am {vulnerable_group} from {location}. {case_description}. {eligibility_question}",
-    #                 "variables": {
-    #                     "vulnerable_group": ["senior citizen 70 years", "disabled with 50% handicap", "minor child 15 years", "woman victim of violence", "transgender person", "HIV patient", "mental health patient"],
-    #                     "location": ["rural area", "urban slum", "hill station", "coastal village"],
-    #                     "case_description": ["Facing property dispute with relatives", "Denied pension by government", "School harassment case", "Domestic abuse by in-laws", "Discrimination at workplace", "Medical negligence in hospital"],
-    #                     "eligibility_question": ["Do I qualify for legal aid?", "Free legal support available?", "How to apply for legal services?"]
-    #                 },
-    #                 "eligibility_logic": lambda vars: True if any(kw in vars['vulnerable_group'] for kw in ["senior", "disabled", "minor", "woman victim"]) else random.choice([True, False]),  # Bias toward eligible but balanced
-    #                 "expected_domains": ["legal_aid"],
-    #                 "complexity": "medium"
-    #             },
-    #             # More templates for diversity...
-    #             # Add 3-5 more per domain with similar structure
-    #         ],
-    #         "family_law": [
-    #             # Divorce/maintenance: Balanced outcomes
-    #             {
-    #                 "template": "{informal_start} I am {gender} {marital_status}, husband/wife {behavior}. {income_info}. {child_info}. {question}",
-    #                 "variables": {
-    #                     "informal_start": ["Bhai sahab", "Didi", "Please help", "My problem is"],
-    #                     "gender": ["woman", "man", "wife", "husband"],
-    #                     "marital_status": ["married since 5 years", "separated", "divorced but alimony pending"],
-    #                     "behavior": ["beats me daily", "left home 2 years ago", "has affair", "doesn't give money for house", "good but no support", "threatens to kill"],
-    #                     "income_info": ["I earn Rs {income} but he earns more", "No job, dependent on him", "Both working but he hides income"],
-    #                     "child_info": ["We have {num_children} kids", "One daughter 10 years old", "No children"],
-    #                     "question": ["Can I get divorce and maintenance?", "Eligible for legal aid in family court?", "How to file custody case free?"]
-    #                 },
-    #                 "eligibility_logic": lambda vars: True if 'woman' in vars['gender'] or int(vars.get('income', 0)) < 20000 or 'beats' in vars['behavior'] else False,
-    #                 "expected_domains": ["family_law"],
-    #                 "complexity": random.choice(["medium", "high"])
-    #             },
-    #             # Add more for custody, adoption, etc.
-    #         ],
-    #         "consumer_protection": [
-    #             # Complaints: Balanced valid/invalid
-    #             {
-    #                 "template": "Bought {product} for Rs {amount} from {seller}. {issue}. {time_since}. {question}",
-    #                 "variables": {
-    #                     "product": ["mobile phone", "fridge", "car", "online course", "medicine", "grocery"],
-    #                     "amount": [str(random.randint(500, 1000000))],
-    #                     "seller": ["Amazon", "local shop", "Flipkart", "dealer", "pharmacy"],
-    #                     "issue": ["defective from day 1", "not as advertised", "expired product", "no delivery", "overcharged", "fake item"],
-    #                     "time_since": ["1 month ago", "2 years back", "just yesterday", "6 months"],
-    #                     "question": ["Can I file consumer case? Legal aid possible?", "Eligible for free lawyer in consumer forum?", "How to get compensation without paying fees?"]
-    #                 },
-    #                 "eligibility_logic": lambda vars: True if int(vars['amount']) < 2000000 and 'defective' in vars['issue'] and int(re.search(r'\d+', vars['time_since'])[0]) <= 24 else False,  # 2-year limit
-    #                 "expected_domains": ["consumer_protection"],
-    #                 "complexity": "low"
-    #             },
-    #             # Add more for services, unfair practices.
-    #         ],
-    #         "fundamental_rights": [
-    #             # Rights violations: Balanced
-    #             {
-    #                 "template": "Police {action} without reason. I am {category}. {details}. {question}",
-    #                 "variables": {
-    #                     "action": ["arrested me illegally", "beat me in custody", "denied my vote", "discriminated based on caste"],
-    #                     "category": ["Muslim", "Christian", "Dalit", "woman", "journalist"],
-    #                     "details": ["No FIR shown", "Tortured for confession", "Speech censored", "Property seized unfairly"],
-    #                     "question": ["Is this violation of Article {article}? Legal aid for PIL?", "Can I get free lawyer for human rights case?"]
-    #                 },
-    #                 "eligibility_logic": lambda vars: True if any(kw in vars['action'] + vars['details'] for kw in ["arrested illegally", "tortured", "censored"]) else False,
-    #                 "expected_domains": ["fundamental_rights"],
-    #                 "complexity": "high"
-    #             },
-    #             # Add more for equality, freedom, etc.
-    #         ],
-    #         "employment_law": [
-    #             # Labor issues: Balanced
-    #             {
-    #                 "template": "Working as {job} for {duration}. Boss {issue}. Salary Rs {salary}. {question}",
-    #                 "variables": {
-    #                     "job": ["factory worker", "IT employee", "maid", "driver", "teacher"],
-    #                     "duration": ["6 months", "2 years", "5 years"],
-    #                     "issue": ["fired without notice", "no PF deduction", "harassment at work", "overtime no pay", "discrimination"],
-    #                     "salary": [str(random.randint(5000, 50000))],
-    #                     "question": ["Eligible for labor court legal aid?", "Can I get free lawyer for wage case?", "How to file under Minimum Wages Act?"]
-    #                 },
-    #                 "eligibility_logic": lambda vars: True if int(vars['salary']) < 25000 or 'harassment' in vars['issue'] or int(re.search(r'\d+', vars['duration'])[0]) > 1 else False,
-    #                 "expected_domains": ["employment_law"],
-    #                 "complexity": "medium"
-    #             },
-    #             # Add more for contracts, safety.
-    #         }
-    #     }
-    
-    def _initialize_diverse_demographics(self) -> List[Dict]:
-        """Diverse user profiles for realism"""
+
+    def _map_desc_to_prolog_category(self, desc: str) -> str:
+        if "sc" in desc or "scheduled caste" in desc: return "sc"
+        if "st" in desc or "scheduled tribe" in desc: return "st"
+        if "obc" in desc: return "obc"
+        return "general"
+
+    def _map_desc_to_prolog_vulnerability(self, desc: str) -> str:
+        if "violence" in desc: return "woman_victim_of_violence"
+        if "custody" in desc: return "person_in_custody"
+        if "disabled" in desc: return "disabled"
+        if "senior" in desc: return "senior_citizen"
+        if "disaster" in desc: return "victim_of_natural_disaster"
+        return "none"
+
+    def _initialize_demographics(self) -> List[Dict]:
+        """Generates a pool of diverse user demographic profiles."""
         return [
-            {"age": random.randint(18, 80), "gender": random.choice(["male", "female", "other"]), "category": random.choice(["SC", "ST", "OBC", "General", "EWS"]),
-             "location": random.choice(["Delhi", "Mumbai", "Rural UP", "Tribal MP", "Urban Karnataka"]), "income": random.randint(0, 1000000),
-             "vulnerable": random.choice([True, False])}
-            for _ in range(1000)  # Pre-generate for variety
+            {"name": self.faker.name(), "location": self.faker.city_name(), "age": random.randint(18, 80), "gender": random.choice(["male", "female", "other"])}
+            for _ in range(200)
         ]
-    
-    def _initialize_case_variations(self) -> Dict:
-        """Variations for complexity and priority"""
-        return {
-            "complexity": ["low", "medium", "high", "very high"],
-            "priority": ["normal", "urgent", "high", "critical"],
-            "confidence_factors": lambda: {f"factor_{i}": round(random.uniform(0.5, 1.0), 2) for i in range(3)}
-        }
-    
+
     def _initialize_noise_patterns(self) -> List[callable]:
-        """Functions to add realistic noise (typos, slang)"""
-        def add_typos(text): return re.sub(r'([a-zA-Z])', lambda m: random.choice([m.group(0), m.group(0).upper() if random.random() < 0.05 else m.group(0)]), text)
-        def add_slang(text): return text.replace("I am", random.choice(["Me is", "I m", "Im"])) if random.random() < 0.3 else text
-        def incomplete_sentence(text): return text[:-random.randint(5,20)] + "..." if random.random() < 0.2 else text
-        return [add_typos, add_slang, incomplete_sentence]
-    
-    def _apply_noise(self, query: str) -> str:
-        """Apply random noise for robustness"""
-        for noise_fn in random.sample(self.noise_patterns, k=random.randint(0, 2)):
+        """Functions to add realistic noise to queries."""
+        def add_typos(text):
+            if random.random() < 0.15:
+                i = random.randint(0, len(text) - 1)
+                if text[i].isalpha():
+                    return text[:i] + random.choice("abcdefghijklmnopqrstuvwxyz") + text[i+1:]
+            return text
+        def use_slang(text):
+            if random.random() < 0.1:
+                return text.replace("Am I eligible", "Meko milega kya free lawyer")
+            return text
+        return [add_typos, use_slang]
+
+    def _initialize_negative_snippets(self) -> List[str]:
+        """Initializes a pool of irrelevant or misleading information snippets."""
+        return [
+            "I have been feeling very stressed lately.",
+            "My son is doing well in school.",
+            "The weather has been very hot.",
+            "I am thinking of buying a new phone.",
+            "My neighbor is very noisy.",
+            "I like to watch cricket.",
+            "I had a fight with my friend yesterday."
+        ]
+
+    def _apply_noise(self, query: str, complexity: str) -> str:
+        """Applies random noise and negative facts based on complexity."""
+        # Apply basic noise like typos or slang
+        if self.noise_patterns and random.random() < 0.2:
+            noise_fn = random.choice(self.noise_patterns)
             query = noise_fn(query)
+
+        # Add negative snippets for medium and high complexity
+        if complexity in ["medium", "high"] and random.random() < 0.5:
+            snippet = random.choice(self.negative_snippets)
+            query = f"{query} {snippet}"
+        
         return query
-    
-    def _generate_single_example(self, domain: LegalDomain, template: Dict, eligible: bool = None) -> LegalTrainingExample:
-        """Generate one example with optional forced eligibility"""
-        vars = {k: random.choice(v) for k, v in template["variables"].items()}
-        query = template["template"].format(**vars)
-        query = self._apply_noise(query)
+
+    # FIX 1: Correct the fact generation to be lowercase.
+    def _demographics_to_prolog_facts(self, demographics: Dict[str, Any]) -> List[str]:
+        """Converts a demographics dictionary to a list of Prolog facts."""
+        facts = []
         
-        # Force eligibility if specified
-        eligibility = template["eligibility_logic"](vars) if eligible is None else eligible
+        # --- START OF CORRECTION 1 ---
+        # Convert category to lowercase to perfectly match the Prolog rules.
+        if 'category' in demographics:
+            facts.append(f"social_category(case_gen, '{demographics['category'].lower()}').")
+        # --- END OF CORRECTION 1 ---
+            
+        if 'age' in demographics:
+            facts.append(f"age(case_gen, {demographics['age']}).")
+        if 'gender' in demographics:
+            facts.append(f"gender(case_gen, '{demographics['gender'].lower()}').")
+        if 'income' in demographics:
+            facts.append(f"annual_income(case_gen, {demographics['income']}).")
+        if demographics.get('vulnerable'): # Use .get() for safety
+            facts.append(f"is_vulnerable(case_gen, true).")
+        if 'occupation' in demographics:
+            facts.append(f"occupation(case_gen, '{demographics['occupation'].lower().replace(' ', '_')}').")
+
+        return facts
+
+    # FIX 2: Correct the goal-directed demographics generation for precision.
+    def _generate_demographics(self, domain: LegalDomain, target_eligibility: bool) -> Dict[str, Any]:
+        """
+        Generates realistic user demographics, precisely biased to meet the target_eligibility.
+        """
+        # Start with a default INELIGIBLE case
+
+        # Ensure the generated occupation is not one that grants special status.
+        occupation = self.faker.job().lower()
+        while occupation == "industrial worker":
+            occupation = self.faker.job().lower()
+
+        demographics = {
+            "age": self.faker.random_int(min=25, max=55),
+            "gender": "male",
+            "category": "General",
+            "location": self.faker.city(),
+            "income": self.faker.random_int(min=1000000, max=5000000), # High income
+            "vulnerable": False,
+            "occupation": occupation
+        }
+
+        if target_eligibility:
+            # If we WANT an eligible case, precisely engineer the facts to meet one of the rules.
+            eligibility_method = random.choice(['category', 'vulnerable_age', 'income'])
+
+            if eligibility_method == 'category':
+                # This is a guaranteed pass for the 'categorically_eligible' rule in Prolog.
+                demographics['category'] = random.choice(['SC', 'ST', 'BPL', 'OBC'])
+
+            elif eligibility_method == 'vulnerable_age':
+                # This is a guaranteed pass for the 'vulnerable_group' rule.
+                demographics['age'] = self.faker.random_int(min=61, max=90)
+                
+            else: # income-based
+                # --- START OF CORRECTION 2 ---
+                # Precisely choose a category and generate an income that fits its specific threshold.
+                cat = random.choice(['General', 'OBC', 'SC', 'ST'])
+                demographics['category'] = cat
+                
+                # Get the SPECIFIC threshold for the chosen category from the config.
+                # Fallback to 'general' if the key doesn't exist.
+                threshold_key = cat.lower() if cat in ['SC', 'ST', 'OBC'] else 'general'
+                income_threshold = self.config.ENTITY_CONFIG['income_thresholds'].get(threshold_key, 500000)
+                
+                # Generate an income safely below that specific threshold.
+                demographics['income'] = self.faker.random_int(min=10000, max=income_threshold - 1)
+                # --- END OF CORRECTION 2 ---
+                
+        # Finally, ensure the 'vulnerable' flag is consistent with the generated age.
+        if demographics['age'] >= 60:
+            demographics['vulnerable'] = True
+            
+        return demographics
+
+    def _generate_single_example(self, domain: str, template: Dict, target_eligibility: bool) -> Optional[LegalTrainingExample]:
+        """
+        Generates a single, logically consistent training example using a goal-directed approach.
+        """
+        for _ in range(10): # Should be much faster now
+            # 1. Generate demographics biased towards the target eligibility.
+            demographics = self._generate_demographics(LegalDomain(domain), target_eligibility)
+
+            # 2. Generate text variables from the template's lambdas.
+            vars = {k: v_func() for k, v_func in template["variables"].items()}
+
+            # 3. Overwrite the generated vars with our definite demographics.
+            # This ensures the generated text will be consistent with the facts.
+            vars.update(demographics)
+            
+            # Map the Prolog-style category from demographics back to a human-readable description for the text.
+            if 'social_category_desc' in vars:
+                cat_map = {
+                    "SC": "a member of the SC community", "ST": "a member of the ST community",
+                    "OBC": "a member of the OBC community", "General": "a general category person",
+                    "BPL": "a person below the poverty line"
+                }
+                vars['social_category_desc'] = cat_map.get(demographics['category'], "a general category person")
+
+            # 4. Generate Prolog facts.
+            # First, get the demographic facts from our corrected function.
+            prolog_facts = self._demographics_to_prolog_facts(demographics)
+            # Then, add the other non-demographic facts from the template's generator.
+            other_facts = template["fact_generator"](vars)
+            
+            # Combine them, avoiding duplicates.
+            for fact in other_facts:
+                # Add fact if it's not a demographic one already handled by _demographics_to_prolog_facts
+                if not any(p_fact.split('(')[0] == fact.split('(')[0] for p_fact in prolog_facts):
+                    prolog_facts.append(fact)
+
+
+            # 5. Get ground truth from Prolog Engine.
+            is_eligible, reason = self.prolog_engine.determine_eligibility_for_generation(prolog_facts)
+
+            # 6. If we matched the target, create and return the example.
+            if is_eligible == target_eligibility:
+                complexity = random.choice(["low", "medium", "high"])
+                query = template["template"].format(**vars)
+                query = self._apply_noise(query, complexity)
+
+                human_facts = [f.replace("case_gen", "user").replace("_", " ").replace(".", "") for f in prolog_facts]
+                
+                return LegalTrainingExample(
+                    query=query,
+                    domains=[domain],
+                    extracted_facts=human_facts,
+                    prolog_facts=prolog_facts,
+                    expected_eligibility=is_eligible,
+                    legal_reasoning=reason,
+                    user_demographics=demographics, # Use the generated demographics
+                    case_complexity=complexity
+                )
         
-        demo = random.choice(self.demographic_profiles)
-        return LegalTrainingExample(
-            query=query,
-            domains=template["expected_domains"],
-            extracted_facts=[f"{k}: {v}" for k, v in vars.items()],
-            expected_eligibility=eligibility,
-            legal_reasoning=f"Reasoning for {domain.value}: {random.choice(['Eligible under Section X', 'Not eligible due to Y'])}",
-            confidence_factors=self.case_variations["confidence_factors"](),
-            user_demographics=demo,
-            case_complexity=random.choice(self.case_variations["complexity"]),
-            priority_level=random.choice(self.case_variations["priority"])
-        )
-    
-    def _generate_enhanced_domain_samples(self, domain: LegalDomain, count: int) -> List[LegalTrainingExample]:
-        """Generate balanced samples per domain (50% eligible)"""
-        templates = self.legal_templates[domain.value]
+        logger.warning(f"Failed to generate a sample for domain={domain} with target_eligibility={target_eligibility} after 10 attempts.")
+        return None
+
+    def generate_dataset_for_domain(self, domain: str, count: int) -> List[LegalTrainingExample]:
+        """Generates a balanced dataset for a specific domain."""
         samples = []
-        for _ in range(count // 2):  # Eligible
-            template = random.choice(templates)
-            samples.append(self._generate_single_example(domain, template, eligible=True))
-        for _ in range(count // 2):  # Ineligible
-            template = random.choice(templates)
-            samples.append(self._generate_single_example(domain, template, eligible=False))
+        
+        eligible_needed = count // 2
+        ineligible_needed = count - eligible_needed
+
+        # --- Loop for ELIGIBLE samples ---
+        logger.info(f"Generating {eligible_needed} eligible samples for {domain}...")
+        generated_count = 0
+        while generated_count < eligible_needed:
+            # For eligible cases, all templates are generally fine.
+            template = random.choice(self.templates[domain])
+            example = self._generate_single_example(domain, template, target_eligibility=True)
+            if example:
+                samples.append(example)
+                generated_count += 1
+
+        # --- Loop for INELIGIBLE samples ---
+        logger.info(f"Generating {ineligible_needed} ineligible samples for {domain}...")
+        ineligible_count = 0
+        while ineligible_count < ineligible_needed:
+            # --- Start of new code ---
+            # Filter templates to avoid logical contradictions
+            compatible_templates = self.templates[domain]
+            if domain == 'legal_aid':
+                # When creating an INELIGIBLE legal aid case, exclude templates that hardcode automatic eligibility.
+                ineligible_templates = {
+                    'legal_aid_vulnerable_002',      # Excludes cases based on general vulnerability
+                    'legal_aid_disaster_victim_004', # Excludes cases for disaster victims (vulnerable)
+                    'legal_aid_industrial_worker_003'# Excludes cases for industrial workers (special category)
+                }
+                compatible_templates = [
+                    t for t in compatible_templates
+                    if t.get('template_id') not in ineligible_templates
+                ]
+
+            # Ensure there are still templates to choose from after filtering
+            if not compatible_templates:
+                logger.warning(f"No compatible templates found for domain={domain}, eligibility=False. Skipping sample generation.")
+                break # Exit the while loop
+
+            template = random.choice(compatible_templates)
+            # --- End of new code ---
+            
+            example = self._generate_single_example(domain, template, target_eligibility=False)
+            if example:
+                samples.append(example)
+                ineligible_count += 1
+        
         return samples
-    
-    def _generate_enhanced_cross_domain_samples(self, count: int) -> List[LegalTrainingExample]:
-        """Generate realistic multi-domain samples"""
-        domain_pairs = list(itertools.combinations(LegalDomain, 2))
-        samples = []
-        for _ in range(count):
-            pair = random.choice(domain_pairs)
-            templates = [random.choice(self.legal_templates[d.value]) for d in pair]
-            combined_template = {**templates[0], **templates[1]}  # Merge for hybrid query
-            combined_template["expected_domains"] = [d.value for d in pair]
-            eligible = random.choice([True, False])
-            sample = self._generate_single_example(pair[0], combined_template, eligible)
-            sample.domains = combined_template["expected_domains"]
-            sample.legal_reasoning += f" Cross-domain: {pair[1].value}"
-            samples.append(sample)
-        return samples
-    
-    def _generate_edge_case_samples(self, count: int) -> List[LegalTrainingExample]:
-        """Generate borderline/ambiguous cases"""
-        samples = []
-        for _ in range(count):
-            domain = random.choice(list(LegalDomain))
-            template = random.choice(self.legal_templates[domain.value])
-            # Modify vars for edge: e.g., income exactly at threshold
-            vars = {k: random.choice(v) for k, v in template["variables"].items()}
-            if 'income' in vars:
-                vars['income'] = str(random.choice([100000, 300000, 500000, 800000]))  # Threshold edges
-            query = template["template"].format(**vars)
-            query = self._apply_noise(query + " But borderline case.")  # Add ambiguity
-            eligible = random.random() < 0.5  # Random for edges
-            sample = self._generate_single_example(domain, template, eligible)
-            sample.case_complexity = "very high"
-            samples.append(sample)
-        return samples
-    
-    def generate_comprehensive_dataset(self, total_samples: int = 30000) -> Tuple[List, List, List]:
-        """Generate and split dataset into train/val/test"""
+
+    def generate_comprehensive_dataset(self, total_samples: int = 15000) -> Tuple[List, List, List]:
+        """
+        Generates the full dataset across all domains and splits it.
+        """
         dataset = []
         
-        # Domain distribution (balanced)
-        domain_distribution = {d: int(total_samples * 0.18) for d in LegalDomain}  # ~5400 per domain
-        domain_distribution[LegalDomain.LEGAL_AID] += total_samples - sum(domain_distribution.values())  # Remainder to core
-        
-        for domain, count in domain_distribution.items():
-            logger.info(f"Generating {count} samples for {domain.value}")
-            domain_samples = self._generate_enhanced_domain_samples(domain, count)
+        samples_per_domain = total_samples // len(self.templates)
+
+        for domain, templates in self.templates.items():
+            logger.info(f"--- Starting domain: {domain} ---")
+            domain_samples = self.generate_dataset_for_domain(domain, samples_per_domain)
             dataset.extend(domain_samples)
-        
-        # Cross-domain (20%)
-        cross_count = int(total_samples * 0.20)
-        logger.info(f"Generating {cross_count} cross-domain samples")
-        dataset.extend(self._generate_enhanced_cross_domain_samples(cross_count))
-        
-        # Edge cases (10%)
-        edge_count = int(total_samples * 0.10)
-        logger.info(f"Generating {edge_count} edge case samples")
-        dataset.extend(self._generate_edge_case_samples(edge_count))
-        
+            logger.info(f"--- Finished domain: {domain}, Total samples: {len(dataset)} ---")
+
         random.shuffle(dataset)
+
+        # Convert to dicts for JSON serialization
+        dataset_dicts = [asdict(s) for s in dataset]
+
+        # Stratified split
+        try:
+            # Ensure there's more than one class to stratify on
+            labels = [d['expected_eligibility'] for d in dataset_dicts]
+            if len(set(labels)) < 2:
+                logger.warning("Cannot perform stratified split: only one class present in the dataset. Using regular split.")
+                raise ValueError("Only one class present.")
+
+            train_data, temp_data = train_test_split(
+                dataset_dicts,
+                test_size=0.30,
+                random_state=42,
+                stratify=labels
+            )
+            val_data, test_data = train_test_split(
+                temp_data,
+                test_size=0.50,
+                random_state=42,
+                stratify=[d['expected_eligibility'] for d in temp_data]
+            )
+            return train_data, val_data, test_data
+        except ValueError as e:
+            logger.error(f"Could not perform stratified split, likely due to insufficient samples of one class in a domain: {e}")
+            # Fallback to non-stratified split
+            train_size = int(0.7 * len(dataset_dicts))
+            val_size = int(0.15 * len(dataset_dicts))
+            train_data = dataset_dicts[:train_size]
+            val_data = dataset_dicts[train_size:train_size + val_size]
+            test_data = dataset_dicts[train_size + val_size:]
+            return train_data, val_data, test_data
+
+
+    def save_datasets(self, train: List, val: List, test: List, output_dir: Path):
+        """Saves the datasets to JSON files."""
+        output_dir.mkdir(exist_ok=True)
         
-        # Stratified split by eligibility
-        train, temp = train_test_split(dataset, test_size=0.3, stratify=[s.expected_eligibility for s in dataset])
-        val, test = train_test_split(temp, test_size=0.5, stratify=[s.expected_eligibility for s in temp])
-        
-        return [asdict(s) for s in train], [asdict(s) for s in val], [asdict(s) for s in test]
-    
-    def save_datasets(self, train: List, val: List, test: List):
-        """Save splits to JSON"""
-        Path("data").mkdir(exist_ok=True)
-        with open("data/train_samples.json", 'w', encoding='utf-8') as f:
-            json.dump(train, f, indent=2)
-        with open("data/val_samples.json", 'w', encoding='utf-8') as f:
-            json.dump(val, f, indent=2)
-        with open("data/test_samples.json", 'w', encoding='utf-8') as f:
-            json.dump(test, f, indent=2)
+        # Clean up old files first
+        for old_file in ["train_samples.json", "val_samples.json", "test_samples.json"]:
+            if (output_dir / old_file).exists():
+                os.remove(output_dir / old_file)
+                logger.info(f"Removed old dataset file: {output_dir / old_file}")
+
+        with open(output_dir / "train_samples.json", 'w', encoding='utf-8') as f:
+            json.dump(train, f, indent=2, ensure_ascii=False)
+        with open(output_dir / "val_samples.json", 'w', encoding='utf-8') as f:
+            json.dump(val, f, indent=2, ensure_ascii=False)
+        with open(output_dir / "test_samples.json", 'w', encoding='utf-8') as f:
+            json.dump(test, f, indent=2, ensure_ascii=False)
+        logger.info(f"Successfully saved new datasets to {output_dir}")
+
 
 def main():
-    logger.info("Starting enhanced legal data generation")
-    generator = EnhancedLegalDataGenerator()
-    train, val, test = generator.generate_comprehensive_dataset(total_samples=30000)
-    generator.save_datasets(train, val, test)
+    """Main function to run the data generation process."""
+    logger.info("--- Starting Comprehensive Legal Data Generation ---")
     
-    logger.info(f"Generated: Train {len(train)}, Val {len(val)}, Test {len(test)}")
-    print(f"✅ Datasets saved to data/ folder")
-    print(f"📊 Total samples: {len(train) + len(val) + len(test):,}")
-    print("Use these for training: system.preprocess_data('data/') then system.train_complete_system('data/')")
+    # The output directory is `multi_domain_legal/data/`
+    output_data_dir = project_root / "data"
+    
+    generator = ComprehensiveLegalDataGenerator()
+    
+    total_samples_to_generate = 15000 
+    logger.info(f"Targeting a total of {total_samples_to_generate} samples.")
+
+    train, val, test = generator.generate_comprehensive_dataset(total_samples=total_samples_to_generate)
+    
+    if not train or not val or not test:
+        logger.error("Dataset generation failed to produce one or more data splits. Aborting.")
+        return
+
+    generator.save_datasets(train, val, test, output_data_dir)
+
+    logger.info("--- Data Generation Complete ---")
+    total_generated = len(train) + len(val) + len(test)
+    logger.info(f"Generated: Train={len(train)}, Val={len(val)}, Test={len(test)}")
+    logger.info(f"Total samples generated: {total_generated}")
+    print(f"\n✅ New, logically consistent datasets saved to '{output_data_dir.relative_to(Path.cwd())}' folder.")
+    print("   You can now proceed with model training.")
 
 if __name__ == "__main__":
     main()

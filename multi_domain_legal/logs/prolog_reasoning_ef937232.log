@@ -1,0 +1,39 @@
+2025-08-25 20:37:53,297 - hybex_system.prolog_engine - INFO - [Session:ef937232] Added file handler to PrologEngine logger.
+2025-08-25 20:37:53,297 - hybex_system.prolog_engine - INFO - [Session:ef937232] ======================================================================
+2025-08-25 20:37:53,300 - hybex_system.prolog_engine - INFO - [Session:ef937232] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-25 20:37:53,300 - hybex_system.prolog_engine - INFO - [Session:ef937232] Session ID: ef937232
+2025-08-25 20:37:53,301 - hybex_system.prolog_engine - INFO - [Session:ef937232] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-25 20:37:53,302 - hybex_system.prolog_engine - INFO - [Session:ef937232] ======================================================================
+2025-08-25 20:37:53,302 - hybex_system.prolog_engine - INFO - [Session:ef937232] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-25 20:37:53,305 - hybex_system.prolog_engine - INFO - [Session:ef937232] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-25 20:37:53,309 - hybex_system.prolog_engine - INFO - [Session:ef937232] Initialized Comprehensive PrologEngine (Session: ef937232, Available: True)
+2025-08-25 20:37:53,310 - hybex_system.prolog_engine - INFO - [Session:ef937232] Loaded 3 rule categories with 9 total rules
+2025-08-25 20:37:53,310 - hybex_system.prolog_engine - INFO - [Session:ef937232] Comprehensive rules actually loaded: True
+2025-08-25 20:37:53,312 - hybex_system.prolog_engine - INFO - [Session:ef937232] ✅ Successfully loaded master knowledge base from: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-25 20:37:53,444 - hybex_system.prolog_engine - INFO - [Session:ef937232] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpk05iouc9.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 20:37:53,622 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmplsqdcska.pl
+2025-08-25 20:37:53,627 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpk05iouc9.pl
+2025-08-25 20:37:53,633 - hybex_system.prolog_engine - INFO - [Session:ef937232] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp8q0jf779.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 20:37:53,804 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpx4kz1mqs.pl
+2025-08-25 20:37:53,804 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp8q0jf779.pl
+2025-08-25 20:37:53,812 - hybex_system.prolog_engine - INFO - [Session:ef937232] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpk_6xhn0f.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 20:37:53,969 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmphpu9qgfs.pl
+2025-08-25 20:37:53,969 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpk_6xhn0f.pl
+2025-08-25 20:37:53,983 - hybex_system.prolog_engine - INFO - [Session:ef937232] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpr80rz04z.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 20:37:54,147 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp4xpca2aw.pl
+2025-08-25 20:37:54,147 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpr80rz04z.pl
+2025-08-25 20:37:54,147 - hybex_system.prolog_engine - INFO - [Session:ef937232] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp2t7cf6mh.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 20:37:54,309 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpbwumt1z7.pl
+2025-08-25 20:37:54,309 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp2t7cf6mh.pl
+2025-08-25 20:37:54,324 - hybex_system.prolog_engine - INFO - [Session:ef937232] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpa_b7i2pc.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 20:37:54,510 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpa1fqy36f.pl
+2025-08-25 20:37:54,510 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpa_b7i2pc.pl
+2025-08-25 20:37:54,510 - hybex_system.prolog_engine - INFO - [Session:ef937232] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpndck6l52.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 20:37:54,665 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpgqagxznz.pl
+2025-08-25 20:37:54,665 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpndck6l52.pl
+2025-08-25 20:37:54,667 - hybex_system.prolog_engine - INFO - [Session:ef937232] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpwww4jit1.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 20:37:54,825 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp19ar5g1x.pl
+2025-08-25 20:37:54,827 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpwww4jit1.pl
+2025-08-25 20:37:54,832 - hybex_system.prolog_engine - INFO - [Session:ef937232] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphvfu46rq.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 20:37:55,001 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpz13jv074.pl
+2025-08-25 20:37:55,001 - hybex_system.prolog_engine - INFO - [Session:ef937232] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmphvfu46rq.pl

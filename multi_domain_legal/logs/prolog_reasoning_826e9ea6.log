@@ -1,0 +1,588 @@
+2025-08-25 19:23:59,366 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Added file handler to PrologEngine logger.
+2025-08-25 19:23:59,366 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] ======================================================================
+2025-08-25 19:23:59,367 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-25 19:23:59,367 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Session ID: 826e9ea6
+2025-08-25 19:23:59,367 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-25 19:23:59,368 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] ======================================================================
+2025-08-25 19:23:59,368 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-25 19:23:59,371 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-25 19:23:59,373 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Initialized Comprehensive PrologEngine (Session: 826e9ea6, Available: True)
+2025-08-25 19:23:59,374 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Loaded 3 rule categories with 9 total rules
+2025-08-25 19:23:59,374 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Comprehensive rules actually loaded: True
+2025-08-25 19:23:59,374 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] ✅ Successfully loaded master knowledge base from: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-25 19:24:00,183 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpyplz4018.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,270 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpyplz4018.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpyplz4018.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,270 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp121xpsj5.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,332 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp121xpsj5.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp121xpsj5.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,335 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpn1ercjiv.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,383 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpn1ercjiv.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpn1ercjiv.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,388 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpufug0ks5.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,436 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpufug0ks5.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpufug0ks5.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,436 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpuoyebz5w.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,507 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpuoyebz5w.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpuoyebz5w.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,509 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpas2g5uku.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,571 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpas2g5uku.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpas2g5uku.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,571 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppwwa92rr.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,622 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppwwa92rr.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppwwa92rr.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,625 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpn90fhwmc.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,679 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpn90fhwmc.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpn90fhwmc.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,680 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp80bkn1ox.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,757 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp80bkn1ox.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp80bkn1ox.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,759 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpb4y04twr.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,815 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpb4y04twr.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpb4y04twr.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,817 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpjpyppmvo.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,875 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpjpyppmvo.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpjpyppmvo.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,877 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpf1zgbo2l.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:00,965 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpf1zgbo2l.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpf1zgbo2l.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:00,966 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp8pkeup6i.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,044 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp8pkeup6i.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp8pkeup6i.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,044 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp4jsr0mko.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,098 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp4jsr0mko.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp4jsr0mko.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,098 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpv5esl_hy.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,177 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpv5esl_hy.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpv5esl_hy.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,179 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm22w0cml.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,251 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm22w0cml.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm22w0cml.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,253 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpk3y3ea33.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,309 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpk3y3ea33.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpk3y3ea33.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,309 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpzl3zpgy8.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,368 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpzl3zpgy8.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpzl3zpgy8.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,368 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpe_4xa8d7.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,437 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpe_4xa8d7.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpe_4xa8d7.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,437 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp4ivi7x0n.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,495 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp4ivi7x0n.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp4ivi7x0n.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,495 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpydywt11k.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,556 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpydywt11k.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpydywt11k.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,556 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp712kdmew.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,623 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp712kdmew.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp712kdmew.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,626 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpu72webp7.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,683 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpu72webp7.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpu72webp7.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,683 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpw3ijn9h7.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,736 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpw3ijn9h7.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpw3ijn9h7.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,736 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpq6io2vxg.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,791 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpq6io2vxg.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpq6io2vxg.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,791 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmprueafxrt.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,847 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmprueafxrt.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmprueafxrt.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,847 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp9br1lfwz.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,893 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp9br1lfwz.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp9br1lfwz.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,894 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp1x1t_5gn.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:01,944 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp1x1t_5gn.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp1x1t_5gn.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:01,944 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmprp0pnnmb.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,014 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmprp0pnnmb.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmprp0pnnmb.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,015 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp8ohz4q6y.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,069 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp8ohz4q6y.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp8ohz4q6y.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,069 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpgv_y9sm5.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,135 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpgv_y9sm5.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpgv_y9sm5.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,136 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm70evbb1.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,167 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm70evbb1.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm70evbb1.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,173 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpandfri3a.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,228 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpandfri3a.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpandfri3a.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,228 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpkcv1fdo0.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,285 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpkcv1fdo0.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpkcv1fdo0.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,285 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpj7orksi7.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,358 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpj7orksi7.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpj7orksi7.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,360 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp_l9mc7ne.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,456 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp_l9mc7ne.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp_l9mc7ne.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,461 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpb8qb5_uc.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,536 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpb8qb5_uc.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpb8qb5_uc.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,536 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppdvptelk.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,596 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppdvptelk.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppdvptelk.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,598 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmploqqdhi7.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,667 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmploqqdhi7.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmploqqdhi7.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,668 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpuoim6643.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,714 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpuoim6643.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpuoim6643.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,716 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp6ccocdvj.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,764 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp6ccocdvj.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp6ccocdvj.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,770 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphpsg44vr.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,812 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphpsg44vr.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphpsg44vr.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,812 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdiiggtjt.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,864 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdiiggtjt.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdiiggtjt.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,868 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpb6am17x8.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,924 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpb6am17x8.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpb6am17x8.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,924 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpio2i8_vw.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:02,993 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpio2i8_vw.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpio2i8_vw.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:02,993 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmpcxo475.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,049 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmpcxo475.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmpcxo475.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,049 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpn8abqgsk.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,118 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpn8abqgsk.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpn8abqgsk.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,126 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpbxfu2d2m.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,202 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpbxfu2d2m.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpbxfu2d2m.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,202 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpiyzm6o3z.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,266 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpiyzm6o3z.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpiyzm6o3z.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,267 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppcjdnj_c.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,321 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppcjdnj_c.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppcjdnj_c.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,323 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpyd1zuhej.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,383 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpyd1zuhej.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpyd1zuhej.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,383 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpu45mxppb.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,437 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpu45mxppb.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpu45mxppb.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,437 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppi6uuebd.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,496 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppi6uuebd.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppi6uuebd.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,498 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmfnzuust.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,548 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmfnzuust.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmfnzuust.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,555 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpv677rjya.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,614 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpv677rjya.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpv677rjya.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,617 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp2kq1wypg.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,674 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp2kq1wypg.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp2kq1wypg.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,674 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpefprobfd.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,728 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpefprobfd.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpefprobfd.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,731 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp5x40x56v.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,798 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp5x40x56v.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp5x40x56v.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,798 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpy1_tki9g.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,866 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpy1_tki9g.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpy1_tki9g.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,868 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpkcp2rugu.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,923 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpkcp2rugu.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpkcp2rugu.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,923 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpxvy8r_8k.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:03,971 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpxvy8r_8k.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpxvy8r_8k.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:03,971 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphnu3xpnd.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,020 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphnu3xpnd.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphnu3xpnd.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,020 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpsm0qy41t.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,071 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpsm0qy41t.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpsm0qy41t.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,072 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmprgus8vpk.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,114 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmprgus8vpk.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmprgus8vpk.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,116 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpwh2dks21.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,156 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpwh2dks21.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpwh2dks21.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,158 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpj7lqhys3.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,218 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpj7lqhys3.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpj7lqhys3.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,218 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmplwhaxsfc.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,286 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmplwhaxsfc.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmplwhaxsfc.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,291 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphmcyrabg.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,357 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphmcyrabg.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphmcyrabg.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,359 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdb0jek4c.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,419 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdb0jek4c.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdb0jek4c.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,421 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmvr9ma8c.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,476 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmvr9ma8c.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmvr9ma8c.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,478 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpk1pkofue.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,536 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpk1pkofue.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpk1pkofue.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,538 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3inwv1il.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,605 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3inwv1il.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3inwv1il.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,607 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3p1tv64p.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,653 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3p1tv64p.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3p1tv64p.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,655 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpuqhu3fix.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,716 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpuqhu3fix.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpuqhu3fix.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,716 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpgcluisgy.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,786 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpgcluisgy.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpgcluisgy.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,787 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpu3_x1zsf.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,854 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpu3_x1zsf.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpu3_x1zsf.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,854 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmdc2xdu6.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:04,915 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmdc2xdu6.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmdc2xdu6.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:04,917 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpzs33ynbb.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,022 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpzs33ynbb.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpzs33ynbb.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,027 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp7chouvte.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,091 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp7chouvte.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp7chouvte.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,091 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3xpqgvyg.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,130 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3xpqgvyg.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3xpqgvyg.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,131 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp10km7t_p.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,169 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp10km7t_p.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp10km7t_p.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,170 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpg71m0ayq.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,206 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpg71m0ayq.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpg71m0ayq.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,207 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpgsmw0ji0.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,259 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpgsmw0ji0.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpgsmw0ji0.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,260 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpp2ipxky2.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,307 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpp2ipxky2.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpp2ipxky2.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,310 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp70avvz9i.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,363 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp70avvz9i.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp70avvz9i.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,365 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppv7zuzwi.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,425 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppv7zuzwi.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmppv7zuzwi.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,425 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpk4fojje6.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,483 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpk4fojje6.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpk4fojje6.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,483 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpsbskm1te.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,523 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpsbskm1te.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpsbskm1te.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,526 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmlmfyy7r.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,577 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmlmfyy7r.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpmlmfyy7r.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,579 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpaycemtbp.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,639 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpaycemtbp.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpaycemtbp.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,639 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp33zudfbi.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,706 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp33zudfbi.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp33zudfbi.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,710 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdxxnap3_.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,774 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdxxnap3_.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdxxnap3_.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,777 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm9_repmq.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,832 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm9_repmq.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm9_repmq.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,832 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdusacseu.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,899 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdusacseu.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdusacseu.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,899 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphznw_mn3.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:05,973 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphznw_mn3.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmphznw_mn3.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:05,973 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpta__2l1q.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,033 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpta__2l1q.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpta__2l1q.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,034 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm1c284ec.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,089 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm1c284ec.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpm1c284ec.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,089 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp0dzwfs33.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,174 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp0dzwfs33.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp0dzwfs33.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,174 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp_kn2t_0e.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,250 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp_kn2t_0e.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp_kn2t_0e.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,250 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp81pnwn1m.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,318 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp81pnwn1m.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp81pnwn1m.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,318 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp29uiuibe.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,363 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp29uiuibe.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp29uiuibe.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,365 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpt1t3na8o.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,421 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpt1t3na8o.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpt1t3na8o.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,423 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpfth7auta.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,486 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpfth7auta.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpfth7auta.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,486 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpkghp4_xv.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,573 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpkghp4_xv.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpkghp4_xv.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,584 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3gia5usf.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,666 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3gia5usf.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3gia5usf.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,666 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpp9wyq4zc.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,721 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpp9wyq4zc.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpp9wyq4zc.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,732 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdo9j5m8m.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,790 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdo9j5m8m.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpdo9j5m8m.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,792 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp5kzc2vbw.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,844 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp5kzc2vbw.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp5kzc2vbw.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,845 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp5g24zdeq.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,910 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp5g24zdeq.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp5g24zdeq.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,912 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp1vl74ppy.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:06,962 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp1vl74ppy.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp1vl74ppy.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:06,963 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpvtqmf6u5.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:07,020 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpvtqmf6u5.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpvtqmf6u5.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:07,022 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpz_1cqdn3.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:07,083 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpz_1cqdn3.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpz_1cqdn3.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:07,083 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpy51mws3a.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:07,140 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpy51mws3a.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpy51mws3a.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:07,140 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpntrp1zzf.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:07,189 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpntrp1zzf.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpntrp1zzf.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:07,191 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp_fn46u11.pl'), eligible_for_legal_aid(case_gen)., halt.
+2025-08-25 19:24:07,242 - hybex_system.prolog_engine - WARNING - [Session:826e9ea6] Prolog warning/error: ERROR: -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp_fn46u11.pl'), eligible_for_legal_aid(case_gen)., halt.: Syntax error: Operand expected, unquoted comma or bar found
+ERROR: consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp_fn46u11.pl'), eligible_for_legal_aid(case_gen)
+ERROR: ** here **
+ERROR: ., halt.
+2025-08-25 19:24:07,242 - hybex_system.prolog_engine - INFO - [Session:826e9ea6] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp0on8pa4a.pl'), eligible_for_legal_aid(case_gen)., halt.

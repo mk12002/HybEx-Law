@@ -10,57 +10,11 @@ This module contains Prolog rules for legal reasoning across all domains:
 """
 
 MULTI_DOMAIN_LEGAL_RULES = """
-% ============================================================================
-% FOUNDATIONAL PREDICATES AND FACTS
-% ============================================================================
-
-% Foundational predicates that are referenced throughout the rules
-% These must be defined to avoid "Unknown procedure" errors
-
-% Vulnerable group definitions
-vulnerable_group(Person, women) :-
-    gender(Person, female).
-
 vulnerable_group(Person, children) :-
-    age(Person, Age),
-    Age < 18.
-
 vulnerable_group(Person, disabled) :-
-    disability_status(Person, true).
-
 vulnerable_group(Person, industrial_workers) :-
-    occupation(Person, industrial_worker).
-
 vulnerable_group(Person, senior_citizens) :-
-    age(Person, Age),
-    Age >= 60.
-
-% Basic person predicate - true for any valid case identifier
-person(Person) :-
-    atom(Person).
-
-% Missing reasoning predicates
-generate_detailed_reasoning(Person, 'Legal analysis completed based on available facts') :-
-    person(Person).
-
-applicable_rule(Person, legal_aid_income_check, legal_aid) :-
-    income_eligible(Person).
-
-applicable_rule(Person, legal_aid_categorical, legal_aid) :-
-    categorically_eligible(Person).
-
-applicable_rule(Person, basic_eligibility, legal_aid) :-
-    eligible_for_legal_aid(Person).
-
-% Primary eligibility reason
-primary_eligibility_reason(Person, 'Income eligibility met') :-
-    income_eligible(Person), !.
-
-primary_eligibility_reason(Person, 'Categorical eligibility met') :-
-    categorically_eligible(Person), !.
-
-primary_eligibility_reason(Person, 'No eligibility criteria met') :-
-    person(Person).
+% ...existing code...
 
 % ============================================================================
 % LEGAL AID DOMAIN RULES

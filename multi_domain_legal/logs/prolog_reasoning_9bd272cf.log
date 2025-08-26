@@ -1,0 +1,18 @@
+2025-08-25 20:56:04,878 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Added file handler to PrologEngine logger.
+2025-08-25 20:56:04,878 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] ======================================================================
+2025-08-25 20:56:04,878 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-25 20:56:04,878 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Session ID: 9bd272cf
+2025-08-25 20:56:04,878 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-25 20:56:04,882 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] ======================================================================
+2025-08-25 20:56:04,882 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-25 20:56:04,883 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-25 20:56:04,883 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Initialized Comprehensive PrologEngine (Session: 9bd272cf, Available: True)
+2025-08-25 20:56:04,883 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Loaded 3 rule categories with 9 total rules
+2025-08-25 20:56:04,883 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Comprehensive rules actually loaded: True
+2025-08-25 20:56:04,889 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] ✅ Successfully loaded master knowledge base from: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-25 20:56:05,198 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp7d0qwcn7.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 20:56:05,341 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp0xoyitjx.pl
+2025-08-25 20:56:05,341 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp7d0qwcn7.pl
+2025-08-25 20:56:05,348 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp4c1pvn5_.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 20:56:05,450 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpatzyjowz.pl
+2025-08-25 20:56:05,458 - hybex_system.prolog_engine - INFO - [Session:9bd272cf] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp4c1pvn5_.pl

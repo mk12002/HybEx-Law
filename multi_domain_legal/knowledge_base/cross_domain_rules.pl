@@ -1,3 +1,24 @@
+% =================================================================
+% BRIDGE RULES to connect Python's `has_grounds` fact to KB logic
+% =================================================================
+
+% Employment Law Bridge
+wrongful_termination(Person) :- has_grounds(Person, wrongful_termination).
+valid_harassment_complaint(Person) :- has_grounds(Person, workplace_harassment).
+discrimination_case(Person) :- has_grounds(Person, discrimination).
+
+% Family Law Bridge
+divorce_case(Person) :- has_grounds(Person, domestic_violence). % Assuming this implies a divorce case
+maintenance_case(Person) :- has_grounds(Person, child_maintenance).
+
+% Consumer Protection Bridge
+valid_consumer_complaint(Person, defective_goods) :- claim_value(Person, _). % Assumes any claim implies a complaint
+valid_consumer_complaint(Person, deficiency_in_service) :- has_grounds(Person, deficiency_in_service).
+
+% Fundamental Rights Bridge
+constitutional_case(Person) :- has_grounds(Person, discrimination).
+constitutional_case(Person) :- has_grounds(Person, right_to_assemble).
+
 % ============================================================================
 % CROSS-DOMAIN RULES
 % This file contains rules that connect multiple legal domains
@@ -5,31 +26,30 @@
 % ============================================================================
 
 % =================================================================
-% LEGAL AID FOR DOMAIN-SPECIFIC CASES
+% CROSS-DOMAIN CASE CLASSIFICATION (FINAL REFINED LOGIC)
+% These rules identify if a case has specific legal grounds.
+% They DO NOT determine final eligibility.
 % =================================================================
 
-% Legal aid for employment matters
-legal_aid_employment_case(Employee) :-
-    eligible_for_legal_aid(Employee),
-    (   wrongful_termination(Employee)
-    ;   minimum_wage_violation(Employee)
-    ;   valid_harassment_complaint(Employee)
-    ).
+% Identifies if a person has valid grounds for an employment law case.
+has_employment_grounds(Person) :-
+    wrongful_termination(Person).
+has_employment_grounds(Person) :-
+    minimum_wage_violation(Person).
+has_employment_grounds(Person) :-
+    valid_harassment_complaint(Person).
 
-% Legal aid for family matters
-legal_aid_family_case(Person) :-
-    eligible_for_legal_aid(Person),
-    (   maintenance_eligible(Person)
-    ;   divorce_case(Person)
-    ;   child_custody_case(Person)
-    ).
+% Identifies if a person has valid grounds for a family law case.
+has_family_grounds(Person) :-
+    maintenance_eligible(Person).
+has_family_grounds(Person) :-
+    divorce_case(Person).
+has_family_grounds(Person) :-
+    child_custody_case(Person).
 
-% Legal aid for consumer matters
-legal_aid_consumer_case(Person) :-
-    eligible_for_legal_aid(Person),
-    valid_consumer_complaint(Person, _),
-    transaction_amount(Person, Amount),
-    Amount =< 100000.  % Small value cases
+% Identifies if a person has a valid consumer complaint.
+has_consumer_grounds(Person) :-
+    valid_consumer_complaint(Person, _).
 
 % =================================================================
 % CONSTITUTIONAL REMEDIES ACROSS DOMAINS
@@ -75,15 +95,8 @@ employment_family_case(Employee) :-
 % COMPREHENSIVE ELIGIBILITY ACROSS DOMAINS
 % =================================================================
 
-% Legal aid eligibility for any valid case type
 comprehensive_legal_aid_eligible(Person) :-
-    eligible_for_legal_aid(Person),
-    (   legal_aid_employment_case(Person)
-    ;   legal_aid_family_case(Person)
-    ;   legal_aid_consumer_case(Person)
-    ;   criminal_case(Person)
-    ;   constitutional_case(Person)
-    ).
+    eligible_for_legal_aid(Person).
 
 % Multi-domain case complexity
 complex_multi_domain_case(Person) :-

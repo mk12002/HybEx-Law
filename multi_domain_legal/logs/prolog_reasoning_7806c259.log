@@ -1,0 +1,373 @@
+2025-08-25 19:33:17,015 - hybex_system.prolog_engine - INFO - [Session:7806c259] Added file handler to PrologEngine logger.
+2025-08-25 19:33:17,015 - hybex_system.prolog_engine - INFO - [Session:7806c259] ======================================================================
+2025-08-25 19:33:17,015 - hybex_system.prolog_engine - INFO - [Session:7806c259] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-25 19:33:17,015 - hybex_system.prolog_engine - INFO - [Session:7806c259] Session ID: 7806c259
+2025-08-25 19:33:17,016 - hybex_system.prolog_engine - INFO - [Session:7806c259] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-25 19:33:17,017 - hybex_system.prolog_engine - INFO - [Session:7806c259] ======================================================================
+2025-08-25 19:33:17,017 - hybex_system.prolog_engine - INFO - [Session:7806c259] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-25 19:33:17,018 - hybex_system.prolog_engine - INFO - [Session:7806c259] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-25 19:33:17,020 - hybex_system.prolog_engine - INFO - [Session:7806c259] Initialized Comprehensive PrologEngine (Session: 7806c259, Available: True)
+2025-08-25 19:33:17,020 - hybex_system.prolog_engine - INFO - [Session:7806c259] Loaded 3 rule categories with 9 total rules
+2025-08-25 19:33:17,020 - hybex_system.prolog_engine - INFO - [Session:7806c259] Comprehensive rules actually loaded: True
+2025-08-25 19:33:17,020 - hybex_system.prolog_engine - INFO - [Session:7806c259] ✅ Successfully loaded master knowledge base from: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-25 19:33:17,198 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp1h26bpz6.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:17,769 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmp1h26bpz6.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:17,769 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpgi17_snn.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:17,897 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmpgi17_snn.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:17,900 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpn2jpdgjp.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:18,011 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmpn2jpdgjp.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:18,012 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpgg3sz1s8.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:18,120 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmpgg3sz1s8.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:18,123 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp3focht4w.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:18,242 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmp3focht4w.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:18,244 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpu_kn7hjo.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:18,346 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmpu_kn7hjo.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:18,352 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpifpmmr1b.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:18,464 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmpifpmmr1b.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:18,472 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpzl9nz0ib.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:18,568 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmpzl9nz0ib.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:18,568 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp8q3h2zef.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:18,688 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmp8q3h2zef.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:18,691 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmp8_vm37tp.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:18,793 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmp8_vm37tp.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:18,793 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmptkn_1t91.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:18,901 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmptkn_1t91.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:18,908 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpjxr3cip7.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:19,015 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmpjxr3cip7.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:19,017 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpu354pfi8.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:19,129 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmpu354pfi8.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:19,132 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpr4tx_m69.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:19,239 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmpr4tx_m69.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:19,242 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpho42awu9.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 19:33:19,355 - hybex_system.prolog_engine - WARNING - [Session:7806c259] Prolog warning/error: Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:38:
+Warning:    Clauses of constitutional_employment_remedy/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:111
+Warning:    Current predicate: has_consumer_grounds/1
+Warning:    Use :- discontiguous constitutional_employment_remedy/1. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Singleton variables: [Person]
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:45:
+Warning:    Clauses of employment_pil_standing/2 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:115
+Warning:    Current predicate: constitutional_employment_remedy/1
+Warning:    Use :- discontiguous employment_pil_standing/2. to suppress this message
+Warning: d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/cross_domain_rules.pl:49:
+Warning:    Clauses of employment_related_issue/1 are not together in the source-file
+Warning:    Earlier definition at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/employment_law.pl:123
+Warning:    Current predicate: employment_pil_standing/2
+Warning:    Use :- discontiguous employment_related_issue/1. to suppress this message
+Warning: c:/users/omen19~1/appdata/local/temp/tmpho42awu9.pl:4:
+Warning:    Redefined static procedure person/1
+Warning:    Previously defined at d:/code_stuff/hybex-law/multi_domain_legal/knowledge_base/foundational_rules_clean.pl:12
+ERROR: -g eligible_for_legal_aid(case_gen): vulnerable_group/2: Unknown procedure: age/2
+2025-08-25 19:33:19,356 - hybex_system.prolog_engine - INFO - [Session:7806c259] Executing SWI-Prolog command: swipl -q -g consult('C:/Users/OMEN19~1/AppData/Local/Temp/tmpt4i0ltdg.pl') -g eligible_for_legal_aid(case_gen) -g halt

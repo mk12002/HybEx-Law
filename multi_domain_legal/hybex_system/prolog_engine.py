@@ -43,6 +43,24 @@ class PrologQuery:
     retry_count: int = 3
 
 class PrologEngine:
+    def _load_rules(self):
+        """
+        Loads all Prolog rules from the master knowledge base file.
+        """
+        kb_path = self.config.BASE_DIR / 'knowledge_base' / 'knowledge_base.pl'
+
+        if not kb_path.exists():
+            logger.error(f"Master knowledge base not found at: {kb_path}")
+            self.rules_loaded = False
+            return
+        try:
+            # Example for pyswip or similar: self.prolog.consult(str(kb_path))
+            # If using subprocess, just store the path for consult in queries
+            self.rules_loaded = True
+            logger.info(f"✅ Successfully loaded master knowledge base from: {kb_path}")
+        except Exception as e:
+            logger.error(f"Failed to consult master knowledge base '{kb_path}': {e}", exc_info=True)
+            self.rules_loaded = False
     """Advanced Prolog reasoning engine for comprehensive legal analysis"""
     
     def __init__(self, config: HybExConfig):
@@ -201,31 +219,19 @@ class PrologEngine:
             return self._load_multi_domain_rules()  # Fallback to full rule set
 
     def _load_multi_domain_rules(self) -> Optional[str]:
-        """Load multi-domain rules from enhanced knowledge base."""
+        """Load rules from the new modular knowledge base entry point (knowledge_base.pl)."""
         try:
-            # Force using the working multi_domain_rules.py with 105 rules
-            fallback_rules_path = Path(__file__).parent.parent / "knowledge_base" / "multi_domain_rules.py"
-            
-            logger.info("Using verified fallback knowledge base with 105 comprehensive rules")
-            
-            if fallback_rules_path.exists():
-                logger.info(f"Attempting to load rules from: {fallback_rules_path}")
-                spec = importlib.util.spec_from_file_location("legal_rules", fallback_rules_path)
-                rules_module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(rules_module)
-                
-                if hasattr(rules_module, 'MULTI_DOMAIN_LEGAL_RULES'):
-                    logger.info("Successfully loaded MULTI_DOMAIN_LEGAL_RULES from knowledge base.")
-                    return rules_module.MULTI_DOMAIN_LEGAL_RULES
-                else:
-                    logger.warning(f"File {fallback_rules_path} found, but no MULTI_DOMAIN_LEGAL_RULES variable found within it.")
+            kb_path = Path(__file__).parent.parent / "knowledge_base" / "knowledge_base.pl"
+            if kb_path.exists():
+                logger.info(f"Using modular knowledge base entry point: {kb_path}")
+                with open(kb_path, 'r', encoding='utf-8') as kb_file:
+                    rules_str = kb_file.read()
+                return rules_str
             else:
-                logger.error("Critical error: multi_domain_rules.py not found!")
-                    
+                logger.error("Critical error: knowledge_base.pl not found!")
         except Exception as e:
-            logger.error(f"Error loading multi-domain rules from knowledge base: {e}", exc_info=True)
-        
-        logger.warning("No multi-domain rules found in knowledge base. Using enhanced fallback rules.")
+            logger.error(f"Error loading modular knowledge base: {e}", exc_info=True)
+        logger.warning("No modular knowledge base found. Using enhanced fallback rules.")
         return self._get_enhanced_fallback_rules()
 
     def _extract_section(self, text: str, section_name: str) -> Optional[str]:
@@ -712,7 +718,7 @@ class PrologEngine:
             
             # Simple reasoning predicates
             temp_file.write('% SIMPLE REASONING\n')
-            temp_file.write("primary_eligibility_reason(Person, 'Eligible: SC/ST/OBC category') :- categorically_eligible(Person), !.\n")
+            temp_file.write("primary_eligibility_reason(Person, 'Eligible: SC/ST/OBC category') :- categorically_eligibile(Person), !.\n")
             temp_file.write("primary_eligibility_reason(Person, 'Eligible: Income below threshold') :- income_eligible(Person), !.\n")
             temp_file.write("primary_eligibility_reason(Person, 'Not eligible') :- \\+ eligible_for_legal_aid(Person), !.\n\n")
             
@@ -1076,63 +1082,68 @@ class PrologEngine:
             return None
 
     def _execute_prolog_query(self, file_path: str, query: str, variables: List[str]) -> Tuple[bool, List[Dict[str, Any]]]:
-        """Execute Prolog query with format-based output to avoid JSON dependency issues."""
-        
-        # Use forward slashes in path for Prolog compatibility
-        prolog_file = file_path.replace('\\', '/')
-        
+        """
+        Execute a Prolog query using subprocess, changing the CWD to handle paths with spaces.
+        This is the most robust method for Windows environments with spaces in user paths.
+        """
+        p = Path(file_path)
+        prolog_dir = p.parent
+        prolog_filename = p.name
+
         if variables:
-            # Build format statements, e.g., format('Reason:~q~n', [Reason])
-            output_parts = []
-            for v in variables:
-                output_parts.append(f"format('{v}:~q~n', [{v}])")
-            output_part = f", {', '.join(output_parts)}"
+            output_parts = [f"format('{v}:~q~n', [{v}])" for v in variables]
+            full_query_text = f"({query}, {', '.join(output_parts)})"
         else:
-            output_part = ""
+            full_query_text = query
+
+        # Use a list of arguments with shell=False for maximum safety and compatibility.
+        # The filename is now relative because we set the current working directory (cwd).
+        command_list = [
+            'swipl',
+            '-q',
+            '-g', f"consult('{prolog_filename}')",
+            '-g', full_query_text,
+            '-g', 'halt'
+        ]
         
-        # Build the goal with consult, the query, and halt
-        goal = f"consult('{prolog_file}'), {query}{output_part}, halt."
-        
-        command = ['swipl', '-q', '-g', goal]
-        
-        logger.info(f"Executing SWI-Prolog command: {' '.join(command)}")
+        logger.info(f"Executing SWI-Prolog in '{prolog_dir}': {' '.join(command_list)}")
         
         try:
             result = subprocess.run(
-                command,
+                command_list,
+                shell=False,  # shell=False is safer and recommended with a list of args
                 capture_output=True,
                 text=True,
-                timeout=self.config.PROLOG_CONFIG.get('timeout', 120)  # Use config timeout with fallback
+                timeout=self.config.PROLOG_CONFIG.get('timeout', 120),
+                encoding='utf-8',
+                cwd=prolog_dir  # Set the working directory to the temp file's location
             )
             
-            # Success if return code is 0 (query succeeded), else false (query failed)
             success = (result.returncode == 0)
-            
-            stdout = result.stdout.strip()
             stderr = result.stderr.strip()
             
             if stderr:
-                logger.warning(f"Prolog warning/error: {stderr}")
-                success = False if 'ERROR' in stderr.upper() else success
+                # Suppress non-fatal singleton variable warnings
+                if 'Singleton variables' not in stderr:
+                    logger.warning(f"Prolog warning/error: {stderr}")
+                if 'ERROR:' in stderr.upper() or 'SYNTAX ERROR' in stderr.upper():
+                    success = False
             
             results = []
-            if variables and stdout:
+            if success and variables and result.stdout:
+                stdout = result.stdout.strip()
                 try:
                     lines = stdout.split('\n')
                     res_dict = {}
                     for line in lines:
                         if ':' in line:
                             key, value = line.split(':', 1)
-                            # Remove quotes and clean the value
                             clean_value = value.strip().strip("'\"")
                             res_dict[key.strip()] = clean_value
                     if res_dict:
                         results = [res_dict]
                 except Exception as e:
                     logger.warning(f"Failed to parse Prolog output: {stdout} | Error: {e}")
-                    results = []
-            else:
-                results = []
             
             return success, results
         
@@ -1140,7 +1151,7 @@ class PrologEngine:
             logger.error(f"Prolog query timed out after {self.config.PROLOG_CONFIG.get('timeout', 120)} seconds: {query}")
             return False, []
         except Exception as e:
-            logger.error(f"Prolog execution failed: {e}")
+            logger.error(f"Prolog execution failed: {e}", exc_info=True)
             return False, []
 
     def execute_prolog_query(self, prolog_file: str, query: PrologQuery, timeout_seconds: int = 60) -> Tuple[bool, List[Dict], str]:
@@ -1435,10 +1446,10 @@ class PrologEngine:
         if success_detailed and results_detailed:
             for res_dict in results_detailed:
                 if 'DetailedReason' in res_dict:
-                    detailed_reason = res_dict['DetailedReason'].strip("'\"")  # Strip any outer quotes
+                    detailed_reasoning = res_dict['DetailedReason'].strip("'\"")  # Strip any outer quotes
                     detailed_reasoning_list.append({
                         'type': 'prolog_reasoning',
-                        'content': detailed_reason,
+                        'content': detailed_reasoning,
                         'confidence': 0.95
                     })
                     break
@@ -1604,16 +1615,31 @@ class PrologEngine:
 
         return derived_facts
 
-    def _cleanup_temp_files(self):
-        """Clean up temporary Prolog files."""
-        for f_path in self.temp_files:
+    def _cleanup_temp_files(self, file_paths: List[str] = None):
+        """Clean up temporary Prolog files idempotently."""
+        files_to_clean = file_paths if file_paths else self.temp_files
+        
+        # Create a copy to avoid modification issues during iteration
+        for temp_file_path in list(files_to_clean):
             try:
-                if os.path.exists(f_path):
-                    os.remove(f_path)
-                    logger.debug(f"Cleaned up temporary Prolog file: {f_path}")
-            except Exception as e:
-                logger.error(f"Error cleaning up temporary file {f_path}: {e}")
-        self.temp_files = []
+                os.remove(temp_file_path)
+                # We can keep the info log, or remove it for a quieter run
+                # logger.info(f"Cleaned up temp file: {temp_file_path}")
+            except FileNotFoundError:
+                # This is expected if the file was already cleaned up by a 'finally' block.
+                # We can safely ignore this error.
+                pass 
+            except OSError as e:
+                # Log other, unexpected OS errors.
+                logger.warning(f"Error cleaning up temp file {temp_file_path}: {e}")
+
+        # After attempting cleanup, remove the files from the master list
+        if file_paths:
+            # If a specific list was provided, remove only those items from the master list
+            self.temp_files = [f for f in self.temp_files if f not in file_paths]
+        else:
+            # If no list was provided, we were cleaning the whole master list, so clear it.
+            self.temp_files.clear()
 
     def get_comprehensive_rule_summary(self) -> Dict[str, Any]:
         """Returns a summary of the loaded comprehensive rules."""
@@ -1819,3 +1845,69 @@ class PrologEngine:
 
     def __del__(self):
         self._cleanup_temp_files()
+
+    def determine_eligibility_for_generation(self, facts: List[str]) -> Tuple[bool, str]:
+        """
+        A streamlined eligibility check for dataset generation.
+        """
+        if not self.prolog_available:
+            # Simple fallback for generation if Prolog isn't there.
+            income_fact = next((f for f in facts if 'annual_income' in f), None)
+            if income_fact:
+                try:
+                    income = int(re.search(r'\d+', income_fact).group())
+                    return income <= 500000, "Fallback eligibility based on income <= 500000"
+                except (ValueError, AttributeError):
+                    return False, "Fallback eligibility failed due to income parse error"
+            return False, "Fallback eligibility: no income data"
+
+        # Use the simpler, single-file creation method
+        prolog_file = self.create_prolog_file_for_generation(facts)
+        if not prolog_file:
+            return False, "Failed to create the Prolog query file."
+
+        try:
+            query = "eligible_for_legal_aid(case_gen)."
+            # Use the robust _execute_prolog_query method
+            success, _ = self._execute_prolog_query(prolog_file, query, [])
+            
+            eligible = success
+            reason = "Eligible based on Prolog rules." if eligible else "Not eligible based on Prolog rules."
+            return eligible, reason
+
+        except Exception as e:
+            logger.error(f"Prolog query for generation failed: {e}", exc_info=True)
+            return False, "Prolog query execution error"
+            
+        finally:
+            # Ensure the single temp file is cleaned up
+            self._cleanup_temp_files([prolog_file])
+
+    def create_prolog_file_for_generation(self, facts: List[str]) -> Optional[str]:
+        """Creates a temporary Prolog file including the master KB and case-specific facts."""
+        try:
+            # Get the absolute, sanitized path to your master knowledge base
+            kb_path = self.config.BASE_DIR / 'knowledge_base' / 'knowledge_base.pl'
+            if not kb_path.exists():
+                logger.error(f"Master knowledge base not found at: {kb_path}")
+                return None
+            # Ensure the path is in a format Prolog understands (forward slashes)
+            kb_path_str = str(kb_path.resolve()).replace('\\', '/')
+
+            # This tells Prolog: "First, load all our rules from the main knowledge base..."
+            prolog_content = f":- include('{kb_path_str}').\n\n"
+            # "...Then, read all the specific facts for this case."
+            prolog_content += "% Case-specific facts for generation\n"
+            prolog_content += "\n".join(facts)
+
+            # Now, write this combined prolog_content to your temporary file
+            temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.pl', delete=False, encoding='utf-8')
+            self.temp_files.append(temp_file.name) # Track for cleanup
+            
+            temp_file.write(prolog_content)
+            temp_file.close()
+            
+            return temp_file.name
+        except Exception as e:
+            logger.error(f"Failed to create prolog file for generation: {e}", exc_info=True)
+            return None

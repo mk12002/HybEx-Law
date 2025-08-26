@@ -1,0 +1,354 @@
+2025-08-25 22:29:35,362 - hybex_system.prolog_engine - INFO - [Session:549afada] Added file handler to PrologEngine logger.
+2025-08-25 22:29:35,363 - hybex_system.prolog_engine - INFO - [Session:549afada] ======================================================================
+2025-08-25 22:29:35,363 - hybex_system.prolog_engine - INFO - [Session:549afada] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-25 22:29:35,363 - hybex_system.prolog_engine - INFO - [Session:549afada] Session ID: 549afada
+2025-08-25 22:29:35,363 - hybex_system.prolog_engine - INFO - [Session:549afada] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-25 22:29:35,364 - hybex_system.prolog_engine - INFO - [Session:549afada] ======================================================================
+2025-08-25 22:29:35,364 - hybex_system.prolog_engine - INFO - [Session:549afada] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-25 22:29:35,365 - hybex_system.prolog_engine - INFO - [Session:549afada] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-25 22:29:35,366 - hybex_system.prolog_engine - INFO - [Session:549afada] Initialized Comprehensive PrologEngine (Session: 549afada, Available: True)
+2025-08-25 22:29:35,366 - hybex_system.prolog_engine - INFO - [Session:549afada] Loaded 3 rule categories with 9 total rules
+2025-08-25 22:29:35,366 - hybex_system.prolog_engine - INFO - [Session:549afada] Comprehensive rules actually loaded: True
+2025-08-25 22:29:35,367 - hybex_system.prolog_engine - INFO - [Session:549afada] ✅ Successfully loaded master knowledge base from: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-25 22:29:35,478 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp3xonpink.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:35,574 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpveeyczb7.pl
+2025-08-25 22:29:35,574 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp3xonpink.pl
+2025-08-25 22:29:35,578 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp8_y7okcg.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:35,702 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmptwxsxl8b.pl
+2025-08-25 22:29:35,703 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp8_y7okcg.pl
+2025-08-25 22:29:35,707 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpeemhih4o.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:35,915 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmplh1tglj5.pl
+2025-08-25 22:29:35,916 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpeemhih4o.pl
+2025-08-25 22:29:35,922 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpu90mcz_m.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:36,036 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpfr4j42qa.pl
+2025-08-25 22:29:36,036 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpu90mcz_m.pl
+2025-08-25 22:29:36,036 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpv5o_kb8g.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:36,185 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpln4ngtwe.pl
+2025-08-25 22:29:36,189 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpv5o_kb8g.pl
+2025-08-25 22:29:36,194 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp5bda_kqw.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:36,350 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpyzicjs5z.pl
+2025-08-25 22:29:36,356 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp5bda_kqw.pl
+2025-08-25 22:29:36,360 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpcb_bx7jf.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:36,534 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpai8eik23.pl
+2025-08-25 22:29:36,534 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpcb_bx7jf.pl
+2025-08-25 22:29:36,539 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpjov7zzn3.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:36,720 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmps48g05zx.pl
+2025-08-25 22:29:36,720 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpjov7zzn3.pl
+2025-08-25 22:29:36,724 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpg77p_jhz.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:36,882 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpn4cm30qb.pl
+2025-08-25 22:29:36,882 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpg77p_jhz.pl
+2025-08-25 22:29:36,893 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp6085b4ul.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:37,111 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp37ads82h.pl
+2025-08-25 22:29:37,113 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp6085b4ul.pl
+2025-08-25 22:29:37,117 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpey5snf1f.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:37,268 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpiwzmb_h8.pl
+2025-08-25 22:29:37,270 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpey5snf1f.pl
+2025-08-25 22:29:37,275 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp2gt6ebfo.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:37,435 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp8h9ir0cv.pl
+2025-08-25 22:29:37,437 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp2gt6ebfo.pl
+2025-08-25 22:29:37,443 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp3qf32p1d.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:37,648 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpk_x1k6dg.pl
+2025-08-25 22:29:37,648 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp3qf32p1d.pl
+2025-08-25 22:29:37,655 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp_s534pkt.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:37,817 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp784bi9_m.pl
+2025-08-25 22:29:37,817 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp_s534pkt.pl
+2025-08-25 22:29:37,823 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp_9e6o5fq.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:37,989 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpzuvez3_m.pl
+2025-08-25 22:29:37,989 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp_9e6o5fq.pl
+2025-08-25 22:29:37,996 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmph2nk2tjf.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:38,204 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmppz3p8lru.pl
+2025-08-25 22:29:38,205 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmph2nk2tjf.pl
+2025-08-25 22:29:38,211 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpr03jiewx.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:38,357 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp6s5yib_l.pl
+2025-08-25 22:29:38,359 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpr03jiewx.pl
+2025-08-25 22:29:38,362 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp028_728h.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:38,485 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpet6sz4h6.pl
+2025-08-25 22:29:38,487 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp028_728h.pl
+2025-08-25 22:29:38,489 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpxwy21rf4.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:38,606 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpjudr0jhs.pl
+2025-08-25 22:29:38,608 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpxwy21rf4.pl
+2025-08-25 22:29:38,611 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp7ry9u3r_.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:38,753 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpzmh2d6eu.pl
+2025-08-25 22:29:38,754 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp7ry9u3r_.pl
+2025-08-25 22:29:38,759 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpa83syt92.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:38,913 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpfpzob9hh.pl
+2025-08-25 22:29:38,914 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpa83syt92.pl
+2025-08-25 22:29:38,917 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp0rswaskn.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:39,041 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp0j1kqh9o.pl
+2025-08-25 22:29:39,043 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp0rswaskn.pl
+2025-08-25 22:29:39,044 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp6qf3chbt.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:39,203 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpicqh0stz.pl
+2025-08-25 22:29:39,205 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp6qf3chbt.pl
+2025-08-25 22:29:39,208 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpu1ovcjoy.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:39,356 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpxs2uba5v.pl
+2025-08-25 22:29:39,357 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpu1ovcjoy.pl
+2025-08-25 22:29:39,361 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp_ersooj5.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:39,530 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp4ywm67wy.pl
+2025-08-25 22:29:39,532 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp_ersooj5.pl
+2025-08-25 22:29:39,537 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpqnz65spv.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:39,709 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp_v2024mh.pl
+2025-08-25 22:29:39,710 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpqnz65spv.pl
+2025-08-25 22:29:39,713 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpqtibqz9k.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:39,859 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp4tzliwel.pl
+2025-08-25 22:29:39,860 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpqtibqz9k.pl
+2025-08-25 22:29:39,866 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpn9ur557v.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:40,031 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpkz51ct93.pl
+2025-08-25 22:29:40,032 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpn9ur557v.pl
+2025-08-25 22:29:40,034 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpt8ji1fix.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:40,155 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpds6e5b8_.pl
+2025-08-25 22:29:40,158 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpt8ji1fix.pl
+2025-08-25 22:29:40,163 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp_9jlt67q.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:40,315 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpgn48am1g.pl
+2025-08-25 22:29:40,315 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp_9jlt67q.pl
+2025-08-25 22:29:40,323 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpw_9amr2g.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:40,480 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpi8ejctns.pl
+2025-08-25 22:29:40,483 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpw_9amr2g.pl
+2025-08-25 22:29:40,484 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp69q4yqo4.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:40,630 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp9xpiy_hw.pl
+2025-08-25 22:29:40,630 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp69q4yqo4.pl
+2025-08-25 22:29:40,633 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpphudq6iv.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:40,764 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpu7dedugs.pl
+2025-08-25 22:29:40,765 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpphudq6iv.pl
+2025-08-25 22:29:40,768 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpxuyrcbd1.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:40,895 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpdvo6uch8.pl
+2025-08-25 22:29:40,896 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpxuyrcbd1.pl
+2025-08-25 22:29:40,898 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpmj2pf0re.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:41,023 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpei7oc1_k.pl
+2025-08-25 22:29:41,023 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpmj2pf0re.pl
+2025-08-25 22:29:41,030 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmprbak75tw.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:41,177 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpzr_kybz_.pl
+2025-08-25 22:29:41,178 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmprbak75tw.pl
+2025-08-25 22:29:41,178 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpok1d44iy.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:41,344 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpi2ao479r.pl
+2025-08-25 22:29:41,344 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpok1d44iy.pl
+2025-08-25 22:29:41,349 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp9qkal7e7.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:41,458 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmptfgu27hb.pl
+2025-08-25 22:29:41,460 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp9qkal7e7.pl
+2025-08-25 22:29:41,463 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpqg3ugmh4.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:41,599 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpv31t39ol.pl
+2025-08-25 22:29:41,600 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpqg3ugmh4.pl
+2025-08-25 22:29:41,603 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpirwaf1g3.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:41,774 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpjbdajwom.pl
+2025-08-25 22:29:41,774 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpirwaf1g3.pl
+2025-08-25 22:29:41,781 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpsk0fllaa.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:41,917 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpeyey55dd.pl
+2025-08-25 22:29:41,919 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpsk0fllaa.pl
+2025-08-25 22:29:41,920 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpgo66cst0.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:42,064 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpkdqsziq7.pl
+2025-08-25 22:29:42,064 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpgo66cst0.pl
+2025-08-25 22:29:42,064 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmprq33euz7.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:42,222 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpmvvd73pq.pl
+2025-08-25 22:29:42,222 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmprq33euz7.pl
+2025-08-25 22:29:42,222 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpheeoiqzl.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:42,375 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp8tr735gb.pl
+2025-08-25 22:29:42,375 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpheeoiqzl.pl
+2025-08-25 22:29:42,375 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp5tprbqv1.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:42,546 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp3egjua99.pl
+2025-08-25 22:29:42,546 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp5tprbqv1.pl
+2025-08-25 22:29:42,553 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpcqlre6ur.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:42,725 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmper0p922d.pl
+2025-08-25 22:29:42,725 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpcqlre6ur.pl
+2025-08-25 22:29:42,733 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp4w418av8.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:42,926 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpcc3cfgvd.pl
+2025-08-25 22:29:42,927 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp4w418av8.pl
+2025-08-25 22:29:42,933 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpjdprxkl1.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:43,093 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmplgq7fzb6.pl
+2025-08-25 22:29:43,099 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpjdprxkl1.pl
+2025-08-25 22:29:43,101 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpvjc2h2jo.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:43,267 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpu0qrlelo.pl
+2025-08-25 22:29:43,270 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpvjc2h2jo.pl
+2025-08-25 22:29:43,274 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpc8u2v8ve.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:43,448 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp1iz982g8.pl
+2025-08-25 22:29:43,450 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpc8u2v8ve.pl
+2025-08-25 22:29:43,455 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpmpo8ghez.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:43,609 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp1tbu2js1.pl
+2025-08-25 22:29:43,620 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpmpo8ghez.pl
+2025-08-25 22:29:43,623 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpyeuqv6o2.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:43,817 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpk93rdus_.pl
+2025-08-25 22:29:43,817 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpyeuqv6o2.pl
+2025-08-25 22:29:43,825 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpbvxtr0ma.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:43,995 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmph9ajf9tp.pl
+2025-08-25 22:29:44,002 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpbvxtr0ma.pl
+2025-08-25 22:29:44,009 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp9hmef0lj.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:44,236 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp9n09wd3d.pl
+2025-08-25 22:29:44,239 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp9hmef0lj.pl
+2025-08-25 22:29:44,245 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpsvhatns3.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:44,401 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp5vjk701j.pl
+2025-08-25 22:29:44,401 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpsvhatns3.pl
+2025-08-25 22:29:44,405 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmprvv7p1oj.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:44,557 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp5oks5qb3.pl
+2025-08-25 22:29:44,558 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmprvv7p1oj.pl
+2025-08-25 22:29:44,561 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpunqds4ri.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:44,725 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpylskgpat.pl
+2025-08-25 22:29:44,726 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpunqds4ri.pl
+2025-08-25 22:29:44,733 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpaxny6qie.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:44,893 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp5gbsvd5f.pl
+2025-08-25 22:29:44,893 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpaxny6qie.pl
+2025-08-25 22:29:44,897 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpkfuf85ro.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:45,060 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp2x3bc7e2.pl
+2025-08-25 22:29:45,060 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpkfuf85ro.pl
+2025-08-25 22:29:45,064 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpbaz77t2z.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:45,229 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp6x4jzmw6.pl
+2025-08-25 22:29:45,233 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpbaz77t2z.pl
+2025-08-25 22:29:45,233 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp3cinhjkw.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:45,394 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpyxfoo79r.pl
+2025-08-25 22:29:45,394 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp3cinhjkw.pl
+2025-08-25 22:29:45,403 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpmt99yb_4.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:45,551 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp8wuz7jw8.pl
+2025-08-25 22:29:45,557 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpmt99yb_4.pl
+2025-08-25 22:29:45,560 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpf3ufi_u5.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:45,706 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpi4oeupvq.pl
+2025-08-25 22:29:45,707 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpf3ufi_u5.pl
+2025-08-25 22:29:45,710 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp3h9icmzg.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:45,863 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpmi9wcmwr.pl
+2025-08-25 22:29:45,863 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp3h9icmzg.pl
+2025-08-25 22:29:45,866 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpramungoc.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:46,006 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpz43gukto.pl
+2025-08-25 22:29:46,007 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpramungoc.pl
+2025-08-25 22:29:46,011 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp__ehp400.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:46,177 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp8vscw2jj.pl
+2025-08-25 22:29:46,177 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp__ehp400.pl
+2025-08-25 22:29:46,181 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpt2lsgc1a.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:46,345 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpifdnqgtk.pl
+2025-08-25 22:29:46,347 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpt2lsgc1a.pl
+2025-08-25 22:29:46,347 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpba6wwfad.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:46,502 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp2yyhv853.pl
+2025-08-25 22:29:46,503 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpba6wwfad.pl
+2025-08-25 22:29:46,509 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpwf_3kn8p.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:46,685 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmplqrmlpst.pl
+2025-08-25 22:29:46,687 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpwf_3kn8p.pl
+2025-08-25 22:29:46,688 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpbyddrp3p.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:46,838 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmplt3tgb3v.pl
+2025-08-25 22:29:46,838 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpbyddrp3p.pl
+2025-08-25 22:29:46,852 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpdx1_vt2w.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:46,993 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpe6pf2vd5.pl
+2025-08-25 22:29:46,993 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpdx1_vt2w.pl
+2025-08-25 22:29:46,999 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp85kb6oqg.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:47,136 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmphwack6_8.pl
+2025-08-25 22:29:47,136 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp85kb6oqg.pl
+2025-08-25 22:29:47,144 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpw172ll9q.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:47,295 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpivx7ny6k.pl
+2025-08-25 22:29:47,296 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpw172ll9q.pl
+2025-08-25 22:29:47,300 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp_v7nyv2l.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:47,455 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmprwi5p5fj.pl
+2025-08-25 22:29:47,457 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp_v7nyv2l.pl
+2025-08-25 22:29:47,460 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpku86gggo.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:47,606 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpyjhclyb7.pl
+2025-08-25 22:29:47,608 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpku86gggo.pl
+2025-08-25 22:29:47,610 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpjlg6xzb0.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:47,740 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp6vw9olre.pl
+2025-08-25 22:29:47,740 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpjlg6xzb0.pl
+2025-08-25 22:29:47,744 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpmlcqpgtg.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:47,886 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpxsb7q8zs.pl
+2025-08-25 22:29:47,886 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpmlcqpgtg.pl
+2025-08-25 22:29:47,886 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp__ywzc90.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:48,016 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp1e95hk5v.pl
+2025-08-25 22:29:48,016 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp__ywzc90.pl
+2025-08-25 22:29:48,031 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpr4tlyvya.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:48,169 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpublzycta.pl
+2025-08-25 22:29:48,169 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpr4tlyvya.pl
+2025-08-25 22:29:48,180 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp7kry1lz0.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:48,321 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpyfgq71h6.pl
+2025-08-25 22:29:48,321 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp7kry1lz0.pl
+2025-08-25 22:29:48,328 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpl55dcc5e.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:48,480 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpil9wl1d3.pl
+2025-08-25 22:29:48,480 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpl55dcc5e.pl
+2025-08-25 22:29:48,484 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpdl_3dkd9.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:48,641 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp7w4k8mhz.pl
+2025-08-25 22:29:48,642 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpdl_3dkd9.pl
+2025-08-25 22:29:48,642 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpyrr2cs7q.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:48,781 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpbtty65tq.pl
+2025-08-25 22:29:48,783 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpyrr2cs7q.pl
+2025-08-25 22:29:48,783 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpbzzhs4ig.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:48,915 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp5cgf73uh.pl
+2025-08-25 22:29:48,916 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpbzzhs4ig.pl
+2025-08-25 22:29:48,918 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp119hr7ar.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:49,017 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpd7srllof.pl
+2025-08-25 22:29:49,017 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp119hr7ar.pl
+2025-08-25 22:29:49,017 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp3ahqwcdl.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:49,161 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpvuwp5db8.pl
+2025-08-25 22:29:49,162 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp3ahqwcdl.pl
+2025-08-25 22:29:49,165 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp10mj4yd2.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:49,287 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmphtdjoyhw.pl
+2025-08-25 22:29:49,289 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp10mj4yd2.pl
+2025-08-25 22:29:49,293 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp1fyoahb8.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:49,418 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpqh86adgz.pl
+2025-08-25 22:29:49,418 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp1fyoahb8.pl
+2025-08-25 22:29:49,418 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpgie73ois.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:49,538 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpklkj33f4.pl
+2025-08-25 22:29:49,538 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpgie73ois.pl
+2025-08-25 22:29:49,538 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpuk7n_7ab.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:49,700 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp2y92ceam.pl
+2025-08-25 22:29:49,700 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpuk7n_7ab.pl
+2025-08-25 22:29:49,706 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmplrp38g1p.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:49,871 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpiq1z9ue2.pl
+2025-08-25 22:29:49,871 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmplrp38g1p.pl
+2025-08-25 22:29:49,871 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp9vskwjg_.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:50,054 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp8wthy6bj.pl
+2025-08-25 22:29:50,055 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp9vskwjg_.pl
+2025-08-25 22:29:50,061 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpmqbzmo6i.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:50,267 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp4x3p0z_5.pl
+2025-08-25 22:29:50,273 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpmqbzmo6i.pl
+2025-08-25 22:29:50,278 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpqt916tqu.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:50,464 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpsle10hr_.pl
+2025-08-25 22:29:50,465 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpqt916tqu.pl
+2025-08-25 22:29:50,471 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp3rkyvccc.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:50,635 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp7mulcpot.pl
+2025-08-25 22:29:50,635 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp3rkyvccc.pl
+2025-08-25 22:29:50,635 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpj2d4m6ee.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:50,813 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpo_g1s3rt.pl
+2025-08-25 22:29:50,814 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpj2d4m6ee.pl
+2025-08-25 22:29:50,816 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpv3u84qv3.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:50,972 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp8sqcn7pj.pl
+2025-08-25 22:29:50,973 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpv3u84qv3.pl
+2025-08-25 22:29:50,976 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp99d_z_a3.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:51,118 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmphhz7t393.pl
+2025-08-25 22:29:51,119 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp99d_z_a3.pl
+2025-08-25 22:29:51,120 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp5mi93a65.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:51,267 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp_s569l_5.pl
+2025-08-25 22:29:51,267 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp5mi93a65.pl
+2025-08-25 22:29:51,267 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpv2kga3lv.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:51,433 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp2eh3s2mb.pl
+2025-08-25 22:29:51,436 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpv2kga3lv.pl
+2025-08-25 22:29:51,443 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmplxsxvf2n.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:51,585 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp3k_msaf1.pl
+2025-08-25 22:29:51,585 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmplxsxvf2n.pl
+2025-08-25 22:29:51,585 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpyy9216_2.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:51,746 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp6g11jkgv.pl
+2025-08-25 22:29:51,746 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpyy9216_2.pl
+2025-08-25 22:29:51,755 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpb33fev72.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:51,909 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpmmy4eibg.pl
+2025-08-25 22:29:51,910 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpb33fev72.pl
+2025-08-25 22:29:51,913 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpxcgvc4ox.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:52,047 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpcxbihcbn.pl
+2025-08-25 22:29:52,047 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpxcgvc4ox.pl
+2025-08-25 22:29:52,057 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmptdb18dde.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:52,215 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpuhx5v4bq.pl
+2025-08-25 22:29:52,215 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmptdb18dde.pl
+2025-08-25 22:29:52,218 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp03do45hj.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:52,359 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpl5chh6j8.pl
+2025-08-25 22:29:52,360 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp03do45hj.pl
+2025-08-25 22:29:52,362 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmppnop6qlg.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:52,512 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp9skj54ta.pl
+2025-08-25 22:29:52,513 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmppnop6qlg.pl
+2025-08-25 22:29:52,517 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpynoqlwsz.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:52,679 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp5n4lkw3f.pl
+2025-08-25 22:29:52,680 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpynoqlwsz.pl
+2025-08-25 22:29:52,684 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpe6ih8r9y.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:52,821 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpd58ssuwo.pl
+2025-08-25 22:29:52,821 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpe6ih8r9y.pl
+2025-08-25 22:29:52,835 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmphd5uc9f9.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:52,964 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp5sahz6ef.pl
+2025-08-25 22:29:52,964 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmphd5uc9f9.pl
+2025-08-25 22:29:52,966 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpwz5hkws2.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:53,089 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpsb81801h.pl
+2025-08-25 22:29:53,089 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpwz5hkws2.pl
+2025-08-25 22:29:53,089 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmp6it5i3wc.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:53,251 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp3jza87ek.pl
+2025-08-25 22:29:53,252 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp6it5i3wc.pl
+2025-08-25 22:29:53,256 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpa2w_446s.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:53,416 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpw24mm3fv.pl
+2025-08-25 22:29:53,417 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpa2w_446s.pl
+2025-08-25 22:29:53,419 - hybex_system.prolog_engine - INFO - [Session:549afada] Executing SWI-Prolog in 'C:\Users\OMEN19~1\AppData\Local\Temp': swipl -q -g consult('tmpfp5pmtf7.pl') -g eligible_for_legal_aid(case_gen) -g halt
+2025-08-25 22:29:53,572 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmp60gm3on4.pl
+2025-08-25 22:29:53,572 - hybex_system.prolog_engine - INFO - [Session:549afada] Cleaned up temp file: C:\Users\OMEN19~1\AppData\Local\Temp\tmpfp5pmtf7.pl

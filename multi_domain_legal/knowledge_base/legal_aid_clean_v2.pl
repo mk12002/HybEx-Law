@@ -26,6 +26,18 @@ categorically_eligible(Person) :- social_category(Person, 'bpl').
 vulnerable_group_eligible(Person) :- vulnerable_group(Person, _).
 
 % =================================================================
+% STATIC INCOME THRESHOLDS (Values from HybExConfig)
+% Adding these here makes the KB self-contained for generation.
+% =================================================================
+
+income_threshold('sc', 800000).
+income_threshold('st', 800000).
+income_threshold('obc', 600000).
+income_threshold('bpl', 0). % BPL is categorically eligible, but a threshold is good practice.
+income_threshold('ews', 800000).
+income_threshold('general', 500000).
+
+% =================================================================
 % INCOME ELIGIBILITY (Dynamic thresholds from Python)
 % =================================================================
 % Removed cuts for better logical flow

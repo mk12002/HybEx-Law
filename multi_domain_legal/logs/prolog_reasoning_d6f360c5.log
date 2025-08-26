@@ -1,0 +1,13 @@
+2025-08-26 15:21:03,152 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] Added file handler to PrologEngine logger.
+2025-08-26 15:21:03,152 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] ======================================================================
+2025-08-26 15:21:03,152 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-26 15:21:03,152 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] Session ID: d6f360c5
+2025-08-26 15:21:03,152 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-26 15:21:03,152 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] ======================================================================
+2025-08-26 15:21:03,152 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-26 15:21:03,152 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-26 15:21:03,160 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] Initialized Comprehensive PrologEngine (Session: d6f360c5, Available: True)
+2025-08-26 15:21:03,160 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] Loaded 3 rule categories with 9 total rules
+2025-08-26 15:21:03,160 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] Comprehensive rules actually loaded: True
+2025-08-26 15:21:03,162 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] Cleaning up PrologEngine session d6f360c5
+2025-08-26 15:21:03,162 - hybex_system.prolog_engine - INFO - [Session:d6f360c5] PrologEngine cleanup completed

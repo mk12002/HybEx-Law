@@ -1,0 +1,12 @@
+2025-08-25 18:36:56,970 - hybex_system.prolog_engine - INFO - [Session:e59fa11f] Added file handler to PrologEngine logger.
+2025-08-25 18:36:56,970 - hybex_system.prolog_engine - INFO - [Session:e59fa11f] ======================================================================
+2025-08-25 18:36:56,970 - hybex_system.prolog_engine - INFO - [Session:e59fa11f] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-08-25 18:36:56,970 - hybex_system.prolog_engine - INFO - [Session:e59fa11f] Session ID: e59fa11f
+2025-08-25 18:36:56,970 - hybex_system.prolog_engine - INFO - [Session:e59fa11f] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-08-25 18:36:56,970 - hybex_system.prolog_engine - INFO - [Session:e59fa11f] ======================================================================
+2025-08-25 18:36:56,970 - hybex_system.prolog_engine - INFO - [Session:e59fa11f] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-08-25 18:36:56,970 - hybex_system.prolog_engine - INFO - [Session:e59fa11f] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-08-25 18:36:56,970 - hybex_system.prolog_engine - INFO - [Session:e59fa11f] Initialized Comprehensive PrologEngine (Session: e59fa11f, Available: True)
+2025-08-25 18:36:56,970 - hybex_system.prolog_engine - INFO - [Session:e59fa11f] Loaded 3 rule categories with 9 total rules
+2025-08-25 18:36:56,970 - hybex_system.prolog_engine - INFO - [Session:e59fa11f] Comprehensive rules actually loaded: True
+2025-08-25 18:36:56,985 - hybex_system.prolog_engine - ERROR - [Session:e59fa11f] Prolog query for generation failed: 'PrologEngine' object has no attribute '_run_prolog_query_process'

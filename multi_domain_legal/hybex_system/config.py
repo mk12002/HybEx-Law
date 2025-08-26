@@ -31,7 +31,7 @@ class HybExConfig:
         
         # Model configurations
         self.MODEL_CONFIG = {
-            'base_model': 'distilbert-base-uncased', 
+            'base_model': 'nlpaueb/legal-bert-base-uncased', 
             'max_length': 512,
             'batch_size': 32,
             'learning_rate': 2e-5,
@@ -45,7 +45,7 @@ class HybExConfig:
         
         self.MODEL_CONFIGS = {
             'domain_classifier': {
-                'model_name': 'distilbert-base-uncased',
+                'model_name': 'nlpaueb/legal-bert-base-uncased',
                 'max_length': 512,
                 'batch_size': 8,  # Reduced for stabili32y
                 'learning_rate': 1e-5,  # Lower learning rate for better convergence
@@ -56,7 +56,7 @@ class HybExConfig:
                 'gradient_clip_val': 1.0
             },
             'entity_extractor': {
-                'model_name': 'distilbert-base-uncased',
+                'model_name': 'nlpaueb/legal-bert-base-uncased',
                 'max_length': 512,
                 'batch_size': 32,
                 'learning_rate': 2e-5,
@@ -67,7 +67,7 @@ class HybExConfig:
                 'gradient_clip_val': 1.0
             },
             'eligibility_predictor': {
-                'model_name': 'distilbert-base-uncased',
+                'model_name': 'nlpaueb/legal-bert-base-uncased',
                 'max_length': 512,
                 'batch_size': 32,
                 'learning_rate': 5e-6,  # Very low for final prediction

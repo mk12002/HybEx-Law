@@ -75,13 +75,7 @@ best_interest_analysis(Child, Parent) :-
     financial_capability(Parent),
     emotional_bond(Child, Parent), !.
 
-% =================================================================
-% FAMILY LAW SPECIFIC LEGAL AID
-% =================================================================
-
-legal_aid_family_case(Person) :-
-    eligible_for_legal_aid(Person),  % From legal_aid.pl
-    family_case_type(Person, _), !.
+% ...existing code...
 
 family_case_type(Person, divorce) :-
     case_type(Person, divorce), !.

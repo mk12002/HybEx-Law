@@ -7,14 +7,14 @@
 % =================================================================
 
 consumer_forum_jurisdiction(Amount, district_forum) :-
-    Amount =< 2000000, !.  % Up to 20 lakh - District Forum
+    jurisdiction_limit(district_forum, Limit), Amount =< Limit.
 
 consumer_forum_jurisdiction(Amount, state_commission) :-
-    Amount > 2000000,
-    Amount =< 10000000, !.  % 20 lakh to 1 crore - State Commission
+    jurisdiction_limit(district_forum, LowerLimit), Amount > LowerLimit,
+    jurisdiction_limit(state_commission, UpperLimit), Amount =< UpperLimit.
 
 consumer_forum_jurisdiction(Amount, national_commission) :-
-    Amount > 10000000, !.  % Above 1 crore - National Commission
+    jurisdiction_limit(state_commission, LowerLimit), Amount > LowerLimit.
 
 % =================================================================
 % VALID CONSUMER COMPLAINTS (Fast validation)
@@ -47,26 +47,22 @@ consumer_compensation(Person, Complaint, TotalCompensation) :-
     TotalCompensation is BaseAmount + Additional, !.
 
 defective_goods_compensation(GoodsValue, Compensation) :-
-    Compensation is GoodsValue * 1.5, !.  % 150% of goods value
+    compensation_multiplier(Multiplier),
+    Compensation is GoodsValue * Multiplier, !.
 
 calculate_base_compensation(defective_goods, Amount) :-
     goods_value(Amount), !.
 calculate_base_compensation(deficient_service, Amount) :-
     service_charges_paid(Amount), !.
-calculate_base_compensation(_, 10000) :- !.  % Default minimum
+calculate_base_compensation(_, Amount) :-
+    default_minimum_compensation(Amount), !.
 
 calculate_additional_damages(Person, Complaint, Additional) :-
     mental_agony_claimed(Person, Complaint),
-    Additional = 25000, !.
+    mental_agony_compensation(Additional), !.
 calculate_additional_damages(_, _, 0) :- !.  % No additional damages
 
-% =================================================================
-% CONSUMER LEGAL AID
-% =================================================================
-
-legal_aid_consumer_case(Person) :-
-    eligible_for_legal_aid(Person),  % From legal_aid.pl
-    consumer_case_type(Person, _), !.
+% ...existing code...
 
 consumer_case_type(Person, consumer_dispute) :-
     case_type(Person, consumer), !.

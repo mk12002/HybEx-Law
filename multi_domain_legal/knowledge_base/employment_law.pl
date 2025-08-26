@@ -34,14 +34,9 @@ sufficient_notice_period(Employee, GivenPeriod) :-
     integer(RequiredPeriod),
     GivenPeriod >= RequiredPeriod.
 
-required_notice_period(Employee, 30) :-
+required_notice_period(Employee, Period) :-
     employment_duration(Employee, Duration),
-    integer(Duration),
-    Duration < 365.  % Less than 1 year - 30 days
-required_notice_period(Employee, 60) :-
-    employment_duration(Employee, Duration),
-    integer(Duration),
-    Duration >= 365.  % 1 year or more - 60 days
+    notice_period_for_duration(Duration, Period).
 
 % =================================================================
 % RETRENCHMENT COMPENSATION
@@ -99,9 +94,7 @@ overtime_hours(_, 0) :- !.  % No overtime
 % EMPLOYMENT LEGAL AID
 % =================================================================
 
-legal_aid_employment_case(Person) :-
-    eligible_for_legal_aid(Person),  % From legal_aid.pl
-    employment_case_type(Person, _), !.
+% ...existing code...
 
 employment_case_type(Person, wrongful_termination) :-
     case_type(Person, employment),
@@ -115,19 +108,4 @@ employment_case_type(Person, harassment) :-
 % CONSTITUTIONAL EMPLOYMENT REMEDIES
 % =================================================================
 
-constitutional_employment_remedy(equal_pay).
-constitutional_employment_remedy(non_discrimination).
-constitutional_employment_remedy(safe_working_conditions).
 
-employment_pil_standing(Person, Issue) :-
-    employment_related_issue(Issue),
-    public_interest_affected(Issue), !.
-
-% Define what constitutes a public interest issue for employment
-public_interest_affected(Issue) :-
-    employment_related_issue(Issue). % Assumes all defined employment issues affect public interest
-
-employment_related_issue(bonded_labor).
-employment_related_issue(child_labor).
-employment_related_issue(unsafe_working_conditions).
-employment_related_issue(gender_discrimination).
