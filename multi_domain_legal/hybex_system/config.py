@@ -89,9 +89,13 @@ class HybExConfig:
             'max_sequence_length': 512
         }
         self.PROLOG_CONFIG = {
-            'min_confidence_for_override': 0.95, # Example value, adjust as needed
-            'log_dir': 'logs/prolog', # Ensure a log directory for prolog
-            'timeout': 120  # Increased timeout for complex queries
+            'enable_reasoning': True,
+            'confidence_threshold': 0.7,
+            'rule_weight': 0.4,  # Weight of Prolog vs Neural
+            'neural_weight': 0.6,
+            'min_confidence_for_override': 0.95, # Add this
+            'log_dir': 'logs/prolog',
+            'timeout': 120
         }
 
         self.NEURAL_CONFIG = {

@@ -9,13 +9,12 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime
 import torch # Add this (even if commented out, it suggests future use)
 import numpy as np # Add this
-
+import concurrent.futures
 # Import HybEx-Law components (ensure these imports point to the correct files)
 from .config import HybExConfig
 from .trainer import TrainingOrchestrator
 from .evaluator import ModelEvaluator
 from .data_processor import DataPreprocessor
-# from .neu            print(f"  Eligible: {'Yes' if final_dec.get('eligible') else 'No'}")al_models import ModelTrainer # Not needed here, ModelTrainer is part of TrainingOrchestrator
 from .prolog_engine import PrologEngine # Corrected import for the updated engine
 from .neural_models import DomainClassifier, EligibilityPredictor  # Add neural models
 from transformers import AutoTokenizer
@@ -227,58 +226,7 @@ class HybExLawSystem:
                 method='prolog_fallback'
             )
     
-    def _fuse_predictions(self, neural_prediction: Dict[str, Any], prolog_analysis: Any) -> Dict[str, Any]:
-        """Fuse neural and Prolog predictions into final decision."""
-        try:
-            neural_eligible = neural_prediction.get('eligibility_probability', 0.5) > 0.5
-            neural_confidence = neural_prediction.get('confidence', 0.5)
-            
-            prolog_eligible = prolog_analysis.eligible
-            prolog_confidence = prolog_analysis.confidence
-            
-            # Fusion strategies
-            if neural_prediction.get('available', False):
-                # Both systems agree
-                if neural_eligible == prolog_eligible:
-                    final_eligible = neural_eligible
-                    final_confidence = (neural_confidence + prolog_confidence) / 2
-                    explanation = f"Both neural and symbolic reasoning agree: {prolog_analysis.primary_reason}"
-                    fusion_method = "agreement"
-                # Disagreement - trust Prolog for rule-based cases, neural for complex patterns
-                else:
-                    if prolog_confidence > neural_confidence:
-                        final_eligible = prolog_eligible
-                        final_confidence = prolog_confidence * 0.9  # Slight penalty for disagreement
-                        explanation = f"Symbolic reasoning preferred: {prolog_analysis.primary_reason}"
-                        fusion_method = "prolog_preferred"
-                    else:
-                        final_eligible = neural_eligible
-                        final_confidence = neural_confidence * 0.9
-                        explanation = f"Neural prediction preferred (confidence: {neural_confidence:.2f})"
-                        fusion_method = "neural_preferred"
-            else:
-                # Neural not available, use Prolog only
-                final_eligible = prolog_eligible
-                final_confidence = prolog_confidence
-                explanation = prolog_analysis.primary_reason
-                fusion_method = "prolog_only"
-            
-            return {
-                'eligible': final_eligible,
-                'confidence': final_confidence,
-                'explanation': explanation,
-                'fusion_method': fusion_method,
-                'neural_agreement': neural_eligible == prolog_eligible if neural_prediction.get('available') else None
-            }
-            
-        except Exception as e:
-            logger.error(f"Prediction fusion failed: {e}")
-            return {
-                'eligible': False,
-                'confidence': 0.2,
-                'explanation': f"Fusion failed: {e}",
-                'fusion_method': 'error_fallback'
-            }
+
 
     @property
     def master_scraper(self): # Master scraper property
@@ -436,45 +384,45 @@ class HybExLawSystem:
     
     def predict_legal_eligibility(self, query: str, case_details: Optional[Dict] = None) -> Dict[str, Any]:
         """
-        Predict legal aid eligibility using the hybrid neural + symbolic approach.
+        Predict legal aid eligibility using a parallelized hybrid neural + symbolic approach.
         Can accept pre-gathered case_details to bypass initial entity extraction.
         """
-        logger.info("Predicting legal eligibility using hybrid neural-symbolic approach")
+        logger.info("Predicting legal eligibility using PARALLEL hybrid neural-symbolic approach")
         logger.info(f"Query: {query[:150]}...")
-        
         try:
-            # Step 1: Use pre-existing entities if provided, otherwise extract them from the query.
             if case_details:
                 extracted_entities = case_details
                 logger.info("Using pre-gathered entities for analysis.")
             else:
                 extracted_entities = self.data_processor.extract_entities(query)
-            
             logger.info(f"Entities for Analysis: {extracted_entities}")
 
-            # Step 2: Neural Predictions (Domain Classification + Eligibility)
-            neural_prediction = self._run_neural_predictions(query)
-            logger.info(f"Neural Predictions: {neural_prediction}")
+            # Parallel execution
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future_neural = executor.submit(self._run_neural_predictions, query)
+                future_prolog = executor.submit(self._run_prolog_analysis, extracted_entities, {})
+                neural_prediction = future_neural.result()
+                prolog_analysis = future_prolog.result()
 
-            # Step 3: Enhanced Prolog Analysis with Neural-informed domains and full facts
-            prolog_analysis = self._run_prolog_analysis(extracted_entities, neural_prediction)
-            logger.info(f"Prolog Analysis: {prolog_analysis.eligible} (confidence: {prolog_analysis.confidence:.2f})")
+            logger.info(f"Parallel Neural Prediction completed: {neural_prediction}")
+            # prolog_analysis is an object; ensure you read attributes on it
+            logger.info(f"Parallel Prolog Analysis completed: {getattr(prolog_analysis, 'eligible', 'N/A')} (confidence: {getattr(prolog_analysis, 'confidence', 0.0):.2f})")
 
-            # Step 4: Hybrid Fusion
+            # Fusion
             final_decision = self._fuse_predictions(neural_prediction, prolog_analysis)
             logger.info(f"Final Hybrid Decision: {final_decision}")
 
-            # Step 5: Construct comprehensive result
             prediction_result = {
                 'query': query,
                 'timestamp': datetime.now().isoformat(),
                 'extracted_entities': extracted_entities,
                 'neural_prediction': neural_prediction,
+                # store prolog result as dict for easy serialization
                 'prolog_reasoning': asdict(prolog_analysis),
                 'final_decision': final_decision,
-                'system_type': 'hybrid_neural_symbolic'
+                'system_type': 'hybrid_neural_symbolic_parallel'
             }
-            
+
             logger.info("Hybrid prediction completed successfully.")
             return prediction_result
 
@@ -484,64 +432,67 @@ class HybExLawSystem:
                 'query': query,
                 'timestamp': datetime.now().isoformat(),
                 'error': f'Hybrid prediction failed: {e}',
-                'system_type': 'hybrid_neural_symbolic'
+                'system_type': 'hybrid_neural_symbolic_parallel'
             }
-        
-    def _get_required_facts_for_domain(self, domain: str) -> list:
-        """Determines the list of required facts for a given domain."""
-        required = set(self.config.REQUIRED_FACTS_CONFIG.get('default', []))
-        required.update(self.config.REQUIRED_FACTS_CONFIG.get(domain, []))
-        return list(required)
 
-    def run_interactive_session(self):
-        """Starts an interactive conversational session for legal aid analysis."""
-        print("\nWelcome to the HybEx-Law Interactive Assistant.")
-        print("You can type 'quit' at any time to exit.")
-        initial_query = input("System: Please describe your legal issue in a sentence or two.\nUser: ")
-
-        if initial_query.lower().strip() == 'quit':
-            return
-
-        gathered_facts = {}
-        
-        # 1. Initial analysis to extract facts and determine domain
-        initial_entities = self.data_processor.extract_entities(initial_query)
-        gathered_facts.update(initial_entities)
-        
-        neural_pred = self._run_neural_predictions(initial_query)
-        domain = neural_pred['domains'][0] if neural_pred.get('domains') else 'default'
-        print(f"System: Based on your query, this seems to be a '{domain.replace('_', ' ')}' issue. To give you the most accurate analysis, I need to ask a few more questions.")
-
-        # 2. Determine what information is missing
-        required_facts = self._get_required_facts_for_domain(domain)
-        missing_facts = [fact for fact in required_facts if fact not in gathered_facts]
-
-        # 3. Conversational loop to gather missing facts
-        while missing_facts:
-            fact_to_find = missing_facts.pop(0)
-            question = self.config.QUESTION_MAPPING.get(fact_to_find, f"Could you please provide information about your {fact_to_find.replace('_', ' ')}?")
+    # You should also have the updated _fuse_predictions function in the same class
+    def _fuse_predictions(self, neural_prediction: Dict[str, Any], prolog_analysis: Any) -> Dict[str, Any]:
+        """Fuse neural and Prolog predictions into final decision based on confidence."""
+        try:
+            neural_eligible = neural_prediction.get('eligibility_probability', 0.5) > 0.5
+            neural_confidence = neural_prediction.get('confidence', 0.5)
             
-            user_response = input(f"System: {question}\nUser: ")
+            prolog_eligible = prolog_analysis.eligible
+            prolog_confidence = prolog_analysis.confidence
             
-            if user_response.lower().strip() == 'quit':
-                print("System: Session ended by user.")
-                return
-            
-            # Extract entities from the user's latest response and update our knowledge
-            new_entities = self.data_processor.extract_entities(user_response)
-            if new_entities:
-                gathered_facts.update(new_entities)
-                print(f"System: Understood. I've noted the following: {new_entities}")
-            
-            # Re-check what's still missing
-            missing_facts = [fact for fact in required_facts if fact not in gathered_facts]
+            prolog_threshold = self.config.PROLOG_CONFIG.get('min_confidence_for_override', 0.95)
+            neural_threshold = self.config.NEURAL_CONFIG.get('min_confidence_for_override', 0.90)
 
-        # 4. Final Analysis
-        print("\nSystem: Thank you. I have all the necessary information. Analyzing your case now...")
-        final_result = self.predict_legal_eligibility(initial_query, case_details=gathered_facts)
-
-        # 5. Display Final Result
-        print_prediction_result(final_result)
+            # New fusion logic with confidence scores
+            if prolog_confidence >= prolog_threshold:
+                final_eligible = prolog_eligible
+                final_confidence = prolog_confidence
+                explanation = f"Symbolic reasoning preferred due to high confidence: {prolog_analysis.primary_reason}"
+                fusion_method = "prolog_override"
+            elif neural_confidence >= neural_threshold:
+                final_eligible = neural_eligible
+                final_confidence = neural_confidence
+                explanation = f"Neural prediction preferred due to high confidence ({neural_confidence:.2f})"
+                fusion_method = "neural_override"
+            elif neural_eligible == prolog_eligible:
+                final_eligible = neural_eligible
+                final_confidence = (neural_confidence + prolog_confidence) / 2
+                explanation = f"Both systems agree: {prolog_analysis.primary_reason}"
+                fusion_method = "agreement"
+            else: # Disagreement with low confidence
+                # Fallback to the more confident prediction
+                if prolog_confidence > neural_confidence:
+                    final_eligible = prolog_eligible
+                    final_confidence = prolog_confidence
+                    explanation = f"Disagreement between systems; defaulting to Prolog due to higher confidence: {prolog_analysis.primary_reason}"
+                    fusion_method = "disagreement_prolog_preferred"
+                else:
+                    final_eligible = neural_eligible
+                    final_confidence = neural_confidence
+                    explanation = f"Disagreement between systems; defaulting to Neural due to higher confidence ({neural_confidence:.2f})"
+                    fusion_method = "disagreement_neural_preferred"
+            
+            return {
+                'eligible': final_eligible,
+                'confidence': final_confidence,
+                'explanation': explanation,
+                'fusion_method': fusion_method,
+                'neural_agreement': neural_eligible == prolog_eligible if neural_prediction.get('available') else None
+            }
+            
+        except Exception as e:
+            logger.error(f"Prediction fusion failed: {e}")
+            return {
+                'eligible': False,
+                'confidence': 0.2,
+                'explanation': f"Fusion failed: {e}",
+                'fusion_method': 'error_fallback'
+            }
 
     def get_system_status(self) -> Dict[str, Any]:
         """Get current system status and health check"""
