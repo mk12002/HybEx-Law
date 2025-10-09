@@ -479,8 +479,14 @@ class TrainingOrchestrator:
         logger.info(f"\nSYSTEM CONFIGURATION:")
         config = pipeline_results.get('config', {})
         logger.info(f"  • Base Model: {config.get('MODEL_CONFIG', {}).get('base_model', 'N/A')}")
-        logger.info(f"  • Training Epochs: {config.get('TRAINING_CONFIG', {}).get('epochs', 'N/A')}")
-        logger.info(f"  • Batch Size: {config.get('TRAINING_CONFIG', {}).get('batch_size', 'N/A')}")
+        
+        # FIX: Use correct nested keys from model_configs
+        model_configs = config.get('model_configs', {})
+        domain_config = model_configs.get('domain_classifier', {})
+        
+        # Use the domain_classifier config as the representative example for the report
+        logger.info(f"  • Training Epochs (Domain Classifier): {domain_config.get('epochs', 'N/A')}")
+        logger.info(f"  • Batch Size (Domain Classifier): {domain_config.get('batch_size', 'N/A')}")
         
         logger.info(f"\nGENERATED FILES:")
         logger.info(f"  • Pipeline Results: {pipeline_results.get('results_file', 'N/A')}")

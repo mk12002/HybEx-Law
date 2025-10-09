@@ -65,7 +65,7 @@ class HybExConfig:
                 'warmup_steps': 300,
                 'weight_decay': 0.01,
                 'early_stopping_patience': 4,
-                'gradient_clip_val': 1.0
+                'gradient_clip_val': 1.0, # <- ADDED COMMA
                 'dropout_prob': 0.3
             },
             'eligibility_predictor': {
@@ -77,7 +77,7 @@ class HybExConfig:
                 'warmup_steps': 500,
                 'weight_decay': 0.02,
                 'early_stopping_patience': 5,
-                'gradient_clip_val': 0.5
+                'gradient_clip_val': 0.5, # <- ADDED COMMA
                 'dropout_prob': 0.3
             }
         }
@@ -91,14 +91,16 @@ class HybExConfig:
             'min_samples_per_domain': 100,
             'max_sequence_length': 512
         }
+        
+        # CONSOLIDATED PROLOG CONFIG (Removed overwrite block)
         self.PROLOG_CONFIG = {
             'enable_reasoning': True,
             'confidence_threshold': 0.7,
             'rule_weight': 0.4,  # Weight of Prolog vs Neural
             'neural_weight': 0.6,
-            'min_confidence_for_override': 0.95, # Retained from original first definition
-            'log_dir': 'logs/prolog',              # Retained from original first definition
-            'timeout': 120                         # Retained from original first definition
+            'min_confidence_for_override': 0.95, 
+            'log_dir': 'logs/prolog',              
+            'timeout': 120                         
             }
 
         self.NEURAL_CONFIG = {
@@ -143,15 +145,7 @@ class HybExConfig:
             }
             self.LEGAL_SOURCES['data_source'] = 'verified_fallback'
         
-        # Prolog reasoning configuration
-        self.PROLOG_CONFIG = {
-            'enable_reasoning': True,
-            'confidence_threshold': 0.7,
-            'rule_weight': 0.4,  # Weight of Prolog vs Neural
-            'neural_weight': 0.6
-        }
-        
-        # Logging configuration
+        # Logging configuration (NOTE: The previous redundant PROLOG_CONFIG was here and is now removed)
         self.LOGGING_CONFIG = {
             'level': 'INFO',
             'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',

@@ -37,14 +37,15 @@ class ModelMetrics:
 
 class DomainClassifier(nn.Module):
     """Multi-label classification model for legal domains."""
-     def __init__(self, config: HybExConfig):
+    # FIX: Added colon to method definition
+    def __init__(self, config: HybExConfig):
         super().__init__()
         self.config = config
-        model_config = config.get_model_config('domain_classifier') # <-- NEW: Get specific config
+        model_config = config.get_model_config('domain_classifier') # <-- Get specific config
         self.num_labels = len(config.ENTITY_CONFIG['domains'])
-        # Use model_config['model_name'] and model_config['dropout_prob']
+        # FIX: Use model_config for model_name and dropout_prob
         self.base_model = AutoModel.from_pretrained(model_config['model_name'])
-        self.dropout = nn.Dropout(model_config['dropout_prob']) # <-- Use model_config
+        self.dropout = nn.Dropout(model_config['dropout_prob']) 
         self.classifier = nn.Linear(self.base_model.config.hidden_size, self.num_labels)
 
     def forward(self, input_ids, attention_mask):
@@ -59,9 +60,10 @@ class EligibilityPredictor(nn.Module):
     def __init__(self, config: HybExConfig):
         super().__init__()
         self.config = config
-        model_config = config.get_model_config('eligibility_predictor')
-        self.base_model = AutoModel.from_pretrained(config.MODEL_CONFIG['base_model'])
-        self.dropout = nn.Dropout(config.MODEL_CONFIG['dropout_prob'])
+        model_config = config.get_model_config('eligibility_predictor') # <-- Get specific config
+        # FIX: Use model_config for model_name and dropout_prob
+        self.base_model = AutoModel.from_pretrained(model_config['model_name'])
+        self.dropout = nn.Dropout(model_config['dropout_prob'])
         self.classifier = nn.Linear(self.base_model.config.hidden_size, 1) # Binary classification
 
     def forward(self, input_ids, attention_mask):
@@ -73,13 +75,15 @@ class EligibilityPredictor(nn.Module):
 
 class LegalDataset(Dataset):
     """PyTorch Dataset for legal text processing"""
-
-    def __init__(self, samples: List[Dict], tokenizer, config: HybExConfig, task_type: str = "domain_classification"):
+    # FIX: Added model_config parameter
+    def __init__(self, samples: List[Dict], tokenizer, config: HybExConfig, task_type: str = "domain_classification", model_config: Dict[str, Any] = None):
         self.samples = samples
         self.tokenizer = tokenizer
         self.config = config
         self.task_type = task_type
+        # FIX: Correctly uses the passed model_config
         self.max_length = model_config.get('max_length', 512) if model_config else 512 
+
         # Ensure that `domains` are always lists for multi-label tasks
         if self.task_type == "domain_classification":
             for sample in self.samples:
@@ -551,8 +555,9 @@ class ModelTrainer:
         logger.info("\n--- Training Domain Classifier ---")
         domain_classifier = DomainClassifier(self.config)
         domain_config = self.config.MODEL_CONFIGS['domain_classifier']
-        domain_train_dataset = LegalDataset(train_samples, self.tokenizer, self.config, task_type="domain_classification")
-        domain_val_dataset = LegalDataset(val_samples, self.tokenizer, self.config, task_type="domain_classification")
+        # FIX: Pass domain_config to LegalDataset
+        domain_train_dataset = LegalDataset(train_samples, self.tokenizer, self.config, task_type="domain_classification", model_config=domain_config)
+        domain_val_dataset = LegalDataset(val_samples, self.tokenizer, self.config, task_type="domain_classification", model_config=domain_config)
 
         domain_train_loader = DataLoader(domain_train_dataset, batch_size=self.config.MODEL_CONFIGS['domain_classifier']['batch_size'], shuffle=True)
         domain_val_loader = DataLoader(domain_val_dataset, batch_size=self.config.MODEL_CONFIGS['domain_classifier']['batch_size'], shuffle=False)
@@ -570,8 +575,9 @@ class ModelTrainer:
         logger.info("\n--- Training Eligibility Predictor ---")
         eligibility_predictor = EligibilityPredictor(self.config)
         eligibility_config = self.config.MODEL_CONFIGS['eligibility_predictor']
-        eligibility_train_dataset = LegalDataset(train_samples, self.tokenizer, self.config, task_type="eligibility_prediction")
-        eligibility_val_dataset = LegalDataset(val_samples, self.tokenizer, self.config, task_type="eligibility_prediction")
+        # FIX: Pass eligibility_config to LegalDataset
+        eligibility_train_dataset = LegalDataset(train_samples, self.tokenizer, self.config, task_type="eligibility_prediction", model_config=eligibility_config)
+        eligibility_val_dataset = LegalDataset(val_samples, self.tokenizer, self.config, task_type="eligibility_prediction", model_config=eligibility_config)
 
         eligibility_train_loader = DataLoader(eligibility_train_dataset, batch_size=self.config.MODEL_CONFIGS['eligibility_predictor']['batch_size'], shuffle=True)
         eligibility_val_loader = DataLoader(eligibility_val_dataset, batch_size=self.config.MODEL_CONFIGS['eligibility_predictor']['batch_size'], shuffle=False)
