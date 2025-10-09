@@ -37,13 +37,14 @@ class ModelMetrics:
 
 class DomainClassifier(nn.Module):
     """Multi-label classification model for legal domains."""
-    def __init__(self, config: HybExConfig):
+     def __init__(self, config: HybExConfig):
         super().__init__()
         self.config = config
+        model_config = config.get_model_config('domain_classifier') # <-- NEW: Get specific config
         self.num_labels = len(config.ENTITY_CONFIG['domains'])
-        # Ensure base model loading uses the correct config attribute
-        self.base_model = AutoModel.from_pretrained(config.MODEL_CONFIG['base_model'])
-        self.dropout = nn.Dropout(config.MODEL_CONFIG['dropout_prob'])
+        # Use model_config['model_name'] and model_config['dropout_prob']
+        self.base_model = AutoModel.from_pretrained(model_config['model_name'])
+        self.dropout = nn.Dropout(model_config['dropout_prob']) # <-- Use model_config
         self.classifier = nn.Linear(self.base_model.config.hidden_size, self.num_labels)
 
     def forward(self, input_ids, attention_mask):
@@ -58,6 +59,7 @@ class EligibilityPredictor(nn.Module):
     def __init__(self, config: HybExConfig):
         super().__init__()
         self.config = config
+        model_config = config.get_model_config('eligibility_predictor')
         self.base_model = AutoModel.from_pretrained(config.MODEL_CONFIG['base_model'])
         self.dropout = nn.Dropout(config.MODEL_CONFIG['dropout_prob'])
         self.classifier = nn.Linear(self.base_model.config.hidden_size, 1) # Binary classification
@@ -77,8 +79,7 @@ class LegalDataset(Dataset):
         self.tokenizer = tokenizer
         self.config = config
         self.task_type = task_type
-        self.max_length = config.MODEL_CONFIG['max_length']
-
+        self.max_length = model_config.get('max_length', 512) if model_config else 512 
         # Ensure that `domains` are always lists for multi-label tasks
         if self.task_type == "domain_classification":
             for sample in self.samples:
@@ -549,6 +550,7 @@ class ModelTrainer:
         # Train Domain Classifier
         logger.info("\n--- Training Domain Classifier ---")
         domain_classifier = DomainClassifier(self.config)
+        domain_config = self.config.MODEL_CONFIGS['domain_classifier']
         domain_train_dataset = LegalDataset(train_samples, self.tokenizer, self.config, task_type="domain_classification")
         domain_val_dataset = LegalDataset(val_samples, self.tokenizer, self.config, task_type="domain_classification")
 
@@ -567,6 +569,7 @@ class ModelTrainer:
         # Train Eligibility Predictor
         logger.info("\n--- Training Eligibility Predictor ---")
         eligibility_predictor = EligibilityPredictor(self.config)
+        eligibility_config = self.config.MODEL_CONFIGS['eligibility_predictor']
         eligibility_train_dataset = LegalDataset(train_samples, self.tokenizer, self.config, task_type="eligibility_prediction")
         eligibility_val_dataset = LegalDataset(val_samples, self.tokenizer, self.config, task_type="eligibility_prediction")
 

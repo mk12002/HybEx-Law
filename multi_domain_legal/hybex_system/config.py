@@ -45,15 +45,16 @@ class HybExConfig:
         
         self.MODEL_CONFIGS = {
             'domain_classifier': {
-                'model_name': 'nlpaueb/legal-bert-base-uncased',
-                'max_length': 512,
-                'batch_size': 8,  # Reduced for stabili32y
-                'learning_rate': 1e-5,  # Lower learning rate for better convergence
-                'epochs': 30,  # More epochs for robust training
-                'warmup_steps': 200,
-                'weight_decay': 0.01,
-                'early_stopping_patience': 3,
-                'gradient_clip_val': 1.0
+            'model_name': 'nlpaueb/legal-bert-base-uncased',
+            'max_length': 512,
+            'batch_size': 8,
+            'learning_rate': 1e-5,
+            'epochs': 30,
+            'warmup_steps': 200,
+            'weight_decay': 0.01,
+            'early_stopping_patience': 3,
+            'gradient_clip_val': 1.0,
+            'dropout_prob': 0.3 # <- ADD THIS
             },
             'entity_extractor': {
                 'model_name': 'nlpaueb/legal-bert-base-uncased',
@@ -65,6 +66,7 @@ class HybExConfig:
                 'weight_decay': 0.01,
                 'early_stopping_patience': 4,
                 'gradient_clip_val': 1.0
+                'dropout_prob': 0.3
             },
             'eligibility_predictor': {
                 'model_name': 'nlpaueb/legal-bert-base-uncased',
@@ -76,6 +78,7 @@ class HybExConfig:
                 'weight_decay': 0.02,
                 'early_stopping_patience': 5,
                 'gradient_clip_val': 0.5
+                'dropout_prob': 0.3
             }
         }
         
@@ -93,10 +96,10 @@ class HybExConfig:
             'confidence_threshold': 0.7,
             'rule_weight': 0.4,  # Weight of Prolog vs Neural
             'neural_weight': 0.6,
-            'min_confidence_for_override': 0.95, # Add this
-            'log_dir': 'logs/prolog',
-            'timeout': 120
-        }
+            'min_confidence_for_override': 0.95, # Retained from original first definition
+            'log_dir': 'logs/prolog',              # Retained from original first definition
+            'timeout': 120                         # Retained from original first definition
+            }
 
         self.NEURAL_CONFIG = {
             'min_confidence_for_override': 0.90, # Example value, adjust as needed
