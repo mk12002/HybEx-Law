@@ -102,6 +102,7 @@ class HybExConfig:
         # Fusion Configuration
         self.FUSION_CONFIG = {
             'graph_override_threshold': 0.8,
+            'neural_override_threshold': 0.95
         }
 
         # Entity extraction configuration
