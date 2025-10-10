@@ -83,7 +83,7 @@ class MasterLegalScraper:
                 self.yaml_path = Path(__file__).parent.parent / "knowledge_base" / "legal_rules.yaml"
                 self.yaml_path.parent.mkdir(exist_ok=True)
         
-        # Initialize session with robust headers
+        # Initialize session with robust headers and SSL handling
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -93,6 +93,12 @@ class MasterLegalScraper:
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1'
         })
+        
+        # Fix SSL issues - disable SSL verification for problematic government sites
+        self.session.verify = False
+        # Suppress SSL warnings
+        import urllib3
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         
         # Initialize database
         self.db_path = self.data_dir / "legal_knowledge.db"
@@ -177,6 +183,51 @@ class MasterLegalScraper:
                 scraping_strategy="administrative_extraction",
                 accessibility="good",
                 priority=4
+            ),
+            'family_courts': LegalWebsite(
+                name="Family Court System India",
+                url="https://ecourts.gov.in",
+                relevance_score=9,
+                content_types=['family_law', 'matrimonial_disputes', 'child_custody', 'maintenance'],
+                scraping_strategy="family_law_extraction",
+                accessibility="good",
+                priority=2
+            ),
+            'employment_tribunal': LegalWebsite(
+                name="Industrial Tribunal & Employment Laws",
+                url="https://labour.gov.in",
+                relevance_score=8,
+                content_types=['employment_law', 'industrial_disputes', 'labor_rights', 'workplace_harassment'],
+                scraping_strategy="employment_law_extraction",
+                accessibility="good", 
+                priority=3
+            ),
+            'consumer_commission': LegalWebsite(
+                name="National Consumer Disputes Redressal Commission",
+                url="https://ncdrc.gov.in",
+                relevance_score=8,
+                content_types=['consumer_protection', 'complaint_procedures', 'consumer_rights'],
+                scraping_strategy="consumer_protection_extraction",
+                accessibility="good",
+                priority=3
+            ),
+            'human_rights': LegalWebsite(
+                name="National Human Rights Commission",
+                url="https://nhrc.gov.in",
+                relevance_score=8,
+                content_types=['fundamental_rights', 'human_rights', 'discrimination_cases'],
+                scraping_strategy="rights_based_extraction", 
+                accessibility="good",
+                priority=3
+            ),
+            'women_child': LegalWebsite(
+                name="Ministry of Women and Child Development",
+                url="https://wcd.nic.in",
+                relevance_score=7,
+                content_types=['women_rights', 'child_protection', 'domestic_violence'],
+                scraping_strategy="women_child_extraction",
+                accessibility="good",
+                priority=4
             )
         }
 
@@ -241,20 +292,73 @@ class MasterLegalScraper:
         
         for attempt in range(retries):
             try:
-                response = self.session.get(url, timeout=30)
+                # Reduced timeout for faster processing
+                response = self.session.get(url, timeout=15)
                 response.raise_for_status()
                 return response
+            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+                logger.warning(f"Network issue attempt {attempt + 1} for {url}: {e}")
+                if attempt < retries - 1:
+                    time.sleep(random.uniform(2, 5))  # Longer wait for network issues
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 404:
+                    logger.warning(f"Page not found (404) for {url}")
+                    return None  # Don't retry for 404s
+                else:
+                    logger.warning(f"HTTP error attempt {attempt + 1} for {url}: {e}")
+                    if attempt < retries - 1:
+                        time.sleep(random.uniform(1, 3))
             except requests.exceptions.RequestException as e:
                 logger.warning(f"Request attempt {attempt + 1} failed for {url}: {e}")
                 if attempt < retries - 1:
                     time.sleep(random.uniform(1, 3))
-                else:
-                    logger.error(f"All requests failed for {url}")
-                    return None
+        
+        logger.error(f"All requests failed for {url}")
+        return None
 
-    def extract_content_hash(self, content: str) -> str:
-        """Generate hash for content deduplication"""
-        return hashlib.md5(content.encode('utf-8')).hexdigest()
+    def extract_content_hash(self, content: str, source_url: str = "", domain: str = "") -> str:
+        """Generate enhanced hash for better content deduplication"""
+        # Create a more specific hash that includes source and domain context
+        # This prevents similar content from different sources being marked as duplicates
+        hash_input = f"{source_url}|{domain}|{content[:500]}"  # Use first 500 chars + context
+        return hashlib.md5(hash_input.encode('utf-8')).hexdigest()
+    
+    def create_legal_content(self, title: str, content: str, source_url: str, domain: str, content_type: str, relevance_score: float = 8.0) -> ExtractedLegalContent:
+        """Helper method to create ExtractedLegalContent with proper hashing"""
+        return ExtractedLegalContent(
+            source_url=source_url,
+            title=title,
+            content=content,
+            legal_domain=domain,
+            content_type=content_type,
+            extraction_date=datetime.now().isoformat(),
+            relevance_score=relevance_score,
+            content_hash=self.extract_content_hash(content, source_url, domain)
+        )
+
+    def clear_old_duplicates(self):
+        """Clear overly restrictive duplicates to allow fresh content"""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        
+        # Find and remove exact duplicates (keeping the most recent)
+        cursor.execute('''
+            DELETE FROM scraped_content 
+            WHERE id NOT IN (
+                SELECT MAX(id) 
+                FROM scraped_content 
+                GROUP BY content_hash
+            )
+        ''')
+        
+        removed_count = cursor.rowcount
+        conn.commit()
+        conn.close()
+        
+        if removed_count > 0:
+            logger.info(f"Cleared {removed_count} strict duplicate records")
+        
+        return removed_count
 
     def clean_text(self, text: str) -> str:
         """Clean extracted text"""
@@ -307,7 +411,7 @@ class MasterLegalScraper:
         for section in sections:
             content = self.clean_text(section.get_text())
             if len(content) > 50:  # Filter out short/irrelevant content
-                content_hash = self.extract_content_hash(content)
+                content_hash = self.extract_content_hash(content, act_url, domain)
                 
                 extracted_content.append(ExtractedLegalContent(
                     source_url=act_url,
@@ -548,6 +652,21 @@ class MasterLegalScraper:
                 elif website_key == 'consumer_affairs':
                     all_extracted[website_key] = self.scrape_consumer_affairs()
                 
+                elif website_key == 'family_courts':
+                    all_extracted[website_key] = self.scrape_family_law_content()
+                
+                elif website_key == 'employment_tribunal':
+                    all_extracted[website_key] = self.scrape_employment_law_content()
+                
+                elif website_key == 'consumer_commission':  
+                    all_extracted[website_key] = self.scrape_consumer_commission_content()
+                
+                elif website_key == 'human_rights':
+                    all_extracted[website_key] = self.scrape_human_rights_content()
+                
+                elif website_key == 'women_child':
+                    all_extracted[website_key] = self.scrape_women_child_content()
+                
                 else:
                     # Generic scraping for other websites
                     response = self.make_request(website.url)
@@ -668,6 +787,145 @@ class MasterLegalScraper:
             website = self.legal_websites[website_key]
             print(f"  {website.name}: {len(content_list)} items (Score: {website.relevance_score})")
         print("="*60)
+
+    def scrape_family_law_content(self) -> List[ExtractedLegalContent]:
+        """Scrape family law specific content"""
+        extracted_content = []
+        family_law_urls = [
+            "https://districts.ecourts.gov.in",  # Fixed base URL
+            "https://www.indiacode.nic.in/handle/123456789/1384",  # Hindu Marriage Act
+            "https://ecourts.gov.in/ecourts_home/",  # Alternative family court URL
+        ]
+        
+        for url in family_law_urls:
+            response = self.make_request(url)
+            if response:
+                soup = BeautifulSoup(response.content, 'html.parser')
+                content = self.clean_text(soup.get_text())
+                if len(content) > 100:
+                    extracted_content.append(self.create_legal_content(
+                        title="Family Law Content",
+                        content=content[:2000],  # Limit content size
+                        source_url=url,
+                        domain="family_law",
+                        content_type="family_law_provision",
+                        relevance_score=8.5
+                    ))
+        
+        logger.info(f"Extracted {len(extracted_content)} items from Family Law sources")
+        return extracted_content
+
+    def scrape_employment_law_content(self) -> List[ExtractedLegalContent]:
+        """Scrape employment law specific content"""
+        extracted_content = []
+        employment_urls = [
+            "https://labour.gov.in",  # Fixed base URL
+            "https://www.indiacode.nic.in/handle/123456789/1891",  # Industrial Disputes Act
+        ]
+        
+        for url in employment_urls:
+            response = self.make_request(url)
+            if response:
+                soup = BeautifulSoup(response.content, 'html.parser')
+                content = self.clean_text(soup.get_text())
+                if len(content) > 100:
+                    extracted_content.append(ExtractedLegalContent(
+                        source_url=url,
+                        title="Employment Law Content",
+                        content=content[:2000],
+                        legal_domain="employment_law", 
+                        content_type="employment_law_provision",
+                        extraction_date=datetime.now().isoformat(),
+                        relevance_score=8.0,
+                        content_hash=self.extract_content_hash(content)
+                    ))
+        
+        logger.info(f"Extracted {len(extracted_content)} items from Employment Law sources")
+        return extracted_content
+
+    def scrape_consumer_commission_content(self) -> List[ExtractedLegalContent]:
+        """Scrape consumer commission specific content"""
+        extracted_content = []
+        consumer_urls = [
+            "https://ncdrc.nic.in",  # Fixed base URL
+            "https://www.indiacode.nic.in/handle/123456789/15711",  # Consumer Protection Act 2019
+        ]
+        
+        for url in consumer_urls:
+            response = self.make_request(url)
+            if response:
+                soup = BeautifulSoup(response.content, 'html.parser')
+                content = self.clean_text(soup.get_text())
+                if len(content) > 100:
+                    extracted_content.append(ExtractedLegalContent(
+                        source_url=url,
+                        title="Consumer Commission Content",
+                        content=content[:2000],
+                        legal_domain="consumer_protection",
+                        content_type="consumer_protection_provision",
+                        extraction_date=datetime.now().isoformat(),
+                        relevance_score=8.0,
+                        content_hash=self.extract_content_hash(content)
+                    ))
+        
+        logger.info(f"Extracted {len(extracted_content)} items from Consumer Commission sources")
+        return extracted_content
+
+    def scrape_human_rights_content(self) -> List[ExtractedLegalContent]:
+        """Scrape human rights specific content"""
+        extracted_content = []
+        rights_urls = [
+            "https://nhrc.nic.in",  # Fixed base URL
+            "https://www.indiacode.nic.in/handle/123456789/1542",  # Protection of Human Rights Act
+        ]
+        
+        for url in rights_urls:
+            response = self.make_request(url)
+            if response:
+                soup = BeautifulSoup(response.content, 'html.parser')
+                content = self.clean_text(soup.get_text())
+                if len(content) > 100:
+                    extracted_content.append(ExtractedLegalContent(
+                        source_url=url,
+                        title="Human Rights Content",
+                        content=content[:2000],
+                        legal_domain="fundamental_rights",
+                        content_type="human_rights_provision",
+                        extraction_date=datetime.now().isoformat(),
+                        relevance_score=8.0,
+                        content_hash=self.extract_content_hash(content)
+                    ))
+        
+        logger.info(f"Extracted {len(extracted_content)} items from Human Rights sources")
+        return extracted_content
+
+    def scrape_women_child_content(self) -> List[ExtractedLegalContent]:
+        """Scrape women and child development specific content"""
+        extracted_content = []
+        women_child_urls = [
+            "https://wcd.gov.in",  # Fixed correct domain
+            "https://www.indiacode.nic.in/handle/123456789/1523",  # Protection of Women from Domestic Violence Act
+        ]
+        
+        for url in women_child_urls:
+            response = self.make_request(url)
+            if response:
+                soup = BeautifulSoup(response.content, 'html.parser')
+                content = self.clean_text(soup.get_text())
+                if len(content) > 100:
+                    extracted_content.append(ExtractedLegalContent(
+                        source_url=url,
+                        title="Women & Child Development Content",
+                        content=content[:2000],
+                        legal_domain="family_law",
+                        content_type="women_child_provision",
+                        extraction_date=datetime.now().isoformat(),
+                        relevance_score=7.5,
+                        content_hash=self.extract_content_hash(content)
+                    ))
+        
+        logger.info(f"Extracted {len(extracted_content)} items from Women & Child Development sources")
+        return extracted_content
 
 def main():
     """Main execution function"""
