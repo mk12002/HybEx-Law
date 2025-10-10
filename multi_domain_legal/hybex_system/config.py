@@ -173,6 +173,10 @@ class HybExConfig:
             'save_attention_weights': False,  # Disable for performance
             'generate_plots': True
         }
+        self.FUSION_CONFIG = {
+            'graph_override_threshold': 0.8,
+            'neural_override_threshold': 0.95,
+        }
 
         # =================================================================
         # INTERACTIVE CHATBOT CONFIGURATION

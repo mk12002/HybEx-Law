@@ -59,7 +59,7 @@ class KnowledgeGraphEngine:
         
         # Initialize the GAT model
         self.model = LegalGAT(
-            num_node_features=len(self.node_to_idx),  # One-hot encoding for node types
+            num_node_features=len(self.node_to_idx) if self.node_to_idx else 1,  # One-hot encoding for node types
             num_classes=1,  # Binary classification: eligible or not
             hidden_channels=128,
             heads=8
@@ -80,7 +80,7 @@ class KnowledgeGraphEngine:
         Nodes can be predicates, entities, or literal values.
         """
         # A more robust regex to capture head, arguments, and body components
-        rule_pattern = re.compile(r'([\w_]+)\((.*?)\)\s*:-\s*(.*)\.')
+        rule_pattern = re.compile(r'([\w_]+)\(.*\)\s*:-\s*(.*)\.')
 
         for rules in self.prolog_engine.legal_rules.values():
             for rule in rules:
@@ -90,14 +90,14 @@ class KnowledgeGraphEngine:
 
                 match = rule_pattern.match(rule)
                 if match:
-                    head_predicate, head_args_str, body_str = match.groups()
+                    head_predicate, body_str = match.groups()
                     
                     # Add head predicate as a node
                     self._add_node(head_predicate, 'predicate')
                     
                     # Process body predicates
                     # This regex finds all predicate(... , ...) structures in the body
-                    body_predicates = re.findall(r'([\w_]+)\(', body_str)
+                    body_predicates = re.findall(r'(\w+)\(', body_str)
                     for body_pred in body_predicates:
                         self._add_node(body_pred, 'predicate')
                         # Add a directed edge from the body predicate to the head predicate
@@ -113,6 +113,10 @@ class KnowledgeGraphEngine:
         "activating" nodes corresponding to the case facts.
         """
         # Start with the full graph structure
+        if not self.graph.nodes:
+            # Return an empty graph data object if the graph is empty
+            return Data(x=torch.empty(0, 1), edge_index=torch.empty(2, 0, dtype=torch.long))
+        
         edge_index = torch.tensor(list(self.graph.edges()), dtype=torch.long).t().contiguous()
         node_indices = [self.node_to_idx[u] for u, v in self.graph.edges()] + [self.node_to_idx[v] for u, v in self.graph.edges()]
         node_indices = torch.tensor(node_indices, dtype=torch.long)
@@ -186,6 +190,14 @@ class KnowledgeGraphEngine:
         # Create the case-specific subgraph
         case_graph_data = self._create_case_subgraph(entities)
         
+        if case_graph_data.x.numel() == 0:
+            return {
+                'eligible': False,
+                'confidence': 0.1,
+                'primary_reason': 'Knowledge graph is empty, cannot perform GNN reasoning.',
+                'method': 'gnn_fallback'
+            }
+
         with torch.no_grad():
             # Get the learned embeddings for all nodes in the context of this case
             node_embeddings = self.model(case_graph_data)
