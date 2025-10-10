@@ -1,0 +1,11 @@
+2025-10-10 11:04:51,223 - hybex_system.prolog_engine - INFO - [Session:c58b0456] Added file handler to PrologEngine logger.
+2025-10-10 11:04:51,223 - hybex_system.prolog_engine - INFO - [Session:c58b0456] ======================================================================
+2025-10-10 11:04:51,223 - hybex_system.prolog_engine - INFO - [Session:c58b0456] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-10-10 11:04:51,223 - hybex_system.prolog_engine - INFO - [Session:c58b0456] Session ID: c58b0456
+2025-10-10 11:04:51,226 - hybex_system.prolog_engine - INFO - [Session:c58b0456] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-10-10 11:04:51,227 - hybex_system.prolog_engine - INFO - [Session:c58b0456] ======================================================================
+2025-10-10 11:04:51,228 - hybex_system.prolog_engine - INFO - [Session:c58b0456] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-10-10 11:04:51,231 - hybex_system.prolog_engine - INFO - [Session:c58b0456] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-10-10 11:04:51,232 - hybex_system.prolog_engine - INFO - [Session:c58b0456] Initialized Comprehensive PrologEngine (Session: c58b0456, Available: True)
+2025-10-10 11:04:51,232 - hybex_system.prolog_engine - INFO - [Session:c58b0456] Loaded 3 rule categories with 9 total rules
+2025-10-10 11:04:51,232 - hybex_system.prolog_engine - INFO - [Session:c58b0456] Comprehensive rules actually loaded: True
