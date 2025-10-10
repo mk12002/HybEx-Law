@@ -45,16 +45,15 @@ class HybExConfig:
         
         self.MODEL_CONFIGS = {
             'domain_classifier': {
-            'model_name': 'nlpaueb/legal-bert-base-uncased',
-            'max_length': 512,
-            'batch_size': 8,
-            'learning_rate': 1e-5,
-            'epochs': 30,
-            'warmup_steps': 200,
-            'weight_decay': 0.01,
-            'early_stopping_patience': 3,
-            'gradient_clip_val': 1.0,
-            'dropout_prob': 0.3 # <- ADD THIS
+                'model_name': 'nlpaueb/legal-bert-base-uncased',
+                'max_length': 512,
+                'batch_size': 8,  # Reduced for stabili32y
+                'learning_rate': 1e-5,  # Lower learning rate for better convergence
+                'epochs': 30,  # More epochs for robust training
+                'warmup_steps': 200,
+                'weight_decay': 0.01,
+                'early_stopping_patience': 3,
+                'gradient_clip_val': 1.0
             },
             'entity_extractor': {
                 'model_name': 'nlpaueb/legal-bert-base-uncased',
@@ -65,8 +64,7 @@ class HybExConfig:
                 'warmup_steps': 300,
                 'weight_decay': 0.01,
                 'early_stopping_patience': 4,
-                'gradient_clip_val': 1.0, # <- ADDED COMMA
-                'dropout_prob': 0.3
+                'gradient_clip_val': 1.0
             },
             'eligibility_predictor': {
                 'model_name': 'nlpaueb/legal-bert-base-uncased',
@@ -77,8 +75,7 @@ class HybExConfig:
                 'warmup_steps': 500,
                 'weight_decay': 0.02,
                 'early_stopping_patience': 5,
-                'gradient_clip_val': 0.5, # <- ADDED COMMA
-                'dropout_prob': 0.3
+                'gradient_clip_val': 0.5
             }
         }
         
@@ -91,17 +88,11 @@ class HybExConfig:
             'min_samples_per_domain': 100,
             'max_sequence_length': 512
         }
-        
-        # CONSOLIDATED PROLOG CONFIG (Removed overwrite block)
         self.PROLOG_CONFIG = {
-            'enable_reasoning': True,
-            'confidence_threshold': 0.7,
-            'rule_weight': 0.4,  # Weight of Prolog vs Neural
-            'neural_weight': 0.6,
-            'min_confidence_for_override': 0.95, 
-            'log_dir': 'logs/prolog',              
-            'timeout': 120                         
-            }
+            'min_confidence_for_override': 0.95, # Example value, adjust as needed
+            'log_dir': 'logs/prolog', # Ensure a log directory for prolog
+            'timeout': 120  # Increased timeout for complex queries
+        }
 
         self.NEURAL_CONFIG = {
             'min_confidence_for_override': 0.90, # Example value, adjust as needed
@@ -145,7 +136,28 @@ class HybExConfig:
             }
             self.LEGAL_SOURCES['data_source'] = 'verified_fallback'
         
-        # Logging configuration (NOTE: The previous redundant PROLOG_CONFIG was here and is now removed)
+        # Prolog reasoning configuration
+        self.PROLOG_CONFIG = {
+            'enable_reasoning': True,
+            'confidence_threshold': 0.7,
+            'rule_weight': 0.4,  # Weight of Prolog vs Neural
+            'neural_weight': 0.6
+        }
+        
+        # Fusion configuration for combining neural and symbolic predictions
+        self.FUSION_CONFIG = {
+            'graph_override_threshold': 0.8,    # If graph confidence > this, use graph result
+            'neural_override_threshold': 0.9,   # If neural confidence > this, use neural result
+            'minimum_confidence': 0.3,          # Minimum confidence for any prediction
+            'fusion_weights': {
+                'neural': 0.6,
+                'graph': 0.4
+            },
+            'fallback_eligible': False,         # Default when both systems fail
+            'require_consensus': False          # Whether both systems must agree
+        }
+        
+        # Logging configuration
         self.LOGGING_CONFIG = {
             'level': 'INFO',
             'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
