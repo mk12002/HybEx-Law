@@ -58,8 +58,9 @@ class KnowledgeGraphEngine:
         self._build_knowledge_graph()
         
         # Initialize the GAT model
+        num_features = len(self.node_to_idx) if self.node_to_idx else 1
         self.model = LegalGAT(
-            num_node_features=len(self.node_to_idx) if self.node_to_idx else 1,  # One-hot encoding for node types
+            num_node_features=num_features,
             num_classes=1,  # Binary classification: eligible or not
             hidden_channels=128,
             heads=8
@@ -112,11 +113,10 @@ class KnowledgeGraphEngine:
         Creates a PyTorch Geometric Data object for a specific case,
         "activating" nodes corresponding to the case facts.
         """
+        if not self.graph.nodes():
+            return Data(x=torch.empty((0, 1)), edge_index=torch.empty((2, 0), dtype=torch.long))
+
         # Start with the full graph structure
-        if not self.graph.nodes:
-            # Return an empty graph data object if the graph is empty
-            return Data(x=torch.empty(0, 1), edge_index=torch.empty(2, 0, dtype=torch.long))
-        
         edge_index = torch.tensor(list(self.graph.edges()), dtype=torch.long).t().contiguous()
         node_indices = [self.node_to_idx[u] for u, v in self.graph.edges()] + [self.node_to_idx[v] for u, v in self.graph.edges()]
         node_indices = torch.tensor(node_indices, dtype=torch.long)
@@ -126,6 +126,8 @@ class KnowledgeGraphEngine:
 
         # Create base features (one-hot encoding of node indices)
         num_nodes = len(self.node_to_idx)
+        if num_nodes == 0:
+            return Data(x=torch.empty((0, 1)), edge_index=torch.empty((2, 0), dtype=torch.long))
         x = F.one_hot(torch.arange(num_nodes), num_classes=num_nodes).float()
 
         # "Activate" nodes based on entities. For simplicity, we can just mark them.
@@ -190,11 +192,11 @@ class KnowledgeGraphEngine:
         # Create the case-specific subgraph
         case_graph_data = self._create_case_subgraph(entities)
         
-        if case_graph_data.x.numel() == 0:
+        if not case_graph_data.num_nodes:
             return {
                 'eligible': False,
-                'confidence': 0.1,
-                'primary_reason': 'Knowledge graph is empty, cannot perform GNN reasoning.',
+                'confidence': 0.0,
+                'primary_reason': 'Knowledge graph is empty. Cannot perform GNN-based reasoning.',
                 'method': 'gnn_fallback'
             }
 

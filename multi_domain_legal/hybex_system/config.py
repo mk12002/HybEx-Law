@@ -107,6 +107,12 @@ class HybExConfig:
             'min_confidence_for_override': 0.90, # Example value, adjust as needed
             'entity_extraction_model': 'en_core_web_sm' # Used by data_processor
         }
+        
+        # Fusion Configuration
+        self.FUSION_CONFIG = {
+            'graph_override_threshold': 0.8,
+        }
+
         # Entity extraction configuration
         # Load real legal data if available, otherwise use verified defaults
         self.ENTITY_CONFIG = self._load_real_legal_config()
@@ -160,10 +166,6 @@ class HybExConfig:
             'save_predictions': True,
             'save_attention_weights': False,  # Disable for performance
             'generate_plots': True
-        }
-        self.FUSION_CONFIG = {
-            'graph_override_threshold': 0.8,
-            'neural_override_threshold': 0.95,
         }
 
         # =================================================================

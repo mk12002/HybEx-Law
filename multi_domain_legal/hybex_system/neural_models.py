@@ -19,6 +19,7 @@ import os
 from tqdm import tqdm
 
 from .config import HybExConfig
+from .knowledge_graph_engine import KnowledgeGraphEngine # Import the GNN engine
 
 # Setup logging
 logger = logging.getLogger(__name__)
@@ -37,13 +38,11 @@ class ModelMetrics:
 
 class DomainClassifier(nn.Module):
     """Multi-label classification model for legal domains."""
-    # FIX: Added colon to method definition
     def __init__(self, config: HybExConfig):
         super().__init__()
         self.config = config
         model_config = config.get_model_config('domain_classifier') # <-- Get specific config
         self.num_labels = len(config.ENTITY_CONFIG['domains'])
-        # FIX: Use model_config for model_name and dropout_prob
         self.base_model = AutoModel.from_pretrained(model_config['model_name'])
         self.dropout = nn.Dropout(model_config['dropout_prob']) 
         self.classifier = nn.Linear(self.base_model.config.hidden_size, self.num_labels)
@@ -61,7 +60,6 @@ class EligibilityPredictor(nn.Module):
         super().__init__()
         self.config = config
         model_config = config.get_model_config('eligibility_predictor') # <-- Get specific config
-        # FIX: Use model_config for model_name and dropout_prob
         self.base_model = AutoModel.from_pretrained(model_config['model_name'])
         self.dropout = nn.Dropout(model_config['dropout_prob'])
         self.classifier = nn.Linear(self.base_model.config.hidden_size, 1) # Binary classification
@@ -75,13 +73,11 @@ class EligibilityPredictor(nn.Module):
 
 class LegalDataset(Dataset):
     """PyTorch Dataset for legal text processing"""
-    # FIX: Added model_config parameter
     def __init__(self, samples: List[Dict], tokenizer, config: HybExConfig, task_type: str = "domain_classification", model_config: Dict[str, Any] = None):
         self.samples = samples
         self.tokenizer = tokenizer
         self.config = config
         self.task_type = task_type
-        # FIX: Correctly uses the passed model_config
         self.max_length = model_config.get('max_length', 512) if model_config else 512 
 
         # Ensure that `domains` are always lists for multi-label tasks
@@ -512,38 +508,58 @@ class ModelTrainer:
 
         logger.info(f"Saved training plots to {plots_dir}")
 
-    # NEW: Dedicated method signature for GNN training (as requested by the orchestrator)
     def train_gnn_model_component(self, train_samples: List[Dict], val_samples: List[Dict]) -> Dict[str, Any]:
         """
-        Placeholder for dedicated Knowledge Graph Neural Network (KGNN) training.
-        
-        This method should be fully implemented using a specialized GNN model (e.g., in a separate 
-        GNNModel class), GNN-specific dataset/dataloader, and GNN-metrics.
-        
-        For production readiness, we provide a structured placeholder that mimics the output
-        of `train_all_models`.
+        Trains the Knowledge Graph Neural Network (KGNN) component.
         """
-        logger.warning("KGNN training method (train_gnn_model_component) is a placeholder. No actual GNN training performed.")
+        logger.info("--- Starting Knowledge Graph Engine (GNN) Training ---")
         
-        # In a real implementation, this would involve:
-        # 1. GNNModel(nn.Module) instantiation.
-        # 2. KGDataset / KGLoader creation (which handles graph structure/embeddings).
-        # 3. Training loop similar to `train_model`.
-        
-        # Simulate results for the orchestrator to proceed
-        simulated_f1 = np.random.uniform(0.7, 0.9)
-        simulated_path = self.config.MODELS_DIR / "gnn_model"
-        simulated_path.mkdir(parents=True, exist_ok=True)
-        
-        logger.info(f"Simulated KGNN training complete. F1: {simulated_f1:.4f}. Model saved to {simulated_path}.")
-        
-        return {
-             "gnn_model": {
-                "path": simulated_path,
-                "best_f1": simulated_f1,
-             },
-             "gnn_training": {'status': 'simulated', 'duration_seconds': 10.0}
-        }
+        try:
+            # 1. Initialize the Knowledge Graph Engine
+            # This will build the base graph from Prolog rules
+            kg_engine = KnowledgeGraphEngine(self.config)
+
+            # Check if the graph has been built successfully
+            if kg_engine.graph.number_of_nodes() == 0:
+                logger.error("Knowledge graph is empty. Aborting GNN training.")
+                return {
+                    "gnn_model": {"path": None, "best_f1": 0.0},
+                    "gnn_training": {'status': 'failed', 'reason': 'Empty knowledge graph'}
+                }
+
+            # 2. Combine training and validation samples for GNN training
+            # GNNs often benefit from seeing all available data to learn the graph structure
+            all_samples = train_samples + val_samples
+
+            # 3. Call the training method from the KG engine
+            # The train_gnn method is already implemented in KnowledgeGraphEngine
+            kg_engine.train_gnn(all_samples, epochs=50)  # Using a default of 50 epochs
+
+            # 4. Save the trained GNN model
+            model_dir = self.config.MODELS_DIR / "gnn_model"
+            model_dir.mkdir(parents=True, exist_ok=True)
+            model_path = model_dir / "model.pt"
+            torch.save(kg_engine.model.state_dict(), model_path)
+            
+            logger.info(f"GNN training complete. Model saved to {model_path}.")
+
+            # 5. Return results in the expected format for the orchestrator
+            # Note: We don't have a separate validation set here, so we can't calculate a true validation F1.
+            # A more advanced implementation would split the `all_samples` for GNN-specific validation.
+            return {
+                "gnn_model": {
+                    "path": str(model_path),
+                    "best_f1": -1,  # Placeholder as we don't have a val score here
+                },
+                "gnn_training": {'status': 'success', 'duration_seconds': -1} # Placeholder
+            }
+            
+        except Exception as e:
+            logger.error(f"GNN model training failed: {e}", exc_info=True)
+            return {
+                "gnn_model": {"path": None, "best_f1": 0.0},
+                "gnn_training": {'status': 'failed', 'reason': str(e)}
+            }
     
     def train_all_models(self, train_samples: List[Dict], val_samples: List[Dict]) -> Dict[str, Any]:
         """Train all required neural models (Domain Classifier and Eligibility Predictor)."""
@@ -555,7 +571,6 @@ class ModelTrainer:
         logger.info("\n--- Training Domain Classifier ---")
         domain_classifier = DomainClassifier(self.config)
         domain_config = self.config.MODEL_CONFIGS['domain_classifier']
-        # FIX: Pass domain_config to LegalDataset
         domain_train_dataset = LegalDataset(train_samples, self.tokenizer, self.config, task_type="domain_classification", model_config=domain_config)
         domain_val_dataset = LegalDataset(val_samples, self.tokenizer, self.config, task_type="domain_classification", model_config=domain_config)
 
@@ -575,7 +590,6 @@ class ModelTrainer:
         logger.info("\n--- Training Eligibility Predictor ---")
         eligibility_predictor = EligibilityPredictor(self.config)
         eligibility_config = self.config.MODEL_CONFIGS['eligibility_predictor']
-        # FIX: Pass eligibility_config to LegalDataset
         eligibility_train_dataset = LegalDataset(train_samples, self.tokenizer, self.config, task_type="eligibility_prediction", model_config=eligibility_config)
         eligibility_val_dataset = LegalDataset(val_samples, self.tokenizer, self.config, task_type="eligibility_prediction", model_config=eligibility_config)
 
