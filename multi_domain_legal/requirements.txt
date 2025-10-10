@@ -43,3 +43,6 @@ tokenizers>=0.13.0
 black>=22.0.0
 flake8>=4.0.0
 isort>=5.10.0
+torch[cuda]
+torchvision 
+torchaudio
