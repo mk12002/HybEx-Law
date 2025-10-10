@@ -1,0 +1,11 @@
+2025-10-10 10:56:02,572 - hybex_system.prolog_engine - INFO - [Session:069f5669] Added file handler to PrologEngine logger.
+2025-10-10 10:56:02,577 - hybex_system.prolog_engine - INFO - [Session:069f5669] ======================================================================
+2025-10-10 10:56:02,579 - hybex_system.prolog_engine - INFO - [Session:069f5669] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-10-10 10:56:02,583 - hybex_system.prolog_engine - INFO - [Session:069f5669] Session ID: 069f5669
+2025-10-10 10:56:02,587 - hybex_system.prolog_engine - INFO - [Session:069f5669] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-10-10 10:56:02,593 - hybex_system.prolog_engine - INFO - [Session:069f5669] ======================================================================
+2025-10-10 10:56:02,598 - hybex_system.prolog_engine - INFO - [Session:069f5669] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-10-10 10:56:02,602 - hybex_system.prolog_engine - INFO - [Session:069f5669] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-10-10 10:56:02,612 - hybex_system.prolog_engine - INFO - [Session:069f5669] Initialized Comprehensive PrologEngine (Session: 069f5669, Available: True)
+2025-10-10 10:56:02,616 - hybex_system.prolog_engine - INFO - [Session:069f5669] Loaded 3 rule categories with 9 total rules
+2025-10-10 10:56:02,619 - hybex_system.prolog_engine - INFO - [Session:069f5669] Comprehensive rules actually loaded: True

@@ -1078,3 +1078,37 @@
 2025-08-12 17:03:24,670 - hybex_system.data_processor - INFO - Starting HybEx-Law Data Preprocessing
 2025-08-12 17:03:24,670 - hybex_system.data_processor - INFO - ==================================================
 2025-08-12 17:03:24,670 - hybex_system.data_processor - INFO - DataPreprocessor initialized.
+2025-10-10 10:20:22,800 - hybex_system.data_processor - INFO - Added file handler to DataPreprocessor logger.
+2025-10-10 10:20:22,800 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:20:22,800 - hybex_system.data_processor - INFO - Starting HybEx-Law Data Preprocessing
+2025-10-10 10:20:22,800 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:20:22,800 - hybex_system.data_processor - INFO - DataPreprocessor initialized.
+2025-10-10 10:20:23,614 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:20:23,614 - hybex_system.data_processor - INFO - Starting HybEx-Law Data Preprocessing
+2025-10-10 10:20:23,614 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:20:23,614 - hybex_system.data_processor - INFO - DataPreprocessor initialized.
+2025-10-10 10:39:21,427 - hybex_system.data_processor - INFO - Added file handler to DataPreprocessor logger.
+2025-10-10 10:39:21,429 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:39:21,429 - hybex_system.data_processor - INFO - Starting HybEx-Law Data Preprocessing
+2025-10-10 10:39:21,429 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:39:21,429 - hybex_system.data_processor - INFO - DataPreprocessor initialized.
+2025-10-10 10:48:53,993 - hybex_system.data_processor - INFO - Added file handler to DataPreprocessor logger.
+2025-10-10 10:48:53,997 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:48:53,998 - hybex_system.data_processor - INFO - Starting HybEx-Law Data Preprocessing
+2025-10-10 10:48:53,998 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:48:53,998 - hybex_system.data_processor - INFO - DataPreprocessor initialized.
+2025-10-10 10:54:38,044 - hybex_system.data_processor - INFO - Added file handler to DataPreprocessor logger.
+2025-10-10 10:54:38,044 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:54:38,046 - hybex_system.data_processor - INFO - Starting HybEx-Law Data Preprocessing
+2025-10-10 10:54:38,046 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:54:38,046 - hybex_system.data_processor - INFO - DataPreprocessor initialized.
+2025-10-10 10:56:02,403 - hybex_system.data_processor - INFO - Added file handler to DataPreprocessor logger.
+2025-10-10 10:56:02,403 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:56:02,404 - hybex_system.data_processor - INFO - Starting HybEx-Law Data Preprocessing
+2025-10-10 10:56:02,404 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 10:56:02,404 - hybex_system.data_processor - INFO - DataPreprocessor initialized.
+2025-10-10 11:04:51,105 - hybex_system.data_processor - INFO - Added file handler to DataPreprocessor logger.
+2025-10-10 11:04:51,105 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 11:04:51,105 - hybex_system.data_processor - INFO - Starting HybEx-Law Data Preprocessing
+2025-10-10 11:04:51,105 - hybex_system.data_processor - INFO - ==================================================
+2025-10-10 11:04:51,105 - hybex_system.data_processor - INFO - DataPreprocessor initialized.

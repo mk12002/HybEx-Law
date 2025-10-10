@@ -21,7 +21,7 @@ from .data_processor import DataPreprocessor
 from .knowledge_graph_engine import KnowledgeGraphEngine # Assume this replaces PrologEngine
 from .prolog_engine import PrologEngine # Keep PrologEngine for 'status' check detail compatibility
 from .neural_models import DomainClassifier, EligibilityPredictor
-from .master_scraper import MasterScraper # Assuming this module exists
+from .master_scraper import MasterLegalScraper # Fixed: correct class name
 from transformers import AutoTokenizer
 from dataclasses import asdict
 
@@ -53,7 +53,7 @@ class HybExLawSystem:
         self._data_processor: Optional[DataPreprocessor] = None
         self._knowledge_graph_engine: Optional[KnowledgeGraphEngine] = None 
         self._prolog_engine: Optional[PrologEngine] = None # Added for compatibility with status check
-        self._master_scraper: Optional['MasterScraper'] = None
+        self._master_scraper: Optional['MasterLegalScraper'] = None
         self._tokenizer: Optional[AutoTokenizer] = None
         self._domain_classifier: Optional[DomainClassifier] = None
         self._eligibility_predictor: Optional[EligibilityPredictor] = None
@@ -95,9 +95,9 @@ class HybExLawSystem:
         return self._prolog_engine
 
     @property
-    def master_scraper(self) -> 'MasterScraper':
+    def master_scraper(self) -> 'MasterLegalScraper':
         if self._master_scraper is None:
-             self._master_scraper = MasterScraper(self.config) # ASSUMING MasterScraper exists
+             self._master_scraper = MasterLegalScraper(self.config)
         return self._master_scraper
 
     @property
