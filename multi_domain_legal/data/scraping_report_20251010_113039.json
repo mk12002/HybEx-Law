@@ -1,0 +1,54 @@
+{
+  "scraping_session": {
+    "timestamp": "2025-10-10T11:30:39.803327",
+    "total_websites_scraped": 5,
+    "total_content_extracted": 80,
+    "content_saved_to_db": 2,
+    "duplicates_skipped": 78
+  },
+  "website_breakdown": {
+    "indiacode": {
+      "name": "India Code - Central Acts Repository",
+      "relevance_score": 10,
+      "priority": 1,
+      "content_extracted": 75,
+      "content_types": [
+        "legal_provision"
+      ]
+    },
+    "nalsa": {
+      "name": "National Legal Services Authority",
+      "relevance_score": 10,
+      "priority": 1,
+      "content_extracted": 3,
+      "content_types": [
+        "scheme_eligibility"
+      ]
+    },
+    "consumer_affairs": {
+      "name": "Department of Consumer Affairs",
+      "relevance_score": 8,
+      "priority": 3,
+      "content_extracted": 0,
+      "content_types": []
+    },
+    "labour_ministry": {
+      "name": "Ministry of Labour and Employment",
+      "relevance_score": 8,
+      "priority": 3,
+      "content_extracted": 1,
+      "content_types": [
+        "website_content"
+      ]
+    },
+    "legal_affairs": {
+      "name": "Department of Legal Affairs",
+      "relevance_score": 7,
+      "priority": 4,
+      "content_extracted": 1,
+      "content_types": [
+        "website_content"
+      ]
+    }
+  }
+}

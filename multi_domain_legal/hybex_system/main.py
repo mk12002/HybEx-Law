@@ -97,7 +97,10 @@ class HybExLawSystem:
     @property
     def master_scraper(self) -> 'MasterLegalScraper':
         if self._master_scraper is None:
-             self._master_scraper = MasterLegalScraper(self.config)
+             self._master_scraper = MasterLegalScraper(
+                 data_dir=self.config.DATA_DIR,
+                 yaml_path=self.config.BASE_DIR / "knowledge_base" / "legal_rules.yaml"
+             )
         return self._master_scraper
 
     @property
@@ -328,10 +331,34 @@ class HybExLawSystem:
         """Handler for the scrape command."""
         logger.info(f"Running comprehensive scraping (Priority Only: {priority_only}, Report Only: {report_only})")
         
-        # ASSUMPTION: MasterScraper has a run_scraping method
+        # Use the correct method name for scraping
         try:
-            results = self.master_scraper.run_scraping(priority_only=priority_only, report_only=report_only)
-            return results
+            if priority_only:
+                # For priority-only scraping, use the priority websites method
+                results = self.master_scraper.scrape_priority_websites()
+                total_items = sum(len(content) for content in results.values())
+                return {
+                    'status': 'success', 
+                    'summary': {
+                        'websites_scraped': len(results),
+                        'total_content_extracted': total_items,
+                        'status': 'completed',
+                        'last_scraping_date': datetime.now().isoformat()
+                    }
+                }
+            else:
+                # For comprehensive scraping
+                results = self.master_scraper.run_comprehensive_scraping()
+                total_items = sum(len(content) for content in results.values())
+                return {
+                    'status': 'success', 
+                    'summary': {
+                        'websites_scraped': len(results),
+                        'total_content_extracted': total_items,
+                        'status': 'completed',
+                        'last_scraping_date': datetime.now().isoformat()
+                    }
+                }
         except Exception as e:
             logger.error(f"Scraping failed: {e}")
             return {'status': 'error', 'error': str(e)}
@@ -680,10 +707,10 @@ def main():
                 if results.get('status') == 'success':
                     print("\nComprehensive legal knowledge scraping completed successfully!")
                     summary = results['summary']
-                    print(f"Websites scraped: {summary['websites_scraped']}")
-                    print(f"Total content extracted: {summary['total_content_extracted']}")
-                    print(f"Status: {summary['status']}")
-                    print(f"Completion time: {summary['last_scraping_date']}")
+                    print(f"Websites scraped: {summary.get('websites_scraped', 'N/A')}")
+                    print(f"Total content extracted: {summary.get('total_content_extracted', 'N/A')}")
+                    print(f"Status: {summary.get('status', 'completed')}")
+                    print(f"Completion time: {summary.get('last_scraping_date', 'N/A')}")
                 else:
                     print(f"\nScraping failed: {results.get('error', 'Unknown error')}")
             
