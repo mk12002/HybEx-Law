@@ -1,4 +1,17 @@
-.github/
-.vscode/
-__pycache__/
+# Log files (NEVER commit these!)
+*.log
+logs/
+multi_domain_legal/logs/
+
+# Models (too large for Git)
 *.pt
+*.pth
+models/
+
+# Results
+results/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
