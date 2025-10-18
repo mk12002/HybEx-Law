@@ -717,8 +717,16 @@ def main():
         elif args.command == 'train':
             logger.info("Starting training command")
             results = system.train_complete_system(args.data_dir)
-            print("\nTraining completed successfully!")
-            print(f"Results saved to: {results.get('results_file', 'N/A')}")
+            
+            # Check the result status before printing success
+            if results.get('status') == 'success' or results.get('status') == 'completed':
+                print("\nTraining completed successfully!")
+                print(f"Results saved to: {results.get('results_file', 'N/A')}")
+            else:
+                print("\nTraining failed.")
+                print(f"Error: {results.get('error', 'An unknown error occurred during training.')}")
+                if results.get('results_file'):
+                    print(f"Error details saved to: {results.get('results_file')}")
             
         elif args.command == 'evaluate':
             logger.info("Starting evaluation command")

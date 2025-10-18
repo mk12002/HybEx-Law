@@ -30,15 +30,20 @@ class LegalDomain(Enum):
 @dataclass
 class LegalTrainingExample:
     """Structured training example for legal AI system"""
+    # NEURAL MODEL INPUTS (what the model sees during training)
     query: str
     domains: List[str]
-    extracted_facts: List[str]
     expected_eligibility: bool
+    
+    # PROLOG ENGINE INPUTS (for symbolic reasoning, NOT for neural training)
+    prolog_facts: List[str]  # Renamed from extracted_facts
+    
+    # METADATA (for evaluation and analysis, NOT for training)
     legal_reasoning: str
-    confidence_factors: Dict[str, float]
     user_demographics: Dict[str, Any]
     case_complexity: str
     priority_level: str
+    sample_id: str = ""  # Add unique ID
 
 class ComprehensiveLegalDataGenerator:
     """
@@ -57,9 +62,9 @@ class ComprehensiveLegalDataGenerator:
             "legal_aid": [
                 # Income-based scenarios for different social categories
                 {
-                    "template": "Sir, I am a {social_category} earning Rs {income} monthly. {case_description}. Can I get free legal aid? I live in a {location}.",
+                    "template": "Respected authority, I am a {social_category} earning Rs {income} monthly. {case_description}. Can I get free legal aid? I live in a {location}.",
                     "variables": {
-                        "social_category": ["poor woman", "dalit woman", "tribal woman", "disabled person", "widow", "divorced woman", "female laborer"],
+                        "social_category": ["economically weak person", "SC community member", "ST community member", "disabled person", "widow", "single parent", "daily wage worker"],
                         "income": ["0", "3000", "5000", "7500", "8000", "10000", "12000", "15000", "18000", "20000", "22000", "25000"],
                         "location": ["village", "small town", "remote area", "tehsil", "district"],
                         "case_description": [
@@ -80,7 +85,7 @@ class ComprehensiveLegalDataGenerator:
                 {
                     "template": "I am a {social_status} earning Rs. {income} per month. {case_situation}. Am I eligible for free legal aid under Legal Services Authorities Act? I live in {city_type}.",
                     "variables": {
-                        "social_status": ["widow", "single mother", "disabled person", "senior citizen above 65", "SC/ST person", "transgender person", "woman from economically weaker section"],
+                        "social_status": ["widow", "single parent", "disabled person", "senior citizen above 65", "SC/ST community member", "transgender person", "person from economically weaker section"],
                         "income": ["8000", "12000", "15000", "18000", "20000", "22000", "25000", "28000", "30000"],
                         "city_type": ["metro city", "tier-2 city", "small town", "urban area"],
                         "case_situation": [
@@ -98,7 +103,7 @@ class ComprehensiveLegalDataGenerator:
                 },
                 # Working class scenarios
                 {
-                    "template": "Sir, I am a {profession} earning monthly {income} rupees. {problem_description}. Am I eligible for legal aid? I belong to {community} community.",
+                    "template": "Respected authority, I am a {profession} earning monthly {income} rupees. {problem_description}. Am I eligible for legal aid? I belong to {community} community.",
                     "variables": {
                         "profession": ["rickshaw driver", "domestic worker", "security guard", "watchman", "cook", "cleaner", "construction worker", "street vendor"],
                         "income": ["5000", "8000", "10000", "12000", "15000", "18000", "20000", "22000"],
@@ -121,12 +126,12 @@ class ComprehensiveLegalDataGenerator:
                     "variables": {
                         "greeting": ["Respected sir", "Sir/Madam", "Hello"],
                         "detailed_status": [
-                            "a 70 year old woman with no family support",
-                            "disability certificate holder using wheelchair",
-                            "single mother with 2 small children whose husband abandoned",
-                            "daily wage laborer unemployed since corona pandemic",
-                            "from tribal area with limited Hindi understanding",
-                            "acid attack survivor needing facial surgery"
+                            "a woman of 70 years with no family support",
+                            "a disabled person of 45 years using wheelchair",
+                            "single mother of 32 years with 2 small children whose husband abandoned",
+                            "daily wage laborer of 40 years unemployed since corona pandemic",
+                            "from tribal area of 35 years with limited Hindi understanding",
+                            "acid attack survivor of 28 years needing facial surgery"
                         ],
                         "complex_situation": [
                             "My in-laws are evicting me from property and police are not helping",
@@ -319,7 +324,7 @@ class ComprehensiveLegalDataGenerator:
             "consumer_protection": [
                 # E-commerce fraud (Very common in modern India)
                 {
-                    "template": "Sir, I bought {product} from {platform} for Rs {amount}. {ecommerce_problem}. {consumer_query} under Consumer Protection Act 2019?",
+                    "template": "I bought {product} from {platform} for Rs {amount}. {ecommerce_problem}. {consumer_query} under Consumer Protection Act 2019?",
                     "variables": {
                         "platform": ["Amazon", "Flipkart", "Myntra", "Snapdeal", "local online store", "Facebook marketplace", "OLX"],
                         "product": ["mobile phone", "laptop", "washing machine", "refrigerator", "LED TV", "air conditioner", "furniture set", "jewelry"],
@@ -1020,7 +1025,7 @@ class ComprehensiveLegalDataGenerator:
             },
             # Construction worker complex scenario
             {
-                "template": "Sir, I am daily wage worker and was working at construction site. In accident I got leg fracture but contractor didn't give compensation and fired me from job. During hospital treatment they kept me in different ward seeing my caste and didn't give proper care. After recovery when I went to find job I faced discrimination. Is it possible to file three cases in legal aid - worker compensation, medical negligence and employment discrimination?",
+                "template": "I am daily wage worker and was working at construction site. In accident I got leg fracture but contractor didn't give compensation and fired me from job. During hospital treatment they kept me in different ward seeing my caste and didn't give proper care. After recovery when I went to find job I faced discrimination. Is it possible to file three cases in legal aid - worker compensation, medical negligence and employment discrimination?",
                 "domains": ["employment_law", "consumer_protection", "fundamental_rights", "legal_aid"],
                 "variables": {},
                 "complexity": "very_high"
@@ -1090,8 +1095,135 @@ class ComprehensiveLegalDataGenerator:
         
         return samples
     
+    def _clean_query_noise(self, query: str) -> str:
+        """Remove legally irrelevant noise from queries"""
+        
+        # Patterns of irrelevant information to remove
+        noise_patterns = [
+            r'\.\s*I had a fight with .*?\.',
+            r'\.\s*I like to watch .*?\.',
+            r'\.\s*My son is doing well .*?\.',
+            r'\.\s*The weather .*?\.',
+            r'\.\s*I enjoy .*?\.',
+            r'\.\s*My hobby .*?\.',
+            r'\.\s*Yesterday .*?\.',
+            r'\.\s*Last week .*?(?=\.|$)',
+        ]
+        
+        cleaned = query
+        for pattern in noise_patterns:
+            cleaned = re.sub(pattern, '.', cleaned, flags=re.IGNORECASE)
+        
+        # Remove extra spaces and fix punctuation
+        cleaned = re.sub(r'\s+', ' ', cleaned).strip()
+        cleaned = re.sub(r'\.\s*\.', '.', cleaned)  # Remove double periods
+        cleaned = re.sub(r'\s+\.', '.', cleaned)  # Fix spacing before period
+        
+        return cleaned
+    
+    def _remove_eligibility_keywords(self, query: str) -> str:
+        """Remove keywords that leak eligibility label - ENHANCED VERSION"""
+        leakage_patterns = [
+            # ✅ NEW: Specific "Can I get" patterns (highest priority - most specific)
+            (r'\bCan I get free legal aid\?', 'I need legal assistance.'),
+            (r'\bCan I get legal aid\?', 'I need legal guidance.'),
+            (r'\bCan I get free\s+\w+\?', 'I need help.'),
+            (r'\bwill I get\s+\w+\?', 'I seek help.'),
+            (r'\bdo I get\s+\w+\?', 'I require assistance.'),
+            (r'\bshall I get\s+\w+\?', 'I want guidance.'),
+            
+            # Direct eligibility mentions
+            (r'\b(am I|will I be|can I be)\s+(considered\s+)?eligible\b', 'I need to know my options'),
+            (r'\b(do I|will I|can I)\s+qualify\b', 'I need guidance'),
+            (r'\bqualify for (legal aid|free legal|government lawyer)\b', 'need help with legal matters'),
+            (r'\b(get|receive|obtain)\s+(legal aid|free legal help)\b', 'need legal assistance'),
+            (r'\bam I entitled to\b', 'I need to understand my rights regarding'),
+            (r'\beligible for (legal aid|free legal)\b', 'need help with'),
+            
+            # Question forms that reveal answer seeking
+            (r'Am I eligible\?', 'I need legal guidance.'),
+            (r'Do I qualify\?', 'I need help.'),
+            (r'Will I be eligible\?', 'I need guidance.'),
+            (r'Can I get free legal\s+\w+\?', 'I need legal help.'),
+            (r'Am I eligible for\s+\w+\?', 'I need assistance.'),
+            
+            # ✅ NEW: Generic "can/will/do/should + get/have/receive" patterns (catch-all)
+            (r'\b(can|will|do|should|shall)\s+I\s+(get|have|receive|obtain)\b', 'I need'),
+            (r'\b(am|is|are)\s+I\s+(eligible|entitled|qualified)\b', 'I require'),
+        ]
+        
+        cleaned = query
+        for pattern, replacement in leakage_patterns:
+            if re.search(pattern, cleaned, re.IGNORECASE):
+                # Replace the leakage pattern with neutral alternative
+                cleaned = re.sub(pattern, replacement, cleaned, flags=re.IGNORECASE)
+        
+        # Clean up any resulting formatting issues
+        cleaned = re.sub(r'\s+', ' ', cleaned).strip()
+        cleaned = re.sub(r'\.+', '.', cleaned)  # Remove multiple periods
+        
+        return cleaned
+    
+    def _generate_consistent_demographics(self, query: str, facts: List[str]) -> Dict[str, Any]:
+        """Generate demographics that are CONSISTENT with query and facts"""
+        
+        # Extract from facts (ground truth)
+        gender = 'not_specified'
+        age = random.randint(25, 55)  # Default
+        category = 'General'
+        income = 15000  # Default
+        vulnerable = False
+        
+        facts_str = ' '.join(facts)
+        
+        # Extract gender from facts
+        if "gender(user, 'female')" in facts_str:
+            gender = 'female'
+        elif "gender(user, 'male')" in facts_str:
+            gender = 'male'
+        
+        # Extract age from facts
+        age_match = re.search(r'age\(user, (\d+)\)', facts_str)
+        if age_match:
+            age = int(age_match.group(1))
+        
+        # Extract social category from facts
+        if "social_category(user, 'sc')" in facts_str:
+            category = 'SC'
+        elif "social_category(user, 'st')" in facts_str:
+            category = 'ST'
+        elif "social_category(user, 'obc')" in facts_str:
+            category = 'OBC'
+        elif "social_category(user, 'bpl')" in facts_str:
+            category = 'BPL'
+        else:
+            category = 'General'
+        
+        # Extract income from facts
+        income_match = re.search(r'income_monthly\(user, (\d+)\)', facts_str)
+        if income_match:
+            income = int(income_match.group(1))
+        
+        # Check vulnerable status from facts
+        vulnerable_indicators = ['is_disabled', 'is_senior_citizen', 'is_widow', 'is_transgender']
+        vulnerable = any(indicator in facts_str for indicator in vulnerable_indicators)
+        
+        # Generate random location
+        locations = ["Delhi", "Mumbai", "Bangalore", "Chennai", "Kolkata", "Hyderabad", 
+                     "Pune", "Ahmedabad", "Jaipur", "Lucknow", "Kanpur", "Nagpur"]
+        
+        return {
+            "age": age,
+            "gender": gender,
+            "category": category,
+            "location": random.choice(locations),
+            "income": income,
+            "vulnerable": vulnerable,
+            "occupation": "not_specified"  # Can be enhanced later
+        }
+    
     def _create_sample_from_template(self, template_data: Dict, domains: List[str]) -> LegalTrainingExample:
-        """Create a training sample from template"""
+        """Create a training sample from template with validation"""
         template = template_data["template"]
         variables = template_data.get("variables", {})
         
@@ -1100,305 +1232,278 @@ class ComprehensiveLegalDataGenerator:
         for var_name, options in variables.items():
             if f"{{{var_name}}}" in filled_query:
                 chosen_value = random.choice(options)
-                filled_query = filled_query.replace(f"{{{var_name}}}", chosen_value)
+                filled_query = filled_query.replace(f"{{{var_name}}}", str(chosen_value))
         
-        # Extract facts based on query content and domains
-        extracted_facts = self._extract_facts_from_query(filled_query, domains)
+        # Clean noise from query
+        filled_query = self._clean_query_noise(filled_query)
+        
+        # Remove eligibility keywords that leak labels
+        filled_query = self._remove_eligibility_keywords(filled_query)
+        
+        # Generate Prolog facts (for symbolic reasoning ONLY)
+        prolog_facts = self._generate_prolog_facts_from_query(filled_query, domains)
         
         # Determine eligibility based on legal rules
-        eligibility = self._determine_eligibility(extracted_facts, domains, filled_query)
+        eligibility = self._determine_eligibility(prolog_facts, domains, filled_query)
         
         # Generate legal reasoning
-        legal_reasoning = self._generate_legal_reasoning(extracted_facts, domains, eligibility)
+        legal_reasoning = self._generate_legal_reasoning(prolog_facts, domains, eligibility)
         
         # Assign demographic profile
-        demographics = random.choice(self.demographic_profiles)
-        
-        # Calculate confidence factors
-        confidence_factors = self._calculate_confidence_factors(filled_query, extracted_facts)
+        demographics = self._generate_consistent_demographics(filled_query, prolog_facts)
         
         # Determine complexity and priority
         complexity = template_data.get("complexity", random.choice(self.case_variations["complexity"]))
         priority = self._determine_priority(filled_query, domains)
         
         return LegalTrainingExample(
-            query=filled_query,
-            domains=domains,
-            extracted_facts=extracted_facts,
-            expected_eligibility=eligibility,
-            legal_reasoning=legal_reasoning,
-            confidence_factors=confidence_factors,
-            user_demographics=demographics,
-            case_complexity=complexity,
-            priority_level=priority
+            query=filled_query,  # THIS is what neural model sees
+            domains=domains,  # THIS is what model predicts
+            expected_eligibility=eligibility,  # THIS is what model predicts
+            prolog_facts=prolog_facts,  # For Prolog engine, NOT neural model
+            legal_reasoning=legal_reasoning,  # Metadata only
+            user_demographics=demographics,  # Metadata only
+            case_complexity=complexity,  # Metadata only
+            priority_level=priority,  # Metadata only
+            sample_id=""  # Will be assigned during save
         )
     
-    def _extract_facts_from_query(self, query: str, domains: List[str]) -> List[str]:
-        """Extract structured facts from query based on domains with enhanced Indian context"""
+    def _generate_prolog_facts_from_query(self, query: str, domains: List[str]) -> List[str]:
+        """
+        Generate Prolog facts for SYMBOLIC REASONING (NOT for neural model training).
+        These facts are used by Prolog engine, not fed to BERT.
+        """
         facts = ["applicant(user)."]
         query_lower = query.lower()
         
-        # Enhanced income extraction with Indian currency patterns
+        # FIXED: Enhanced income extraction with STRICT validation
         income_patterns = [
-            r'(\d+)\s*rupees?\s*(?:monthly|per month|every month|per month)',
-            r'(?:earning|earning|income|salary)\s*(?:is|is|was)?\s*(?:rs\.?|rupees?)\s*(\d+)',
-            r'(\d+)\s*(?:rs|rupees?)\s*(?:per month|monthly|salary|pension)',
-            r'monthly\s*(?:income|salary)\s*(?:of|is)?\s*(?:rs\.?|rupees?)\s*(\d+)',
-            r'(\d+)\s*rupees?\s*(?:pension|earning|salary)'
+            (r'rs\.?\s*(\d+)\s*(?:monthly|per\s+month)', 'monthly'),
+            (r'(\d+)\s*rupees?\s*(?:monthly|per\s+month)', 'monthly'),
+            (r'earning\s+(?:rs\.?\s*)?(\d+)', 'monthly'),
+            (r'salary\s+(?:is|was)?\s*(?:rs\.?\s*)?(\d+)', 'monthly'),
+            (r'income\s+(?:is|of)?\s*(?:rs\.?\s*)?(\d+)', 'monthly'),
+            (r'pension\s+of\s+rs\.?\s*(\d+)', 'monthly'),
         ]
         
-        for pattern in income_patterns:
+        extracted_income = None
+        for pattern, income_type in income_patterns:
             match = re.search(pattern, query_lower)
             if match:
-                income = int(match.group(1))
-                facts.append(f"income_monthly(user, {income}).")
-                # Add income category facts
-                if income <= 12000:
-                    facts.append("income_category(user, 'very_low').")
-                elif income <= 25000:
-                    facts.append("income_category(user, 'low').")
-                elif income <= 50000:
-                    facts.append("income_category(user, 'medium').")
-                else:
-                    facts.append("income_category(user, 'high').")
+                income_value = int(match.group(1))
+                # Validate income is reasonable (500 to 500000)
+                if 500 <= income_value <= 500000:
+                    extracted_income = income_value
+                    facts.append(f"income_monthly(user, {income_value}).")
+                    
+                    # Add ONLY derived income category
+                    if income_value <= 12000:
+                        facts.append("income_category(user, 'very_low').")
+                    elif income_value <= 25000:
+                        facts.append("income_category(user, 'low').")
+                    elif income_value <= 50000:
+                        facts.append("income_category(user, 'medium').")
+                    else:
+                        facts.append("income_category(user, 'high').")
+                    break
+        
+        # CRITICAL: Extract gender with PRIORITY ORDER to avoid conflicts
+        gender_extracted = None
+        
+        # Priority 1: Direct self-identification (highest priority)
+        direct_gender_patterns = {
+            r'\bI am (?:a )?woman\b': 'female',
+            r'\bI am (?:a )?man\b': 'male',
+            r'\bI am (?:a )?female\b': 'female',
+            r'\bI am (?:a )?male\b': 'male',
+        }
+        
+        for pattern, gender in direct_gender_patterns.items():
+            if re.search(pattern, query_lower):
+                gender_extracted = gender
+                facts.append(f"gender(user, '{gender}').")
                 break
         
-        # Enhanced social category extraction with Indian context
-        social_categories = {
-            # Caste categories
-            "sc": "social_category(user, 'sc').",
-            "dalit": "social_category(user, 'sc').",
-            "scheduled caste": "social_category(user, 'sc').",
-            "st": "social_category(user, 'st').",
-            "adivasi": "social_category(user, 'st').",
-            "tribal": "social_category(user, 'st').",
-            "scheduled tribe": "social_category(user, 'st').",
-            "obc": "social_category(user, 'obc').",
-            
-            # Gender categories
-            "woman": "is_woman(user, true).",
-            "woman": "is_woman(user, true).",
-            "girl": "is_woman(user, true).",
-            "female": "is_woman(user, true).",
-            "working woman": "is_woman(user, true).",
-            "working mother": "is_woman(user, true).",
-            "single mother": "is_woman(user, true).",
-            "housewife": "is_woman(user, true).",
-            "widow": "is_woman(user, true).",
-            "widow": "is_woman(user, true).",
-            
-            # Special categories
-            "disabled": "is_disabled(user, true).",
-            "differently abled": "is_disabled(user, true).",
-            "handicapped": "is_disabled(user, true).",
-            "senior citizen": "is_senior_citizen(user, true).",
-            "elderly": "is_senior_citizen(user, true).",
-            "transgender": "is_transgender(user, true).",
-            "minority": "is_minority(user, true)."
-        }
-        
-        for category, fact in social_categories.items():
-            if category in query_lower:
-                facts.append(fact)
-        
-        # Work/profession extraction
-        professions = {
-            "daily wage": "profession(user, 'daily_wage_worker').",
-            "construction worker": "profession(user, 'construction_worker').",
-            "factory worker": "profession(user, 'factory_worker').",
-            "domestic worker": "profession(user, 'domestic_worker').",
-            "rickshaw driver": "profession(user, 'rickshaw_driver').",
-            "security guard": "profession(user, 'security_guard').",
-            "employee": "employment_status(user, 'employed').",
-            "unemployed": "employment_status(user, 'unemployed').",
-            "retired": "employment_status(user, 'retired')."
-        }
-        
-        for profession, fact in professions.items():
-            if profession in query_lower:
-                facts.append(fact)
-        
-        # Location extraction
-        locations = {
-            "village": "location_type(user, 'rural').",
-            "village": "location_type(user, 'rural').",
-            "city": "location_type(user, 'urban').",
-            "metro": "location_type(user, 'metro').",
-            "mumbai": "location_type(user, 'metro').",
-            "delhi": "location_type(user, 'metro').",
-            "bangalore": "location_type(user, 'metro').",
-            "town": "location_type(user, 'semi_urban').",
-            "town": "location_type(user, 'semi_urban')."
-        }
-        
-        for location, fact in locations.items():
-            if location in query_lower:
-                facts.append(fact)
-        
-        # Domain-specific fact extraction
-        if "legal_aid" in domains:
-            # Legal aid seeking indicators
-            legal_aid_indicators = [
-                "free legal", "free lawyer", "legal aid", "cannot afford", 
-                "cannot afford lawyer", "no money", "poor", "poor"
-            ]
-            if any(indicator in query_lower for indicator in legal_aid_indicators):
-                facts.append("seeks_legal_aid(user, true).")
-            
-            # Multiple case indicators
-            if any(word in query_lower for word in ["three", "all", "multiple", "different", "various"]):
-                facts.append("multiple_cases(user, true).")
-        
-        if "family_law" in domains:
-            # Marriage status
-            marriage_indicators = {
-                "husband": "marital_status(user, married).",
-                "husband": "marital_status(user, married).",
-                "wife": "marital_status(user, married).",
-                "wife": "marital_status(user, married).",
-                "marriage": "marital_status(user, married).",
-                "married": "marital_status(user, married).",
-                "divorce": "seeks_divorce(user, true).",
-                "divorce": "seeks_divorce(user, true).",
-                "separation": "seeks_separation(user, true).",
-                "maintenance": "seeks_maintenance(user, true).",
-                "in-laws": "joint_family(user, true).",
-                "in-laws": "joint_family(user, true)."
+        # Priority 2: Relationship indicators (only if no direct mention)
+        if not gender_extracted:
+            relationship_patterns = {
+                r'\b(widow|mother|wife|daughter|sister)\b': 'female',
+                r'\b(husband|father|son|brother)\b': 'male',
             }
             
-            for indicator, fact in marriage_indicators.items():
-                if indicator in query_lower:
-                    facts.append(fact)
+            for pattern, gender in relationship_patterns.items():
+                if re.search(pattern, query_lower):
+                    gender_extracted = gender
+                    facts.append(f"gender(user, '{gender}').")
+                    break
+        
+        # Priority 3: Context words (lowest priority, only if nothing else found)
+        if not gender_extracted:
+            context_patterns = {
+                r'\bwoman\b': 'female',
+                r'\bwomen\b': 'female',
+                r'\bgirl\b': 'female',
+                r'\bman\b': 'male',
+                r'\bmale\b': 'male',
+            }
             
-            # Violence indicators
-            violence_terms = ["violence", "beating", "beat", "torture", "cruelty", "harassment"]
-            if any(term in query_lower for term in violence_terms):
+            for pattern, gender in context_patterns.items():
+                if re.search(pattern, query_lower):
+                    gender_extracted = gender
+                    facts.append(f"gender(user, '{gender}').")
+                    break
+        
+        # Default: gender not specified
+        if not gender_extracted:
+            facts.append("gender(user, 'not_specified').")
+        
+        # Social category extraction
+        social_categories = {
+            r'\bsc\b': 'sc',
+            r'scheduled\s+caste': 'sc',
+            r'\bdalit\b': 'sc',
+            r'\bst\b': 'st',
+            r'scheduled\s+tribe': 'st',
+            r'\btribal\b': 'st',
+            r'\badivasi\b': 'st',
+            r'\bobc\b': 'obc',
+            r'backward\s+class': 'obc',
+            r'\bgeneral\b': 'general',
+            r'\bbpl\b': 'bpl',
+            r'below\s+poverty': 'bpl',
+        }
+        
+        category_found = False
+        for pattern, category in social_categories.items():
+            if re.search(pattern, query_lower):
+                facts.append(f"social_category(user, '{category}').")
+                category_found = True
+                break
+        
+        if not category_found:
+            facts.append("social_category(user, 'general').")
+        
+        # Vulnerable category detection
+        vulnerable_indicators = {
+            r'disabled': "is_disabled(user, true).",
+            r'handicapped': "is_disabled(user, true).",
+            r'differently\s+abled': "is_disabled(user, true).",
+            r'senior\s+citizen': "is_senior_citizen(user, true).",
+            r'\b\d{2,}\s+year(?:s)?\s+old\b': None,  # Age-based - extract separately
+            r'transgender': "is_transgender(user, true).",
+            r'widow': "is_widow(user, true).",
+            r'single\s+mother': "is_single_parent(user, true).",
+        }
+        
+        for pattern, fact in vulnerable_indicators.items():
+            if fact and re.search(pattern, query_lower):
+                facts.append(fact)
+        
+        # Age extraction with validation
+        age_match = re.search(r'(\d{2})\s+year(?:s)?\s+old', query_lower)
+        if age_match:
+            age = int(age_match.group(1))
+            if 18 <= age <= 100:  # Validate reasonable age
+                facts.append(f"age(user, {age}).")
+                if age >= 65:
+                    facts.append("is_senior_citizen(user, true).")
+        
+        # Domain-specific facts (simplified to avoid leakage)
+        if "legal_aid" in domains:
+            if any(indicator in query_lower for indicator in ["free legal", "legal aid", "cannot afford"]):
+                facts.append("seeks_legal_aid(user, true).")
+        
+        if "family_law" in domains:
+            if re.search(r'\b(divorce|separation)\b', query_lower):
+                facts.append("seeks_divorce(user, true).")
+            if re.search(r'\b(violence|beating|torture|harassment)\b', query_lower):
                 facts.append("domestic_violence(user, true).")
-            
-            # Dowry indicators
-            dowry_terms = ["dowry", "dowry", "demand"]
-            if any(term in query_lower for term in dowry_terms):
+            if re.search(r'\b(dowry|demand)\b', query_lower):
                 facts.append("dowry_harassment(user, true).")
         
         if "employment_law" in domains:
-            # Employment issues
-            employment_issues = {
-                "fired": "employment_issue(user, 'termination').",
-                "terminate": "employment_issue(user, 'termination').",
-                "job termination": "employment_issue(user, 'termination').",
-                "salary": "employment_issue(user, 'salary').",
-                "overtime": "employment_issue(user, 'overtime').",
-                "harassment": "employment_issue(user, 'harassment').",
-                "discrimination": "employment_issue(user, 'discrimination').",
-                "maternity": "employment_issue(user, 'maternity').",
-                "pregnancy": "employment_issue(user, 'maternity')."
-            }
-            
-            for issue, fact in employment_issues.items():
-                if issue in query_lower:
-                    facts.append(fact)
+            if re.search(r'\b(fired|terminate|termination)\b', query_lower):
+                facts.append("employment_issue(user, 'termination').")
+            if re.search(r'\b(maternity|pregnancy)\b', query_lower):
+                facts.append("employment_issue(user, 'maternity').")
         
         if "consumer_protection" in domains:
-            # Consumer issues
-            consumer_terms = {
-                "bought": "consumer_transaction(user, true).",
-                "kharida": "consumer_transaction(user, true).",
-                "defective": "product_defect(user, true).",
-                "fraud": "consumer_fraud(user, true).",
-                "cheating": "consumer_fraud(user, true).",
-                "builder": "real_estate_issue(user, true).",
-                "hospital": "medical_service_issue(user, true).",
-                "negligence": "service_negligence(user, true)."
-            }
-            
-            for term, fact in consumer_terms.items():
-                if term in query_lower:
-                    facts.append(fact)
+            if re.search(r'\b(bought|purchased)\b', query_lower):
+                facts.append("consumer_transaction(user, true).")
+            if re.search(r'\b(fraud|cheating|fake)\b', query_lower):
+                facts.append("consumer_fraud(user, true).")
         
         if "fundamental_rights" in domains:
-            # Rights violations
-            rights_terms = {
-                "discrimination": "rights_violation(user, 'discrimination').",
-                "harassment": "rights_violation(user, 'harassment').",
-                "police": "authority_involved(user, 'police').",
-                "government": "authority_involved(user, 'government').",
-                "rti": "rti_case(user, true).",
-                "bribe": "corruption(user, true).",
-                "bribery": "corruption(user, true).",
-                "caste": "caste_discrimination(user, true).",
-                "religion": "religious_discrimination(user, true)."
-            }
-            
-            for term, fact in rights_terms.items():
-                if term in query_lower:
-                    facts.append(fact)
-        
-        # Case complexity indicators
-        complexity_indicators = [
-            "multiple", "various", "different", "all", "three", "complex", 
-            "complicated", "difficult", "difficult"
-        ]
-        if any(indicator in query_lower for indicator in complexity_indicators):
-            facts.append("case_complexity(user, high).")
-        
-        # Urgency indicators
-        urgency_indicators = [
-            "urgent", "emergency", "immediate", "immediately", "quickly", 
-            "threat", "danger", "violence", "harassment"
-        ]
-        if any(indicator in query_lower for indicator in urgency_indicators):
-            facts.append("case_urgency(user, high).")
+            if re.search(r'\b(discrimination|discriminate)\b', query_lower):
+                facts.append("rights_violation(user, 'discrimination').")
+            if re.search(r'\b(bribe|corruption)\b', query_lower):
+                facts.append("corruption(user, true).")
         
         return facts
     
     def _determine_eligibility(self, facts: List[str], domains: List[str], query: str) -> bool:
-        """Determine eligibility based on legal rules simulation"""
+        """Determine eligibility with balanced distribution (65-70% eligible)"""
+        
+        facts_str = ' '.join(facts)
         query_lower = query.lower()
         
+        # For legal_aid domain - strict criteria with refined thresholds
         if "legal_aid" in domains:
-            # Check income eligibility
-            income_eligible = False
-            categorical_eligible = False
+            # Income-based eligibility
+            income_match = re.search(r'income_monthly\(user, (\d+)\)', facts_str)
+            if income_match:
+                income = int(income_match.group(1))
+                
+                # Clear ineligibility - high income
+                if income > 40000:
+                    return False
+                
+                # Clear eligibility - very low income
+                if income <= 15000:
+                    return True
+                
+                # Medium income (15k-40k) - check categorical eligibility with sub-thresholds
+                categorical_indicators = [
+                    "social_category(user, 'sc')",
+                    "social_category(user, 'st')",
+                    "social_category(user, 'bpl')",
+                    "is_disabled(user, true)",
+                    "is_widow(user, true)",
+                    "is_senior_citizen(user, true)",
+                    "gender(user, 'female')"  # Women with medium income
+                ]
+                
+                if any(indicator in facts_str for indicator in categorical_indicators):
+                    # Categorical + income sub-thresholds for balanced distribution
+                    if income <= 25000:
+                        return True  # Categorical + low-medium income - definitely eligible
+                    elif income <= 35000:
+                        return random.random() < 0.6  # Categorical + medium income - 60% chance
+                    else:  # 35k-40k
+                        return random.random() < 0.3  # Categorical + high medium income - 30% chance
+                else:
+                    # General category, medium income - reduced eligibility
+                    return random.random() < 0.15  # Reduced from 0.2 to balance distribution
             
-            for fact in facts:
-                if "income_monthly" in fact:
-                    income_match = re.search(r'income_monthly\(user, (\d+)\)', fact)
-                    if income_match:
-                        income = int(income_match.group(1))
-                        if income <= 25000:  # Income threshold
-                            income_eligible = True
-                        else:
-                            # High income cases - not eligible unless categorical
-                            if income > 50000:
-                                return False  # Definitely not eligible
-            
-            # Check categorical eligibility
+            # No income information but has categorical eligibility
             categorical_indicators = [
-                "is_woman(user, true)", 
-                "social_category(user, 'sc')", 
+                "social_category(user, 'sc')",
                 "social_category(user, 'st')",
+                "social_category(user, 'bpl')",
                 "is_disabled(user, true)",
+                "is_widow(user, true)",
                 "is_senior_citizen(user, true)"
             ]
-            if any(indicator in facts for indicator in categorical_indicators):
-                categorical_eligible = True
             
-            # Additional exclusion criteria for better distribution
-            exclusion_terms = ["rich", "wealthy", "business owner", "company owner", "multiple properties"]
-            if any(term in query_lower for term in exclusion_terms):
-                return False
+            if any(indicator in facts_str for indicator in categorical_indicators):
+                return True
             
-            # Create balanced eligibility (aim for ~70% eligible, 30% not eligible)
-            import random
-            if not income_eligible and not categorical_eligible:
-                # Random 10% chance for edge cases to be eligible
-                return random.random() < 0.1
-            
-            return income_eligible or categorical_eligible
+            # Default: ambiguous cases - reduced for balance
+            return random.random() < 0.25  # Reduced from 0.3
         
-        # For other domains, generally eligible if valid case (80% eligible)
-        import random
-        return random.random() < 0.8
+        # For other domains - generally eligible if valid case (70%)
+        return random.random() < 0.70  # Reduced from 0.75 for balanced distribution
+        return random.random() < 0.75
     
     def _generate_legal_reasoning(self, facts: List[str], domains: List[str], eligibility: bool) -> str:
         """Generate legal reasoning for the decision"""
@@ -1437,24 +1542,62 @@ class ComprehensiveLegalDataGenerator:
             return random.choice(["normal", "normal", "high"])  # Bias toward normal
     
     def save_dataset(self, dataset: List[LegalTrainingExample], filepath: str):
-        """Save dataset to JSON file"""
+        """Save dataset in CORRECT format for neural model training"""
         Path(filepath).parent.mkdir(parents=True, exist_ok=True)
         
-        dataset_json = {
-            "metadata": {
-                "total_samples": len(dataset),
-                "domains_covered": list(set([domain for sample in dataset for domain in sample.domains])),
-                "generation_date": "2025-08-01",
-                "version": "1.0",
-                "description": "Comprehensive legal training dataset for hybrid neural-symbolic system"
-            },
-            "samples": [asdict(sample) for sample in dataset]
-        }
+        # Separate neural training data from prolog/metadata
+        neural_training_samples = []
+        prolog_samples = []
+        metadata_samples = []
         
+        for idx, sample in enumerate(dataset):
+            sample_id = f"sample_{idx}"
+            
+            # Format for NEURAL MODEL (data_processor.py expects this)
+            neural_sample = {
+                "query": sample.query,  # Only text input
+                "domains": sample.domains,  # Multi-label targets
+                "expected_eligibility": sample.expected_eligibility,  # Binary target
+                "sample_id": sample_id  # Tracking
+            }
+            neural_training_samples.append(neural_sample)
+            
+            # Format for PROLOG ENGINE (separate file)
+            prolog_sample = {
+                "sample_id": sample_id,
+                "query": sample.query,
+                "prolog_facts": sample.prolog_facts,  # For symbolic reasoning
+                "expected_eligibility": sample.expected_eligibility,
+                "legal_reasoning": sample.legal_reasoning
+            }
+            prolog_samples.append(prolog_sample)
+            
+            # Format for METADATA (separate file)
+            metadata_sample = {
+                "sample_id": sample_id,
+                "user_demographics": sample.user_demographics,
+                "case_complexity": sample.case_complexity,
+                "priority_level": sample.priority_level
+            }
+            metadata_samples.append(metadata_sample)
+        
+        # Save NEURAL training data (THIS is what your model loads)
         with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump(dataset_json, f, indent=2, ensure_ascii=False)
+            json.dump(neural_training_samples, f, indent=2, ensure_ascii=False)
         
-        logger.info(f"Dataset saved to {filepath}")
+        # Save PROLOG data separately
+        prolog_path = filepath.replace('.json', '_prolog.json')
+        with open(prolog_path, 'w', encoding='utf-8') as f:
+            json.dump(prolog_samples, f, indent=2, ensure_ascii=False)
+        
+        # Save metadata separately
+        metadata_path = filepath.replace('.json', '_metadata.json')
+        with open(metadata_path, 'w', encoding='utf-8') as f:
+            json.dump(metadata_samples, f, indent=2, ensure_ascii=False)
+        
+        logger.info(f"Neural training data saved to {filepath}")
+        logger.info(f"Prolog data saved to {prolog_path}")
+        logger.info(f"Metadata saved to {metadata_path}")
         
         # Generate statistics
         self._generate_dataset_statistics(dataset, filepath.replace('.json', '_stats.json'))
@@ -1512,6 +1655,23 @@ class ComprehensiveLegalDataGenerator:
         variation_count = count - base_count  # 30% variations
         variation_samples = self._generate_template_variations(domain, variation_count)
         samples.extend(variation_samples)
+        
+        return samples
+    
+    def _generate_basic_variations(self, domain: LegalDomain, count: int) -> List[LegalTrainingExample]:
+        """Generate basic variations when no specific templates exist"""
+        samples = []
+        templates = self.legal_templates.get(domain.value, [])
+        
+        if not templates:
+            logger.warning(f"No templates for {domain.value}, returning empty list")
+            return samples
+        
+        # Use existing templates with random variable combinations
+        for i in range(count):
+            template_data = random.choice(templates)
+            sample = self._create_sample_from_template(template_data, [domain.value])
+            samples.append(sample)
         
         return samples
 
@@ -1874,6 +2034,157 @@ class ComprehensiveLegalDataGenerator:
             samples.append(sample)
         
         return samples
+
+
+class DataQualityValidator:
+    """Comprehensive data quality validation for legal training data"""
+    
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.validation_errors = []
+        self.validation_warnings = []
+    
+    def validate_sample(self, sample: LegalTrainingExample, index: int) -> Dict[str, List[str]]:
+        """Validate a single sample for data quality issues"""
+        errors = []
+        warnings = []
+        
+        # 1. Query-Facts Consistency Check
+        query_lower = sample.query.lower()
+        facts_str = ' '.join(sample.prolog_facts).lower()
+        
+        # Check gender consistency
+        query_has_woman = any(w in query_lower for w in ['woman', 'female', 'girl', 'mother', 'wife', 'widow'])
+        query_has_man = any(w in query_lower for w in ['man', 'male', 'husband', 'father'])
+        facts_has_female = "gender(user, 'female')" in facts_str
+        facts_has_male = "gender(user, 'male')" in facts_str
+        
+        if query_has_woman and facts_has_male:
+            errors.append(f"Sample {index}: Gender mismatch - query mentions woman but facts say male")
+        if query_has_man and facts_has_female:
+            errors.append(f"Sample {index}: Gender mismatch - query mentions man but facts say female")
+        
+        # Check income consistency
+        income_in_query = re.search(r'rs\.?\s*(\d+)', query_lower)
+        income_in_facts = re.search(r'income_monthly\(user,\s*(\d+)\)', facts_str)
+        
+        if income_in_query and income_in_facts:
+            query_income = int(income_in_query.group(1))
+            facts_income = int(income_in_facts.group(1))
+            
+            # Allow 10% tolerance for rounding
+            if abs(query_income - facts_income) > query_income * 0.1:
+                errors.append(f"Sample {index}: Income mismatch - query={query_income}, facts={facts_income}")
+        
+        # 2. Check for irrelevant noise in query (demoted to warnings - not blocking)
+        noise_patterns = [
+            r'i had a fight with',
+            r'i like to watch',
+            r'my son is doing',
+            r'yesterday',
+            r'the weather',
+            r'my hobby',
+        ]
+        
+        for pattern in noise_patterns:
+            if re.search(pattern, query_lower):
+                warnings.append(f"Sample {index}: Contains minor irrelevant information: {pattern}")
+        
+        # 3. Check query length and quality
+        if len(sample.query.split()) < 10:
+            warnings.append(f"Sample {index}: Query too short ({len(sample.query.split())} words)")
+        
+        if len(sample.query.split()) > 200:
+            warnings.append(f"Sample {index}: Query too long ({len(sample.query.split())} words)")
+        
+        # 4. Domain-specific validation
+        if "legal_aid" in sample.domains:
+            # Check if eligibility is properly determined
+            has_low_income = any('income_category' in f and 'low' in f for f in sample.prolog_facts)
+            has_categorical_eligibility = any(
+                keyword in facts_str 
+                for keyword in ['is_disabled', 'is_widow', 'is_senior_citizen', 'social_category']
+            )
+            
+            if sample.expected_eligibility and not (has_low_income or has_categorical_eligibility):
+                warnings.append(f"Sample {index}: Eligible but no clear qualifying criteria")
+        
+        # 5. Check for data leakage (CRITICAL - remains as error)
+        # These keywords directly leak the label and must be removed
+        leakage_keywords = [
+            'expected_eligibility', 'eligible', 'not eligible', 
+            'answer is', 'am i eligible', 'will i be eligible',
+            'can i get', 'will i get', 'do i get', 'shall i get',
+            'qualify for', 'meet the criteria', 'entitled to',
+            'can i have', 'will i receive', 'do i qualify'
+        ]
+        for keyword in leakage_keywords:
+            if keyword in query_lower:
+                errors.append(f"Sample {index}: CRITICAL data leakage - eligibility keyword in query: '{keyword}'")
+        
+        return {"errors": errors, "warnings": warnings}
+    
+    def validate_dataset(self, dataset: List[LegalTrainingExample]) -> Dict[str, Any]:
+        """Validate entire dataset and return comprehensive report"""
+        self.logger.info(f"Validating dataset with {len(dataset)} samples...")
+        
+        all_errors = []
+        all_warnings = []
+        
+        for idx, sample in enumerate(dataset):
+            validation_result = self.validate_sample(sample, idx)
+            all_errors.extend(validation_result["errors"])
+            all_warnings.extend(validation_result["warnings"])
+        
+        # Calculate statistics
+        stats = {
+            "total_samples": len(dataset),
+            "samples_with_errors": len([e for e in all_errors if e]),
+            "samples_with_warnings": len([w for w in all_warnings if w]),
+            "error_rate": len(all_errors) / len(dataset) if dataset else 0,
+            "warning_rate": len(all_warnings) / len(dataset) if dataset else 0,
+            "errors": all_errors[:50],  # Show first 50 errors
+            "warnings": all_warnings[:50],  # Show first 50 warnings
+        }
+        
+        # Domain distribution
+        domain_counts = {}
+        for sample in dataset:
+            for domain in sample.domains:
+                domain_counts[domain] = domain_counts.get(domain, 0) + 1
+        stats["domain_distribution"] = domain_counts
+        
+        # Eligibility distribution
+        eligible_count = sum(1 for s in dataset if s.expected_eligibility)
+        stats["eligibility_distribution"] = {
+            "eligible": eligible_count,
+            "not_eligible": len(dataset) - eligible_count,
+            "eligible_percentage": eligible_count / len(dataset) * 100 if dataset else 0
+        }
+        
+        self.logger.info(f"Validation complete: {len(all_errors)} errors, {len(all_warnings)} warnings")
+        
+        return stats
+    
+    def clean_dataset(self, dataset: List[LegalTrainingExample]) -> List[LegalTrainingExample]:
+        """Remove samples with critical errors"""
+        cleaned_dataset = []
+        removed_count = 0
+        
+        for idx, sample in enumerate(dataset):
+            validation_result = self.validate_sample(sample, idx)
+            
+            # Remove if has errors (warnings are OK)
+            if not validation_result["errors"]:
+                cleaned_dataset.append(sample)
+            else:
+                removed_count += 1
+                self.logger.debug(f"Removed sample {idx}: {validation_result['errors']}")
+        
+        self.logger.info(f"Cleaned dataset: removed {removed_count} samples, {len(cleaned_dataset)} remaining")
+        
+        return cleaned_dataset
+
     
 def generate_comprehensive_dataset(self, total_samples: int = 20000) -> List[LegalTrainingExample]:
     """
@@ -1925,40 +2236,77 @@ def generate_comprehensive_dataset(self, total_samples: int = 20000) -> List[Leg
 # Replace the existing main() function
 
 def main():
-    """Main function to generate comprehensive 20K dataset for robust training"""
-    logger.info("Starting comprehensive legal data generation for robust training")
+    """Main function with comprehensive validation"""
+    logger.info("=" * 80)
+    logger.info("Starting HIGH-QUALITY legal data generation with validation")
+    logger.info("=" * 80)
     
     # Create data generator
     generator = ComprehensiveLegalDataGenerator()
+    validator = DataQualityValidator()
     
-    # Generate large dataset for robust training (20,000 samples)
-    dataset = generator.generate_comprehensive_dataset(total_samples=20000)
+    # Generate dataset (start with more to account for cleaning)
+    logger.info("\n📊 STEP 1: Generating initial dataset...")
+    initial_dataset = generator.generate_comprehensive_dataset(total_samples=20000)
     
-    # Save main dataset
-    output_path = "data/comprehensive_legal_training_data.json"
-    generator.save_dataset(dataset, output_path)
+    # Validate dataset
+    logger.info("\n📊 STEP 2: Validating data quality...")
+    validation_report = validator.validate_dataset(initial_dataset)
     
-    # Generate additional validation datasets
-    logger.info("Generating additional validation datasets...")
+    # Print validation summary
+    print("\n" + "=" * 80)
+    print("VALIDATION REPORT")
+    print("=" * 80)
+    print(f"Total Samples: {validation_report['total_samples']}")
+    print(f"Error Rate: {validation_report['error_rate']:.2%}")
+    print(f"Warning Rate: {validation_report['warning_rate']:.2%}")
+    print(f"\nEligibility Distribution:")
+    print(f"  Eligible: {validation_report['eligibility_distribution']['eligible']} "
+          f"({validation_report['eligibility_distribution']['eligible_percentage']:.1f}%)")
+    print(f"  Not Eligible: {validation_report['eligibility_distribution']['not_eligible']}")
+    print(f"\nDomain Distribution:")
+    for domain, count in validation_report['domain_distribution'].items():
+        print(f"  {domain}: {count}")
     
-    # Generate edge cases dataset
-    edge_cases = generator._generate_edge_case_samples(1000)
-    edge_cases_path = "data/edge_cases_dataset.json"
-    generator.save_dataset(edge_cases, edge_cases_path)
+    if validation_report['errors']:
+        print(f"\n⚠️  First 10 Errors:")
+        for error in validation_report['errors'][:10]:
+            print(f"  - {error}")
     
-    # Generate domain-specific validation sets
-    for domain in LegalDomain:
-        domain_samples = generator._generate_enhanced_domain_samples(domain, 500)
-        domain_path = f"data/{domain.value}_validation_set.json"
-        generator.save_dataset(domain_samples, domain_path)
+    # Clean dataset
+    logger.info("\n📊 STEP 3: Cleaning dataset...")
+    cleaned_dataset = validator.clean_dataset(initial_dataset)
     
-    logger.info("Comprehensive data generation completed successfully!")
-    print(f"\n✅ Generated {len(dataset):,} training samples")
-    print(f"✅ Generated 1,000 edge case samples")
-    print(f"✅ Generated 500 samples per domain for validation")
-    print(f"📁 Main dataset saved to: {output_path}")
-    print(f"📊 Total samples across all datasets: {len(dataset) + 1000 + (500 * 5):,}")
-    print(f"📈 Enhanced coverage for robust neural training!")
+    # Save cleaned dataset
+    output_path = "data/high_quality_legal_training_data.json"
+    logger.info(f"\n📊 STEP 4: Saving high-quality dataset to {output_path}...")
+    generator.save_dataset(cleaned_dataset, output_path)
+    
+    # Create train/val/test splits
+    logger.info("\n📊 STEP 5: Creating train/val/test splits...")
+    random.shuffle(cleaned_dataset)
+    
+    train_size = int(len(cleaned_dataset) * 0.7)
+    val_size = int(len(cleaned_dataset) * 0.15)
+    
+    train_data = cleaned_dataset[:train_size]
+    val_data = cleaned_dataset[train_size:train_size + val_size]
+    test_data = cleaned_dataset[train_size + val_size:]
+    
+    generator.save_dataset(train_data, "data/train_split.json")
+    generator.save_dataset(val_data, "data/val_split.json")
+    generator.save_dataset(test_data, "data/test_split.json")
+    
+    # Final summary
+    print("\n" + "=" * 80)
+    print("✅ DATA GENERATION COMPLETE")
+    print("=" * 80)
+    print(f"📁 Main Dataset: {len(cleaned_dataset):,} samples")
+    print(f"📁 Train Split: {len(train_data):,} samples (70%)")
+    print(f"📁 Val Split: {len(val_data):,} samples (15%)")
+    print(f"� Test Split: {len(test_data):,} samples (15%)")
+    print(f"� Quality: {(1 - validation_report['error_rate']):.1%} error-free")
+    print("=" * 80)
 
 
 if __name__ == "__main__":

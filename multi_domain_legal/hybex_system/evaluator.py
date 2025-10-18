@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Any
 import gc # Import garbage collector
@@ -224,7 +225,7 @@ class ModelEvaluator:
         gnn_labels = []
         
         # Limit the evaluation to the first 100 samples for performance sanity if the full set is large
-        samples_to_evaluate = test_samples[:self.config.EVALUATION_CONFIG.get('max_gnn_samples', 1000)]
+        samples_to_evaluate = test_samples[:self.config.EVAL_CONFIG.get('max_gnn_samples', 1000)]
 
         for sample in tqdm(samples_to_evaluate, desc="Running GNN Analysis", leave=False):
             # Use the cached data processor
@@ -320,15 +321,26 @@ class ModelEvaluator:
         if prolog_reasoning_results is None:
             logger.info("No Prolog reasoning results provided. Running in-place Prolog evaluation...")
             try:
-                # Use cached Prolog engine
-                prolog_engine = self._prolog_engine_cache
-                # NOTE: This should ideally use PrologEngine.batch_legal_analysis on extracted entities.
-                # Since the extraction is slow, we rely on the orchestrator to provide results. 
-                # For robustness, we'll try to get entity samples if IDs match.
-                prolog_reasoning_results = self._prolog_engine_cache.run_evaluation_on_samples(test_samples)
+                # Use cached Prolog engine to run batch analysis
+                # batch_legal_analysis expects list of dicts with 'extracted_entities' and 'sample_id'
+                cases_for_analysis = []
+                for sample in test_samples:
+                    case_dict = {
+                        'sample_id': sample.get('sample_id', f'eval_{len(cases_for_analysis)}'),
+                        'extracted_entities': sample.get('extracted_entities', {})
+                    }
+                    # If no extracted_entities, extract on the fly
+                    if not case_dict['extracted_entities'] and 'query' in sample:
+                        case_dict['extracted_entities'] = self._data_processor_cache.extract_entities(sample['query'])
+                    cases_for_analysis.append(case_dict)
+                
+                # Call batch_legal_analysis which returns List[LegalReasoning]
+                reasoning_dataclasses = self._prolog_engine_cache.batch_legal_analysis(cases_for_analysis)
+                # Convert to dicts for consistency
+                prolog_reasoning_results = [asdict(r) for r in reasoning_dataclasses]
                 logger.info(f"Completed in-place Prolog reasoning for {len(prolog_reasoning_results)} samples")
             except Exception as e:
-                logger.error(f"Failed to run in-place Prolog reasoning: {e}")
+                logger.error(f"Failed to run in-place Prolog reasoning: {e}", exc_info=True)
                 prolog_reasoning_results = []
         
         prolog_metrics = self._calculate_prolog_metrics(test_samples, prolog_reasoning_results)
@@ -442,7 +454,7 @@ class ModelEvaluator:
         ]
         
         # Limit processing for performance safety
-        samples_to_process = samples_to_process[:self.config.EVALUATION_CONFIG.get('max_hybrid_samples', 1000)]
+        samples_to_process = samples_to_process[:self.config.EVAL_CONFIG.get('max_hybrid_samples', 1000)]
 
         for sample in tqdm(samples_to_process, desc="Processing hybrid fusion", leave=False):
             sample_id = sample.get('sample_id')
@@ -471,8 +483,9 @@ class ModelEvaluator:
                 final_hybrid_pred = False
                 fusion_method = "default"
 
-                prolog_threshold = self.config.FUSION_CONFIG.get('prolog_override_threshold', 0.95)
-                neural_threshold = self.config.FUSION_CONFIG.get('neural_override_threshold', 0.90)
+                # Use graph_override_threshold for symbolic (Prolog) reasoning
+                prolog_threshold = self.config.FUSION_CONFIG.get('graph_override_threshold', 0.8)
+                neural_threshold = self.config.FUSION_CONFIG.get('neural_override_threshold', 0.9)
 
                 if prolog_confidence >= prolog_threshold:
                     final_hybrid_pred = prolog_pred_bool

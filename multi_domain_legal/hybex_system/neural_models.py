@@ -89,6 +89,25 @@ class LegalDataset(Dataset):
 
         logger.info(f"Created {task_type} dataset with {len(samples)} samples")
 
+        # DEBUG: Log first few samples to detect leakage during dataset construction
+        try:
+            logger.debug("\n🔍 DEBUG: First 5 training samples:")
+            for i, sample in enumerate(self.samples[:5]):
+                logger.debug(f"\nSample {i}:")
+                logger.debug(f"  Query: {sample.get('query', 'MISSING')[:100]}...")
+                logger.debug(f"  Domains: {sample.get('domains', 'MISSING')}")
+                logger.debug(f"  Eligibility: {sample.get('expected_eligibility', 'MISSING')}")
+                logger.debug(f"  Keys: {list(sample.keys())}")
+
+            # Quick check for leaked fields that shouldn't be present in neural inputs
+            leaked_keys = ['extracted_facts', 'prolog_facts', 'user_demographics', 'income', 'social_category']
+            for key in leaked_keys:
+                if key in self.samples[0]:
+                    logger.warning(f"⚠️  WARNING: Found potential data leakage key: '{key}' in samples[0]")
+        except Exception:
+            # Don't fail dataset construction on debug printing issues
+            logger.exception("Debug print failed in LegalDataset.__init__")
+
     def __len__(self):
         return len(self.samples)
 
@@ -155,7 +174,7 @@ class ModelTrainer:
         log_file = self.config.get_log_path('neural_training')
         # Robust check against multiple handlers
         if not any(isinstance(h, logging.FileHandler) and h.baseFilename.endswith('neural_training.log') for h in logger.handlers):
-            file_handler = logging.FileHandler(log_file)
+            file_handler = logging.FileHandler(log_file, encoding='utf-8')
             file_handler.setLevel(logging.INFO)
             formatter = logging.Formatter(self.config.LOGGING_CONFIG['format'])
             file_handler.setFormatter(formatter)
@@ -172,16 +191,24 @@ class ModelTrainer:
 
     def train_model(self, model: nn.Module, train_loader: DataLoader, val_loader: DataLoader,
                     model_name: str, task_type: str) -> Dict[str, Any]:
-        """Train a model with comprehensive monitoring."""
+        """Train a model with comprehensive monitoring, gradient accumulation, and mixed precision."""
 
         model_config = self.get_model_config(model_name)
         model.to(self.device)
+        
+        # Gradient accumulation settings (simulate larger batch size)
+        ACCUMULATION_STEPS = 4  # Effective batch = 2 * 4 = 8
+        
         optimizer = torch.optim.AdamW(model.parameters(), lr=model_config['learning_rate'])
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
             optimizer, mode='max', factor=0.1, patience=model_config['early_stopping_patience'] // 2
         )
 
-        # Use weights for BCEWithLogitsLoss if class imbalance is an issue (not implemented here, but good practice)
+        # Mixed precision training for memory optimization
+        from torch.cuda.amp import autocast, GradScaler
+        scaler = GradScaler() if self.device.type == 'cuda' else None
+
+        # Use weights for BCEWithLogitsLoss if class imbalance is an issue
         if task_type in ["domain_classification", "eligibility_prediction"]:
             criterion = nn.BCEWithLogitsLoss()
         else:
@@ -200,16 +227,20 @@ class ModelTrainer:
             'val_metrics': []
         }
 
-        logger.info(f"Starting training for {model_name} for {model_config['epochs']} epochs.")
+        logger.info(f"Starting training for {model_name} with gradient accumulation (steps={ACCUMULATION_STEPS})")
+        if scaler:
+            logger.info("Mixed precision training enabled (FP16)")
 
         # Progress bar for epochs
         epoch_pbar = tqdm(range(model_config['epochs']), desc=f"Training {model_name}", unit="epoch")
 
         for epoch in epoch_pbar:
-            final_epoch = epoch + 1 # Track the final epoch number correctly
+            final_epoch = epoch + 1
             model.train()
             total_train_loss = 0
             train_preds, train_labels = [], []
+
+            optimizer.zero_grad()  # Zero gradients at start
 
             # Progress bar for training batches
             train_pbar = tqdm(train_loader, desc=f"Epoch {epoch+1} Training", leave=False, unit="batch")
@@ -219,28 +250,47 @@ class ModelTrainer:
                 attention_mask = batch['attention_mask'].to(self.device)
                 labels = batch['labels'].to(self.device)
 
-                optimizer.zero_grad()
-                outputs = model(input_ids=input_ids, attention_mask=attention_mask)
-                logits = outputs['logits']
-
-                # Loss calculation and prediction logic is the same for both tasks using BCEWithLogitsLoss
-                loss = criterion(logits, labels)
+                # Use autocast for mixed precision if CUDA available
+                if scaler:
+                    with autocast():
+                        outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+                        logits = outputs['logits']
+                        loss = criterion(logits, labels)
+                        loss = loss / ACCUMULATION_STEPS  # Normalize for accumulation
+                else:
+                    outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+                    logits = outputs['logits']
+                    loss = criterion(logits, labels)
+                    loss = loss / ACCUMULATION_STEPS
                 
+                # Predictions
                 if task_type == "eligibility_prediction":
-                    # Binary: Sigmoid > 0.5 threshold
                     preds = (torch.sigmoid(logits) > 0.5).cpu().numpy()
                 elif task_type == "domain_classification":
-                    # Multi-label: Sigmoid > 0.5 threshold
                     preds = (torch.sigmoid(logits) > 0.5).cpu().numpy()
 
-                loss.backward()
-                torch.nn.utils.clip_grad_norm_(model.parameters(), model_config['gradient_clip_val'])
-                optimizer.step()
+                # Backward pass
+                if scaler:
+                    scaler.scale(loss).backward()
+                else:
+                    loss.backward()
 
-                total_train_loss += loss.item()
+                # Update weights every ACCUMULATION_STEPS or on last batch
+                if ((batch_idx + 1) % ACCUMULATION_STEPS == 0) or (batch_idx + 1 == len(train_loader)):
+                    if scaler:
+                        scaler.unscale_(optimizer)
+                        torch.nn.utils.clip_grad_norm_(model.parameters(), model_config['gradient_clip_val'])
+                        scaler.step(optimizer)
+                        scaler.update()
+                    else:
+                        torch.nn.utils.clip_grad_norm_(model.parameters(), model_config['gradient_clip_val'])
+                        optimizer.step()
+                    optimizer.zero_grad()
+
+                total_train_loss += loss.item() * ACCUMULATION_STEPS  # De-normalize for logging
 
                 # Update progress bar with current loss
-                train_pbar.set_postfix({'loss': f'{loss.item():.4f}'})
+                train_pbar.set_postfix({'loss': f'{loss.item() * ACCUMULATION_STEPS:.4f}'})
 
                 train_preds.extend(preds)
                 train_labels.extend(labels.cpu().numpy())
@@ -509,56 +559,70 @@ class ModelTrainer:
         logger.info(f"Saved training plots to {plots_dir}")
 
     def train_gnn_model_component(self, train_samples: List[Dict], val_samples: List[Dict]) -> Dict[str, Any]:
-        """
-        Trains the Knowledge Graph Neural Network (KGNN) component.
-        """
+        """Trains the Knowledge Graph Neural Network (KGNN) component."""
         logger.info("--- Starting Knowledge Graph Engine (GNN) Training ---")
         
         try:
-            # 1. Initialize the Knowledge Graph Engine
-            # This will build the base graph from Prolog rules
-            kg_engine = KnowledgeGraphEngine(self.config)
-
-            # Check if the graph has been built successfully
-            if kg_engine.graph.number_of_nodes() == 0:
-                logger.error("Knowledge graph is empty. Aborting GNN training.")
+            # Initialize GNN engine
+            kgengine = KnowledgeGraphEngine(self.config)
+            
+            # Verify we have samples with extracted entities
+            train_with_entities = [s for s in train_samples if s.get('extracted_entities')]
+            val_with_entities = [s for s in val_samples if s.get('extracted_entities')]
+            
+            if len(train_with_entities) == 0:
+                logger.error("No training samples with extracted_entities found. Cannot train GNN.")
                 return {
-                    "gnn_model": {"path": None, "best_f1": 0.0},
-                    "gnn_training": {'status': 'failed', 'reason': 'Empty knowledge graph'}
+                    'gnn_model': {'path': None, 'best_f1': 0.0},
+                    'gnn_training': {
+                        'status': 'failed',
+                        'reason': 'No samples with extracted entities'
+                    }
                 }
-
-            # 2. Combine training and validation samples for GNN training
-            # GNNs often benefit from seeing all available data to learn the graph structure
-            all_samples = train_samples + val_samples
-
-            # 3. Call the training method from the KG engine
-            # The train_gnn method is already implemented in KnowledgeGraphEngine
-            kg_engine.train_gnn(all_samples, epochs=50)  # Using a default of 50 epochs
-
-            # 4. Save the trained GNN model
-            model_dir = self.config.MODELS_DIR / "gnn_model"
+            
+            logger.info(f"Training GNN with {len(train_with_entities)} train samples and {len(val_with_entities)} val samples")
+            
+            # Train the GNN
+            kgengine.train_gnn(
+                train_data=train_with_entities,
+                val_data=val_with_entities if val_with_entities else None,
+                epochs=100
+            )
+            
+            # Save the trained model
+            model_dir = self.config.MODELS_DIR / 'gnn_model'
             model_dir.mkdir(parents=True, exist_ok=True)
-            model_path = model_dir / "model.pt"
-            torch.save(kg_engine.model.state_dict(), model_path)
+            model_path = model_dir / 'gnn_model.pt'
             
-            logger.info(f"GNN training complete. Model saved to {model_path}.")
-
-            # 5. Return results in the expected format for the orchestrator
-            # Note: We don't have a separate validation set here, so we can't calculate a true validation F1.
-            # A more advanced implementation would split the `all_samples` for GNN-specific validation.
+            torch.save({
+                'model_state_dict': kgengine.model.state_dict(),
+                'node_to_idx': kgengine.node_to_idx,
+                'idx_to_node': kgengine.idx_to_node,
+                'feature_dim': kgengine.feature_dim
+            }, model_path)
+            
+            logger.info(f"✅ GNN model saved to {model_path}")
+            
             return {
-                "gnn_model": {
-                    "path": str(model_path),
-                    "best_f1": -1,  # Placeholder as we don't have a val score here
+                'gnn_model': {
+                    'path': str(model_path),
+                    'best_f1': getattr(kgengine, 'best_model_state', -1)
                 },
-                "gnn_training": {'status': 'success', 'duration_seconds': -1} # Placeholder
+                'gnn_training': {
+                    'status': 'success',
+                    'num_nodes': kgengine.graph.number_of_nodes(),
+                    'num_edges': kgengine.graph.number_of_edges()
+                }
             }
-            
+        
         except Exception as e:
             logger.error(f"GNN model training failed: {e}", exc_info=True)
             return {
-                "gnn_model": {"path": None, "best_f1": 0.0},
-                "gnn_training": {'status': 'failed', 'reason': str(e)}
+                'gnn_model': {'path': None, 'best_f1': 0.0},
+                'gnn_training': {
+                    'status': 'failed',
+                    'reason': str(e)
+                }
             }
     
     def train_all_models(self, train_samples: List[Dict], val_samples: List[Dict]) -> Dict[str, Any]:

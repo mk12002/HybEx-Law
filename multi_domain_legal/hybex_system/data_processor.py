@@ -27,7 +27,7 @@ class DataPreprocessor:
     def setup_logging(self):
         log_file = self.config.get_log_path('data_preprocessing')
         if not any(isinstance(h, logging.FileHandler) and h.baseFilename.endswith('data_preprocessing.log') for h in logger.handlers):
-            file_handler = logging.FileHandler(log_file)
+            file_handler = logging.FileHandler(log_file, encoding='utf-8')
             file_handler.setLevel(logging.INFO)
             formatter = logging.Formatter(self.config.LOGGING_CONFIG['format'])
             file_handler.setFormatter(formatter)
@@ -57,6 +57,18 @@ class DataPreprocessor:
         """
         Extracts a wide range of legal entities using domain-specific regex and spaCy.
         This is the core of providing facts to the Prolog engine.
+        
+        **Normalization Strategy:**
+        - `annual_income`: ALWAYS in rupees per year (monthly * 12)
+        - `employment_duration_days`: ALWAYS in days (months * 30, years * 365)
+        - `daily_wage`: ALWAYS rupees per day
+        - `age`: Years
+        - All monetary values in integer rupees
+        - Boolean values: True/False
+        - Categorical values: Lowercase strings ('sc', 'st', 'bpl', etc.)
+        
+        This ensures the Prolog engine and neural models receive consistent,
+        comparable values regardless of how they're expressed in the query.
         """
         entities = {}
         text_lower = text.lower()
@@ -67,33 +79,43 @@ class DataPreprocessor:
         # =================================================================
         
         # 1. Income Extraction (Robust: handles monthly vs. annual)
+        # ALWAYS store as annual income (normalized)
         income_patterns = [
-            r'rs\.?\s*(\d[\d,]+(?:\.\d{2})?)\s*(?:per month|monthly)',
-            r'rs\.?\s*(\d[\d,]+(?:\.\d{2})?)\s*(?:per year|annually|yearly)',
-            r'(\d+)\s*lakhs? an?nual',
-            r'income.*?(\d[\d,]+)',
-            r'earning\s*rs\.?\s*(\d[\d,]+)'
+            # Monthly patterns - will be multiplied by 12
+            (r'(?:monthly|per month)\s+(?:salary|income|wage|earning).*?rs\.?\s*(\d[\d,]+(?:\.\d{2})?)', 'monthly'),
+            (r'(?:salary|income|wage|earning).*?rs\.?\s*(\d[\d,]+(?:\.\d{2})?)\s*(?:per month|monthly)', 'monthly'),
+            (r'rs\.?\s*(\d[\d,]+(?:\.\d{2})?)\s*(?:per month|monthly)', 'monthly'),
+            # Annual patterns - use as-is
+            (r'(?:annual|yearly)\s+(?:salary|income|wage|earning).*?rs\.?\s*(\d[\d,]+(?:\.\d{2})?)', 'annual'),
+            (r'(?:salary|income|wage|earning).*?rs\.?\s*(\d[\d,]+(?:\.\d{2})?)\s*(?:per year|annually|yearly|annual)', 'annual'),
+            (r'rs\.?\s*(\d[\d,]+(?:\.\d{2})?)\s*(?:per year|annually|yearly|annual)', 'annual'),
+            (r'(\d+)\s*lakhs?\s+(?:annual|per year|yearly)', 'annual'),
+            # Ambiguous patterns - assume annual if no context
+            (r'annual\s+income.*?rs\.?\s*(\d[\d,]+)', 'annual'),
+            (r'income.*?rs\.?\s*(\d[\d,]+)', 'annual'),
         ]
-        annual_income = None
-        for pattern in income_patterns:
+        for pattern, period_type in income_patterns:
             match = re.search(pattern, text_lower)
             if match:
                 amount_str = match.group(1).replace(',', '')
                 try:
                     amount = float(amount_str)
-                    if 'month' in match.group(0):
+                    # Apply multiplier based on period type to normalize to annual
+                    if period_type == 'monthly':
                         annual_income = amount * 12
-                    else:
+                    else:  # annual
                         annual_income = amount
-                    entities['income'] = int(annual_income)
+                    # Store normalized annual income
+                    entities['annual_income'] = int(annual_income)
                     break
                 except ValueError:
                     continue
 
         # 2. Social Category Extraction (Normalized for Prolog)
+        # CRITICAL: Check ST before SC to avoid "sc" matching in "scheduled tribe"
         social_category_mapping = {
-            'scheduled caste': 'sc', 'sc': 'sc', 'dalit': 'sc',
-            'scheduled tribe': 'st', 'st': 'st', 'tribal': 'st',
+            'scheduled tribe': 'st', 'st': 'st', 'tribal': 'st', 'adivasi': 'st',  # Check first
+            'scheduled caste': 'sc', 'dalit': 'sc',  # Removed standalone 'sc' to avoid ambiguity
             'below poverty line': 'bpl', 'bpl': 'bpl', 'poor': 'bpl',
             'economically weaker': 'ews', 'ews': 'ews',
             'other backward class': 'obc', 'obc': 'obc'
@@ -116,19 +138,39 @@ class DataPreprocessor:
         # =================================================================
         # Employment Law Entities
         # =================================================================
-        duration_match = re.search(r'(\d+)\s*(day|month|year)s?', text_lower)
-        if duration_match:
-            value, unit = int(duration_match.group(1)), duration_match.group(2)
-            if 'month' in unit:
-                entities['employment_duration'] = value * 30
-            elif 'year' in unit:
-                entities['employment_duration'] = value * 365
-            else:
-                entities['employment_duration'] = value
+        # Employment duration - only match in employment context (working, employed, job, service)
+        # ALWAYS store as days (normalized)
+        employment_duration_patterns = [
+            (r'(?:working|employed|job|service|employment).*?(\d+)\s*(day|month|year)s?', None),
+            (r'(\d+)\s*(day|month|year)s?\s*(?:of employment|of work|of service|working)', None),
+            (r'(\d+)\s*(day|month|year)s?\s+(?:contract|tenure|period)', None),
+        ]
+        for pattern, _ in employment_duration_patterns:
+            duration_match = re.search(pattern, text_lower)
+            if duration_match:
+                value, unit = int(duration_match.group(1)), duration_match.group(2)
+                # Normalize to days
+                if 'month' in unit:
+                    days = value * 30
+                elif 'year' in unit:
+                    days = value * 365
+                else:  # already in days
+                    days = value
+                entities['employment_duration_days'] = days
+                break
 
-        wage_match = re.search(r'(\d+)\s*(?:per day|daily)', text_lower)
-        if wage_match:
-            entities['daily_wage'] = int(wage_match.group(1))
+        # Daily wage extraction - handles multiple patterns
+        # Store as-is (already normalized to per-day rate)
+        wage_patterns = [
+            r'daily\s+wage.*?rs\.?\s*(\d+)',
+            r'rs\.?\s*(\d+)\s*(?:per day|daily)',
+            r'(\d+)\s*(?:per day|daily\s+wage)'
+        ]
+        for pattern in wage_patterns:
+            wage_match = re.search(pattern, text_lower)
+            if wage_match:
+                entities['daily_wage'] = int(wage_match.group(1))
+                break
 
         notice_match = re.search(r'(\d+)\s*days?\s*notice', text_lower)
         if notice_match:
@@ -239,9 +281,107 @@ class DataPreprocessor:
         3. Extracts entities and enriches samples.
         4. Splits data into train, validation, and test sets.
         5. Saves processed data to files.
+        
+        NOTE: If pre-split files (*_split.json) are detected, skips re-splitting.
         """
         logger.info(f"Running preprocessing pipeline for data in: {data_directory}")
         data_path = Path(data_directory)
+        
+        # ========================================
+        # CHECK FOR PRE-SPLIT DATA FILES FIRST
+        # ========================================
+        train_file = data_path / "train_split.json"
+        val_file = data_path / "val_split.json"
+        test_file = data_path / "test_split.json"
+        
+        if train_file.exists() and val_file.exists() and test_file.exists():
+            logger.info("✅ Detected pre-split data files (*_split.json). Loading without re-splitting...")
+            
+            # Load pre-split files directly
+            with open(train_file, 'r', encoding='utf-8') as f:
+                train_samples = json.load(f)
+            with open(val_file, 'r', encoding='utf-8') as f:
+                val_samples = json.load(f)
+            with open(test_file, 'r', encoding='utf-8') as f:
+                test_samples = json.load(f)
+            
+            logger.info(f"Loaded {len(train_samples)} train, {len(val_samples)} val, {len(test_samples)} test samples")
+            
+            # CRITICAL FIX: Always extract entities if missing
+            all_pre_split_samples = train_samples + val_samples + test_samples
+            missing_entities_count = sum(1 for s in all_pre_split_samples if 'extracted_entities' not in s)
+            
+            if missing_entities_count > 0:
+                logger.info(f"Extracting entities for {missing_entities_count} samples without 'extracted_entities'...")
+                
+                extraction_errors = 0
+                for sample in tqdm(all_pre_split_samples, desc="Extracting entities for pre-split data", unit="samples"):
+                    if 'extracted_entities' not in sample:
+                        if 'query' in sample:
+                            try:
+                                sample['extracted_entities'] = self.extract_entities(sample['query'])
+                            except Exception as e:
+                                logger.error(f"Failed to extract entities for {sample.get('sample_id')}: {e}")
+                                sample['extracted_entities'] = {}
+                                extraction_errors += 1
+                        else:
+                            sample['extracted_entities'] = {}
+                
+                if extraction_errors > 0:
+                    logger.warning(f"⚠️  Entity extraction failed for {extraction_errors} samples")
+                
+                logger.info("✅ Entity extraction completed for pre-split data")
+                
+                # ✅ CRITICAL: Save updated data BACK to original *_split.json files
+                logger.info("💾 Saving extracted entities back to original split files...")
+                with open(train_file, 'w', encoding='utf-8') as f:
+                    json.dump(train_samples, f, indent=2, ensure_ascii=False)
+                with open(val_file, 'w', encoding='utf-8') as f:
+                    json.dump(val_samples, f, indent=2, ensure_ascii=False)
+                with open(test_file, 'w', encoding='utf-8') as f:
+                    json.dump(test_samples, f, indent=2, ensure_ascii=False)
+                logger.info("✅ Entities saved back to split files - future runs will skip extraction")
+            else:
+                logger.info("✅ All samples already have extracted_entities")
+
+            # Save to processed_data directory as well
+            processed_dir = self.config.RESULTS_DIR / "processed_data"
+            processed_dir.mkdir(parents=True, exist_ok=True)
+            
+            train_file_out = processed_dir / "train_samples.json"
+            val_file_out = processed_dir / "val_samples.json"
+            test_file_out = processed_dir / "test_samples.json"
+            
+            with open(train_file_out, 'w', encoding='utf-8') as f:
+                json.dump(train_samples, f, indent=2, ensure_ascii=False)
+            with open(val_file_out, 'w', encoding='utf-8') as f:
+                json.dump(val_samples, f, indent=2, ensure_ascii=False)
+            with open(test_file_out, 'w', encoding='utf-8') as f:
+                json.dump(test_samples, f, indent=2, ensure_ascii=False)
+            
+            logger.info("✅ Pre-split data with entities saved to both locations")
+            
+            return {
+                'total_processed_samples': len(all_pre_split_samples),
+                'train_samples_count': len(train_samples),
+                'val_samples_count': len(val_samples),
+                'test_samples_count': len(test_samples),
+                'saved_files': {
+                    'train_data_file': str(train_file_out),
+                    'val_data_file': str(val_file_out),
+                    'test_data_file': str(test_file_out)
+                },
+                'validation_stats': {
+                    'status': 'presplit_with_entities',
+                    'message': 'Pre-split data loaded and entities extracted',
+                    'missing_entities_filled': missing_entities_count
+                }
+            }
+        
+        # ========================================
+        # OTHERWISE: PROCEED WITH ORIGINAL PREPROCESSING
+        # ========================================
+        logger.info("No pre-split files detected. Proceeding with full preprocessing pipeline...")
         
         # 1. Load raw data
         all_samples = []
@@ -250,6 +390,11 @@ class DataPreprocessor:
             raise FileNotFoundError(f"No JSON data files found in {data_directory}. Please ensure your raw data is in JSON format in the specified directory.")
         
         for file_path in json_files:
+            # Skip scraping report files - they contain metadata, not training samples
+            if 'scraping_report' in file_path.name:
+                logger.info(f"Skipping non-sample JSON report file: {file_path.name}")
+                continue
+            
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     file_data = json.load(f)
@@ -283,18 +428,28 @@ class DataPreprocessor:
 
         # 3. Extract entities and enrich samples
         logger.info("Extracting entities and enriching samples...")
+        extraction_errors = 0
+        
         for i, sample in enumerate(tqdm(all_samples, desc="Extracting legal entities", unit="samples")):
             # Ensure each sample has a unique ID, useful for tracking
             if 'sample_id' not in sample:
                 sample['sample_id'] = f"sample_{i+1}"
             
             if 'query' in sample:
-                sample['extracted_entities'] = self.extract_entities(sample['query'])
+                try:
+                    sample['extracted_entities'] = self.extract_entities(sample['query'])
+                except Exception as e:
+                    logger.error(f"Failed to extract entities for sample {sample.get('sample_id')}: {e}")
+                    sample['extracted_entities'] = {}  # Empty dict as fallback
+                    extraction_errors += 1
             else:
-                sample['extracted_entities'] = {} # No query, no entities
+                sample['extracted_entities'] = {}  # No query, no entities
                 logger.warning(f"Sample {sample.get('sample_id', i)} has no 'query' field for entity extraction.")
         
-        logger.info("Samples enriched with extracted_entities.")
+        if extraction_errors > 0:
+            logger.warning(f"⚠️  Entity extraction failed for {extraction_errors}/{len(all_samples)} samples")
+        else:
+            logger.info(f"✅ Successfully extracted entities for all {len(all_samples)} samples")
 
         # 4. Split data into train, validation, and test sets
         logger.info("Splitting data into train, validation, and test sets...")

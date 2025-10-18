@@ -717,3 +717,108 @@ Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
 2025-08-12 17:05:09,919 - hybex_system.evaluator - INFO - Generated Neural Eligibility Predictor Confusion Matrix.
 2025-08-12 17:05:10,037 - hybex_system.evaluator - INFO - Generated Prolog Reasoning Confusion Matrix.
 2025-08-12 17:05:10,037 - hybex_system.evaluator - INFO - ✅ Evaluation visualizations saved to C:\Users\Student\Documents\22BLC1058\NLP\multi_domain_legal\results\evaluation_plots
+2025-10-17 23:38:29,407 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-17 23:38:29,407 - hybex_system.evaluator - INFO - ============================================================
+2025-10-17 23:38:29,407 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-17 23:38:29,407 - hybex_system.evaluator - INFO - ============================================================
+2025-10-17 23:38:29,407 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 01:02:50,118 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 01:02:50,118 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:02:50,118 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 01:02:50,119 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:02:50,119 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 01:08:37,431 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 01:08:37,431 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:08:37,431 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 01:08:37,431 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:08:37,433 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 01:17:36,750 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 01:17:36,750 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:17:36,750 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 01:17:36,750 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:17:36,750 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 01:24:41,050 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 01:24:41,051 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:24:41,051 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 01:24:41,051 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:24:41,051 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 01:29:36,879 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 01:29:36,879 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:29:36,879 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 01:29:36,879 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:29:36,879 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 01:35:20,419 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 01:35:20,419 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:35:20,419 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 01:35:20,419 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:35:20,419 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 01:41:22,274 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 01:41:22,274 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:41:22,274 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 01:41:22,274 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:41:22,275 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 01:42:32,475 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 01:42:32,475 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:42:32,475 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 01:42:32,475 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:42:32,475 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 01:43:56,899 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 01:43:56,899 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:43:56,899 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 01:43:56,899 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 01:43:56,900 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 07:06:45,926 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 07:06:45,926 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 07:06:45,926 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 07:06:45,926 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 07:06:45,926 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 16:51:12,808 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 16:51:12,808 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 16:51:12,808 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 16:51:12,808 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 16:51:12,808 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 19:06:20,215 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 19:06:20,215 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 19:06:20,215 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 19:06:20,215 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 19:06:20,215 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 23:24:41,554 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 23:24:41,554 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 23:24:41,555 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 23:24:41,555 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 23:24:41,555 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 23:38:08,523 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 23:38:08,523 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 23:38:08,523 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 23:38:08,523 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 23:38:08,523 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 23:50:37,886 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 23:50:37,887 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 23:50:37,887 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 23:50:37,887 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 23:50:37,887 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 23:51:31,672 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 23:51:31,672 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 23:51:31,672 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 23:51:31,673 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 23:51:31,673 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-18 23:54:56,370 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-18 23:54:56,370 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 23:54:56,371 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-18 23:54:56,371 - hybex_system.evaluator - INFO - ============================================================
+2025-10-18 23:54:56,371 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-19 00:17:43,354 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-19 00:17:43,354 - hybex_system.evaluator - INFO - ============================================================
+2025-10-19 00:17:43,354 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-19 00:17:43,354 - hybex_system.evaluator - INFO - ============================================================
+2025-10-19 00:17:43,354 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-19 00:19:19,045 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-19 00:19:19,045 - hybex_system.evaluator - INFO - ============================================================
+2025-10-19 00:19:19,045 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-19 00:19:19,045 - hybex_system.evaluator - INFO - ============================================================
+2025-10-19 00:19:19,045 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda
+2025-10-19 00:56:06,321 - hybex_system.evaluator - INFO - Added file handler to ModelEvaluator logger.
+2025-10-19 00:56:06,321 - hybex_system.evaluator - INFO - ============================================================
+2025-10-19 00:56:06,321 - hybex_system.evaluator - INFO - Starting HybEx-Law Model Evaluation
+2025-10-19 00:56:06,321 - hybex_system.evaluator - INFO - ============================================================
+2025-10-19 00:56:06,321 - hybex_system.evaluator - INFO - ModelEvaluator initialized on device: cuda

@@ -1,0 +1,550 @@
+{
+  "train_losses": [
+    0.06518617756845457,
+    0.00834690097927936,
+    0.004939110340939751,
+    0.0037779060782822988
+  ],
+  "val_losses": [
+    0.008309142445512428,
+    0.004671056107306609,
+    0.0028985811200921622,
+    0.0027402596539119906
+  ],
+  "learning_rates": [
+    1e-05,
+    1e-05,
+    1e-05,
+    1.0000000000000002e-06
+  ],
+  "train_metrics": [
+    {
+      "accuracy": 0.9305866547245858,
+      "f1_score": 0.9455606930839991,
+      "precision": 0.989994087546766,
+      "recall": 0.9062939087998304,
+      "loss": 0.06518617756845457,
+      "classification_report": {
+        "legal_aid": {
+          "precision": 0.9858510195588848,
+          "recall": 0.9769072164948454,
+          "f1-score": 0.9813587406793703,
+          "support": 2425.0
+        },
+        "family_law": {
+          "precision": 0.998062015503876,
+          "recall": 0.8833619210977701,
+          "f1-score": 0.9372156505914467,
+          "support": 583.0
+        },
+        "consumer_protection": {
+          "precision": 0.9853300733496333,
+          "recall": 0.9495758718190387,
+          "f1-score": 0.9671226301895849,
+          "support": 2122.0
+        },
+        "employment_law": {
+          "precision": 0.9918032786885246,
+          "recall": 0.8642857142857143,
+          "f1-score": 0.9236641221374046,
+          "support": 840.0
+        },
+        "fundamental_rights": {
+          "precision": 0.9889240506329114,
+          "recall": 0.8573388203017832,
+          "f1-score": 0.9184423218221895,
+          "support": 729.0
+        },
+        "micro avg": {
+          "precision": 0.9876738305941846,
+          "recall": 0.9329750709061054,
+          "f1-score": 0.9595455592231519,
+          "support": 6699.0
+        },
+        "macro avg": {
+          "precision": 0.989994087546766,
+          "recall": 0.9062939087998304,
+          "f1-score": 0.9455606930839991,
+          "support": 6699.0
+        },
+        "weighted avg": {
+          "precision": 0.987829479045638,
+          "recall": 0.9329750709061054,
+          "f1-score": 0.958926437812865,
+          "support": 6699.0
+        },
+        "samples avg": {
+          "precision": 0.9316689058068368,
+          "recall": 0.9329750709061054,
+          "f1-score": 0.9320644872369009,
+          "support": 6699.0
+        }
+      },
+      "confusion_matrix": null
+    },
+    {
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "loss": 0.00834690097927936,
+      "classification_report": {
+        "legal_aid": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 2425.0
+        },
+        "family_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 583.0
+        },
+        "consumer_protection": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 2122.0
+        },
+        "employment_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 840.0
+        },
+        "fundamental_rights": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 729.0
+        },
+        "micro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        },
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        },
+        "samples avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        }
+      },
+      "confusion_matrix": null
+    },
+    {
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "loss": 0.004939110340939751,
+      "classification_report": {
+        "legal_aid": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 2425.0
+        },
+        "family_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 583.0
+        },
+        "consumer_protection": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 2122.0
+        },
+        "employment_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 840.0
+        },
+        "fundamental_rights": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 729.0
+        },
+        "micro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        },
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        },
+        "samples avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        }
+      },
+      "confusion_matrix": null
+    },
+    {
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "loss": 0.0037779060782822988,
+      "classification_report": {
+        "legal_aid": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 2425.0
+        },
+        "family_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 583.0
+        },
+        "consumer_protection": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 2122.0
+        },
+        "employment_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 840.0
+        },
+        "fundamental_rights": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 729.0
+        },
+        "micro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        },
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        },
+        "samples avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6699.0
+        }
+      },
+      "confusion_matrix": null
+    }
+  ],
+  "val_metrics": [
+    {
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "loss": 0.008309142445512428,
+      "classification_report": {
+        "legal_aid": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 535.0
+        },
+        "family_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 137.0
+        },
+        "consumer_protection": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 464.0
+        },
+        "employment_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 155.0
+        },
+        "fundamental_rights": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 145.0
+        },
+        "micro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "samples avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        }
+      },
+      "confusion_matrix": null
+    },
+    {
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "loss": 0.004671056107306609,
+      "classification_report": {
+        "legal_aid": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 535.0
+        },
+        "family_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 137.0
+        },
+        "consumer_protection": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 464.0
+        },
+        "employment_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 155.0
+        },
+        "fundamental_rights": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 145.0
+        },
+        "micro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "samples avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        }
+      },
+      "confusion_matrix": null
+    },
+    {
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "loss": 0.0028985811200921622,
+      "classification_report": {
+        "legal_aid": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 535.0
+        },
+        "family_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 137.0
+        },
+        "consumer_protection": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 464.0
+        },
+        "employment_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 155.0
+        },
+        "fundamental_rights": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 145.0
+        },
+        "micro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "samples avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        }
+      },
+      "confusion_matrix": null
+    },
+    {
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "loss": 0.0027402596539119906,
+      "classification_report": {
+        "legal_aid": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 535.0
+        },
+        "family_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 137.0
+        },
+        "consumer_protection": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 464.0
+        },
+        "employment_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 155.0
+        },
+        "fundamental_rights": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 145.0
+        },
+        "micro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        },
+        "samples avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1436.0
+        }
+      },
+      "confusion_matrix": null
+    }
+  ],
+  "best_f1_score": 1.0,
+  "final_epoch": 4,
+  "model_config": {
+    "model_name": "nlpaueb/legal-bert-base-uncased",
+    "max_length": 256,
+    "batch_size": 2,
+    "learning_rate": 1e-05,
+    "epochs": 15,
+    "warmup_steps": 200,
+    "weight_decay": 0.01,
+    "dropout_prob": 0.3,
+    "early_stopping_patience": 3,
+    "gradient_clip_val": 1.0
+  }
+}

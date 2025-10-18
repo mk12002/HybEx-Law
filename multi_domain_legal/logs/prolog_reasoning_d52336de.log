@@ -1,0 +1,41 @@
+2025-10-18 23:38:07,641 - hybex_system.prolog_engine - INFO - [Session:d52336de] Added file handler to PrologEngine logger.
+2025-10-18 23:38:07,643 - hybex_system.prolog_engine - INFO - [Session:d52336de] ======================================================================
+2025-10-18 23:38:07,643 - hybex_system.prolog_engine - INFO - [Session:d52336de] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-10-18 23:38:07,643 - hybex_system.prolog_engine - INFO - [Session:d52336de] Session ID: d52336de
+2025-10-18 23:38:07,643 - hybex_system.prolog_engine - INFO - [Session:d52336de] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-10-18 23:38:07,643 - hybex_system.prolog_engine - INFO - [Session:d52336de] ======================================================================
+2025-10-18 23:38:07,643 - hybex_system.prolog_engine - INFO - [Session:d52336de] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-10-18 23:38:07,643 - hybex_system.prolog_engine - INFO - [Session:d52336de] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-10-18 23:38:07,643 - hybex_system.prolog_engine - INFO - [Session:d52336de] Initialized Comprehensive PrologEngine (Session: d52336de, Available: True)
+2025-10-18 23:38:07,643 - hybex_system.prolog_engine - INFO - [Session:d52336de] Loaded 3 rule categories with 9 total rules
+2025-10-18 23:38:07,643 - hybex_system.prolog_engine - INFO - [Session:d52336de] Comprehensive rules actually loaded: True
+2025-10-18 23:38:08,432 - hybex_system.prolog_engine - INFO - [Session:d52336de] SWI-Prolog available: SWI-Prolog version 9.2.9 for x64-win64
+2025-10-18 23:38:08,458 - hybex_system.prolog_engine - INFO - [Session:d52336de] SWI-Prolog basic functionality verified
+2025-10-18 23:38:08,465 - hybex_system.prolog_engine - INFO - [Session:d52336de] Added file handler to PrologEngine logger.
+2025-10-18 23:38:08,465 - hybex_system.prolog_engine - INFO - [Session:d52336de] ======================================================================
+2025-10-18 23:38:08,465 - hybex_system.prolog_engine - INFO - [Session:d52336de] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-10-18 23:38:08,465 - hybex_system.prolog_engine - INFO - [Session:d52336de] Session ID: 7ea5ea3e
+2025-10-18 23:38:08,465 - hybex_system.prolog_engine - INFO - [Session:d52336de] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-10-18 23:38:08,474 - hybex_system.prolog_engine - INFO - [Session:d52336de] ======================================================================
+2025-10-18 23:38:08,474 - hybex_system.prolog_engine - INFO - [Session:d52336de] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-10-18 23:38:08,474 - hybex_system.prolog_engine - INFO - [Session:d52336de] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-10-18 23:38:08,474 - hybex_system.prolog_engine - INFO - [Session:d52336de] Initialized Comprehensive PrologEngine (Session: 7ea5ea3e, Available: True)
+2025-10-18 23:38:08,475 - hybex_system.prolog_engine - INFO - [Session:d52336de] Loaded 3 rule categories with 9 total rules
+2025-10-18 23:38:08,475 - hybex_system.prolog_engine - INFO - [Session:d52336de] Comprehensive rules actually loaded: True
+2025-10-18 23:38:08,494 - hybex_system.prolog_engine - INFO - [Session:d52336de] SWI-Prolog available: SWI-Prolog version 9.2.9 for x64-win64
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] SWI-Prolog basic functionality verified
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] Added file handler to PrologEngine logger.
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] ======================================================================
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] Starting HybEx-Law Comprehensive Prolog Reasoning Engine
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] Session ID: 69cb97b4
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] Configuration: {'config_source': 'verified_fallback', 'last_updated': None, 'validation_status': 'unvalidated', 'primary_act': 'Legal Services Authorities Act, 1987', 'income_thresholds': {'general': 500000, 'sc_st': 800000, 'obc': 600000, 'bpl': 0, 'ews': 800000}, 'real_data_available': False, 'sources_count': 0}
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] ======================================================================
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] Using modular knowledge base entry point: D:\Code_stuff\HybEx-Law\multi_domain_legal\knowledge_base\knowledge_base.pl
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] Parsing comprehensive multi-domain legal rules from knowledge base.
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] Initialized Comprehensive PrologEngine (Session: 69cb97b4, Available: True)
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] Loaded 3 rule categories with 9 total rules
+2025-10-18 23:38:08,523 - hybex_system.prolog_engine - INFO - [Session:d52336de] Comprehensive rules actually loaded: True
+2025-10-19 00:15:31,294 - hybex_system.prolog_engine - INFO - [Session:d52336de] Cleaning up PrologEngine session d52336de
+2025-10-19 00:15:31,300 - hybex_system.prolog_engine - INFO - [Session:d52336de] PrologEngine cleanup completed
+2025-10-19 00:15:31,300 - hybex_system.prolog_engine - INFO - [Session:d52336de] Cleaning up PrologEngine session d52336de
+2025-10-19 00:15:31,300 - hybex_system.prolog_engine - INFO - [Session:d52336de] PrologEngine cleanup completed

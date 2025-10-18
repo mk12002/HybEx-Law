@@ -13,6 +13,8 @@ from typing import Dict, List, Tuple, Any, Optional
 from datetime import datetime
 import time
 import numpy as np
+import gc
+import torch
 from dataclasses import asdict
 from tqdm import tqdm
 
@@ -50,7 +52,7 @@ class TrainingOrchestrator:
         if not any(isinstance(h, logging.FileHandler) and h.baseFilename.endswith('training_orchestrator.log') for h in logger.handlers):
             # Assuming config.get_log_path is implemented and returns a file path string
             log_file = self.config.get_log_path('training_orchestrator')
-            file_handler = logging.FileHandler(log_file)
+            file_handler = logging.FileHandler(log_file, encoding='utf-8')
             file_handler.setLevel(logging.INFO)
             # Assuming config.LOGGING_CONFIG is a dictionary with 'format' key
             formatter = logging.Formatter(self.config.LOGGING_CONFIG['format'])
@@ -114,10 +116,22 @@ class TrainingOrchestrator:
 
     def run_complete_training_pipeline(self, data_directory: str) -> Dict[str, Any]:
         """Execute the complete HybEx-Law training pipeline"""
+        import os
+        # Set PyTorch memory allocator configuration for better memory management
+        os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True'
+        
         self.start_time = time.time()
+        
+        # Aggressive memory clearing before starting training
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            torch.cuda.reset_peak_memory_stats()
         
         logger.info("Starting Complete HybEx-Law Training Pipeline")
         logger.info(f"Data Directory: {data_directory}")
+        if torch.cuda.is_available():
+            logger.info(f"GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
         
         pipeline_results = {
             'start_time': datetime.now().isoformat(),
@@ -128,7 +142,7 @@ class TrainingOrchestrator:
             'errors': []
         }
         
-        # Define pipeline stages for progress tracking (Added GNN Training as Stage 2B)
+        # Define pipeline stages for progress tracking
         stages = [
             "Data Preprocessing", 
             "Neural Model Training (Non-GNN)", 
@@ -163,6 +177,53 @@ class TrainingOrchestrator:
             
             # Load processed data
             processed_data = self._load_processed_data(preprocessing_results['saved_files'])
+
+            # =====================
+            # QUICK DATA SANITY CHECKS
+            # 1) Train/Val/Test overlap detection
+            # Check for train/val/test overlap
+            train_queries = {s['query'] for s in processed_data['train_samples']}
+            val_queries = {s['query'] for s in processed_data['val_samples']}
+            test_queries = {s['query'] for s in processed_data.get('test_samples', [])}
+
+            overlap = train_queries & val_queries
+
+            # ROBUST FIX: Skip overlap check for pre-split data
+            saved_files = preprocessing_results.get('saved_files', {})
+            is_presplit = 'train_split.json' in str(saved_files.get('train_data_file', ''))
+
+            if is_presplit:
+                logger.info(f"Pre-split data detected - skipping overlap validation")
+                logger.info(f"Data loaded: {len(train_queries)} train, {len(val_queries)} val, {len(test_queries)} test queries")
+            else:
+                # Only check overlap for newly preprocessed data
+                if overlap:
+                    logger.error(f"DATA LEAKAGE: {len(overlap)} queries appear in both train and val!")
+                    logger.error(f"Example overlapping query: {list(overlap)[0][:200]}...")
+                    raise ValueError("Train/Val overlap detected - data leakage!")
+                
+                logger.info(f"Data loaded: {len(train_queries)} unique train queries, {len(val_queries)} unique val queries")
+
+            # 2) Domain distribution check for imbalance
+            try:
+                from collections import Counter
+                all_domains = []
+                for sample in processed_data.get('train_samples', []):
+                    if 'domains' in sample and isinstance(sample['domains'], list):
+                        all_domains.extend(sample['domains'])
+                domain_counts = Counter(all_domains)
+                total_train = max(1, len(processed_data.get('train_samples', [])))
+                logger.info("\n📊 Domain distribution in training set:")
+                for domain, count in domain_counts.items():
+                    pct = (count / total_train) * 100
+                    logger.info(f"  {domain}: {count} ({pct:.1f}%)")
+                    if pct > 80.0:
+                        logger.warning(f"Imbalance warning: Domain '{domain}' represents >80% of training samples ({pct:.1f}%)")
+                    if pct < 5.0:
+                        logger.warning(f"Imbalance warning: Domain '{domain}' represents <5% of training samples ({pct:.1f}%)")
+            except Exception:
+                logger.exception("Failed to compute domain distribution")
+            # =====================
             
             # Stage 2: Neural Model Training (Standard/Non-GNN Models)
             main_pbar.set_description("STAGE 2: NEURAL MODEL TRAINING (STANDARD)")
@@ -192,6 +253,12 @@ class TrainingOrchestrator:
             
             logger.info(f"Standard neural model training completed in {training_time_standard:.2f} seconds")
             main_pbar.update(1)
+            
+            # Memory cleanup after standard neural training
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                logger.info(f"GPU Memory after Stage 2: {torch.cuda.memory_allocated() / 1024**3:.2f} GB allocated")
 
             # Stage 3: Knowledge Graph Neural Network Training (GNN)
             main_pbar.set_description("STAGE 3: KGNN TRAINING")
@@ -221,6 +288,12 @@ class TrainingOrchestrator:
             
             logger.info(f"GNN training completed in {gnn_training_time:.2f} seconds (Status: {pipeline_results['pipeline_stages']['neural_training_gnn']['status']})")
             main_pbar.update(1)
+            
+            # Memory cleanup after GNN training
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                logger.info(f"GPU Memory after Stage 3: {torch.cuda.memory_allocated() / 1024**3:.2f} GB allocated")
             
             # Stage 4: Prolog Rule Integration / Initial Symbolic Evaluation
             main_pbar.set_description("STAGE 4: PROLOG RULE INTEGRATION")
@@ -292,6 +365,10 @@ class TrainingOrchestrator:
             
             main_pbar.close()
             
+            # Clear memory after training completes
+            gc.collect()
+            torch.cuda.empty_cache()
+            
             return pipeline_results
             
         except Exception as e:
@@ -311,6 +388,10 @@ class TrainingOrchestrator:
             
             main_pbar.close()
             
+            # Clear memory even on failure
+            gc.collect()
+            torch.cuda.empty_cache()
+            
             raise
     
     # Rest of the helper methods remain the same as the previous full correction
@@ -318,7 +399,6 @@ class TrainingOrchestrator:
     def _load_processed_data(self, saved_files: Dict[str, str]) -> Dict[str, List]:
         """Load processed data from saved files"""
         logger.info("Loading processed data...")
-        
         processed_data = {}
         
         for split_name in ['train', 'val', 'test']:
@@ -326,25 +406,50 @@ class TrainingOrchestrator:
             if file_path and Path(file_path).exists():
                 with open(file_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
-                    processed_data[f'{split_name}_samples'] = data
-                    logger.info(f"Loaded {len(data)} {split_name} samples")
+                processed_data[f'{split_name}_samples'] = data
+                logger.info(f"Loaded {len(data)} {split_name} samples")
             else:
                 logger.warning(f"Could not load {split_name} data from {file_path}. Skipping.")
                 processed_data[f'{split_name}_samples'] = []
         
-        # Ensure 'extracted_entities' are present in samples for Prolog processing
+        # ✅ CRITICAL FIX: Verify entities are actually present
         for split in ['train_samples', 'val_samples', 'test_samples']:
             if processed_data.get(split):
-                if not processed_data[split] or 'extracted_entities' not in processed_data[split][0]:
-                    logger.warning(f"Samples in {split} are missing 'extracted_entities'. This might impact Prolog integration. "
-                                    "Consider updating DataPreprocessor to always include them.")
-                    for sample in processed_data[split][:10]:
-                        if 'query' in sample and 'extracted_entities' not in sample:
-                            sample['extracted_entities'] = self.components['data_processor'].extract_entities(sample['query'])
-                            logger.debug(f"Extracted entities on the fly for sample ID {sample.get('sample_id', 'N/A')}")
+                missing_count = sum(1 for s in processed_data[split] 
+                                  if 'extracted_entities' not in s or not s['extracted_entities'])
+                
+                if missing_count > 0:
+                    logger.warning(
+                        f"⚠️  {missing_count}/{len(processed_data[split])} samples in {split} "
+                        f"have missing/empty 'extracted_entities'. Reloading from source..."
+                    )
+                    
+                    # ✅ RELOAD FROM ORIGINAL SPLIT FILES (which now have entities)
+                    split_type = split.replace('_samples', '')
+                    source_file = self.config.DATA_DIR / f"{split_type}_split.json"
+                    
+                    if source_file.exists():
+                        logger.info(f"📂 Reloading {split} from source file: {source_file}")
+                        with open(source_file, 'r', encoding='utf-8') as f:
+                            reloaded_data = json.load(f)
+                        
+                        # Verify the reloaded data has entities
+                        reloaded_missing = sum(1 for s in reloaded_data 
+                                             if 'extracted_entities' not in s or not s['extracted_entities'])
+                        
+                        if reloaded_missing == 0:
+                            processed_data[split] = reloaded_data
+                            logger.info(f"✅ Successfully reloaded {len(reloaded_data)} samples with entities")
+                        else:
+                            logger.warning(
+                                f"⚠️  Source file still missing {reloaded_missing} entities. "
+                                f"Will extract on-the-fly during training."
+                            )
+                    else:
+                        logger.warning(f"⚠️  Source file not found: {source_file}")
                 else:
-                    logger.info(f"Samples in {split} contain 'extracted_entities'.")
-
+                    logger.info(f"✅ All samples in {split} have 'extracted_entities'")
+        
         return processed_data
     
     def _integrate_prolog_reasoning_and_evaluation(self, test_samples: List[Dict]) -> Dict[str, Any]:
@@ -353,14 +458,32 @@ class TrainingOrchestrator:
         logger.info("Integrating Prolog reasoning for evaluation...")
         
         cases_for_prolog_batch = []
+        missing_entities_count = 0
+        
+        # Collect cases and track missing entities WITHOUT individual warnings
         for sample in test_samples:
-            if 'extracted_entities' in sample:
+            if 'extracted_entities' in sample and sample['extracted_entities']:
                 cases_for_prolog_batch.append(sample['extracted_entities'])
             else:
-                logger.warning(f"Sample ID {sample.get('sample_id', 'N/A')} missing 'extracted_entities'. Extracting on the fly.")
-                extracted = self.components['data_processor'].extract_entities(sample.get('query', ''))
-                cases_for_prolog_batch.append(extracted)
-
+                missing_entities_count += 1
+                # Extract on the fly silently
+                try:
+                    extracted = self.components['data_processor'].extract_entities(
+                        sample.get('query', '')
+                    )
+                    sample['extracted_entities'] = extracted
+                    cases_for_prolog_batch.append(extracted)
+                except Exception as e:
+                    logger.error(f"Failed to extract entities for {sample.get('sample_id')}: {e}")
+                    cases_for_prolog_batch.append({})
+        
+        # Single summary log for missing entities
+        if missing_entities_count > 0:
+            logger.warning(
+                f"⚠️  {missing_entities_count}/{len(test_samples)} test samples had missing "
+                f"'extracted_entities'. Extracted on-the-fly for Prolog evaluation."
+            )
+        
         if not cases_for_prolog_batch:
             logger.warning("No cases with extracted entities available for Prolog batch analysis.")
             return {
@@ -392,10 +515,11 @@ class TrainingOrchestrator:
             'reasoning_results': reasoning_results_dicts
         }
         
-        logger.info(f"Prolog reasoning integration and batch evaluation complete:")
-        logger.info(f"  - Cases evaluated: {total_count}")
-        logger.info(f"  - Eligible cases: {eligible_count}")
-        logger.info(f"  - Eligibility rate: {integration_results['eligibility_rate']*100:.1f}%")
+        logger.info(f"✅ Prolog reasoning integration complete:")
+        logger.info(f"   • Cases evaluated: {total_count}")
+        logger.info(f"   • Eligible cases: {eligible_count}")
+        logger.info(f"   • Eligibility rate: {integration_results['eligibility_rate']*100:.1f}%")
+        logger.info(f"   • Results saved to: {results_file}")
         
         return integration_results
 

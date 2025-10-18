@@ -35,7 +35,7 @@ class HybExConfig:
             'max_length': 512,
             'batch_size': 32,
             'learning_rate': 2e-5,
-            'epochs': 30,
+            'epochs': 15,
             'warmup_steps': 200,
             'weight_decay': 0.01,
             'dropout_prob': 0.3,  # Added missing dropout probability
@@ -46,34 +46,37 @@ class HybExConfig:
         self.MODEL_CONFIGS = {
             'domain_classifier': {
                 'model_name': 'nlpaueb/legal-bert-base-uncased',
-                'max_length': 512,
-                'batch_size': 8,  # Reduced for stabili32y
-                'learning_rate': 1e-5,  # Lower learning rate for better convergence
-                'epochs': 30,  # More epochs for robust training
+                'max_length': 256,  # Reduced from 512 for memory optimization
+                'batch_size': 2,    # Reduced from 8 for GPU memory
+                'learning_rate': 1e-5,
+                'epochs': 15,
                 'warmup_steps': 200,
                 'weight_decay': 0.01,
+                'dropout_prob': 0.3,
                 'early_stopping_patience': 3,
                 'gradient_clip_val': 1.0
             },
             'entity_extractor': {
                 'model_name': 'nlpaueb/legal-bert-base-uncased',
-                'max_length': 512,
-                'batch_size': 32,
+                'max_length': 256,  # Reduced from 512 for memory optimization
+                'batch_size': 2,    # Reduced from 32 for GPU memory
                 'learning_rate': 2e-5,
-                'epochs': 30,  # More epochs for NER task
+                'epochs': 15,
                 'warmup_steps': 300,
                 'weight_decay': 0.01,
+                'dropout_prob': 0.3,
                 'early_stopping_patience': 4,
                 'gradient_clip_val': 1.0
             },
             'eligibility_predictor': {
                 'model_name': 'nlpaueb/legal-bert-base-uncased',
-                'max_length': 512,
-                'batch_size': 32,
-                'learning_rate': 5e-6,  # Very low for final prediction
-                'epochs': 30,  # Most epochs for main task
+                'max_length': 256,  # Reduced from 512 for memory optimization
+                'batch_size': 2,    # Reduced from 32 for GPU memory
+                'learning_rate': 5e-6,
+                'epochs': 15,
                 'warmup_steps': 500,
                 'weight_decay': 0.02,
+                'dropout_prob': 0.3,
                 'early_stopping_patience': 5,
                 'gradient_clip_val': 0.5
             }

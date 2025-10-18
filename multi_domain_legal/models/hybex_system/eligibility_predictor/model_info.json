@@ -1,0 +1,10 @@
+{
+  "model_name": "eligibility_predictor",
+  "model_class": "EligibilityPredictor",
+  "base_model": "nlpaueb/legal-bert-base-uncased",
+  "num_parameters": 109483009,
+  "trainable_parameters": 109483009,
+  "device": "cuda",
+  "save_timestamp": "2025-10-18T19:46:08.689829",
+  "config_summary": "HybEx-Law Config - Data: verified_fallback, Models: 3, Legal Sources: Unknown"
+}

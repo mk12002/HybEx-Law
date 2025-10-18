@@ -11,6 +11,7 @@ import json
 from datetime import datetime
 import re
 import uuid
+import time  # ✅ ADD THIS for batch summary logging
 from dataclasses import dataclass, asdict # Added asdict import
 
 from .config import HybExConfig
@@ -659,19 +660,13 @@ class PrologEngine:
         try:
             # Header
             temp_file.write(f'% HybEx-Law Minimal Legal Reasoning Session: {self.session_id}\n')
+            
+            # ✅ CRITICAL: Suppress ALL discontiguous warnings globally
+            temp_file.write(':- style_check(-discontiguous).\n')
+            temp_file.write(':- style_check(-singleton).\n\n')  # Also suppress singleton variable warnings
+            
             temp_file.write(f'% Domain: {domain}\n')
             temp_file.write(f'% Generated: {datetime.now().isoformat()}\n\n')
-            
-            # Add essential discontiguous directives to fix warnings
-            temp_file.write('% DISCONTIGUOUS DIRECTIVES\n')
-            temp_file.write(':- discontiguous person/1.\n')
-            temp_file.write(':- discontiguous applicable_rule/3.\n')
-            temp_file.write(':- discontiguous eligible_for_legal_aid/1.\n')
-            temp_file.write(':- discontiguous categorically_eligible/1.\n')
-            temp_file.write(':- discontiguous income_eligible/1.\n')
-            temp_file.write(':- discontiguous social_category/2.\n')
-            temp_file.write(':- discontiguous annual_income/2.\n')
-            temp_file.write(':- discontiguous income_threshold/2.\n\n')
             
             # 🚀 CRITICAL OPTIMIZATION: Use only ESSENTIAL rules for this case
             temp_file.write('% MINIMAL ESSENTIAL RULES\n')
@@ -718,7 +713,7 @@ class PrologEngine:
             
             # Simple reasoning predicates
             temp_file.write('% SIMPLE REASONING\n')
-            temp_file.write("primary_eligibility_reason(Person, 'Eligible: SC/ST/OBC category') :- categorically_eligibile(Person), !.\n")
+            temp_file.write("primary_eligibility_reason(Person, 'Eligible: SC/ST/OBC category') :- categorically_eligible(Person), !.\n")
             temp_file.write("primary_eligibility_reason(Person, 'Eligible: Income below threshold') :- income_eligible(Person), !.\n")
             temp_file.write("primary_eligibility_reason(Person, 'Not eligible') :- \\+ eligible_for_legal_aid(Person), !.\n\n")
             
@@ -731,15 +726,14 @@ class PrologEngine:
             temp_file.write("applicable_rule(Person, 'not_eligible', legal_aid) :- \\+ eligible_for_legal_aid(Person), !.\n")
             temp_file.write("applicable_rule(_, _, _) :- fail.\n\n")
             
-            # Write facts
-            temp_file.write('% CASE FACTS\n')
-            for fact in facts:
-                clean_fact = fact.strip()
-                if clean_fact and not clean_fact.startswith('%'):
-                    if not clean_fact.endswith('.'):
-                        temp_file.write(f"{clean_fact}.\n")
-                    else:
-                        temp_file.write(f"{clean_fact}\n")
+            # Write facts (grouped by predicate to avoid discontiguous warnings)
+            temp_file.write('% CASE FACTS (GROUPED BY PREDICATE)\n')
+            grouped_facts = self.group_facts_by_predicate(facts)
+            for fact in grouped_facts:
+                if not fact.endswith('.'):
+                    temp_file.write(f"{fact}.\n")
+                else:
+                    temp_file.write(f"{fact}\n")
             
             temp_file.close()
             
@@ -761,6 +755,39 @@ class PrologEngine:
             logger.error(f"Error creating minimal Prolog file: {e}", exc_info=True)
             return None
 
+    def group_facts_by_predicate(self, facts: List[str]) -> List[str]:
+        """Group facts by predicate name to avoid discontiguous warnings.
+        
+        This ensures all facts with the same predicate name are grouped together,
+        which is a Prolog best practice and prevents discontiguous predicate warnings.
+        """
+        from collections import defaultdict
+        import re
+        
+        grouped = defaultdict(list)
+        
+        for fact in facts:
+            fact = fact.strip()
+            if not fact or fact.startswith('%'):
+                continue
+                
+            # Extract predicate name (everything before first '(')
+            match = re.match(r'^([a-z_][a-z0-9_]*)\(', fact)
+            if match:
+                predicate_name = match.group(1)
+                grouped[predicate_name].append(fact)
+            else:
+                # Facts without proper predicate format go to 'other'
+                grouped['_other'].append(fact)
+        
+        # Flatten back to list, grouped by predicate (sorted for consistency)
+        result = []
+        for predicate in sorted(grouped.keys()):
+            result.extend(grouped[predicate])
+        
+        logger.debug(f"Grouped {len(facts)} facts into {len(grouped)} predicate groups")
+        return result
+
     def create_domain_specific_prolog_file_modular(self, facts: List[str], domain: str) -> str:
         """🚀 MODULAR APPROACH: Create Prolog file by loading only domain-specific .pl files."""
         
@@ -770,11 +797,16 @@ class PrologEngine:
         try:
             # Header
             temp_file.write(f'% HybEx-Law Modular Legal Reasoning Session: {self.session_id}\n')
+            
+            # ✅ CRITICAL: Suppress ALL discontiguous warnings globally
+            temp_file.write(':- style_check(-discontiguous).\n')
+            temp_file.write(':- style_check(-singleton).\n\n')
+            
             temp_file.write(f'% Domain: {domain}\n')
             temp_file.write(f'% Generated: {datetime.now().isoformat()}\n\n')
             
-            # Essential discontiguous directives
-            temp_file.write('% DISCONTIGUOUS DIRECTIVES\n')
+            # Essential discontiguous directives (now redundant but kept for documentation)
+            temp_file.write('% DISCONTIGUOUS DIRECTIVES (suppressed globally above)\n')
             essential_directives = [
                 ':- discontiguous person/1.',
                 ':- discontiguous eligible_for_legal_aid/1.',
@@ -788,7 +820,14 @@ class PrologEngine:
                 ':- discontiguous applicable_rule/3.',
                 ':- discontiguous vulnerable_group/2.',
                 ':- discontiguous gender/2.',
-                ':- discontiguous age/2.'
+                ':- discontiguous age/2.',
+                # Employment law predicates
+                ':- discontiguous disciplinary_hearing_conducted/1.',
+                ':- discontiguous notice_period_given/1.',
+                ':- discontiguous hourly_wage/2.',
+                ':- discontiguous notice_period_days/2.',
+                ':- discontiguous termination_date/4.',
+                ':- discontiguous employment_duration_days/2.'
             ]
             for directive in essential_directives:
                 temp_file.write(directive + '\n')
@@ -809,15 +848,14 @@ class PrologEngine:
                 else:
                     logger.warning(f"⚠️ Domain file not found: {domain_file}")
             
-            # Write case facts
-            temp_file.write('\n% CASE FACTS\n')
-            for fact in facts:
-                clean_fact = fact.strip()
-                if clean_fact and not clean_fact.startswith('%'):
-                    if not clean_fact.endswith('.'):
-                        temp_file.write(f"{clean_fact}.\n")
-                    else:
-                        temp_file.write(f"{clean_fact}\n")
+            # Write case facts (grouped by predicate to avoid discontiguous warnings)
+            temp_file.write('\n% CASE FACTS (GROUPED BY PREDICATE)\n')
+            grouped_facts = self.group_facts_by_predicate(facts)
+            for fact in grouped_facts:
+                if not fact.endswith('.'):
+                    temp_file.write(f"{fact}.\n")
+                else:
+                    temp_file.write(f"{fact}\n")
             
             temp_file.close()
             
@@ -1037,9 +1075,15 @@ class PrologEngine:
         
         try:
             temp_file.write(f'% HybEx-Law Legal Reasoning Session: {self.session_id}\n')
+            
+            # ✅ CRITICAL: Suppress ALL discontiguous warnings globally
+            temp_file.write(':- style_check(-discontiguous).\n')
+            temp_file.write(':- style_check(-singleton).\n\n')
+            
             temp_file.write(f'% Generated: {datetime.now().isoformat()}\n\n')
             
-            # Add discontiguous directives at the top to avoid warnings
+            # Add discontiguous directives at the top (now redundant but kept for documentation)
+            temp_file.write('% DISCONTIGUOUS DIRECTIVES (suppressed globally above)\n')
             for directive in self._get_discontiguous_directives():
                 temp_file.write(f"{directive}\n")
             temp_file.write('\n')
@@ -1062,14 +1106,14 @@ class PrologEngine:
                     for rule in rule_list:
                         temp_file.write(rule.strip() + '\n\n')
 
-            # Write all facts at the end
-            temp_file.write('\n% CASE FACTS\n')
-            for fact in facts:
-                if fact.strip():
-                    if not fact.strip().endswith('.'):
-                        temp_file.write(fact.strip() + '.\n')
-                    else:
-                        temp_file.write(fact.strip() + '\n')
+            # Write all facts at the end (grouped by predicate to avoid discontiguous warnings)
+            temp_file.write('\n% CASE FACTS (GROUPED BY PREDICATE)\n')
+            grouped_facts = self.group_facts_by_predicate(facts)
+            for fact in grouped_facts:
+                if not fact.endswith('.'):
+                    temp_file.write(fact + '.\n')
+                else:
+                    temp_file.write(fact + '\n')
             
             temp_file.close()
             logger.info(f"Created comprehensive Prolog file: {temp_file.name} with {len(facts)} facts.")
@@ -1544,7 +1588,8 @@ class PrologEngine:
         facts.extend(self._generate_income_threshold_facts())
         facts.extend(self._generate_derived_facts(entities, case_id))
         
-        logger.info(f"Generated {len(facts)} comprehensive Prolog facts for {case_id}")
+        # Changed from logger.info to logger.debug to prevent log spam during batch processing
+        logger.debug(f"Generated {len(facts)} comprehensive Prolog facts for {case_id}")
         logger.debug(f"Facts generated: {facts}")
         return facts
 
@@ -1658,6 +1703,10 @@ class PrologEngine:
         results = []
         all_facts_combined = []
         case_ids_in_batch = []
+        
+        # ✅ Track totals for summary logging
+        total_facts = 0
+        fact_generation_start = time.time()
 
         # Generate all facts first and map case_id to original sample_id
         for i, case_entities in enumerate(cases):
@@ -1671,6 +1720,15 @@ class PrologEngine:
             # _generate_comprehensive_facts expects extracted_entities and case_id
             current_case_facts = self._generate_comprehensive_facts(case_entities.get('extracted_entities', {}), case_id)
             all_facts_combined.extend(current_case_facts)
+            total_facts += len(current_case_facts)
+        
+        fact_generation_time = time.time() - fact_generation_start
+        
+        # ✅ SUMMARY LOG: Replace 1436 individual logs with ONE summary
+        logger.info(
+            f"✅ Generated {total_facts} total facts across {len(cases)} cases "
+            f"(avg {total_facts/len(cases):.1f} facts/case) in {fact_generation_time:.2f}s"
+        )
             
         # Create a single Prolog file with all rules and all facts for efficiency
         prolog_file = self.create_comprehensive_prolog_file(all_facts_combined)

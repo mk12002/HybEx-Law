@@ -1,47 +1,754 @@
 scraped_updates:
   domains:
+    consumer_protection:
+      new_eligibility_criteria: []
+      new_procedures:
+      - content: CONTACT DETAILS OF PUBLIC INFORMATION OFFICERS S.No Name   Designation
+          Telephone Nos. Office Intercom 1 Shri Iqbal Ahmed, First Appellate Authority
+          Joint Registrar NCDRC, Upbhokta Nyay Bhawan,  F  Block,G.P.O.Complex,INA,
+          NEW DELHI   110 023 24608718 718 2 Shri Rajesh Nath, CPIO (Consumer Complaint
+          Section) Assistant Registrar NCDRC, Upbhokta Nyay Bhawan,  F  Block,G.P.O.Complex,INA,
+          NEW DELHI   110 023 24608858 858 3 Smt. M. Durga Devi, Nodal Officer. CPIO
+          (24B 70 Section) Assistant Registrar N
+        extracted_date: '2025-10-17T23:30:38.496033'
+        source: https://ncdrc.nic.in/contact_pio.html
+      new_provisions:
+      - content: 'भ रत सरक र GOVERNMENT OF INDIA उपभ क त  म मल , ख द य और स र वजन
+          क व तरण म त र लय MINISTRY OF CONSUMER AFFAIRS, FOOD   PIBLIC DISTRIBUTION
+          Search English Hindi म खप ष ठ हम र  ब र  म   हम र  ब र  म   द  ष टक ण और
+          लक ष य न गर क अध क र पत र क न क य  ह  स गठन च र ट म नन य म त र  एव  सच व
+          स  म ल   म नन य क  द र य म त र  श र  प रल ह द ज श  म नन य र ज  य म त र  श
+          र  ब  एल वर म  ज  म नन य र ज  य म त र  श र मत  न म ब न जय त भ ई ब  भण य  सच
+          व श र मत  न ध  खर  स गठन एव  इक ई व भ ग उपभ क त  स रक षण इक ई म ल '
+        extracted_date: '2025-10-17T23:29:53.753680'
+        source: https://consumeraffairs.gov.in/site-map
+      - content: 'भ रत सरक र GOVERNMENT OF INDIA उपभ क त  म मल , ख द य और स र वजन
+          क व तरण म त र लय MINISTRY OF CONSUMER AFFAIRS, FOOD   PIBLIC DISTRIBUTION
+          Search English Hindi म खप ष ठ हम र  ब र  म   हम र  ब र  म   द  ष टक ण और
+          लक ष य न गर क अध क र पत र क न क य  ह  स गठन च र ट म नन य म त र  एव  सच व
+          स  म ल   म नन य क  द र य म त र  श र  प रल ह द ज श  म नन य र ज  य म त र  श
+          र  ब  एल वर म  ज  म नन य र ज  य म त र  श र मत  न म ब न जय त भ ई ब  भण य  सच
+          व श र मत  न ध  खर  स गठन एव  इक ई व भ ग उपभ क त  स रक षण इक ई म ल '
+        extracted_date: '2025-10-17T23:30:10.654068'
+        source: 'https://consumeraffairs.gov.in/pages/home '
+      - content: 'भ रत सरक र GOVERNMENT OF INDIA उपभ क त  म मल , ख द य और स र वजन
+          क व तरण म त र लय MINISTRY OF CONSUMER AFFAIRS, FOOD   PIBLIC DISTRIBUTION
+          Search English Hindi म खप ष ठ हम र  ब र  म   हम र  ब र  म   द  ष टक ण और
+          लक ष य न गर क अध क र पत र क न क य  ह  स गठन च र ट म नन य म त र  एव  सच व
+          स  म ल   म नन य क  द र य म त र  श र  प रल ह द ज श  म नन य र ज  य म त र  श
+          र  ब  एल वर म  ज  म नन य र ज  य म त र  श र मत  न म ब न जय त भ ई ब  भण य  सच
+          व श र मत  न ध  खर  स गठन एव  इक ई व भ ग उपभ क त  स रक षण इक ई म ल '
+        extracted_date: '2025-10-17T23:30:12.265962'
+        source: 'https://consumeraffairs.gov.in/pages/about-us '
+      - content: 'भ रत सरक र GOVERNMENT OF INDIA उपभ क त  म मल , ख द य और स र वजन
+          क व तरण म त र लय MINISTRY OF CONSUMER AFFAIRS, FOOD   PIBLIC DISTRIBUTION
+          Search English Hindi म खप ष ठ हम र  ब र  म   हम र  ब र  म   द  ष टक ण और
+          लक ष य न गर क अध क र पत र क न क य  ह  स गठन च र ट म नन य म त र  एव  सच व
+          स  म ल   म नन य क  द र य म त र  श र  प रल ह द ज श  म नन य र ज  य म त र  श
+          र  ब  एल वर म  ज  म नन य र ज  य म त र  श र मत  न म ब न जय त भ ई ब  भण य  सच
+          व श र मत  न ध  खर  स गठन एव  इक ई व भ ग उपभ क त  स रक षण इक ई म ल '
+        extracted_date: '2025-10-17T23:30:14.171899'
+        source: 'https://consumeraffairs.gov.in/pages/about-department '
+      - content: 'भ रत सरक र GOVERNMENT OF INDIA उपभ क त  म मल , ख द य और स र वजन
+          क व तरण म त र लय MINISTRY OF CONSUMER AFFAIRS, FOOD   PIBLIC DISTRIBUTION
+          Search English Hindi म खप ष ठ हम र  ब र  म   हम र  ब र  म   द  ष टक ण और
+          लक ष य न गर क अध क र पत र क न क य  ह  स गठन च र ट म नन य म त र  एव  सच व
+          स  म ल   म नन य क  द र य म त र  श र  प रल ह द ज श  म नन य र ज  य म त र  श
+          र  ब  एल वर म  ज  म नन य र ज  य म त र  श र मत  न म ब न जय त भ ई ब  भण य  सच
+          व श र मत  न ध  खर  स गठन एव  इक ई व भ ग उपभ क त  स रक षण इक ई म ल '
+        extracted_date: '2025-10-17T23:30:16.204370'
+        source: 'https://consumeraffairs.gov.in/pages/vision-and-mission '
+      - content: Selection for the post of Member in NCDRC Dt. 23 09 2025. NATIONAL
+          CONSUMER DISPUTES REDRESSAL COMMISSION ABOUT US Hon'ble Mr. Justice Amreshwar
+          Pratap Sahi President The National Consumer Disputes Redressal Commission
+          (NCDRC), India is a quasi-judicial commission in India which was set up
+          in 1988 under the Consumer Protection Act of 1986. Its head office is in
+          New Delhi. The Commission is headed by a sitting or a retired Judge of the
+          Hon'ble Supreme Court of India or a sitting or a retired Chie
+        extracted_date: '2025-10-17T23:30:36.589345'
+        source: https://ncdrc.nic.in
+      - content: 'NOTICE   Circular regarding Migration of Bharatkosh to RBI''s ekuber
+          version 2.0. Dt. 22 09 2025.   Office Order regarding re-constitution of
+          Benches. Dt. 11 07 2025.   Circular regarding International Yoga Day celebration.
+          Dt. 11 06 2025.   Office Order regarding re-constitution of Benches. Dt.
+          23 05 2025.   Office Order regarding re-constitution of Benches. Dt. 09
+          04 2025.   Circular regarding public holiday on 14th April, 2025. Dt. 07
+          04 2025.   Notice inviting quotations for repairing Godrej '
+        extracted_date: '2025-10-17T23:30:45.024310'
+        source: https://ncdrc.nic.in/notice.html
+      - content: CONTACT DETAILS OF HON'BLE PRESIDENT, MEMBERS   OFFICERS S.No. Name   Designation
+          Telephone Nos. Office Intercom 1 Hon'ble Mr. Justice Amreshwar Pratap Sahi
+          President 18, Akbar Road, New Delhi-110001 24608701 701 2 Hon ble Mr. Justice
+          Sudip Ahluwalia Member House No.A-13, Tower A-1, Floor-13, Deen Dayal Upadhaya
+          Marg, New Delhi-110002 24608702 702 3 Hon ble Dr. Inder Jit Singh Member
+          C-1 14, Lodi Garden,Near Khan Market, New Delhi-110003 24608703 703 4 Hon
+          ble AVM J. Rajendra, AVSM VSM (Retd.) M
+        extracted_date: '2025-10-17T23:30:46.799853'
+        source: https://ncdrc.nic.in/contact_members.html
+    employment_law:
+      new_eligibility_criteria: []
+      new_procedures:
+      - content: Section 22. Practice and procedure in the common High Court.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 27. Procedure as to appeals to Supreme Court.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      new_provisions:
+      - content: Section 1. Short title, extent and application. Show Related Subordinates
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 2A. Establishment to include all departments and branches.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 3. Power to apply Act to an establishment which has a common
+          provident fund with another establishment
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 5C. Board of Trustees to be body corporate.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 5DD. Acts and proceedings of the Central Board or its Executive
+          Committee or the State Board not to be invalidated on certain grounds.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 6. Contributions and matters which may be provided for in
+          Schemes.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 6C. Employees' Deposit-linked Insurance Scheme.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 7A. Determination of moneys due from employers.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 7B. Review of orders passed under section 7A.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 7K. Right of appellant to take assistance of legal practitioner
+          and of Government, etc., to appoint presenting officers.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 7-O. Deposit of amount due, on filing appeal.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 7P. Transfer of certain applications to Tribunals.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 8. Mode of recovery of moneys due from employers.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 8A. Recovery of moneys by employers and contractors.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 8B. Issue of certificate to the Recovery Officer.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 8C. Recovery Officer to whom certificate is to be forwarded.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 8D. Validity of certificate and amendment thereof.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 8E. Stay of proceedings under certificate and amendment or
+          withdrawal thereof.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 8G. Application of certain provisions of Income-tax Act.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 9. Fund to be recognised under Act 11 of 1922.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 11. Priority of payment of contributions over other debts.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 14AA. Enhanced punishment in certain cases after previous
+          conviction.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 15. Special provisions relating to existing provident funds.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 16. Act not to apply to certain establishments.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 16A. Authorising certain employers to maintain provident
+          fund accounts.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 17AA. Act to have effect notwithstanding anything contained
+          in Act 31 of 1956.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 17B. Liability in case of transfer of establishment.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 18. Protection of action taken in good faith.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 18A. Presiding Officer and other officers to be public servants.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Section 20. Power of Central Government to give directions.
+        extracted_date: '2025-10-17T23:26:58.089225'
+        source: https://www.indiacode.nic.in/handle/123456789/2152
+      - content: Schedule 1. THE FIRST SCHEDULE Order Appendix Forms
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Schedule 1. THE FIRST SCHEDULE Order Appendix Forms
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Schedule 2. THE SECOND SCHEDULE. Order Appendix Forms
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Schedule 2. THE SECOND SCHEDULE. Order Appendix Forms
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 4. Formation of Union territory of Daman and Diu.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 7. Election to fill the seat allotted to the State of Goa.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 8. Allocation of seats in the House of the People.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 9. Parliamentary constituency of the Union territory of Daman
+          and Diu.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 15. Speaker of the provisional Legislative Assembly.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 18. Power of Election Commission to maintain delimitation
+          orders up-to-date.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 20. Common High Court for Maharashtra, Goa, Dadra and Nagar
+          Haveli and Daman and Diu.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 23. Custody of seal of the common High Court.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 26. Principal seat and other places of sitting of the common
+          High Court.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 28. Transfer of proceedings to the common High Court.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 31. Authorisation of expenditure pending its sanction by
+          the Legislature.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 32. Reports relating to the accounts of the existing Union
+          territory.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 39. Investments in and loans, etc., to certain corporate
+          bodies.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 40. Assets and liabilities of State undertakings.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 44. Pensions granted by the Administrator, etc.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 46. Liability in respect of actionable wrong.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 47. Liability as guarantor of co-operative societies.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 50. Apportionment of assets or liabilities by agreement.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 51. Power of Central Government to order allocation or adjustment
+          in certain cases.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 54. General provisions as to statutory corporations.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 55. Temporary provisions as to continuance of certain existing
+          road transport permits.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 56. Special provision relating to retrenchment compensation
+          in certain cases.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 58. Continuance of existing facilities in certain institutions.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 59. Provisions relating to All India Services.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 61. Provisions as to continuance of officers in the same
+          posts.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 62. Powers of Central Government to give direction.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 69. Provisions as to continuance of courts, etc.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 70. Effect of provisions of Act inconsistent with other laws.
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Schedule 1. THE FIRST SCHEDULE Order Appendix Forms
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Schedule 2. THE SECOND SCHEDULE. Order Appendix Forms
+        extracted_date: '2025-10-17T23:26:59.643668'
+        source: https://www.indiacode.nic.in/handle/123456789/1886
+      - content: Section 1. Short title and commencement. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 3. Establishment of Board. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 6. Powers and functions of Member-Secretary of Board. Show
+          Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 7. Classification of enterprises. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 8. Memorandum of micro, small and medium enterprises. Show
+          Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 9. Measures for promotion and development. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 11. Procurement preference policy. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 14. Administration and utilisation of Fund or Funds.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 16. Date from which and rate at which interest is payable.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 18. Reference to Micro and small Enterprises Facilitation
+          Council.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 19. Application for setting aside decree, award or order.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 20. Establishment of Micro and Small Enterprises Facilitation
+          Council.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 21. Composition of Micro and Small Enterprises Facilitation
+          Council.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 22. Requirement to specify unpaid amount with interest in
+          the annual statement of accounts.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 23. Interest not to be allowed as deduction from income.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 25. Scheme for closure of business of micro, small and medium
+          enterprises.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 26. Appointment of Officers and other employees.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 27. Penalty for contravention of section 8 or section 22
+          or section 26.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 29. Power to make rules. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: Section 30. Power to make rules by State Government.
+        extracted_date: '2025-10-17T23:27:01.233524'
+        source: https://www.indiacode.nic.in/handle/123456789/2013
+      - content: 'Home   Ministry of Labour   Employment   GoI India "JavaScript is
+          a standard programming language that is included to provide interactive
+          features, Kindly enable Javascript in your browser. For details visit help
+          page" भ रत सरक रGOVERNMENT OF INDIA A  A A- A A Search form Search LanguageEnglish
+          श रम एव  र जग र म त र लय Government of India Ministry of Labour   Employment
+          Menu म ख य प ष ठ हम र  ब र  म  म त र लय क  ब र  म   म त र  प र फ  इल र ज
+          य म त र  (स वत त र प रभ र) द रद ष ट  (व ज न) ध य य (म '
+        extracted_date: '2025-10-17T23:30:30.576817'
+        source: https://labour.gov.in
+      - content: 'India Code: Invalid URL or Argument(s). Screen Reader Access A-
+          A A  T T Language ह  द  English Skip navigation Home About Us Browse Central
+          Acts List of Acts Short Title Act Number Act Year Enactment Date Ministry
+          Department State Acts Andaman and Nicobar Islands Andhra Pradesh Arunachal
+          Pradesh Assam Bihar Chandigarh Chhattisgarh Dadra and Nagar Haveli and Daman
+          and Diu Delhi Goa Gujarat Haryana Himachal Pradesh Jammu and Kashmir Jharkhand
+          Karnataka Kerala Ladakh Lakshadweep Madhya Pradesh Mah'
+        extracted_date: '2025-10-17T23:30:32.608373'
+        source: https://www.indiacode.nic.in/handle/123456789/1891
     family_law:
       new_eligibility_criteria: []
       new_procedures:
       - content: Section 15. Practice and procedure in common High Court.
-        extracted_date: '2025-10-10T11:38:49.370730'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
       - content: Section 20. Procedure as to appeals to Supreme Court.
-        extracted_date: '2025-10-10T11:38:49.370730'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
+      - content: Section 22C. Procedure, etc., of Authority. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 29C. Procedure of Board. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: 'SQLSTATE[08006] [7] FATAL: no pg_hba.conf entry for host "10.192.102.252",
+          user "postgres", database "nationalcourtwebhc_test", SSL off Home - eCourt
+          India Services Skip to Navigation Skip to Main Content Site map A- A A  A
+          A Home e-Committee Supreme Court High Courts District Courts NJDG Contact
+          Us Citizen Centric Service To provide efficient   time-bound citizen centric
+          service delivery. Decision Support Systems To develop, install   implement
+          decision support systems in courts. Transparency o'
+        extracted_date: '2025-10-17T23:29:49.300447'
+        source: https://ecourts.gov.in/ecourts_home/
       new_provisions:
+      - content: Section 1. Short title, extent and commencement. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 3. Constitution of National Commission for Protection of
+          Child Rights. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 4. Appointment of Chairperson and Members. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 5. Term of office and conditions of service of Chairperson
+          and Members. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 6. Salary and allowances of Chairperson and Members.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 8. Vacation of office by Chairperson or Member.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 9. Vacancies, etc., not to invalidate proceedings of Commission.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 11. Member-Secretary, officers and other employees of Commission.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 12. Salaries and allowances to be paid out of grants.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 16. Annual and special reports of Commission.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 17. Constitution of State Commission for Protection of Child
+          Rights.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 18. Appointment of Chairperson and other Members.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 19. Term of office and conditions of service of Chairperson
+          and Members.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 20. Salary and allowances and Chairperson and Members.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 21. Secretary, officers and other employees of the State
+          Commission.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 22. Salaries and allowances to be paid out of grants.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 23. Annual and special reports of State Commission.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 24. Application of certain provisions relating to National
+          Commission for Protection of Child Rights to State Commissions.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 30. Accounts and audit of State Commission.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 31. Protection of action taken in good faith.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 32. Chairperson, Members and other officers to be public
+          servant.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 35. Power of Central Government to make rules. Show Related
+          Subordinates
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
+      - content: Section 36. Power of State Government to make rules.
+        extracted_date: '2025-10-17T23:27:01.317843'
+        source: https://www.indiacode.nic.in/handle/123456789/2056
       - content: Section 4. Amendment of First Schedule to the Constitution.
-        extracted_date: '2025-10-10T11:38:49.370730'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
       - content: Section 5. Amendment of Sixth Schedule to the Constitution.
-        extracted_date: '2025-10-10T11:38:49.370730'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
       - content: Section 13. Common High Court for Assam and Nagaland.
-        extracted_date: '2025-10-10T11:38:49.370730'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
       - content: Section 21. Pending suits, appeals and proceedings.
-        extracted_date: '2025-10-10T11:38:49.372243'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
       - content: Section 22. Authorisation of expenditure pending its sanction by
           Legislature.
-        extracted_date: '2025-10-10T11:38:49.372243'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
       - content: Section 22A. Allowances and privileges of Governor of Nagaland.
-        extracted_date: '2025-10-10T11:38:49.372243'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
       - content: Section 24. Property, assets, rights, liabilities and obligations.
-        extracted_date: '2025-10-10T11:38:49.372243'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
       - content: Section 26. Continuance of existing laws and their adaptation.
-        extracted_date: '2025-10-10T11:38:49.372243'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
       - content: Section 28. Provisions as to continuance of courts and of officers,
           etc.
-        extracted_date: '2025-10-10T11:38:49.372243'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
       - content: Section 30. Effect of provisions of Act inconsistent with other laws.
-        extracted_date: '2025-10-10T11:38:49.372243'
+        extracted_date: '2025-10-17T23:27:01.351344'
         source: https://www.indiacode.nic.in/handle/123456789/1384
+      - content: Schedule 1. THE FIRST SCHEDULE Order Appendix Forms
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Schedule 1. THE FIRST SCHEDULE Order Appendix Forms
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Schedule 2. THE SECOND SCHEDULE. Order Appendix Forms
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Schedule 2. THE SECOND SCHEDULE. Order Appendix Forms
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 1. Short title, extent and commencement. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 3. Incorporation of the Institute. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 4. Entry of names in the Register of members. Show Related
+          Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 7. Members to be known as cost accountants.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 9. Constitution of the Council of the Institute. Show Related
+          Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 10. Re-election or re-nomination to Council.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 10A. Settlement of disputes regarding election.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 10B. Establishment of Tribunal. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 13. Resignation of membership and casual vacancies.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 15B. Imparting education by Universities and other bodies.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 16. Officers and employees, salary, allowances, etc.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 21. Disciplinary Directorate. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 21B. Disciplinary Committee. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 21C. Authority, Disciplinary Committee, Board of Discipline
+          and Director (Discipline) to have powers of civil court.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 22. Professional or other misconduct defined.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 22A. Constitution of Appellate Authority. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 22B. Term of office of members of Authority.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 22D. Officers and other staff of Authority.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 23. Constitution and functions of Regional Councils.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 24. Penalty for falsely claiming to be a member, etc.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 25. Penalty for using name of the Council, awarding degrees
+          of cost accountancy, etc.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 26. Companies not to engage in cost accountancy.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 27. Unqualified persons not to sign documents.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 28. Offences by companies. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 29. Sanction to prosecute. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 29A. Establishment of Quality Review Board. Show Related
+          Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 29B. Functions of Board. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 29D. Terms and conditions of service of Chairperson and members
+          of Board and its expenditure. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 30. Dissolution of the Institute of Cost and Works Accountants
+          registered under the Companies Act, 1956.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 31. Transfer of assets and liabilities of the dissolved company
+          to the Institute.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 32. Provisions respecting employees of the dissolved company.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 34. Alteration in the Register and cancellation of certificate.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 36. Protection of action taken in good faith.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 37. Maintenance of branch offices. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 38A. Power of Central Government to make rules Show Related
+          Subordinates
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Section 40. Rules, regulations and notifications to laid before Parliament.
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Schedule 1. THE FIRST SCHEDULE Order Appendix Forms
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: Schedule 2. THE SECOND SCHEDULE. Order Appendix Forms
+        extracted_date: '2025-10-17T23:27:01.846688'
+        source: https://www.indiacode.nic.in/handle/123456789/1385
+      - content: 'India Code: State of Nagaland Act, 1962 Screen Reader Access A-
+          A A  T T Language ह  द  English Skip navigation Home About Us Browse Central
+          Acts List of Acts Short Title Act Number Act Year Enactment Date Ministry
+          Department State Acts Andaman and Nicobar Islands Andhra Pradesh Arunachal
+          Pradesh Assam Bihar Chandigarh Chhattisgarh Dadra and Nagar Haveli and Daman
+          and Diu Delhi Goa Gujarat Haryana Himachal Pradesh Jammu and Kashmir Jharkhand
+          Karnataka Kerala Ladakh Lakshadweep Madhya Pradesh Mah'
+        extracted_date: '2025-10-17T23:29:37.219068'
+        source: https://www.indiacode.nic.in/handle/123456789/1384
+      - content: Home   WCD Government of India Ministry of Women and Child Development
+          UC SoE Portal HI Accessibility Controls Contrast View Invert Saturation
+          Highlight links Hide Images Filling up of four posts of Consultant (Official
+          Language) in the Ministry of Women and Child Development on contract basis.
+          CARA Toll free No. - 1800-11-1311 POSHAN 2.0 Toll free No. - 14408 Women
+          Helpline Toll free No. - 181 Child Helpline Toll free No. - 1098 SHe-Box
+          is live now. If you are facing any workplace related sexua
+        extracted_date: '2025-10-17T23:31:05.833632'
+        source: https://wcd.gov.in
+      - content: 'India Code: Invalid URL or Argument(s). Screen Reader Access A-
+          A A  T T Language ह  द  English Skip navigation Home About Us Browse Central
+          Acts List of Acts Short Title Act Number Act Year Enactment Date Ministry
+          Department State Acts Andaman and Nicobar Islands Andhra Pradesh Arunachal
+          Pradesh Assam Bihar Chandigarh Chhattisgarh Dadra and Nagar Haveli and Daman
+          and Diu Delhi Goa Gujarat Haryana Himachal Pradesh Jammu and Kashmir Jharkhand
+          Karnataka Kerala Ladakh Lakshadweep Madhya Pradesh Mah'
+        extracted_date: '2025-10-17T23:31:07.086065'
+        source: https://www.indiacode.nic.in/handle/123456789/1523
+    fundamental_rights:
+      new_eligibility_criteria: []
+      new_procedures:
+      - content: NHRC National Human Rights Commission, India (Established under the
+          Protection of Human Rights Act, 1993) Protecting   Promoting Life, Liberty,
+          Equality and Dignity of all Accessibility Tool Navigation Adjustment Screenreader
+          Color Adjustment Light Dark Text Size Increase Reset Decrease Increase Line
+          Height Increase Letter Spacing Others Hide All Images Highlight All Links
+          Big Cursor ह  द  English About Us About the Organisation Mandate Vision   Mission
+          Composition SCA Accreditation Organisation
+        extracted_date: '2025-10-17T23:30:50.567938'
+        source: https://nhrc.nic.in
+      new_provisions:
+      - content: Section 1. Short title, extent, application and commencement. Show
+          Related Subordinates
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: Section 4. Maintenance of parents and senior citizens.
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: Section 5. Application for maintenance. Show Related Subordinates
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: Section 12. Option regarding maintenance in certain cases.
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: Section 14. Award of interest where any claim is allowed.
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: Section 21. Measures for publicity, awareness, etc., for welfare
+          of senior citizens.
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: Section 22. Authorities who may be specified for implementing the
+          provisions of this Act.
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: Section 23. Transfer of property to be void in certain circumstances.
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: Section 24. Exposure and abandonment of senior citizen.
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: Section 28. Protection of action taken in good faith.
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: Section 30. Power of Central Government to give directions.
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: Section 32. Power of State Government to make rules.
+        extracted_date: '2025-10-17T23:27:03.704024'
+        source: https://www.indiacode.nic.in/handle/123456789/2033
+      - content: 'India Code: Invalid URL or Argument(s). Screen Reader Access A-
+          A A  T T Language ह  द  English Skip navigation Home About Us Browse Central
+          Acts List of Acts Short Title Act Number Act Year Enactment Date Ministry
+          Department State Acts Andaman and Nicobar Islands Andhra Pradesh Arunachal
+          Pradesh Assam Bihar Chandigarh Chhattisgarh Dadra and Nagar Haveli and Daman
+          and Diu Delhi Goa Gujarat Haryana Himachal Pradesh Jammu and Kashmir Jharkhand
+          Karnataka Kerala Ladakh Lakshadweep Madhya Pradesh Mah'
+        extracted_date: '2025-10-17T23:30:50.744236'
+        source: https://www.indiacode.nic.in/handle/123456789/1542
     general:
       new_eligibility_criteria: []
       new_procedures: []
@@ -49,15 +756,15 @@ scraped_updates:
       - content: '"JavaScript is a standard programming language that is included
           to provide interactive features, Kindly enable Javascript in your browser.
           For details visit help page" भ रत सरक रGOVERNMENT OF INDIA A  A A- A A Search
-          form Search Languageह न द'
-        extracted_date: '2025-10-10T11:39:18.140563'
+          form Search LanguageEnglish'
+        extracted_date: '2025-10-17T23:30:30.340722'
         source: https://labour.gov.in
       - content: '"JavaScript is a standard programming language that is included
           to provide interactive features, Kindly enable Javascript in your browser.
           For details visit help page" भ रत सरक रGOVERNMENT OF INDIAव ध  और न य य
           म त र लयMinistry of Law   Justice Skip to main content Search form Search
           A  A A- A A Languageह न द'
-        extracted_date: '2025-10-10T11:39:20.616498'
+        extracted_date: '2025-10-17T23:31:04.826335'
         source: https://legalaffairs.gov.in
     legal_aid:
       new_eligibility_criteria:
@@ -68,221 +775,10 @@ scraped_updates:
           12 of the Legal Services Authorities Act, 1987. It also entails creating
           legal awareness by spreading legal literacy through legal awareness camps,
           print media, digital media and organizing Lok Adalats '
-        extracted_date: '2025-10-10T11:38:57.816092'
+        extracted_date: '2025-10-17T23:27:17.678520'
         source: https://nalsa.gov.in/legal-aid/
       new_procedures: []
       new_provisions:
-      - content: Section 1. Short title, extent and commencement. Show Related Subordinates
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 4. When work not deemed to be published or performed in public.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 5. When work deemed to be first published in India.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 6. Certain disputes to be decided by Commercial Court.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 7. Nationality of author where the making of unpublished
-          work is extended over considerable period.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 10. Registrar and Deputy Registrars of Copyrights.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 15. Special provision regarding copyright in designs registered
-          or capable of being registered under the Designs Act, 2000.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 16. No copyright except as provided in this Act.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 19A. Disputes with respect to assignment of copyright.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 20. Transmission of copyright in manuscript by testamentary
-          disposition.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 21. Right of author to relinquish copyright.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 22. Term of copyright in published literary, dramatic, musical
-          and artistic works.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 23. Term of copyright in anonymous and pseudonymous works.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 26. Term of copyright in cinematograph films.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 28A. Term of copyright in works of public undertakings.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 29. Term of copyright in works of international organisations.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 31. Compulsory licence in works withheld from public.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 31A. Compulsory licence in unpublished or published works.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 31B. Compulsory licence for benefit of disabled.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 31D. Statutory licence for broadcasting of literary and musical
-          works and sound recording.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 32. Licence to produce and publish translations.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 32A. Licence to reproduce and publish works for certain purposes.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 32B. Termination of licences issued under this Chapter.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 34. Administration of rights of owner by copyright society.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 35. Control over the copyright society by the author and
-          other owners of rights.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 36A. Rights and liabilities of performing rights societies.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 39. Acts not infringing broadcast reproduction right or performer
-          s right.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 39A. Certain provisions to apply in case of broadcast reproduction
-          right and performer s.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 40. Power to extend copyright to foreign works.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 40A. Power of Central Government to apply Chapter VIII to
-          broadcasting organisations and performers in certain other countries.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 41. Provisions as to works of certain international organisations.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 42. Power to restrict rights in works of foreign authors
-          first published in India.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 42A. Power to restrict rights of foreign broadcasting organisations
-          and performer s.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 43. Orders under this Chapter to be laid before Parliament.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 48. Register of Copyrights to be prima facie evidence of
-          particulars entered therein.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 49. Correction of entries in the Register of Copyrights.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 50. Rectification of Register by High Court.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 50A. Entries in the Register of Copyrights, etc., to be published.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 52. Certain acts not to be infringement of copyright.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 52A. Particulars to be included in records and video Films.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 53A. Resale share right in original copies.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 55. Civil remedies for infringement of copyright.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 58. Rights of owner against persons possessing or dealing
-          with infringing copies.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 59. Restriction on remedies in the case of works of architecture.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 60. Remedy in the case of groundless threat of legal proceedings.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 61. Owner of copyright to be party to the proceeding.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 62. Jurisdiction of court over matters arising under this
-          Chapter.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 63. Offences of infringement of copyright or other rights
-          conferred by this Act.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 63A. Enhanced penalty on second and subsequent convictions.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 63B. Knowing use of infringing copy of computer programme
-          to be an offence.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 64. Power of police to seize infringing copies.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 65. Possession of plates for purpose of making infringing
-          copies.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 65B. Protection of Rights Management Information.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 66. Disposal of infringing copies or plates for purpose of
-          making infringing copies.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 67. Penalty for making false entries in register, etc., for
-          producing or tendering false entries.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 68. Penalty for making false statements for the purpose of
-          deceiving or influencing any authority or officer.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 68A. Penalty for contravention of section 52A.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 71. Appeals against certain orders of Magistrate.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 72. Appeals against orders of Registrar of Copyrights.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 74. Registrar of Copyrights and Appellate Board to possess
-          certain powers of civil courts
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 75. Orders for payment of money passed by Registrar of Copyrights
-          and Appellate Board to be executable as a decree
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 76. Protection of action taken in good faith.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
-      - content: Section 79. Repeals, savings and transitional provisions.
-        extracted_date: '2025-10-10T11:38:47.385066'
-        source: https://www.indiacode.nic.in/handle/123456789/1367
       - content: 'Preventive   Strategic Legal Services Schemes Title Date View   Download
           NALSA Supporting Potential and Resilience of the Unseen, Held-back and Affected
           (SPRUHA) SCHEME, 2025 Accessible Version : View NALSA SCHEME ON ACCESS TO
@@ -290,7 +786,7 @@ scraped_updates:
           : View VEER PARIVAR SAHAYATA YOJANA 2025 Accessible Version : View (5 MB)   NALSA
           (JAGRITI) SCHEME, 2025 Accessible Version : View (4 MB)   NALSA (DAWN)-
           SCHEME, 2025 Accessible Version : View (4'
-        extracted_date: '2025-10-10T11:38:55.769807'
+        extracted_date: '2025-10-17T23:27:15.711505'
         source: https://nalsa.gov.in/preventive-strategic-legal-services-schemes/
       - content: 'Preventive   Strategic Legal Services Schemes Title Date View   Download
           NALSA Supporting Potential and Resilience of the Unseen, Held-back and Affected
@@ -299,6 +795,6 @@ scraped_updates:
           : View VEER PARIVAR SAHAYATA YOJANA 2025 Accessible Version : View (5 MB)   NALSA
           (JAGRITI) SCHEME, 2025 Accessible Version : View (4 MB)   NALSA (DAWN)-
           SCHEME, 2025 Accessible Version : View (4'
-        extracted_date: '2025-10-10T11:38:59.793123'
+        extracted_date: '2025-10-17T23:27:19.799100'
         source: https://nalsa.gov.in/preventive-strategic-legal-services-schemes/
-  last_update: '2025-10-10T11:39:20.623838'
+  last_update: '2025-10-17T23:31:07.098854'
