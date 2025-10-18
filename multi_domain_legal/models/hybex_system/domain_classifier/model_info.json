@@ -5,6 +5,6 @@
   "num_parameters": 109486085,
   "trainable_parameters": 109486085,
   "device": "cuda",
-  "save_timestamp": "2025-10-18T23:57:47.260019",
+  "save_timestamp": "2025-10-19T01:19:02.549749",
   "config_summary": "HybEx-Law Config - Data: verified_fallback, Models: 3, Legal Sources: Unknown"
 }
