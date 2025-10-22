@@ -11,9 +11,9 @@ wrongful_termination(Employee) :-
 wrongful_termination(Employee) :-
     discriminatory_termination(Employee).
 
-% Add this new definition
+% Corrected discriminatory_termination to avoid circular dependency
 discriminatory_termination(Employee) :-
-    constitutional_employment_remedy(non_discrimination),
+    discriminated_against(Employee, _),
     case_type(Employee, discrimination).
     
 improper_procedure(Employee) :-
@@ -107,5 +107,18 @@ employment_case_type(Person, harassment) :-
 % =================================================================
 % CONSTITUTIONAL EMPLOYMENT REMEDIES
 % =================================================================
+
+% =================================================================
+% MISSING UTILITY PREDICATES
+% =================================================================
+
+notice_period_for_duration(Days, 30) :- Days < 365, !.
+notice_period_for_duration(Days, 60) :- Days < 1825, !.  % < 5 years
+notice_period_for_duration(_, 90).  % >= 5 years
+
+state_minimum_wage('maharashtra', 18000).
+state_minimum_wage('karnataka', 16000).
+state_minimum_wage('delhi', 17000).
+state_minimum_wage(_, 15000).  % Default
 
 

@@ -15,14 +15,444 @@ from .config import HybExConfig
 
 logger = logging.getLogger(__name__)
 
+
+class EnhancedFeatureExtractor:
+    """
+    Extract rich semantic features from legal queries beyond basic entity extraction.
+    
+    Features extracted:
+    1. Financial indicators: monetary amounts, financial statistics
+    2. Urgency signals: high/medium/low urgency levels
+    3. Implicit vulnerabilities: health, social, family, age-related, disaster indicators
+    4. Domain-specific keywords: consumer, employment, family, rights keywords
+    5. Sentiment analysis: negative, positive, neutral tone
+    6. Named entities: persons, organizations, locations, dates, monetary values
+    
+    These features enhance model performance by providing richer semantic signals.
+    """
+    
+    def __init__(self):
+        """Initialize the feature extractor with spaCy model."""
+        try:
+            self.nlp = spacy.load('en_core_web_sm')
+            logger.info("EnhancedFeatureExtractor initialized with spaCy model")
+        except OSError:
+            logger.warning("SpaCy model not found. Downloading en_core_web_sm...")
+            spacy.cli.download("en_core_web_sm")
+            self.nlp = spacy.load('en_core_web_sm')
+        except Exception as e:
+            logger.error(f"Failed to load spaCy model: {e}")
+            self.nlp = None
+    
+    def extract_enhanced_features(self, query: str, entities: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Extract comprehensive semantic features from a legal query.
+        
+        Args:
+            query: The legal query text
+            entities: Previously extracted entities (from extract_entities method)
+        
+        Returns:
+            Dictionary containing enhanced features:
+            - financial_indicators: Dict with amounts, max/min/avg, has_debt, has_savings
+            - urgency_level: str ('high', 'medium', 'low')
+            - implicit_vulnerabilities: Dict with health, social, family, age, disaster flags
+            - domain_keywords: Dict with counts per domain
+            - sentiment: Dict with label and score
+            - named_entities: Dict with persons, organizations, locations, dates, money
+        """
+        enhanced_features = {}
+        
+        # Extract each feature category
+        enhanced_features['financial_indicators'] = self._extract_financial_indicators(query, entities)
+        enhanced_features['urgency_level'] = self._extract_urgency_signals(query)
+        enhanced_features['implicit_vulnerabilities'] = self._extract_implicit_vulnerabilities(query)
+        enhanced_features['domain_keywords'] = self._extract_domain_keywords(query)
+        enhanced_features['sentiment'] = self._extract_sentiment(query)
+        enhanced_features['named_entities'] = self._extract_named_entities(query)
+        
+        logger.debug(f"Extracted enhanced features: {enhanced_features}")
+        return enhanced_features
+    
+    def _extract_financial_indicators(self, query: str, entities: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Extract financial indicators including amounts, debt/savings signals.
+        
+        Returns:
+            Dict with:
+            - amounts: List of all monetary amounts found
+            - max_amount: Maximum amount
+            - min_amount: Minimum amount
+            - avg_amount: Average amount
+            - has_debt: Boolean indicating debt mentions
+            - has_savings: Boolean indicating savings mentions
+            - currency_type: Default 'INR'
+        """
+        indicators = {
+            'amounts': [],
+            'max_amount': None,
+            'min_amount': None,
+            'avg_amount': None,
+            'has_debt': False,
+            'has_savings': False,
+            'currency_type': 'INR'
+        }
+        
+        # Extract all monetary amounts using multiple patterns
+        amount_patterns = [
+            r'rs\.?\s*(\d[\d,]+(?:\.\d{2})?)',  # Rs. 50000 or Rs. 50,000
+            r'₹\s*(\d[\d,]+(?:\.\d{2})?)',      # ₹50000
+            r'(\d+)\s*lakhs?',                   # 5 lakhs
+            r'(\d+)\s*crores?',                  # 2 crores
+            r'rupees\s*(\d[\d,]+)',              # rupees 50000
+        ]
+        
+        text_lower = query.lower()
+        for pattern in amount_patterns:
+            matches = re.finditer(pattern, text_lower)
+            for match in matches:
+                amount_str = match.group(1).replace(',', '')
+                try:
+                    amount = float(amount_str)
+                    # Convert lakhs/crores to rupees
+                    if 'lakh' in pattern:
+                        amount *= 100000
+                    elif 'crore' in pattern:
+                        amount *= 10000000
+                    indicators['amounts'].append(int(amount))
+                except ValueError:
+                    continue
+        
+        # Calculate statistics if amounts found
+        if indicators['amounts']:
+            indicators['max_amount'] = max(indicators['amounts'])
+            indicators['min_amount'] = min(indicators['amounts'])
+            indicators['avg_amount'] = sum(indicators['amounts']) // len(indicators['amounts'])
+        
+        # Check for debt indicators
+        debt_keywords = ['loan', 'debt', 'owe', 'borrow', 'credit', 'mortgage', 'liability', 'dues']
+        indicators['has_debt'] = any(keyword in text_lower for keyword in debt_keywords)
+        
+        # Check for savings indicators
+        savings_keywords = ['savings', 'deposit', 'investment', 'fixed deposit', 'fd', 'assets']
+        indicators['has_savings'] = any(keyword in text_lower for keyword in savings_keywords)
+        
+        # Add amounts from entities if available
+        if 'annual_income' in entities and entities['annual_income'] not in indicators['amounts']:
+            indicators['amounts'].append(entities['annual_income'])
+        if 'goods_value' in entities and entities['goods_value'] not in indicators['amounts']:
+            indicators['amounts'].append(entities['goods_value'])
+        
+        return indicators
+    
+    def _extract_urgency_signals(self, query: str) -> str:
+        """
+        Determine urgency level based on keywords and context.
+        
+        Returns:
+            'high', 'medium', or 'low'
+        """
+        text_lower = query.lower()
+        
+        # High urgency indicators
+        high_urgency_keywords = [
+            'urgent', 'emergency', 'immediate', 'asap', 'critical', 
+            'dying', 'life-threatening', 'eviction', 'terminate', 
+            'fired', 'dismissed', 'arrest', 'threat', 'violence',
+            'abuse', 'harassment', 'danger', 'crisis'
+        ]
+        
+        # Medium urgency indicators
+        medium_urgency_keywords = [
+            'soon', 'quickly', 'within', 'days', 'deadline',
+            'notice', 'warning', 'concern', 'worried', 'anxious',
+            'problem', 'issue', 'trouble', 'dispute'
+        ]
+        
+        # Check for high urgency
+        if any(keyword in text_lower for keyword in high_urgency_keywords):
+            return 'high'
+        
+        # Check for medium urgency
+        if any(keyword in text_lower for keyword in medium_urgency_keywords):
+            return 'medium'
+        
+        # Default to low urgency
+        return 'low'
+    
+    def _extract_implicit_vulnerabilities(self, query: str) -> Dict[str, bool]:
+        """
+        Identify implicit vulnerability indicators that may not be explicitly stated.
+        
+        Returns:
+            Dict with flags for:
+            - health_vulnerability: Medical/health issues
+            - social_vulnerability: Caste/social exclusion
+            - family_vulnerability: Family issues, dependents
+            - age_vulnerability: Elderly or minor
+            - disaster_vulnerability: Natural disasters, accidents
+        """
+        vulnerabilities = {
+            'health_vulnerability': False,
+            'social_vulnerability': False,
+            'family_vulnerability': False,
+            'age_vulnerability': False,
+            'disaster_vulnerability': False
+        }
+        
+        text_lower = query.lower()
+        
+        # Health vulnerability indicators
+        health_keywords = [
+            'sick', 'ill', 'disease', 'medical', 'hospital', 'doctor',
+            'treatment', 'medicine', 'disabled', 'handicap', 'injury',
+            'cancer', 'diabetes', 'heart', 'mental health', 'depression',
+            'accident', 'surgery'
+        ]
+        vulnerabilities['health_vulnerability'] = any(kw in text_lower for kw in health_keywords)
+        
+        # Social vulnerability indicators
+        social_keywords = [
+            'discrimination', 'caste', 'scheduled', 'dalit', 'tribal',
+            'minority', 'backward', 'bpl', 'poor', 'poverty', 'slum',
+            'homeless', 'refugee', 'migrant', 'exclusion', 'marginalized'
+        ]
+        vulnerabilities['social_vulnerability'] = any(kw in text_lower for kw in social_keywords)
+        
+        # Family vulnerability indicators
+        family_keywords = [
+            'children', 'child', 'dependent', 'elderly parent', 'pregnant',
+            'single parent', 'widow', 'orphan', 'divorce', 'custody',
+            'domestic', 'family violence', 'dowry', 'maintenance'
+        ]
+        vulnerabilities['family_vulnerability'] = any(kw in text_lower for kw in family_keywords)
+        
+        # Age vulnerability indicators
+        age_keywords = [
+            'senior citizen', 'elderly', 'old age', 'retirement',
+            'minor', 'juvenile', 'young', 'child', 'student'
+        ]
+        vulnerabilities['age_vulnerability'] = any(kw in text_lower for kw in age_keywords)
+        
+        # Disaster vulnerability indicators
+        disaster_keywords = [
+            'flood', 'earthquake', 'cyclone', 'fire', 'disaster',
+            'calamity', 'pandemic', 'covid', 'lockdown', 'emergency'
+        ]
+        vulnerabilities['disaster_vulnerability'] = any(kw in text_lower for kw in disaster_keywords)
+        
+        return vulnerabilities
+    
+    def _extract_domain_keywords(self, query: str) -> Dict[str, int]:
+        """
+        Count domain-specific keywords to identify relevant legal domains.
+        
+        Returns:
+            Dict with keyword counts for each domain:
+            - consumer_protection: Keywords related to consumer issues
+            - employment_law: Keywords related to employment
+            - family_law: Keywords related to family matters
+            - civil_rights: Keywords related to rights and discrimination
+        """
+        domain_keywords = {
+            'consumer_protection': 0,
+            'employment_law': 0,
+            'family_law': 0,
+            'civil_rights': 0
+        }
+        
+        text_lower = query.lower()
+        
+        # Consumer protection keywords
+        consumer_keywords = [
+            'product', 'goods', 'service', 'purchase', 'buy', 'sold',
+            'defective', 'warranty', 'guarantee', 'refund', 'return',
+            'seller', 'merchant', 'shop', 'store', 'consumer', 'complaint',
+            'fraud', 'cheating', 'misleading', 'advertisement'
+        ]
+        domain_keywords['consumer_protection'] = sum(1 for kw in consumer_keywords if kw in text_lower)
+        
+        # Employment law keywords
+        employment_keywords = [
+            'job', 'work', 'employee', 'employer', 'company', 'office',
+            'salary', 'wage', 'terminate', 'fire', 'dismiss', 'resign',
+            'contract', 'notice', 'leave', 'working hours', 'overtime',
+            'promotion', 'transfer', 'harassment', 'discrimination', 'labor'
+        ]
+        domain_keywords['employment_law'] = sum(1 for kw in employment_keywords if kw in text_lower)
+        
+        # Family law keywords
+        family_keywords = [
+            'marriage', 'divorce', 'spouse', 'husband', 'wife', 'children',
+            'custody', 'maintenance', 'alimony', 'dowry', 'domestic',
+            'family', 'parent', 'guardian', 'adoption', 'inheritance',
+            'property', 'will', 'succession'
+        ]
+        domain_keywords['family_law'] = sum(1 for kw in family_keywords if kw in text_lower)
+        
+        # Civil rights keywords
+        rights_keywords = [
+            'right', 'rights', 'discrimination', 'equality', 'freedom',
+            'liberty', 'justice', 'legal aid', 'court', 'lawyer',
+            'police', 'arrest', 'bail', 'detention', 'constitution',
+            'fundamental', 'violation', 'abuse'
+        ]
+        domain_keywords['civil_rights'] = sum(1 for kw in rights_keywords if kw in text_lower)
+        
+        return domain_keywords
+    
+    def _extract_sentiment(self, query: str) -> Dict[str, Any]:
+        """
+        Analyze sentiment/tone of the query.
+        
+        Returns:
+            Dict with:
+            - label: 'negative', 'positive', or 'neutral'
+            - score: Float between -1.0 (very negative) and 1.0 (very positive)
+        """
+        text_lower = query.lower()
+        
+        # Simple rule-based sentiment analysis
+        # Negative sentiment indicators
+        negative_words = [
+            'not', 'no', 'never', 'refuse', 'deny', 'reject', 'unfair',
+            'wrong', 'bad', 'terrible', 'awful', 'worst', 'poor', 'fail',
+            'problem', 'issue', 'trouble', 'difficult', 'hard', 'struggle',
+            'suffer', 'pain', 'hurt', 'abuse', 'harassment', 'threat',
+            'angry', 'upset', 'worried', 'concerned', 'afraid', 'scared'
+        ]
+        
+        # Positive sentiment indicators
+        positive_words = [
+            'yes', 'good', 'great', 'excellent', 'best', 'happy', 'satisfied',
+            'pleased', 'grateful', 'thank', 'appreciate', 'help', 'support',
+            'resolve', 'solution', 'improve', 'better', 'fair', 'right', 'just'
+        ]
+        
+        # Count occurrences
+        negative_count = sum(1 for word in negative_words if word in text_lower)
+        positive_count = sum(1 for word in positive_words if word in positive_words)
+        
+        # Calculate score (normalized to -1 to 1 range)
+        total_words = len(query.split())
+        if total_words == 0:
+            score = 0.0
+        else:
+            score = (positive_count - negative_count) / max(total_words, 1)
+            score = max(-1.0, min(1.0, score))  # Clamp to [-1, 1]
+        
+        # Determine label
+        if score < -0.1:
+            label = 'negative'
+        elif score > 0.1:
+            label = 'positive'
+        else:
+            label = 'neutral'
+        
+        return {
+            'label': label,
+            'score': round(score, 3)
+        }
+    
+    def _extract_named_entities(self, query: str) -> Dict[str, List[str]]:
+        """
+        Extract named entities using spaCy NER.
+        
+        Returns:
+            Dict with lists of:
+            - persons: Person names
+            - organizations: Organization names
+            - locations: Locations (GPE, LOC)
+            - dates: Dates and times
+            - money: Monetary values
+        """
+        entities = {
+            'persons': [],
+            'organizations': [],
+            'locations': [],
+            'dates': [],
+            'money': []
+        }
+        
+        if not self.nlp:
+            logger.warning("spaCy model not available for NER")
+            return entities
+        
+        try:
+            doc = self.nlp(query)
+            
+            for ent in doc.ents:
+                if ent.label_ == 'PERSON':
+                    entities['persons'].append(ent.text)
+                elif ent.label_ == 'ORG':
+                    entities['organizations'].append(ent.text)
+                elif ent.label_ in ('GPE', 'LOC'):
+                    entities['locations'].append(ent.text)
+                elif ent.label_ == 'DATE':
+                    entities['dates'].append(ent.text)
+                elif ent.label_ == 'MONEY':
+                    entities['money'].append(ent.text)
+            
+            # Remove duplicates while preserving order
+            for key in entities:
+                entities[key] = list(dict.fromkeys(entities[key]))
+        
+        except Exception as e:
+            logger.error(f"Error during NER extraction: {e}")
+        
+        return entities
+
+
+def preprocess_with_enhanced_features(
+    query: str,
+    basic_entities: Dict[str, Any],
+    feature_extractor: EnhancedFeatureExtractor
+) -> Dict[str, Any]:
+    """
+    Convenience function to combine basic entity extraction with enhanced features.
+    
+    Args:
+        query: Legal query text
+        basic_entities: Entities from DataPreprocessor.extract_entities()
+        feature_extractor: Instance of EnhancedFeatureExtractor
+    
+    Returns:
+        Dict containing both basic entities and enhanced features
+    """
+    enhanced_features = feature_extractor.extract_enhanced_features(query, basic_entities)
+    
+    return {
+        'query': query,
+        'basic_entities': basic_entities,
+        'enhanced_features': enhanced_features
+    }
+
+
 class DataPreprocessor:
     """Preprocesses raw legal data into structured formats for training and evaluation."""
     
-    def __init__(self, config: HybExConfig):
+    def __init__(self, config: HybExConfig, use_enhanced_features: bool = True):
+        """
+        Initialize the DataPreprocessor.
+        
+        Args:
+            config: HybExConfig instance
+            use_enhanced_features: If True, extract enhanced semantic features in addition to basic entities
+        """
         self.config = config
         self.nlp = self._load_spacy_model() # Load spaCy model for NER
+        self.use_enhanced_features = use_enhanced_features
+        
+        # Initialize enhanced feature extractor if enabled
+        if self.use_enhanced_features:
+            self.enhanced_feature_extractor = EnhancedFeatureExtractor()
+            logger.info("DataPreprocessor initialized with enhanced feature extraction enabled")
+        else:
+            self.enhanced_feature_extractor = None
+            logger.info("DataPreprocessor initialized with basic feature extraction only")
+        
         self.setup_logging()
-        logger.info("DataPreprocessor initialized.")
+        logger.info("DataPreprocessor initialization complete.")
     
     def setup_logging(self):
         log_file = self.config.get_log_path('data_preprocessing')
@@ -204,6 +634,89 @@ class DataPreprocessor:
 
         logger.debug(f"Extracted entities: {entities}")
         return entities
+    
+    def extract_all_features(self, query: str) -> Dict[str, Any]:
+        """
+        Extract both basic entities and enhanced features from a query.
+        
+        This is the main feature extraction method that should be used during preprocessing.
+        It extracts basic entities (income, age, etc.) and optionally enhanced semantic features
+        (financial indicators, urgency, vulnerabilities, etc.).
+        
+        Args:
+            query: The legal query text
+        
+        Returns:
+            Dict containing:
+            - If use_enhanced_features=True: {'basic_entities': {...}, 'enhanced_features': {...}}
+            - If use_enhanced_features=False: Just the basic entities dict (backward compatible)
+        """
+        # Always extract basic entities
+        basic_entities = self.extract_entities(query)
+        
+        # If enhanced features are disabled, return basic entities only (backward compatible)
+        if not self.use_enhanced_features or not self.enhanced_feature_extractor:
+            return basic_entities
+        
+        # Extract enhanced features
+        try:
+            enhanced_features = self.enhanced_feature_extractor.extract_enhanced_features(query, basic_entities)
+            return {
+                'basic_entities': basic_entities,
+                'enhanced_features': enhanced_features
+            }
+        except Exception as e:
+            logger.error(f"Failed to extract enhanced features: {e}. Falling back to basic entities only.")
+            return basic_entities
+
+    def normalize_sample(self, sample: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Normalize a training sample to ensure consistent field names.
+        
+        This ensures compatibility between data generation, preprocessing, and training.
+        Handles legacy field names and adds required aliases.
+        
+        Args:
+            sample: Raw sample dictionary
+        
+        Returns:
+            Normalized sample with consistent keys:
+            - 'query': User's legal query text
+            - 'text': Alias for 'query' (for compatibility)
+            - 'domains': List of legal domains
+            - 'expected_eligibility': Boolean eligibility label
+            - 'label': Integer eligibility label (for PyTorch)
+            - 'extracted_entities': Entity dictionary (if available)
+            - 'prolog_facts': Prolog facts list (if available)
+        """
+        normalized = {}
+        
+        # Core text field (required)
+        query_text = sample.get('query') or sample.get('text') or sample.get('input_text', '')
+        normalized['query'] = query_text
+        normalized['text'] = query_text  # Add alias for compatibility
+        
+        # Domains (required)
+        normalized['domains'] = sample.get('domains', [])
+        
+        # Eligibility label (required)
+        eligibility = sample.get('expected_eligibility', sample.get('eligibility', False))
+        normalized['expected_eligibility'] = eligibility
+        normalized['label'] = int(eligibility)  # Integer label for PyTorch
+        
+        # Entities (optional but recommended)
+        normalized['extracted_entities'] = sample.get('extracted_entities', {})
+        
+        # Prolog facts (optional)
+        normalized['prolog_facts'] = sample.get('prolog_facts', [])
+        
+        # Preserve other metadata fields
+        for key in ['legal_reasoning', 'user_demographics', 'case_complexity', 
+                    'priority_level', 'sample_id', 'confidence']:
+            if key in sample:
+                normalized[key] = sample[key]
+        
+        return normalized
 
     def validate_data_quality(self, data_path: Path) -> Dict[str, Any]:
         """Performs data quality checks on raw JSON files."""
@@ -312,25 +825,27 @@ class DataPreprocessor:
             missing_entities_count = sum(1 for s in all_pre_split_samples if 'extracted_entities' not in s)
             
             if missing_entities_count > 0:
-                logger.info(f"Extracting entities for {missing_entities_count} samples without 'extracted_entities'...")
+                feature_type = "entities and enhanced features" if self.use_enhanced_features else "entities"
+                logger.info(f"Extracting {feature_type} for {missing_entities_count} samples without 'extracted_entities'...")
                 
                 extraction_errors = 0
-                for sample in tqdm(all_pre_split_samples, desc="Extracting entities for pre-split data", unit="samples"):
+                for sample in tqdm(all_pre_split_samples, desc=f"Extracting {feature_type} for pre-split data", unit="samples"):
                     if 'extracted_entities' not in sample:
                         if 'query' in sample:
                             try:
-                                sample['extracted_entities'] = self.extract_entities(sample['query'])
+                                # Use extract_all_features which handles both basic and enhanced features
+                                sample['extracted_entities'] = self.extract_all_features(sample['query'])
                             except Exception as e:
-                                logger.error(f"Failed to extract entities for {sample.get('sample_id')}: {e}")
+                                logger.error(f"Failed to extract features for {sample.get('sample_id')}: {e}")
                                 sample['extracted_entities'] = {}
                                 extraction_errors += 1
                         else:
                             sample['extracted_entities'] = {}
                 
                 if extraction_errors > 0:
-                    logger.warning(f"⚠️  Entity extraction failed for {extraction_errors} samples")
+                    logger.warning(f"⚠️  Feature extraction failed for {extraction_errors} samples")
                 
-                logger.info("✅ Entity extraction completed for pre-split data")
+                logger.info(f"✅ Feature extraction completed for pre-split data ({feature_type})")
                 
                 # ✅ CRITICAL: Save updated data BACK to original *_split.json files
                 logger.info("💾 Saving extracted entities back to original split files...")
@@ -427,29 +942,32 @@ class DataPreprocessor:
             logger.warning("Data quality validation found issues. Proceeding but review errors.")
 
         # 3. Extract entities and enrich samples
-        logger.info("Extracting entities and enriching samples...")
+        feature_type = "entities and enhanced features" if self.use_enhanced_features else "entities"
+        logger.info(f"Extracting {feature_type} and enriching samples...")
         extraction_errors = 0
         
-        for i, sample in enumerate(tqdm(all_samples, desc="Extracting legal entities", unit="samples")):
+        desc_text = "Extracting legal features" if self.use_enhanced_features else "Extracting legal entities"
+        for i, sample in enumerate(tqdm(all_samples, desc=desc_text, unit="samples")):
             # Ensure each sample has a unique ID, useful for tracking
             if 'sample_id' not in sample:
                 sample['sample_id'] = f"sample_{i+1}"
             
             if 'query' in sample:
                 try:
-                    sample['extracted_entities'] = self.extract_entities(sample['query'])
+                    # Use extract_all_features which handles both basic and enhanced features
+                    sample['extracted_entities'] = self.extract_all_features(sample['query'])
                 except Exception as e:
-                    logger.error(f"Failed to extract entities for sample {sample.get('sample_id')}: {e}")
+                    logger.error(f"Failed to extract features for sample {sample.get('sample_id')}: {e}")
                     sample['extracted_entities'] = {}  # Empty dict as fallback
                     extraction_errors += 1
             else:
                 sample['extracted_entities'] = {}  # No query, no entities
-                logger.warning(f"Sample {sample.get('sample_id', i)} has no 'query' field for entity extraction.")
+                logger.warning(f"Sample {sample.get('sample_id', i)} has no 'query' field for feature extraction.")
         
         if extraction_errors > 0:
-            logger.warning(f"⚠️  Entity extraction failed for {extraction_errors}/{len(all_samples)} samples")
+            logger.warning(f"⚠️  Feature extraction failed for {extraction_errors}/{len(all_samples)} samples")
         else:
-            logger.info(f"✅ Successfully extracted entities for all {len(all_samples)} samples")
+            logger.info(f"✅ Successfully extracted {feature_type} for all {len(all_samples)} samples")
 
         # 4. Split data into train, validation, and test sets
         logger.info("Splitting data into train, validation, and test sets...")

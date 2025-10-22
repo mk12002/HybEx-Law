@@ -21,6 +21,7 @@ class HybExConfig:
         self.BASE_DIR = Path(__file__).parent.parent
         self.DATA_DIR = self.BASE_DIR / "data"
         self.MODELS_DIR = self.BASE_DIR / "models" / "hybex_system"
+        self.knowledge_base_path = self.BASE_DIR / "knowledge_base"
         self.LOGS_DIR = self.BASE_DIR / "logs"
         self.RESULTS_DIR = self.BASE_DIR / "results"
         self.PLOTS_DIR = self.RESULTS_DIR / "plots"
@@ -79,6 +80,26 @@ class HybExConfig:
                 'dropout_prob': 0.3,
                 'early_stopping_patience': 5,
                 'gradient_clip_val': 0.5
+            },
+            'enhanced_legal_bert': {
+                'model_name': 'nlpaueb/legal-bert-base-uncased',
+                'max_length': 256,  # Reduced from 512 for memory optimization
+                'batch_size': 4,    # Slightly larger than simple models (multi-task learning benefits from more data)
+                'learning_rate': 2e-5,  # BERT learning rate
+                'head_learning_rate': 5e-5,  # Classification heads learning rate
+                'epochs': 15,
+                'warmup_steps': 0,  # Using CosineAnnealingWarmRestarts instead
+                'weight_decay': 0.01,
+                'dropout_prob': 0.3,
+                'early_stopping_patience': 5,
+                'gradient_clip_val': 1.0,
+                'num_attention_heads': 8,
+                'freeze_bottom_layers': 6,  # Freeze bottom 6 BERT layers
+                'loss_weights': {
+                    'eligibility': 0.7,
+                    'domain': 0.2,
+                    'confidence': 0.1
+                }
             }
         }
         
@@ -90,11 +111,6 @@ class HybExConfig:
             'random_seed': 42,
             'min_samples_per_domain': 100,
             'max_sequence_length': 512
-        }
-        self.PROLOG_CONFIG = {
-            'min_confidence_for_override': 0.95, # Example value, adjust as needed
-            'log_dir': 'logs/prolog', # Ensure a log directory for prolog
-            'timeout': 120  # Increased timeout for complex queries
         }
 
         self.NEURAL_CONFIG = {
@@ -124,7 +140,7 @@ class HybExConfig:
         if not self.ENTITY_CONFIG:
             self.ENTITY_CONFIG = {
                 'income_thresholds': {
-                    'general': 500000,      # ₹5 lakhs (NALSA 2024)
+                    'general': 300000,      # ₹3 lakhs (NALSA 2024 - aligned with Prolog rules)
                     'sc_st': 800000,        # ₹8 lakhs (Enhanced for SC/ST)
                     'obc': 600000,          # ₹6 lakhs (State amendments)
                     'bpl': 0,               # No income limit for BPL
@@ -151,7 +167,8 @@ class HybExConfig:
             'enable_reasoning': True,
             'confidence_threshold': 0.7,
             'rule_weight': 0.4,  # Weight of Prolog vs Neural
-            'neural_weight': 0.6
+            'neural_weight': 0.6,
+            'timeout': 120  # Timeout for complex queries
         }
         
         # Fusion configuration for combining neural and symbolic predictions
@@ -165,6 +182,17 @@ class HybExConfig:
             },
             'fallback_eligible': False,         # Default when both systems fail
             'require_consensus': False          # Whether both systems must agree
+        }
+        
+        # GNN Configuration (Graph Neural Network for Knowledge Graph)
+        self.GNN_CONFIG = {
+            'gnn_hidden_channels': 128,         # Hidden layer dimension
+            'gnn_num_heads': 8,                 # Number of attention heads
+            'gnn_dropout': 0.3,                 # Dropout probability
+            'gnn_epochs': 50,                   # Training epochs
+            'gnn_batch_size': 32,               # Batch size for training
+            'gnn_learning_rate': 0.001,         # Learning rate
+            'use_gnn_in_eligibility': True      # Whether to use GNN for eligibility prediction
         }
         
         # Logging configuration
@@ -332,6 +360,8 @@ class HybExConfig:
             'entity_config': self.ENTITY_CONFIG,
             'prolog_config': self.PROLOG_CONFIG,
             'neural_config': self.NEURAL_CONFIG,
+            'fusion_config': self.FUSION_CONFIG,
+            'gnn_config': self.GNN_CONFIG,
             'logging_config': self.LOGGING_CONFIG,
             'eval_config': self.EVAL_CONFIG,
             'legal_sources': self.LEGAL_SOURCES

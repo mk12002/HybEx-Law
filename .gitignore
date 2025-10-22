@@ -9,7 +9,6 @@ multi_domain_legal/logs/
 models/
 
 # Results
-results/
 
 # Python
 __pycache__/

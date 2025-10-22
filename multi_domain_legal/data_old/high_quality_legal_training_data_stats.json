@@ -1,0 +1,24 @@
+{
+  "total_samples": 16705,
+  "domain_distribution": {
+    "family_law": 3146,
+    "legal_aid": 5384,
+    "fundamental_rights": 1945,
+    "consumer_protection": 4000,
+    "employment_law": 2230
+  },
+  "eligibility_distribution": {
+    "eligible": 13170,
+    "not_eligible": 3535
+  },
+  "complexity_distribution": {
+    "high": 6316,
+    "very_high": 6107,
+    "medium": 4282
+  },
+  "priority_distribution": {
+    "normal": 9932,
+    "urgent": 1760,
+    "high": 5013
+  }
+}

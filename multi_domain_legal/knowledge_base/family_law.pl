@@ -95,3 +95,13 @@ spouse(X, Y) :- married(Y, X).
 
 mother(Parent, Child) :- parent(Parent, Child), gender(Parent, female).
 father(Parent, Child) :- parent(Parent, Child), gender(Parent, male).
+
+% =================================================================
+% MISSING UTILITY PREDICATES
+% =================================================================
+
+child_custody_case(Person) :-
+    case_type(Person, custody).
+
+marriage_validity_case(Person) :-
+    case_type(Person, marriage_validity).

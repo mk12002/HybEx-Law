@@ -35,8 +35,11 @@ class LegalTrainingExample:
     domains: List[str]
     expected_eligibility: bool
     
+    # DATA PROCESSOR INPUTS (for entity extraction and feature engineering)
+    extracted_entities: Dict[str, Any]  # For data_processor.py compatibility
+    
     # PROLOG ENGINE INPUTS (for symbolic reasoning, NOT for neural training)
-    prolog_facts: List[str]  # Renamed from extracted_facts
+    prolog_facts: List[str]  # For Prolog engine
     
     # METADATA (for evaluation and analysis, NOT for training)
     legal_reasoning: str
@@ -44,6 +47,95 @@ class LegalTrainingExample:
     case_complexity: str
     priority_level: str
     sample_id: str = ""  # Add unique ID
+
+
+class LegalEligibilityValidator:
+    """Validates eligibility labels based on precise legal rules."""
+    
+    # Legal Aid thresholds (as per LSA Act 1987 + 2024 amendments - ALIGNED WITH CONFIG.PY)
+    INCOME_THRESHOLDS = {
+        'sc': 800000,      # ₹8 lakh per year
+        'st': 800000,
+        'obc': 600000,     # ₹6 lakh per year
+        'bpl': float('inf'),  # Always eligible
+        'ews': 800000,
+        'general': 300000,  # ₹3 lakh per year (₹25k/month) - STRICT
+        'minority': 600000
+    }
+    
+    VULNERABLE_CATEGORIES = {
+        'women', 'disabled', 'senior_citizen', 'widow', 
+        'single_parent', 'transgender', 'child', 'trafficked',
+        'natural_disaster_victim', 'industrial_disaster_victim'
+    }
+    
+    @classmethod
+    def validate_legal_aid_eligibility(cls, entities: Dict[str, Any]) -> Tuple[bool, float, str]:
+        """
+        Validate legal aid eligibility with strict rules.
+        Returns: (is_eligible, confidence, reason)
+        """
+        
+        # Rule 1: No income = ALWAYS eligible (highest priority)
+        if not entities.get('income') or entities.get('income') == 0:
+            return (True, 0.98, "No income reported - categorically eligible under LSA Act Section 12")
+        
+        # Rule 2: Vulnerable group = ALWAYS eligible (second priority)
+        vulnerable_groups = []
+        if entities.get('is_disabled'): vulnerable_groups.append('disabled')
+        if entities.get('is_senior_citizen'): vulnerable_groups.append('senior_citizen')
+        if entities.get('is_widow'): vulnerable_groups.append('widow')
+        if entities.get('is_single_parent'): vulnerable_groups.append('single_parent')
+        if entities.get('is_transgender'): vulnerable_groups.append('transgender')
+        if entities.get('gender') == 'female': vulnerable_groups.append('women')
+        
+        if vulnerable_groups:
+            return (True, 0.95, f"Vulnerable group: {', '.join(vulnerable_groups)}")
+        
+        # Rule 3: Income threshold check (strict)
+        monthly_income = entities.get('income', 0)
+        annual_income = monthly_income * 12
+        
+        social_category = entities.get('social_category', 'general').lower()
+        threshold = cls.INCOME_THRESHOLDS.get(social_category, cls.INCOME_THRESHOLDS['general'])
+        
+        if annual_income <= threshold:
+            confidence = 0.90 if annual_income < threshold * 0.8 else 0.75
+            return (True, confidence, 
+                    f"Income ₹{annual_income}/year < ₹{threshold} threshold for {social_category}")
+        
+        # Rule 4: Not eligible
+        return (False, 0.90, 
+                f"Income ₹{annual_income}/year > ₹{threshold} threshold, no vulnerable status")
+    
+    @classmethod
+    def fix_dataset_labels(cls, dataset: List[Dict]) -> Tuple[List[Dict], Dict]:
+        """Fix mislabeled examples in dataset."""
+        fixed = []
+        stats = {'total': len(dataset), 'fixed': 0, 'confirmed': 0}
+        
+        for sample in dataset:
+            entities = sample.get('extracted_entities', {})
+            current_label = sample.get('expected_eligibility', False)
+            
+            # Validate with strict rules
+            correct_label, confidence, reason = cls.validate_legal_aid_eligibility(entities)
+            
+            if correct_label != current_label:
+                print(f"⚠️ Fixed {sample.get('sample_id')}: {current_label} → {correct_label}")
+                print(f"   Reason: {reason}")
+                print(f"   Entities: {entities}\n")
+                sample['expected_eligibility'] = correct_label
+                sample['eligibility_reason'] = reason
+                sample['eligibility_confidence'] = confidence
+                stats['fixed'] += 1
+            else:
+                stats['confirmed'] += 1
+            
+            fixed.append(sample)
+        
+        return fixed, stats
+
 
 class ComprehensiveLegalDataGenerator:
     """
@@ -1240,14 +1332,26 @@ class ComprehensiveLegalDataGenerator:
         # Remove eligibility keywords that leak labels
         filled_query = self._remove_eligibility_keywords(filled_query)
         
-        # Generate Prolog facts (for symbolic reasoning ONLY)
-        prolog_facts = self._generate_prolog_facts_from_query(filled_query, domains)
+        # Generate Prolog facts AND extracted entities (for both symbolic reasoning and data processor)
+        prolog_facts, extracted_entities = self._generate_prolog_facts_from_query(filled_query, domains)
         
-        # Determine eligibility based on legal rules
-        eligibility = self._determine_eligibility(prolog_facts, domains, filled_query)
+        # Determine initial eligibility based on template logic
+        initial_eligibility = self._determine_eligibility(prolog_facts, domains, filled_query)
         
-        # Generate legal reasoning
-        legal_reasoning = self._generate_legal_reasoning(prolog_facts, domains, eligibility)
+        # ✅ VALIDATE eligibility with strict rules if legal_aid domain
+        if "legal_aid" in domains:
+            correct_eligibility, confidence, validation_reason = \
+                LegalEligibilityValidator.validate_legal_aid_eligibility(extracted_entities)
+            final_eligibility = correct_eligibility
+            legal_reasoning = validation_reason
+            
+            # Log corrections for debugging
+            if initial_eligibility != final_eligibility:
+                logger.debug(f"Eligibility corrected: {initial_eligibility} → {final_eligibility}")
+                logger.debug(f"Reason: {validation_reason}")
+        else:
+            final_eligibility = initial_eligibility
+            legal_reasoning = self._generate_legal_reasoning(prolog_facts, domains, final_eligibility)
         
         # Assign demographic profile
         demographics = self._generate_consistent_demographics(filled_query, prolog_facts)
@@ -1259,21 +1363,28 @@ class ComprehensiveLegalDataGenerator:
         return LegalTrainingExample(
             query=filled_query,  # THIS is what neural model sees
             domains=domains,  # THIS is what model predicts
-            expected_eligibility=eligibility,  # THIS is what model predicts
+            expected_eligibility=final_eligibility,  # ✅ Use VALIDATED eligibility
+            extracted_entities=extracted_entities,  # NEW: For data_processor compatibility
             prolog_facts=prolog_facts,  # For Prolog engine, NOT neural model
-            legal_reasoning=legal_reasoning,  # Metadata only
+            legal_reasoning=legal_reasoning,  # Now includes validation reason
             user_demographics=demographics,  # Metadata only
             case_complexity=complexity,  # Metadata only
             priority_level=priority,  # Metadata only
             sample_id=""  # Will be assigned during save
         )
     
-    def _generate_prolog_facts_from_query(self, query: str, domains: List[str]) -> List[str]:
+    def _generate_prolog_facts_from_query(self, query: str, domains: List[str]) -> Tuple[List[str], Dict[str, Any]]:
         """
         Generate Prolog facts for SYMBOLIC REASONING (NOT for neural model training).
         These facts are used by Prolog engine, not fed to BERT.
+        
+        NOW ALSO extracts entities dict for data_processor compatibility.
+        
+        Returns:
+            Tuple of (prolog_facts, extracted_entities)
         """
         facts = ["applicant(user)."]
+        entities = {}  # NEW: Dictionary for data_processor compatibility
         query_lower = query.lower()
         
         # FIXED: Enhanced income extraction with STRICT validation
@@ -1296,15 +1407,26 @@ class ComprehensiveLegalDataGenerator:
                     extracted_income = income_value
                     facts.append(f"income_monthly(user, {income_value}).")
                     
+                    # NEW: Add to entities dict (multiple formats for compatibility)
+                    entities['income'] = income_value  # For validator (monthly income)
+                    entities['monthly_income'] = income_value
+                    entities['annual_income'] = income_value * 12
+                    
                     # Add ONLY derived income category
                     if income_value <= 12000:
+                        income_cat = 'very_low'
                         facts.append("income_category(user, 'very_low').")
                     elif income_value <= 25000:
+                        income_cat = 'low'
                         facts.append("income_category(user, 'low').")
                     elif income_value <= 50000:
+                        income_cat = 'medium'
                         facts.append("income_category(user, 'medium').")
                     else:
+                        income_cat = 'high'
                         facts.append("income_category(user, 'high').")
+                    
+                    entities['income_category'] = income_cat  # NEW: Add to entities
                     break
         
         # CRITICAL: Extract gender with PRIORITY ORDER to avoid conflicts
@@ -1355,7 +1477,11 @@ class ComprehensiveLegalDataGenerator:
         
         # Default: gender not specified
         if not gender_extracted:
+            gender_extracted = 'not_specified'
             facts.append("gender(user, 'not_specified').")
+        
+        # NEW: Add gender to entities dict
+        entities['gender'] = gender_extracted
         
         # Social category extraction
         social_categories = {
@@ -1374,14 +1500,20 @@ class ComprehensiveLegalDataGenerator:
         }
         
         category_found = False
+        extracted_category = None
         for pattern, category in social_categories.items():
             if re.search(pattern, query_lower):
                 facts.append(f"social_category(user, '{category}').")
+                extracted_category = category
                 category_found = True
                 break
         
         if not category_found:
+            extracted_category = 'general'
             facts.append("social_category(user, 'general').")
+        
+        # NEW: Add social category to entities dict
+        entities['social_category'] = extracted_category
         
         # Vulnerable category detection
         vulnerable_indicators = {
@@ -1395,9 +1527,38 @@ class ComprehensiveLegalDataGenerator:
             r'single\s+mother': "is_single_parent(user, true).",
         }
         
+        # NEW: Track vulnerabilities for entities dict
+        vulnerabilities = []
+        
+        # Initialize vulnerability flags for validator compatibility
+        entities['is_disabled'] = False
+        entities['is_senior_citizen'] = False
+        entities['is_transgender'] = False
+        entities['is_widow'] = False
+        entities['is_single_parent'] = False
+        
         for pattern, fact in vulnerable_indicators.items():
             if fact and re.search(pattern, query_lower):
                 facts.append(fact)
+                # Extract vulnerability type from fact and set flags
+                if 'disabled' in fact:
+                    vulnerabilities.append('disabled')
+                    entities['is_disabled'] = True
+                elif 'senior_citizen' in fact:
+                    vulnerabilities.append('senior_citizen')
+                    entities['is_senior_citizen'] = True
+                elif 'transgender' in fact:
+                    vulnerabilities.append('transgender')
+                    entities['is_transgender'] = True
+                elif 'widow' in fact:
+                    vulnerabilities.append('widow')
+                    entities['is_widow'] = True
+                elif 'single_parent' in fact:
+                    vulnerabilities.append('single_parent')
+                    entities['is_single_parent'] = True
+        
+        # NEW: Add vulnerabilities to entities dict
+        entities['vulnerabilities'] = vulnerabilities
         
         # Age extraction with validation
         age_match = re.search(r'(\d{2})\s+year(?:s)?\s+old', query_lower)
@@ -1405,8 +1566,13 @@ class ComprehensiveLegalDataGenerator:
             age = int(age_match.group(1))
             if 18 <= age <= 100:  # Validate reasonable age
                 facts.append(f"age(user, {age}).")
+                entities['age'] = age  # NEW: Add to entities dict
                 if age >= 65:
                     facts.append("is_senior_citizen(user, true).")
+                    if 'senior_citizen' not in vulnerabilities:
+                        vulnerabilities.append('senior_citizen')
+                        entities['vulnerabilities'] = vulnerabilities  # Update entities
+                        entities['is_senior_citizen'] = True  # Set flag for validator
         
         # Domain-specific facts (simplified to avoid leakage)
         if "legal_aid" in domains:
@@ -1439,7 +1605,8 @@ class ComprehensiveLegalDataGenerator:
             if re.search(r'\b(bribe|corruption)\b', query_lower):
                 facts.append("corruption(user, true).")
         
-        return facts
+        # NEW: Return both prolog_facts AND extracted_entities dict
+        return facts, entities
     
     def _determine_eligibility(self, facts: List[str], domains: List[str], query: str) -> bool:
         """Determine eligibility with balanced distribution (65-70% eligible)"""
@@ -2232,6 +2399,168 @@ def generate_comprehensive_dataset(self, total_samples: int = 20000) -> List[Leg
     
     logger.info(f"Enhanced dataset generation complete: {len(dataset)} total samples")
     return dataset
+
+
+class BalancedDataGenerator(ComprehensiveLegalDataGenerator):
+    """Generate balanced dataset with controlled distribution."""
+    
+    def generate_balanced_dataset(self, total_samples=5000, eligible_ratio=0.55):
+        """
+        Generate balanced dataset.
+        
+        Args:
+            total_samples: Total samples to generate
+            eligible_ratio: Target ratio of eligible samples (0.5-0.6 recommended)
+        """
+        target_eligible = int(total_samples * eligible_ratio)
+        target_not_eligible = total_samples - target_eligible
+        
+        eligible_samples = []
+        not_eligible_samples = []
+        
+        # Generate with controlled distribution
+        while len(eligible_samples) < target_eligible or \
+              len(not_eligible_samples) < target_not_eligible:
+            
+            domain = random.choice(list(LegalDomain))
+            template = random.choice(self.legal_templates[domain.value])
+            
+            sample = self.generate_sample_with_validation(template, domain.value)
+            
+            if sample.expected_eligibility and len(eligible_samples) < target_eligible:
+                eligible_samples.append(sample)
+            elif not sample.expected_eligibility and len(not_eligible_samples) < target_not_eligible:
+                not_eligible_samples.append(sample)
+        
+        # Combine and shuffle
+        balanced_dataset = eligible_samples + not_eligible_samples
+        random.shuffle(balanced_dataset)
+        
+        print(f"✅ Generated balanced dataset:")
+        print(f"   Eligible: {len(eligible_samples)} ({len(eligible_samples)/total_samples*100:.1f}%)")
+        print(f"   Not Eligible: {len(not_eligible_samples)} ({len(not_eligible_samples)/total_samples*100:.1f}%)")
+        
+        return balanced_dataset
+    
+    def generate_hard_negative_samples(self, count=500):
+        """
+        Generate challenging 'not eligible' cases near decision boundary.
+        These improve model's ability to reject borderline cases.
+        """
+        hard_negatives = []
+        
+        # Edge case templates for NOT ELIGIBLE
+        edge_templates = [
+            {
+                'query': "I earn Rs. {income} monthly as {profession}. {problem}. Am I eligible for legal aid?",
+                'income_range': (25001, 35000),  # Just above threshold
+                'social_category': ['general'],
+                'vulnerable': False
+            },
+            {
+                'query': "I am from {category} community earning Rs. {income} per month. {problem}. Can I get free legal services?",
+                'income_range': (30001, 40000),  # Above threshold even for OBC
+                'social_category': ['general'],
+                'vulnerable': False
+            },
+            {
+                'query': "My monthly salary is Rs. {income}. {problem}. Do I qualify for legal aid?",
+                'income_range': (28000, 32000),  # Borderline
+                'social_category': ['general'],
+                'vulnerable': False
+            }
+        ]
+        
+        problems = [
+            "Landlord is not returning security deposit",
+            "Builder delayed project by 6 months",
+            "Insurance company rejected my claim",
+            "My neighbor has encroached 2 feet of my land",
+            "Hospital billed extra charges",
+            "Online shopping refund not received"
+        ]
+        
+        professions = [
+            "office worker", "shopkeeper", "tutor", "clerk", 
+            "junior engineer", "sales executive", "accountant"
+        ]
+        
+        for i in range(count):
+            template = random.choice(edge_templates)
+            income = random.randint(*template['income_range'])
+            
+            query = template['query'].format(
+                income=income,
+                profession=random.choice(professions),
+                problem=random.choice(problems),
+                category=random.choice(template['social_category'])
+            )
+            
+            sample = LegalTrainingExample(
+                query=query,
+                domains=['legalaid'],
+                expected_eligibility=False,
+                prolog_facts=[
+                    f"person('hard_neg_{i}').",
+                    f"monthly_income('hard_neg_{i}', {income}).",
+                    f"annual_income('hard_neg_{i}', {income * 12}).",
+                    f"social_category('hard_neg_{i}', general)."
+                ],
+                legal_reasoning="Not eligible - income above threshold with no categorical eligibility",
+                user_demographics={
+                    'income': income,
+                    'income_category': 'medium',
+                    'social_category': 'general'
+                },
+                case_complexity='high',
+                priority_level='medium',
+                sample_id=f"hard_neg_{i}"
+            )
+            
+            hard_negatives.append(sample)
+        
+        return hard_negatives
+    
+    def generate_sample_with_validation(self, template, domain):
+        """Generate sample with automatic validation."""
+        # Generate base sample (simplified version - adapt to your actual implementation)
+        sample_dict = self._generate_sample_from_template(template, domain)
+        
+        # Extract entities
+        entities = sample_dict.get('user_demographics', {})
+        
+        # Validate and fix eligibility
+        correct_eligibility, confidence, reason = \
+            LegalEligibilityValidator.validate_legal_aid_eligibility(entities)
+        
+        # Create LegalTrainingExample with validated data
+        sample = LegalTrainingExample(
+            query=sample_dict.get('query', ''),
+            domains=sample_dict.get('domains', [domain]),
+            expected_eligibility=correct_eligibility,
+            prolog_facts=sample_dict.get('prolog_facts', []),
+            legal_reasoning=reason,
+            user_demographics=entities,
+            case_complexity=sample_dict.get('case_complexity', 'medium'),
+            priority_level=sample_dict.get('priority_level', 'medium'),
+            sample_id=sample_dict.get('sample_id', '')
+        )
+        
+        return sample
+    
+    def _generate_sample_from_template(self, template, domain):
+        """Helper method to generate sample from template (implement based on existing logic)."""
+        # This is a placeholder - adapt to your actual sample generation logic
+        return {
+            'query': '',
+            'domains': [domain],
+            'user_demographics': {},
+            'prolog_facts': [],
+            'case_complexity': 'medium',
+            'priority_level': 'medium',
+            'sample_id': ''
+        }
+
 
 # Replace the existing main() function
 

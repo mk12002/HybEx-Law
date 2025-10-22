@@ -16,3 +16,6 @@
 
 % Load rules that connect the domains
 :- include('cross_domain_rules.pl').
+
+% Load reasoning helpers for detailed explanations
+:- include('reasoning_helpers.pl').

@@ -380,12 +380,46 @@ class HybExLawSystem:
         
         # ASSUMPTION: Evaluator loads models using model_paths if provided, or uses config defaults.
         try:
-            # If test_data is a path, load it
+            # Load test samples
             test_samples = []
+            test_data_path_to_load = None
+
             if test_data and Path(test_data).exists():
-                with open(test_data, 'r') as f:
-                    test_samples = json.load(f)
-                logger.info(f"Loaded {len(test_samples)} samples for evaluation.")
+                # Use provided test data path if valid
+                test_data_path_to_load = Path(test_data)
+                logger.info(f"Using provided test data: {test_data_path_to_load}")
+            else:
+                # Fallback to default processed test data
+                default_test_path = self.config.RESULTS_DIR / "processed_data" / "test_samples.json"
+                if default_test_path.exists():
+                    test_data_path_to_load = default_test_path
+                    logger.info(f"No valid test data provided. Using default: {test_data_path_to_load}")
+                else:
+                    logger.error("No test data provided and default processed test file not found!")
+                    raise FileNotFoundError(f"Evaluation requires test data. Provide --test-data or ensure '{default_test_path}' exists.")
+
+            # Load the selected test data file
+            if test_data_path_to_load:
+                try:
+                    with open(test_data_path_to_load, 'r', encoding='utf-8') as f:
+                        test_samples = json.load(f)
+                    logger.info(f"Loaded {len(test_samples)} samples from {test_data_path_to_load} for evaluation.")
+                except json.JSONDecodeError as e:
+                    logger.error(f"Failed to decode JSON from {test_data_path_to_load}: {e}")
+                    raise  # Re-raise error as evaluation cannot proceed
+                except Exception as e:
+                    logger.error(f"Failed to load test samples from {test_data_path_to_load}: {e}")
+                    raise  # Re-raise error
+
+            # Ensure test_samples is a list, even if loading failed or file was empty JSON `[]`
+            if not isinstance(test_samples, list):
+                logger.error(f"Loaded test data is not a list (type: {type(test_samples)}). Cannot proceed.")
+                raise TypeError("Test data must be a list of samples.")
+
+            # Check if samples were actually loaded
+            if not test_samples:
+                logger.error(f"Evaluation failed: No test samples loaded from {test_data_path_to_load}.")
+                raise ValueError("No test samples found for evaluation.")
             
             # Since trainer.py saves the final_models with paths, we need a way to pass them 
             # to the evaluator, but in CLI mode, we often rely on the default saved paths.
@@ -479,9 +513,9 @@ class HybExLawSystem:
             }
         }
         
-        # Check for trained models
+        # Check for trained models (UPDATED: Now checks all 4 models)
         if self.config.MODELS_DIR.exists():
-            for model_name in ['domain_classifier', 'eligibility_predictor', 'gnn_model']: # Added gnn_model
+            for model_name in ['domain_classifier', 'eligibility_predictor', 'enhanced_bert', 'gnn_model']:
                 model_path = self.config.MODELS_DIR / model_name / "model.pt"
                 status['trained_models'][model_name] = model_path.exists()
         
@@ -661,6 +695,15 @@ Examples:
     chat_parser = subparsers.add_parser('chat', help='Start an interactive session to determine eligibility')
     chat_parser.add_argument('--config', type=str, help='Path to configuration file')
 
+    # Hybrid Evaluation command
+    hybrid_eval_parser = subparsers.add_parser('evaluate_hybrid', help='Evaluate the complete hybrid system (Prolog + GNN + BERT)')
+    hybrid_eval_parser.add_argument('--test-data', type=str,
+                                    help='Path to test data file (default: data/val_split.json)')
+    hybrid_eval_parser.add_argument('--ablation', action='store_true',
+                                    help='Run ablation study (test all model combinations)')
+    hybrid_eval_parser.add_argument('--config', type=str,
+                                    help='Path to configuration file')
+
     return parser
 
 def main():
@@ -761,12 +804,16 @@ def main():
             print(f"CUDA Available: {status['pytorch']['cuda_available']}")
             print(f"Prolog Available: {status['prolog_engine']['available']}")
             print(f"Prolog Rules from KB: {status['prolog_engine']['rules_loaded_from_kb']}")
-            print("\nTrained Models:")
+            print("\nTrained Models (4 total):")
             for model_name, exists in status['trained_models'].items():
-                print(f"  • {model_name}: {'OK' if exists else 'MISSING'}")
+                symbol = "✓" if exists else "✗"
+                status_text = "OK" if exists else "MISSING"
+                print(f"  {symbol} {model_name}: {status_text}")
             print("\nDirectories:")
             for dir_name, exists in status['directory_exists'].items():
-                print(f"  • {dir_name}: {'OK' if exists else 'MISSING'}")
+                symbol = "✓" if exists else "✗"
+                status_text = "OK" if exists else "MISSING"
+                print(f"  {symbol} {dir_name}: {status_text}")
             print("\nProlog Rule Summary:")
             for cat, count in status['prolog_engine']['rule_summary'].get('rule_counts', {}).items():
                 print(f"  • {cat}: {count} rules")
@@ -786,6 +833,99 @@ def main():
         elif args.command == 'chat':
             logger.info("Starting interactive session")
             system.run_interactive_session()
+            
+        elif args.command == 'evaluate_hybrid':
+            logger.info("="*60)
+            logger.info("HYBRID SYSTEM EVALUATION MODE")
+            logger.info("="*60)
+            
+            # Load test data
+            test_data_path = args.test_data if hasattr(args, 'test_data') and args.test_data else system.config.DATA_DIR / 'val_split.json'
+            test_data_path = Path(test_data_path)
+            
+            if not test_data_path.exists():
+                logger.error(f"Test data file not found: {test_data_path}")
+                print(f"\nError: Test data file not found at {test_data_path}")
+                sys.exit(1)
+            
+            with open(test_data_path, 'r') as f:
+                test_data = json.load(f)
+            
+            logger.info(f"Loaded {len(test_data)} test samples from {test_data_path}")
+            
+            # Initialize evaluator
+            evaluator = ModelEvaluator(system.config)
+            
+            # Load all models
+            logger.info("\nLoading Prolog engine...")
+            evaluator.prolog_engine = PrologEngine(system.config)
+            
+            logger.info("Loading GNN model...")
+            evaluator.kg_engine = KnowledgeGraphEngine(system.config)
+            gnn_model_path = system.config.MODELS_DIR / 'hybex_system' / 'gnn_model' / 'model.pt'
+            if not gnn_model_path.exists():
+                gnn_model_path = system.config.MODELS_DIR / 'gnn_model' / 'model.pt'
+            if gnn_model_path.exists():
+                evaluator.kg_engine.load_model(str(gnn_model_path))
+            else:
+                logger.warning(f"GNN model not found at {gnn_model_path}")
+            
+            logger.info("Loading BERT model...")
+            evaluator.eligibility_model = EligibilityPredictor(system.config)
+            bert_model_path = system.config.MODELS_DIR / 'hybex_system' / 'eligibility_predictor' / 'model.pt'
+            if not bert_model_path.exists():
+                bert_model_path = system.config.MODELS_DIR / 'eligibility_predictor' / 'model.pt'
+            if bert_model_path.exists():
+                evaluator.eligibility_model.load_state_dict(
+                    torch.load(bert_model_path, map_location=evaluator.device)
+                )
+                evaluator.eligibility_model.to(evaluator.device)
+                evaluator.eligibility_model.eval()
+            else:
+                logger.warning(f"BERT model not found at {bert_model_path}")
+            
+            logger.info("\nAll models loaded successfully!")
+            
+            # Run standard hybrid evaluation
+            results = evaluator.evaluate_hybrid_system(test_data)
+            
+            logger.info(f"\n{'='*70}")
+            logger.info(f"🎯 FINAL HYBRID ACCURACY: {results['accuracy']*100:.2f}%")
+            logger.info(f"🎯 FINAL F1 SCORE: {results['f1_score']:.4f}")
+            logger.info(f"{'='*70}\n")
+            
+            print("\nHybrid evaluation completed successfully!")
+            print(f"Overall Accuracy: {results['accuracy']*100:.2f}%")
+            print(f"Overall F1 Score: {results['f1_score']:.4f}")
+            
+            # Run ablation study if requested
+            if hasattr(args, 'ablation') and args.ablation:
+                logger.info("\n" + "="*80)
+                logger.info("STARTING ABLATION STUDY")
+                logger.info("Testing all 16 model combinations to find optimal ensemble")
+                logger.info("="*80)
+                
+                # Convert test data to DataLoader format expected by ablation study
+                from torch.utils.data import DataLoader, TensorDataset
+                
+                # Create DataLoader from test_data
+                # Note: This assumes test_data is a list of dicts with 'text' and 'label' keys
+                # Adjust based on your actual data format
+                try:
+                    ablation_results = evaluator.evaluate_ablation_combinations(test_data, evaluator.device)
+                    
+                    logger.info("\n" + "="*80)
+                    logger.info("ABLATION STUDY COMPLETED")
+                    logger.info("="*80)
+                    print("\n✅ Ablation study completed!")
+                    print(f"Results saved to: {system.config.RESULTS_DIR / 'ablation_study'}")
+                    print("Check the CSV/JSON/TXT reports for detailed comparison.")
+                    
+                except Exception as e:
+                    logger.error(f"Ablation study failed: {e}", exc_info=True)
+                    print(f"\n❌ Ablation study failed: {e}")
+                    print("Standard evaluation results are still available above.")
+
             
         # Cleanup is called outside the block but inside the main try/except
         

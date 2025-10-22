@@ -2,28 +2,36 @@
 
 from .main import HybExLawSystem
 from .config import HybExConfig
-from .legal_scraper import LegalDataScraper
+from .master_scraper import MasterLegalScraper
 from .prolog_engine import PrologEngine, LegalReasoning, PrologQuery # Expose PrologEngine components
 from .data_processor import DataPreprocessor
-from .neural_models import DomainClassifier, EligibilityPredictor, ModelTrainer, ModelMetrics, LegalDataset # Expose neural components
-from .trainer import TrainingOrchestrator
+from .neural_models import (
+    DomainClassifier, EligibilityPredictor, 
+    EnhancedLegalBERT, EnhancedLegalBERTTrainer,
+    ModelTrainer, ModelMetrics, LegalDataset
+) # Expose neural components
+from .trainer import TrainingOrchestrator, AdvancedTrainingStrategy, DataAugmenter
 from .evaluator import ModelEvaluator, EvaluationResults # Expose evaluator components
 
 # Define what happens when 'from hybex_system import *' is used
 __all__ = [
     "HybExLawSystem",
     "HybExConfig",
-    "LegalDataScraper",
+    "MasterLegalScraper",
     "PrologEngine",
     "LegalReasoning",
     "PrologQuery",
     "DataPreprocessor",
     "DomainClassifier",
     "EligibilityPredictor",
+    "EnhancedLegalBERT",
+    "EnhancedLegalBERTTrainer",
     "ModelTrainer",
     "ModelMetrics",
     "LegalDataset",
     "TrainingOrchestrator",
+    "AdvancedTrainingStrategy",
+    "DataAugmenter",
     "ModelEvaluator",
     "EvaluationResults",
     "create_system" # Keep the factory function

@@ -1,0 +1,442 @@
+{
+  "overall_metrics": {
+    "accuracy": 0.8032100488485694,
+    "precision": 0.8032100488485694,
+    "recall": 1.0,
+    "f1_score": 0.8908668730650154,
+    "mcc": 0.0,
+    "kappa": 0.0,
+    "true_positives": 1151,
+    "true_negatives": 0,
+    "false_positives": 282,
+    "false_negatives": 0,
+    "specificity": 0.0,
+    "balanced_accuracy": 0.5
+  },
+  "stratified_analysis": {
+    "income_level": {
+      "low": {
+        "count": 193,
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "avg_confidence": 0.9499999999999998
+      },
+      "medium": {
+        "count": 80,
+        "accuracy": 0.8625,
+        "precision": 0.8625,
+        "recall": 1.0,
+        "avg_confidence": 0.95
+      },
+      "no_income": {
+        "count": 971,
+        "accuracy": 0.7209062821833162,
+        "precision": 0.7209062821833162,
+        "recall": 1.0,
+        "avg_confidence": 0.9499999999999998
+      },
+      "very_low": {
+        "count": 189,
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "avg_confidence": 0.9500000000000001
+      }
+    },
+    "social_category": {
+      "general": {
+        "count": 1224,
+        "accuracy": 0.7736928104575164,
+        "precision": 0.7736928104575164,
+        "recall": 1.0,
+        "avg_confidence": 0.9500000000000002
+      },
+      "obc": {
+        "count": 33,
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "avg_confidence": 0.95
+      },
+      "sc": {
+        "count": 57,
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "avg_confidence": 0.9500000000000001
+      },
+      "st": {
+        "count": 119,
+        "accuracy": 0.957983193277311,
+        "precision": 0.957983193277311,
+        "recall": 1.0,
+        "avg_confidence": 0.95
+      }
+    },
+    "vulnerability_status": {
+      "not_vulnerable": {
+        "count": 1232,
+        "accuracy": 0.7881493506493507,
+        "precision": 0.7881493506493507,
+        "recall": 1.0,
+        "avg_confidence": 0.9500000000000001
+      },
+      "vulnerable": {
+        "count": 201,
+        "accuracy": 0.8955223880597015,
+        "precision": 0.8955223880597015,
+        "recall": 1.0,
+        "avg_confidence": 0.95
+      }
+    },
+    "has_income": {
+      "has_income": {
+        "count": 462,
+        "accuracy": 0.9761904761904762,
+        "precision": 0.9761904761904762,
+        "recall": 1.0,
+        "avg_confidence": 0.9499999999999998
+      },
+      "no_income": {
+        "count": 971,
+        "accuracy": 0.7209062821833162,
+        "precision": 0.7209062821833162,
+        "recall": 1.0,
+        "avg_confidence": 0.9499999999999998
+      }
+    }
+  },
+  "confidence_analysis": {
+    "bin_accuracies": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      0.8032100488485694
+    ],
+    "bin_confidences": [
+      0.05,
+      0.15000000000000002,
+      0.25,
+      0.35000000000000003,
+      0.45,
+      0.55,
+      0.6500000000000001,
+      0.75,
+      0.8500000000000001,
+      0.95
+    ],
+    "bin_counts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1433
+    ],
+    "expected_calibration_error": 0.14678995115143056,
+    "calibration_quality": "needs_improvement"
+  },
+  "error_analysis": {
+    "false_positives": {
+      "count": 282,
+      "top_errors": [
+        {
+          "index": 1,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "I am permanent employee and have been working in private company for 1 year. deducting PF and ESI bu"
+        },
+        {
+          "index": 4,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": 30000,
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "I am a person from economically weaker section earning Rs. 30000 per month. Police have filed false "
+        },
+        {
+          "index": 5,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "While working in pharmaceutical company handling hazardous material, machinery maintenance is poor a"
+        },
+        {
+          "index": 6,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "I filed RTI application about government employee recruitment details 1 month ago. denied saying inf"
+        },
+        {
+          "index": 8,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "In religious observance at workplace, religious festival celebration was banned without reason. Can "
+        },
+        {
+          "index": 15,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "During government job interview, service was denied based on economic status. Can mandamus writ be i"
+        },
+        {
+          "index": 21,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "During eating from street food stall, expired products were used in cooking. Spent Rs 50000 on medic"
+        },
+        {
+          "index": 30,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "During insurance policy claim settlement, unauthorized transactions occurred and bank is not accepti"
+        },
+        {
+          "index": 37,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "After organizing peaceful protest/rally, local authorities banned assembly without proper reason. Ca"
+        },
+        {
+          "index": 38,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "I bought furniture set from Myntra for Rs 200000. Wrong model delivered and not refunding price diff"
+        },
+        {
+          "index": 43,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "After uncle's natural death, agricultural land division dispute is ongoing. What is procedure when t"
+        },
+        {
+          "index": 46,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "I am factory worker and have been working in private company for 1 year. salary delay for 2-3 months"
+        },
+        {
+          "index": 49,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "I booked 2 BHK flat from local builder by paying Rs 10 lakh advance. Builder changed approved plan w"
+        },
+        {
+          "index": 54,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": true,
+          "query_snippet": "I got married 2 years ago. Husband drinks alcohol, doesn't work, only beats me. What should I do for"
+        },
+        {
+          "index": 55,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "While working in chemical factory during shift work, machinery maintenance is poor and worker safety"
+        },
+        {
+          "index": 65,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": 28000,
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "I am a single parent earning Rs. 28000 per month. My employer terminated me during maternity leave v"
+        },
+        {
+          "index": 75,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "During environment pollution, emergency medical treatment was denied due to lack of money. Can I cla"
+        },
+        {
+          "index": 77,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "While working in mining operation with underground work, forced to work overtime 12+ hours daily wit"
+        },
+        {
+          "index": 84,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": 28000,
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "I am a single parent earning Rs. 28000 per month. My landlord is trying to evict me without proper n"
+        },
+        {
+          "index": 89,
+          "confidence": 0.95,
+          "method": "prolog",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "While working as Zomato/Swiggy delivery partner, payment delays and unauthorized deductions are happ"
+        }
+      ],
+      "common_patterns": {
+        "by_method": {
+          "prolog": 282
+        },
+        "by_income_range": {
+          "unknown": 271,
+          "25k-40k": 11
+        },
+        "by_category": {
+          "general": 277,
+          "st": 5
+        },
+        "vulnerable_involved": 21
+      }
+    },
+    "false_negatives": {
+      "count": 0,
+      "top_errors": [],
+      "common_patterns": {}
+    }
+  },
+  "fairness_metrics": {
+    "social_category": {
+      "general": {
+        "count": 1224,
+        "true_positive_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "selection_rate": 1.0
+      },
+      "obc": {
+        "count": 33,
+        "true_positive_rate": 1.0,
+        "false_positive_rate": 0.0,
+        "selection_rate": 1.0
+      },
+      "st": {
+        "count": 119,
+        "true_positive_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "selection_rate": 1.0
+      },
+      "sc": {
+        "count": 57,
+        "true_positive_rate": 1.0,
+        "false_positive_rate": 0.0,
+        "selection_rate": 1.0
+      }
+    },
+    "gender": {
+      "unknown": {
+        "count": 1331,
+        "true_positive_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "selection_rate": 1.0
+      },
+      "female": {
+        "count": 102,
+        "true_positive_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "selection_rate": 1.0
+      }
+    },
+    "vulnerability_status": {
+      "not_vulnerable": {
+        "count": 1297,
+        "true_positive_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "selection_rate": 1.0
+      },
+      "vulnerable": {
+        "count": 136,
+        "true_positive_rate": 1.0,
+        "false_positive_rate": 0.0,
+        "selection_rate": 1.0
+      }
+    },
+    "disparate_impact": {
+      "obc_vs_general": {
+        "ratio": 1.0,
+        "fair": true,
+        "category_rate": 1.0,
+        "general_rate": 1.0
+      },
+      "st_vs_general": {
+        "ratio": 1.0,
+        "fair": true,
+        "category_rate": 1.0,
+        "general_rate": 1.0
+      },
+      "sc_vs_general": {
+        "ratio": 1.0,
+        "fair": true,
+        "category_rate": 1.0,
+        "general_rate": 1.0
+      }
+    }
+  },
+  "method_comparison": {
+    "prolog": {
+      "count": 1433,
+      "accuracy": 0.8032100488485694,
+      "precision": 0.8032100488485694,
+      "recall": 1.0,
+      "f1_score": 0.8908668730650154,
+      "avg_confidence": 0.95
+    }
+  }
+}

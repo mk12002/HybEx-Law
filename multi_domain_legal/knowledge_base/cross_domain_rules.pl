@@ -12,7 +12,9 @@ divorce_case(Person) :- has_grounds(Person, domestic_violence). % Assuming this 
 maintenance_case(Person) :- has_grounds(Person, child_maintenance).
 
 % Consumer Protection Bridge
-valid_consumer_complaint(Person, defective_goods) :- claim_value(Person, _). % Assumes any claim implies a complaint
+valid_consumer_complaint(Person, defective_goods) :- 
+    claim_value(Person, _),
+    has_grounds(Person, defective_goods).
 valid_consumer_complaint(Person, deficiency_in_service) :- has_grounds(Person, deficiency_in_service).
 
 % Fundamental Rights Bridge
@@ -226,3 +228,79 @@ prohibited_discrimination_ground(race).
 prohibited_discrimination_ground(caste).
 prohibited_discrimination_ground(sex).
 prohibited_discrimination_ground(place_of_birth).
+
+% =================================================================
+% MISSING UTILITY PREDICATES
+% =================================================================
+
+wage_dispute(Person) :- case_type(Person, wage_dispute).
+harassment_case(Person) :- case_type(Person, harassment).
+domestic_violence_case(Person) :- case_type(Person, domestic_violence).
+child_welfare_case(Person) :- case_type(Person, child_welfare).
+immediate_livelihood_threat(Person) :- wrongful_termination(Person).
+fundamental_rights_emergency(Person) :- fundamental_right_violated(Person, _).
+
+% =================================================================
+% MISSING PREDICATE DEFINITIONS (Fallback implementations)
+% =================================================================
+
+% Employment-related predicates
+employee(Person) :- case_type(Person, employment).
+employee(Person) :- case_type(Person, wage_dispute).
+employee(Person) :- case_type(Person, wrongful_termination).
+employee(Person) :- case_type(Person, harassment).
+
+discriminated_against(Person, Grounds) :- 
+    has_grounds(Person, discrimination),
+    discrimination_ground(Grounds).
+
+discrimination_ground(religion).
+discrimination_ground(race).
+discrimination_ground(caste).
+discrimination_ground(sex).
+discrimination_ground(gender).
+discrimination_ground(disability).
+discrimination_ground(age).
+
+workplace_discrimination(Person) :-
+    employee(Person),
+    discriminated_against(Person, _).
+
+% Family law predicates
+financial_dependency(Person1, Person2) :-
+    spouse(Person1, Person2),
+    (annual_income(Person1, 0) ; \+ annual_income(Person1, _)).
+
+financial_dependency(Person1, Person2) :-
+    parent(Person2, Person1),
+    age(Person1, Age),
+    Age < 18.
+
+stable_environment(Parent) :-
+    annual_income(Parent, Income),
+    integer(Income),
+    Income > 0.
+
+financial_capability(Parent) :-
+    annual_income(Parent, Income),
+    integer(Income),
+    Income >= 200000.
+
+emotional_bond(Child, Parent) :-
+    parent(Parent, Child).
+
+child_custody_case(Person) :- case_type(Person, child_custody).
+marriage_validity_case(Person) :- case_type(Person, marriage_validity).
+
+% Consumer-related predicates
+workplace_related_purchase(Person) :-
+    employee(Person),
+    valid_consumer_complaint(Person, _).
+
+family_dependent(Person, Dependent) :-
+    spouse(Person, Dependent).
+family_dependent(Person, Dependent) :-
+    parent(Person, Dependent).
+
+% Criminal case predicate
+criminal_charges(Person, _) :- case_type(Person, criminal).

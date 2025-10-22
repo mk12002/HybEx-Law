@@ -1,0 +1,178 @@
+% ============================================================================
+% LEGAL AID ELIGIBILITY RULES
+% Based on: Legal Services Authorities Act, 1987
+% ============================================================================
+% This file contains eligibility determination rules for legal aid in India.
+% The rules follow a priority-based decision tree with confidence scores.
+% ============================================================================
+
+:- discontiguous eligible_with_confidence/3.
+:- discontiguous vulnerable_group_eligible/1.
+:- dynamic has_income/1.
+:- dynamic no_income/1.
+
+% ============================================================================
+% CORE ELIGIBILITY RULES (Priority Order)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Rule 1: NO INCOME → ALWAYS ELIGIBLE
+% Priority: HIGHEST (0.95 confidence)
+% Legal Basis: Section 12(a) - persons in custody
+% ----------------------------------------------------------------------------
+eligible_with_confidence(Person, eligible, 0.95) :-
+    no_income(Person),
+    !.  % Cut - stop here if no income
+
+% ----------------------------------------------------------------------------
+% Rule 2: VULNERABLE GROUPS → ELIGIBLE
+% Priority: VERY HIGH (0.95 confidence)
+% Legal Basis: Section 12(b-h) - women, children, SC/ST, disabled, victims
+% ----------------------------------------------------------------------------
+eligible_with_confidence(Person, eligible, 0.95) :-
+    vulnerable_group(Person, _),              % Member of ANY vulnerable group
+    \+ no_vulnerable_group(Person),          % Not explicitly excluded
+    !.  % Cut - stop if vulnerable group member
+
+% ----------------------------------------------------------------------------
+% Rule 3: SC/ST with INCOME CHECK
+% Priority: HIGH (0.90 confidence)
+% Threshold: Annual income ≤ ₹8,00,000
+% ----------------------------------------------------------------------------
+eligible_with_confidence(Person, eligible, 0.90) :-
+    (social_category(Person, sc) ; social_category(Person, st)),
+    annual_income(Person, Income),
+    Income =< 800000,
+    !.
+
+% ----------------------------------------------------------------------------
+% Rule 4: OBC with INCOME CHECK
+% Priority: HIGH (0.88 confidence)
+% Threshold: Annual income ≤ ₹6,00,000
+% ----------------------------------------------------------------------------
+eligible_with_confidence(Person, eligible, 0.88) :-
+    social_category(Person, obc),
+    annual_income(Person, Income),
+    Income =< 600000,
+    !.
+
+% ----------------------------------------------------------------------------
+% Rule 5: GENERAL CATEGORY with INCOME CHECK
+% Priority: MEDIUM-HIGH (0.85 confidence)
+% Threshold: Annual income ≤ ₹5,00,000
+% ----------------------------------------------------------------------------
+eligible_with_confidence(Person, eligible, 0.85) :-
+    social_category(Person, general),
+    annual_income(Person, Income),
+    Income =< 500000,
+    !.
+
+% ----------------------------------------------------------------------------
+% Rule 6: EWS (Economically Weaker Section)
+% Priority: HIGH (0.88 confidence)
+% Threshold: Annual income ≤ ₹8,00,000
+% ----------------------------------------------------------------------------
+eligible_with_confidence(Person, eligible, 0.88) :-
+    social_category(Person, ews),
+    annual_income(Person, Income),
+    Income =< 800000,
+    !.
+
+% ----------------------------------------------------------------------------
+% Rule 7: BPL (Below Poverty Line) → ALWAYS ELIGIBLE
+% Priority: VERY HIGH (0.95 confidence)
+% ----------------------------------------------------------------------------
+eligible_with_confidence(Person, eligible, 0.95) :-
+    social_category(Person, bpl),
+    !.
+
+% ----------------------------------------------------------------------------
+% Rule 8: DEFAULT - NOT ELIGIBLE
+% Priority: LOWEST (0.70 confidence)
+% This is the catch-all rule if none of the above match
+% ----------------------------------------------------------------------------
+eligible_with_confidence(Person, not_eligible, 0.70).
+
+% ============================================================================
+% HELPER PREDICATES FOR INCOME THRESHOLD CHECKS
+% ============================================================================
+
+% Check if person meets income threshold for their category
+meets_income_threshold(Person, Category, Threshold) :-
+    annual_income(Person, Income),
+    Income =< Threshold.
+
+% Check if person has income below general threshold
+below_general_threshold(Person) :-
+    annual_income(Person, Income),
+    Income =< 500000.
+
+% ============================================================================
+% VULNERABLE GROUP ELIGIBILITY HELPER
+% ============================================================================
+
+% A person is vulnerable group eligible if they belong to ANY vulnerable group
+vulnerable_group_eligible(Person) :-
+    vulnerable_group(Person, _),
+    \+ no_vulnerable_group(Person).
+
+% ============================================================================
+% DETAILED REASONING GENERATION
+% ============================================================================
+
+generate_detailed_reasoning(Person, Reason) :-
+    eligible_with_confidence(Person, Decision, Confidence),
+    format_eligibility_reason(Person, Decision, Confidence, Reason).
+
+format_eligibility_reason(Person, eligible, Confidence, Reason) :-
+    Confidence >= 0.95,
+    (   no_income(Person) ->
+        Reason = 'Eligible: No income reported (Section 12 LSA Act)'
+    ;   vulnerable_group(Person, Group) ->
+        atomic_list_concat(['Eligible: Member of vulnerable group (', Group, ')'], Reason)
+    ;   social_category(Person, bpl) ->
+        Reason = 'Eligible: Below Poverty Line (BPL) category'
+    ;   Reason = 'Eligible: High confidence based on multiple factors'
+    ).
+
+format_eligibility_reason(Person, eligible, Confidence, Reason) :-
+    Confidence < 0.95,
+    annual_income(Person, Income),
+    social_category(Person, Category),
+    format(atom(Reason), 'Eligible: ~w category with annual income ₹~w', [Category, Income]).
+
+format_eligibility_reason(Person, not_eligible, Confidence, Reason) :-
+    (   annual_income(Person, Income),
+        social_category(Person, Category) ->
+        format(atom(Reason), 'Not eligible: ~w category income ₹~w exceeds threshold', [Category, Income])
+    ;   Reason = 'Not eligible: Does not meet eligibility criteria'
+    ).
+
+% ============================================================================
+% PRIMARY ELIGIBILITY REASON (SHORT FORM)
+% ============================================================================
+
+primary_eligibility_reason(Person, Reason) :-
+    eligible_with_confidence(Person, Decision, _),
+    (   Decision = eligible ->
+        Reason = 'Eligible under Legal Services Authorities Act, 1987'
+    ;   Reason = 'Does not meet eligibility criteria'
+    ).
+
+% ============================================================================
+% QUERY INTERFACE FOR PROLOG ENGINE
+% ============================================================================
+
+check_and_print_eligibility(Person) :-
+    eligible_with_confidence(Person, Decision, Confidence),
+    format('Decision: ~w~n', [Decision]),
+    format('Confidence: ~w~n', [Confidence]),
+    !.
+
+check_and_print_eligibility(Person) :-
+    format('Decision: not_eligible~n'),
+    format('Confidence: 0.50~n').
+
+% ============================================================================
+% END OF LEGAL AID RULES
+% ============================================================================

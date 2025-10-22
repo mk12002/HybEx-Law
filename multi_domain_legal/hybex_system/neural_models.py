@@ -135,14 +135,31 @@ class LegalDataset(Dataset):
             # Ensure safe conversion, handle potential missing key
             eligibility_value = float(sample.get('expected_eligibility', 0.0))
             labels = torch.tensor(eligibility_value, dtype=torch.float)
+        elif self.task_type == "multi_task":
+            # For EnhancedLegalBERT: need both eligibility and domain labels
+            eligibility_value = float(sample.get('expected_eligibility', 0.0))
+            labels = torch.tensor(eligibility_value, dtype=torch.long)  # 0 or 1 for CrossEntropyLoss
         else:
             labels = torch.tensor(0.0, dtype=torch.float) # Placeholder for other tasks
+
+        # Prepare domain information for multi-task learning
+        domain_labels = torch.zeros(len(self.config.ENTITY_CONFIG['domains']), dtype=torch.float)
+        domain_indices = []
+        for i, domain in enumerate(self.config.ENTITY_CONFIG['domains']):
+            if domain in sample.get('domains', []):
+                domain_labels[i] = 1.0
+                domain_indices.append(i)
+        
+        # Primary domain index (for domain-specific projection)
+        primary_domain_idx = domain_indices[0] if domain_indices else 0
 
         return {
             # Squeeze dim 1 (batch dimension from `return_tensors='pt'`)
             'input_ids': encoding['input_ids'].squeeze(),
             'attention_mask': encoding['attention_mask'].squeeze(),
             'labels': labels,
+            'domains': torch.tensor(primary_domain_idx, dtype=torch.long),  # Single domain index
+            'domain_labels': domain_labels,  # Multi-hot for domain classification
             'sample_id': sample.get('sample_id', idx)
         }
 
@@ -559,54 +576,46 @@ class ModelTrainer:
         logger.info(f"Saved training plots to {plots_dir}")
 
     def train_gnn_model_component(self, train_samples: List[Dict], val_samples: List[Dict]) -> Dict[str, Any]:
-        """Trains the Knowledge Graph Neural Network (KGNN) component."""
+        """Trains the Knowledge Graph Neural Network (KGNN) component - FIXED"""
         logger.info("--- Starting Knowledge Graph Engine (GNN) Training ---")
-        
         try:
-            # Initialize GNN engine
-            kgengine = KnowledgeGraphEngine(self.config)
+            from .knowledge_graph_engine import KnowledgeGraphEngine
             
-            # Verify we have samples with extracted entities
+            # Initialize GNN engine
+            kgengine = KnowledgeGraphEngine(self.config, prolog_engine=None)
+            
+            # Verify samples have extracted entities
             train_with_entities = [s for s in train_samples if s.get('extracted_entities')]
             val_with_entities = [s for s in val_samples if s.get('extracted_entities')]
             
             if len(train_with_entities) == 0:
-                logger.error("No training samples with extracted_entities found. Cannot train GNN.")
+                logger.error("No training samples with extracted_entities. Cannot train GNN.")
                 return {
                     'gnn_model': {'path': None, 'best_f1': 0.0},
-                    'gnn_training': {
-                        'status': 'failed',
-                        'reason': 'No samples with extracted entities'
-                    }
+                    'gnn_training': {'status': 'failed', 'reason': 'No samples with entities'}
                 }
             
-            logger.info(f"Training GNN with {len(train_with_entities)} train samples and {len(val_with_entities)} val samples")
+            logger.info(f"Training GNN with {len(train_with_entities)} train, {len(val_with_entities)} val samples")
             
             # Train the GNN
-            kgengine.train_gnn(
+            result = kgengine.train_gnn(
                 train_data=train_with_entities,
                 val_data=val_with_entities if val_with_entities else None,
-                epochs=100
+                epochs=50
             )
             
-            # Save the trained model
+            # Save the model
             model_dir = self.config.MODELS_DIR / 'gnn_model'
             model_dir.mkdir(parents=True, exist_ok=True)
             model_path = model_dir / 'gnn_model.pt'
-            
-            torch.save({
-                'model_state_dict': kgengine.model.state_dict(),
-                'node_to_idx': kgengine.node_to_idx,
-                'idx_to_node': kgengine.idx_to_node,
-                'feature_dim': kgengine.feature_dim
-            }, model_path)
+            kgengine.save_model(str(model_path))
             
             logger.info(f"✅ GNN model saved to {model_path}")
             
             return {
                 'gnn_model': {
                     'path': str(model_path),
-                    'best_f1': getattr(kgengine, 'best_model_state', -1)
+                    'best_f1': result.get('best_val_f1', 0.0)
                 },
                 'gnn_training': {
                     'status': 'success',
@@ -619,10 +628,7 @@ class ModelTrainer:
             logger.error(f"GNN model training failed: {e}", exc_info=True)
             return {
                 'gnn_model': {'path': None, 'best_f1': 0.0},
-                'gnn_training': {
-                    'status': 'failed',
-                    'reason': str(e)
-                }
+                'gnn_training': {'status': 'failed', 'reason': str(e)}
             }
     
     def train_all_models(self, train_samples: List[Dict], val_samples: List[Dict]) -> Dict[str, Any]:
@@ -669,5 +675,551 @@ class ModelTrainer:
             "best_f1": eligibility_results['best_f1_score']
         }
 
-        logger.info("Standard neural models trained successfully.")
+        # Train EnhancedLegalBERT (multi-task model)
+        logger.info("\n--- Training EnhancedLegalBERT (Multi-Task Model) ---")
+        enhanced_results = self._train_enhanced_legal_bert(train_samples, val_samples)
+        
+        trained_models_info["enhanced_legal_bert"] = {
+            "path": Path(enhanced_results['model_path']),
+            "best_f1": enhanced_results['best_f1']
+        }
+
+        logger.info("All neural models (standard + enhanced) trained successfully.")
         return trained_models_info
+    
+    def _train_enhanced_legal_bert(self, train_samples: List[Dict], val_samples: List[Dict]) -> Dict[str, Any]:
+        """Train the EnhancedLegalBERT model with multi-task learning."""
+        logger.info("Initializing EnhancedLegalBERT with multi-task learning...")
+        
+        # Get config parameters (with defaults if not defined)
+        enhanced_config = self.config.MODEL_CONFIGS.get('enhanced_legal_bert', {
+            'batch_size': 8,
+            'epochs': 15,
+            'learning_rate': 2e-5,
+            'max_length': 512,
+            'early_stopping_patience': 5
+        })
+        
+        # Initialize model
+        model = EnhancedLegalBERT(
+            model_name='nlpaueb/legal-bert-base-uncased',
+            num_domains=len(self.config.ENTITY_CONFIG['domains']),
+            dropout=0.3
+        ).to(self.device)
+        
+        # Initialize trainer
+        trainer = EnhancedLegalBERTTrainer(model, device=self.device)
+        
+        # Create datasets for multi-task learning
+        train_dataset = LegalDataset(
+            train_samples, 
+            self.tokenizer, 
+            self.config, 
+            task_type="multi_task",
+            model_config=enhanced_config
+        )
+        val_dataset = LegalDataset(
+            val_samples, 
+            self.tokenizer, 
+            self.config, 
+            task_type="multi_task",
+            model_config=enhanced_config
+        )
+        
+        # Create dataloaders
+        train_loader = DataLoader(
+            train_dataset, 
+            batch_size=enhanced_config['batch_size'], 
+            shuffle=True,
+            num_workers=0  # Windows compatibility
+        )
+        val_loader = DataLoader(
+            val_dataset, 
+            batch_size=enhanced_config['batch_size'], 
+            shuffle=False,
+            num_workers=0
+        )
+        
+        logger.info(f"Training set: {len(train_dataset)} samples")
+        logger.info(f"Validation set: {len(val_dataset)} samples")
+        logger.info(f"Batch size: {enhanced_config['batch_size']}")
+        logger.info(f"Epochs: {enhanced_config['epochs']}")
+        
+        # Training loop
+        best_f1 = 0.0
+        best_epoch = 0
+        best_model_state = None
+        patience_counter = 0
+        
+        training_history = {
+            'train_losses': [],
+            'val_losses': [],
+            'train_f1': [],
+            'val_f1': [],
+            'eligibility_losses': [],
+            'domain_losses': [],
+            'confidence_losses': []
+        }
+        
+        epoch_pbar = tqdm(range(enhanced_config['epochs']), desc="Training EnhancedLegalBERT", unit="epoch")
+        
+        for epoch in epoch_pbar:
+            # Training phase
+            model.train()
+            epoch_losses = {
+                'total_loss': [],
+                'eligibility_loss': [],
+                'domain_loss': [],
+                'confidence_loss': []
+            }
+            train_preds = []
+            train_labels = []
+            
+            train_pbar = tqdm(train_loader, desc=f"Epoch {epoch+1} Training", leave=False, unit="batch")
+            
+            for batch in train_pbar:
+                losses = trainer.train_step(batch)
+                
+                for key, value in losses.items():
+                    epoch_losses[key].append(value)
+                
+                train_pbar.set_postfix({
+                    'loss': f"{losses['total_loss']:.4f}",
+                    'elig': f"{losses['eligibility_loss']:.4f}"
+                })
+                
+                # Collect predictions for metrics
+                with torch.no_grad():
+                    input_ids = batch['input_ids'].to(self.device)
+                    attention_mask = batch['attention_mask'].to(self.device)
+                    domains = batch['domains'].cpu().numpy()
+                    
+                    logits, _, _ = model(input_ids, attention_mask, domains, return_confidence=False)
+                    preds = torch.argmax(logits, dim=-1).cpu().numpy()
+                    labels = batch['labels'].cpu().numpy()
+                    
+                    train_preds.extend(preds)
+                    train_labels.extend(labels)
+            
+            # Calculate training metrics
+            avg_train_loss = np.mean(epoch_losses['total_loss'])
+            train_f1 = f1_score(train_labels, train_preds, average='binary')
+            
+            training_history['train_losses'].append(avg_train_loss)
+            training_history['train_f1'].append(train_f1)
+            training_history['eligibility_losses'].append(np.mean(epoch_losses['eligibility_loss']))
+            training_history['domain_losses'].append(np.mean(epoch_losses['domain_loss']))
+            training_history['confidence_losses'].append(np.mean(epoch_losses['confidence_loss']))
+            
+            # Validation phase
+            model.eval()
+            val_losses = []
+            val_preds = []
+            val_labels = []
+            
+            with torch.no_grad():
+                for batch in tqdm(val_loader, desc=f"Epoch {epoch+1} Validation", leave=False, unit="batch"):
+                    input_ids = batch['input_ids'].to(self.device)
+                    attention_mask = batch['attention_mask'].to(self.device)
+                    labels = batch['labels'].to(self.device)
+                    domains = batch['domains'].cpu().numpy()
+                    
+                    logits, _, _ = model(input_ids, attention_mask, domains, return_confidence=False)
+                    
+                    # Calculate loss
+                    loss = trainer.eligibility_criterion(logits, labels)
+                    val_losses.append(loss.item())
+                    
+                    # Predictions
+                    preds = torch.argmax(logits, dim=-1).cpu().numpy()
+                    val_preds.extend(preds)
+                    val_labels.extend(labels.cpu().numpy())
+            
+            # Calculate validation metrics
+            avg_val_loss = np.mean(val_losses)
+            val_f1 = f1_score(val_labels, val_preds, average='binary')
+            val_accuracy = accuracy_score(val_labels, val_preds)
+            val_precision = precision_score(val_labels, val_preds, average='binary', zero_division=0)
+            val_recall = recall_score(val_labels, val_preds, average='binary', zero_division=0)
+            
+            training_history['val_losses'].append(avg_val_loss)
+            training_history['val_f1'].append(val_f1)
+            
+            logger.info(f"\nEpoch {epoch+1}/{enhanced_config['epochs']}:")
+            logger.info(f"  Train Loss: {avg_train_loss:.4f}, Train F1: {train_f1:.4f}")
+            logger.info(f"  Val Loss: {avg_val_loss:.4f}, Val F1: {val_f1:.4f}")
+            logger.info(f"  Val Accuracy: {val_accuracy:.4f}, Precision: {val_precision:.4f}, Recall: {val_recall:.4f}")
+            logger.info(f"  Component Losses - Eligibility: {training_history['eligibility_losses'][-1]:.4f}, "
+                       f"Domain: {training_history['domain_losses'][-1]:.4f}, "
+                       f"Confidence: {training_history['confidence_losses'][-1]:.4f}")
+            
+            # Early stopping and model checkpoint
+            if val_f1 > best_f1:
+                best_f1 = val_f1
+                best_epoch = epoch + 1
+                best_model_state = model.state_dict().copy()
+                patience_counter = 0
+                logger.info(f"  ✅ New best model! F1: {best_f1:.4f}")
+            else:
+                patience_counter += 1
+                logger.info(f"  No improvement. Patience: {patience_counter}/{enhanced_config['early_stopping_patience']}")
+            
+            if patience_counter >= enhanced_config['early_stopping_patience']:
+                logger.info(f"\nEarly stopping triggered after {epoch+1} epochs")
+                break
+            
+            epoch_pbar.set_postfix({
+                'best_f1': f"{best_f1:.4f}",
+                'val_f1': f"{val_f1:.4f}"
+            })
+        
+        # Restore best model
+        if best_model_state is not None:
+            model.load_state_dict(best_model_state)
+            logger.info(f"\n✅ Restored best model from epoch {best_epoch} (F1: {best_f1:.4f})")
+        
+        # Save model
+        save_dir = self.config.MODELS_DIR / 'enhanced_legal_bert'
+        save_dir.mkdir(parents=True, exist_ok=True)
+        
+        model_path = save_dir / 'enhanced_legal_bert_best.pt'
+        torch.save({
+            'epoch': best_epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_bert_state_dict': trainer.optimizer_bert.state_dict(),
+            'optimizer_head_state_dict': trainer.optimizer_head.state_dict(),
+            'best_f1': best_f1,
+            'training_history': training_history,
+            'config': enhanced_config
+        }, model_path)
+        
+        logger.info(f"✅ EnhancedLegalBERT saved to {model_path}")
+        
+        # Create training plots
+        self._create_enhanced_training_plots(training_history, 'enhanced_legal_bert')
+        
+        return {
+            'model': model,
+            'model_path': str(model_path),
+            'best_f1': best_f1,
+            'best_epoch': best_epoch,
+            'training_history': training_history
+        }
+    
+    def _create_enhanced_training_plots(self, history: Dict, model_name: str):
+        """Create training plots for EnhancedLegalBERT."""
+        try:
+            fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+            
+            # Loss plot
+            axes[0, 0].plot(history['train_losses'], label='Train Loss', marker='o')
+            axes[0, 0].plot(history['val_losses'], label='Val Loss', marker='s')
+            axes[0, 0].set_title('Training and Validation Loss')
+            axes[0, 0].set_xlabel('Epoch')
+            axes[0, 0].set_ylabel('Loss')
+            axes[0, 0].legend()
+            axes[0, 0].grid(True)
+            
+            # F1 Score plot
+            axes[0, 1].plot(history['train_f1'], label='Train F1', marker='o')
+            axes[0, 1].plot(history['val_f1'], label='Val F1', marker='s')
+            axes[0, 1].set_title('Training and Validation F1 Score')
+            axes[0, 1].set_xlabel('Epoch')
+            axes[0, 1].set_ylabel('F1 Score')
+            axes[0, 1].legend()
+            axes[0, 1].grid(True)
+            
+            # Component losses
+            axes[1, 0].plot(history['eligibility_losses'], label='Eligibility Loss', marker='o')
+            axes[1, 0].plot(history['domain_losses'], label='Domain Loss', marker='s')
+            axes[1, 0].plot(history['confidence_losses'], label='Confidence Loss', marker='^')
+            axes[1, 0].set_title('Multi-Task Component Losses')
+            axes[1, 0].set_xlabel('Epoch')
+            axes[1, 0].set_ylabel('Loss')
+            axes[1, 0].legend()
+            axes[1, 0].grid(True)
+            
+            # Best F1 marker
+            best_idx = np.argmax(history['val_f1'])
+            axes[1, 1].bar(['Best Val F1'], [history['val_f1'][best_idx]], color='green', alpha=0.7)
+            axes[1, 1].axhline(y=history['val_f1'][best_idx], color='r', linestyle='--', 
+                             label=f'Best: {history["val_f1"][best_idx]:.4f}')
+            axes[1, 1].set_title('Best Validation F1 Score')
+            axes[1, 1].set_ylabel('F1 Score')
+            axes[1, 1].legend()
+            axes[1, 1].grid(True)
+            
+            plt.tight_layout()
+            
+            # Save plot
+            plot_dir = self.config.RESULTS_DIR / 'training_plots'
+            plot_dir.mkdir(parents=True, exist_ok=True)
+            plot_path = plot_dir / f'{model_name}_training_curves.png'
+            plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+            plt.close()
+            
+            logger.info(f"Training plots saved to {plot_path}")
+            
+        except Exception as e:
+            logger.warning(f"Failed to create training plots: {e}")
+            logger.exception("Plot creation error")
+
+
+# ============================================================================
+# ENHANCED LEGAL-BERT ARCHITECTURE
+# ============================================================================
+
+class EnhancedLegalBERT(nn.Module):
+    """
+    Enhanced BERT model with:
+    1. Legal domain adaptation
+    2. Multi-task learning (eligibility + domain classification)
+    3. Attention pooling
+    4. Uncertainty estimation
+    """
+    
+    def __init__(self, model_name='nlpaueb/legal-bert-base-uncased', 
+                 num_domains=5, dropout=0.3):
+        super().__init__()
+        
+        # Load pre-trained legal BERT (better than vanilla BERT for legal text)
+        self.config = AutoConfig.from_pretrained(model_name)
+        self.bert = AutoModel.from_pretrained(model_name)
+        
+        hidden_size = self.config.hidden_size  # 768
+        
+        # Freeze bottom 6 layers (keep legal knowledge, fine-tune top layers)
+        for param in self.bert.encoder.layer[:6].parameters():
+            param.requires_grad = False
+        
+        # Attention-based pooling (better than CLS token alone)
+        self.attention_weights = nn.Linear(hidden_size, 1)
+        
+        # Multi-head attention for better representation
+        self.multihead_attn = nn.MultiheadAttention(
+            embed_dim=hidden_size,
+            num_heads=8,
+            dropout=dropout
+        )
+        
+        # Domain-specific projection layers
+        self.domain_projection = nn.ModuleDict({
+            'legalaid': nn.Linear(hidden_size, hidden_size),
+            'familylaw': nn.Linear(hidden_size, hidden_size),
+            'consumerprotection': nn.Linear(hidden_size, hidden_size),
+            'employmentlaw': nn.Linear(hidden_size, hidden_size),
+            'fundamentalrights': nn.Linear(hidden_size, hidden_size)
+        })
+        
+        # Main classification head with dropout
+        self.classifier = nn.Sequential(
+            nn.Linear(hidden_size, hidden_size // 2),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.LayerNorm(hidden_size // 2),
+            nn.Linear(hidden_size // 2, hidden_size // 4),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_size // 4, 2)  # Binary: eligible/not_eligible
+        )
+        
+        # Auxiliary task: Domain classification (multi-task learning)
+        self.domain_classifier = nn.Sequential(
+            nn.Linear(hidden_size, hidden_size // 2),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_size // 2, num_domains)
+        )
+        
+        # Confidence estimation head
+        self.confidence_head = nn.Sequential(
+            nn.Linear(hidden_size, hidden_size // 2),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_size // 2, 1),
+            nn.Sigmoid()  # Output: 0-1 confidence score
+        )
+        
+    def attention_pooling(self, hidden_states, attention_mask):
+        """
+        Attention-weighted pooling over sequence.
+        Better than just using [CLS] token.
+        """
+        # hidden_states: [batch, seq_len, hidden]
+        # attention_mask: [batch, seq_len]
+        
+        # Calculate attention scores
+        attention_scores = self.attention_weights(hidden_states).squeeze(-1)
+        # attention_scores: [batch, seq_len]
+        
+        # Mask padded tokens
+        attention_scores = attention_scores.masked_fill(
+            attention_mask == 0, float('-inf')
+        )
+        
+        # Softmax to get attention distribution
+        attention_probs = F.softmax(attention_scores, dim=-1).unsqueeze(-1)
+        # attention_probs: [batch, seq_len, 1]
+        
+        # Weighted sum
+        pooled = torch.sum(hidden_states * attention_probs, dim=1)
+        # pooled: [batch, hidden]
+        
+        return pooled
+    
+    def forward(self, input_ids, attention_mask, domains=None, return_confidence=False):
+        """
+        Forward pass with multi-task learning.
+        
+        Args:
+            input_ids: [batch, seq_len]
+            attention_mask: [batch, seq_len]
+            domains: [batch] - domain indices for each sample
+            return_confidence: Whether to return confidence scores
+        
+        Returns:
+            logits: [batch, 2] - eligibility scores
+            domain_logits: [batch, num_domains] - domain classification scores
+            confidence: [batch] - confidence scores (if return_confidence=True)
+        """
+        # BERT encoding
+        outputs = self.bert(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            output_hidden_states=True
+        )
+        
+        # Get hidden states from last layer
+        hidden_states = outputs.last_hidden_state  # [batch, seq_len, hidden]
+        
+        # Attention pooling
+        pooled = self.attention_pooling(hidden_states, attention_mask)
+        # pooled: [batch, hidden]
+        
+        # Multi-head self-attention for better representation
+        pooled_attn, _ = self.multihead_attn(
+            pooled.unsqueeze(0),  # [1, batch, hidden]
+            pooled.unsqueeze(0),
+            pooled.unsqueeze(0)
+        )
+        pooled_attn = pooled_attn.squeeze(0)  # [batch, hidden]
+        
+        # Combine original and attention-enhanced representations
+        combined = pooled + pooled_attn
+        
+        # Domain-specific projection (if domains provided)
+        if domains is not None:
+            domain_enhanced = []
+            for i, domain_idx in enumerate(domains):
+                domain_name = ['legalaid', 'familylaw', 'consumerprotection', 
+                               'employmentlaw', 'fundamentalrights'][domain_idx]
+                proj = self.domain_projection[domain_name](combined[i:i+1])
+                domain_enhanced.append(proj)
+            combined = torch.cat(domain_enhanced, dim=0)
+        
+        # Main task: Eligibility classification
+        logits = self.classifier(combined)
+        
+        # Auxiliary task: Domain classification
+        domain_logits = self.domain_classifier(combined)
+        
+        # Confidence estimation
+        confidence = None
+        if return_confidence:
+            confidence = self.confidence_head(combined).squeeze(-1)
+        
+        return logits, domain_logits, confidence
+
+
+# ============================================================================
+# ENHANCED TRAINER WITH MULTI-TASK LEARNING
+# ============================================================================
+
+class EnhancedLegalBERTTrainer:
+    """Enhanced trainer with better training strategies."""
+    
+    def __init__(self, model, device='cuda'):
+        self.model = model.to(device)
+        self.device = device
+        
+        # Separate optimizers for different parts
+        self.optimizer_bert = torch.optim.AdamW(
+            [p for n, p in model.named_parameters() if 'bert' in n],
+            lr=2e-5, weight_decay=0.01
+        )
+        
+        self.optimizer_head = torch.optim.AdamW(
+            [p for n, p in model.named_parameters() if 'bert' not in n],
+            lr=5e-5, weight_decay=0.01
+        )
+        
+        # Learning rate schedulers
+        self.scheduler_bert = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
+            self.optimizer_bert, T_0=10, T_mult=2
+        )
+        
+        self.scheduler_head = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
+            self.optimizer_head, T_0=10, T_mult=2
+        )
+        
+        # Loss functions
+        self.eligibility_criterion = nn.CrossEntropyLoss(
+            weight=torch.tensor([1.2, 1.0]).to(device)  # Slightly weight NOT ELIGIBLE more
+        )
+        self.domain_criterion = nn.CrossEntropyLoss()
+        self.confidence_criterion = nn.MSELoss()
+        
+    def train_step(self, batch):
+        """Enhanced training step with multi-task learning."""
+        self.model.train()
+        
+        input_ids = batch['input_ids'].to(self.device)
+        attention_mask = batch['attention_mask'].to(self.device)
+        eligibility_labels = batch['labels'].to(self.device)
+        domain_labels = batch['domains'].to(self.device)
+        
+        # Forward pass
+        logits, domain_logits, confidence = self.model(
+            input_ids, attention_mask, 
+            domains=domain_labels.cpu().numpy(),
+            return_confidence=True
+        )
+        
+        # Calculate losses
+        eligibility_loss = self.eligibility_criterion(logits, eligibility_labels)
+        domain_loss = self.domain_criterion(domain_logits, domain_labels)
+        
+        # Confidence target: 1.0 if prediction is correct, 0.5 if wrong
+        preds = torch.argmax(logits, dim=-1)
+        confidence_target = (preds == eligibility_labels).float()
+        confidence_loss = self.confidence_criterion(confidence, confidence_target)
+        
+        # Combined loss (weighted)
+        total_loss = (
+            0.7 * eligibility_loss +  # Main task
+            0.2 * domain_loss +        # Auxiliary task
+            0.1 * confidence_loss      # Calibration
+        )
+        
+        # Backward pass
+        self.optimizer_bert.zero_grad()
+        self.optimizer_head.zero_grad()
+        total_loss.backward()
+        
+        # Gradient clipping
+        torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
+        
+        # Optimize
+        self.optimizer_bert.step()
+        self.optimizer_head.step()
+        
+        # Update learning rates
+        self.scheduler_bert.step()
+        self.scheduler_head.step()
+        
+        return {
+            'total_loss': total_loss.item(),
+            'eligibility_loss': eligibility_loss.item(),
+            'domain_loss': domain_loss.item(),
+            'confidence_loss': confidence_loss.item()
+        }

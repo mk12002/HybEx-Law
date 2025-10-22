@@ -1,0 +1,16 @@
+{
+  "accuracy": 0.8032100488485694,
+  "f1_score": 0.8908668730650154,
+  "precision": 0.8032100488485694,
+  "recall": 1.0,
+  "method_metrics": {
+    "prolog": {
+      "count": 1433,
+      "accuracy": 0.8032100488485694,
+      "f1": 0.8908668730650154,
+      "precision": 0.8032100488485694,
+      "recall": 1.0
+    }
+  },
+  "classification_report": "              precision    recall  f1-score   support\n\nNot Eligible     0.0000    0.0000    0.0000       282\n    Eligible     0.8032    1.0000    0.8909      1151\n\n    accuracy                         0.8032      1433\n   macro avg     0.4016    0.5000    0.4454      1433\nweighted avg     0.6451    0.8032    0.7156      1433\n"
+}

@@ -37,6 +37,10 @@ complaint_within_time_limit(Person, Complaint) :-
     days_between(IncidentDate, ComplaintDate, Days),
     Days =< 730, !.  % 2 years time limit
 
+% Fallback: If no time data, assume within limit
+complaint_within_time_limit(Person, Complaint) :-
+    \+ incident_date(Person, Complaint, _).
+
 % =================================================================
 % CONSUMER COMPENSATION (Optimized calculation)
 % =================================================================
@@ -81,3 +85,30 @@ days_between(Date1, Date2, Days) :-
 
 date_to_days(date(Y, M, D), TotalDays) :-
     TotalDays is Y * 365 + M * 30 + D, !.  % Simplified calculation
+
+% =================================================================
+% MISSING UTILITY PREDICATES
+% =================================================================
+
+jurisdiction_limit(district_forum, 10000000).      % ₹1 crore
+jurisdiction_limit(state_commission, 100000000).   % ₹10 crore
+
+compensation_multiplier(1.5).  % 150% of goods value
+default_minimum_compensation(5000).  % ₹5000 minimum
+mental_agony_compensation(10000).    % ₹10,000 for mental agony
+
+% =================================================================
+% CONSUMER PROTECTION - DEFAULT ELIGIBILITY
+% =================================================================
+% Consumer protection cases are eligible if they have valid complaints AND meet eligibility criteria
+eligible_for_legal_aid(CaseID) :-
+    valid_consumer_complaint(CaseID, _),
+    (   categorically_eligible(CaseID)
+    ;   vulnerable_group_eligible(CaseID)
+    ;   income_eligible(CaseID)
+    ;   (\+ annual_income(CaseID, _))  % No income = eligible
+    ).
+
+primary_eligibility_reason(CaseID, 'Eligible - Valid Consumer Protection Case') :-
+    valid_consumer_complaint(CaseID, _),
+    eligible_for_legal_aid(CaseID).

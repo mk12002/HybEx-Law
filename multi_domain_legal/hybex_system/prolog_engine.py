@@ -652,107 +652,55 @@ class PrologEngine:
         ]
 
     def create_domain_specific_prolog_file_robust(self, facts: List[str], domain: str) -> str:
-        """Create a robust Prolog file with MINIMAL rules for fast execution."""
-        
-        temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.pl', delete=False, encoding='utf-8')
+        """Create a Prolog file that ACTUALLY loads the legal_aid rules."""
+        unique_suffix = f"_{int(time.time())}_{os.getpid()}.pl"
+        temp_file = tempfile.NamedTemporaryFile(
+            mode='w',
+            suffix=unique_suffix,
+            delete=False,
+            prefix='hybex_prolog_',
+            encoding='utf-8'
+        )
         self.temp_files.append(temp_file.name)
         
         try:
             # Header
-            temp_file.write(f'% HybEx-Law Minimal Legal Reasoning Session: {self.session_id}\n')
-            
-            # ✅ CRITICAL: Suppress ALL discontiguous warnings globally
+            temp_file.write(f'% HybEx-Law Legal Reasoning Session: {self.session_id}\n')
             temp_file.write(':- style_check(-discontiguous).\n')
-            temp_file.write(':- style_check(-singleton).\n\n')  # Also suppress singleton variable warnings
+            temp_file.write(':- style_check(-singleton).\n\n')
             
-            temp_file.write(f'% Domain: {domain}\n')
-            temp_file.write(f'% Generated: {datetime.now().isoformat()}\n\n')
+            # ✅ CRITICAL FIX: Consult the actual legal_aid_clean_v2.pl file
+            kb_path = Path(__file__).parent.parent / "knowledge_base" / "legal_aid_clean_v2.pl"
             
-            # 🚀 CRITICAL OPTIMIZATION: Use only ESSENTIAL rules for this case
-            temp_file.write('% MINIMAL ESSENTIAL RULES\n')
+            if kb_path.exists():
+                # Convert Windows path to Prolog-friendly format
+                prolog_path = str(kb_path).replace('\\', '/')
+                temp_file.write(f":- consult('{prolog_path}').\n\n")
+                logger.info(f"✅ Consulting legal_aid_clean_v2.pl from {kb_path}")
+            else:
+                logger.error(f"❌ CRITICAL: legal_aid_clean_v2.pl not found at {kb_path}")
+                return None  # Force fallback to modular approach
             
-            # Utility predicates (required)
-            temp_file.write('member(X, [X|_]).\n')
-            temp_file.write('member(X, [_|T]) :- member(X, T).\n\n')
+            # Write all facts
+            temp_file.write('% CASE-SPECIFIC FACTS\n')
+            for fact in facts:
+                if fact.strip():
+                    temp_file.write(fact.strip() + '\n')
             
-            # Core eligibility rules (optimized with cuts)
-            temp_file.write('% OPTIMIZED CORE ELIGIBILITY RULES\n')
-            temp_file.write('eligible_for_legal_aid(Person) :- categorically_eligible(Person), !.\n')
-            temp_file.write('eligible_for_legal_aid(Person) :- income_eligible(Person), !.\n\n')
-            
-            # Fast categorical eligibility (check first - most definitive)
-            temp_file.write('categorically_eligible(Person) :- social_category(Person, sc), !.\n')
-            temp_file.write('categorically_eligible(Person) :- social_category(Person, st), !.\n')
-            temp_file.write('categorically_eligible(Person) :- social_category(Person, obc), !.\n\n')
-            
-            # Dynamic income thresholds from config
-            temp_file.write('% DYNAMIC INCOME THRESHOLDS\n')
-            for category, threshold in self.income_thresholds.items():
-                # Handle combined 'sc_st' category from config
-                if category == 'sc_st':
-                    temp_file.write(f"income_threshold('sc', {threshold}).\n")
-                    temp_file.write(f"income_threshold('st', {threshold}).\n")
-                else:
-                    temp_file.write(f"income_threshold('{category.lower()}', {threshold}).\n")
             temp_file.write('\n')
-
-            # Income eligibility using dynamic thresholds
-            temp_file.write('% INCOME ELIGIBILITY (dynamic thresholds)\n')
-            temp_file.write('income_eligible(Person) :-\n')
-            temp_file.write('    social_category(Person, Category),\n')
-            temp_file.write('    income_threshold(Category, Threshold),\n')
-            temp_file.write('    annual_income(Person, Income),\n')
-            temp_file.write('    Income =< Threshold, !.\n')
-            
-            # Fallback for cases with no social category
-            temp_file.write('income_eligible(Person) :-\n')
-            temp_file.write('    \\+ social_category(Person, _),\n')
-            temp_file.write("    income_threshold(general, Threshold),\n")
-            temp_file.write('    annual_income(Person, Income),\n')
-            temp_file.write('    Income =< Threshold, !.\n\n')
-            
-            # Simple reasoning predicates
-            temp_file.write('% SIMPLE REASONING\n')
-            temp_file.write("primary_eligibility_reason(Person, 'Eligible: SC/ST/OBC category') :- categorically_eligible(Person), !.\n")
-            temp_file.write("primary_eligibility_reason(Person, 'Eligible: Income below threshold') :- income_eligible(Person), !.\n")
-            temp_file.write("primary_eligibility_reason(Person, 'Not eligible') :- \\+ eligible_for_legal_aid(Person), !.\n\n")
-            
-            temp_file.write("generate_detailed_reasoning(Person, 'Legal aid evaluation completed') :- person(Person), !.\n\n")
-            
-            # Add missing applicable_rule predicates to fix Unknown procedure error
-            temp_file.write('% APPLICABLE RULES (to fix missing predicate error)\n')
-            temp_file.write("applicable_rule(Person, 'categorical_eligibility', legal_aid) :- categorically_eligible(Person), !.\n")
-            temp_file.write("applicable_rule(Person, 'income_eligibility', legal_aid) :- income_eligible(Person), !.\n")
-            temp_file.write("applicable_rule(Person, 'not_eligible', legal_aid) :- \\+ eligible_for_legal_aid(Person), !.\n")
-            temp_file.write("applicable_rule(_, _, _) :- fail.\n\n")
-            
-            # Write facts (grouped by predicate to avoid discontiguous warnings)
-            temp_file.write('% CASE FACTS (GROUPED BY PREDICATE)\n')
-            grouped_facts = self.group_facts_by_predicate(facts)
-            for fact in grouped_facts:
-                if not fact.endswith('.'):
-                    temp_file.write(f"{fact}.\n")
-                else:
-                    temp_file.write(f"{fact}\n")
-            
+            temp_file.flush()
             temp_file.close()
             
-            # DEBUG: Show the minimal file
-            logger.info("🔍 DEBUG: Minimal Prolog file content:")
-            try:
-                with open(temp_file.name, 'r', encoding='utf-8') as debug_file:
-                    content = debug_file.read()
-                    logger.info(f"Minimal file ({len(content)} chars):\n{content}")
-            except Exception as debug_e:
-                logger.error(f"Failed to read debug content: {debug_e}")
-            
-            logger.info(f"✅ Created MINIMAL Prolog file: {temp_file.name} with essential rules only")
-            
+            logger.info(f"✅ Created Prolog file with {len(facts)} facts: {temp_file.name}")
             return temp_file.name
             
         except Exception as e:
-            temp_file.close()
-            logger.error(f"Error creating minimal Prolog file: {e}", exc_info=True)
+            logger.error(f"Failed to create Prolog file: {e}", exc_info=True)
+            if hasattr(temp_file, 'name'):
+                try:
+                    os.unlink(temp_file.name)
+                except:
+                    pass
             return None
 
     def group_facts_by_predicate(self, facts: List[str]) -> List[str]:
@@ -791,7 +739,14 @@ class PrologEngine:
     def create_domain_specific_prolog_file_modular(self, facts: List[str], domain: str) -> str:
         """🚀 MODULAR APPROACH: Create Prolog file by loading only domain-specific .pl files."""
         
-        temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.pl', delete=False, encoding='utf-8')
+        unique_suffix = f"_{int(time.time())}_{os.getpid()}.pl"
+        temp_file = tempfile.NamedTemporaryFile(
+            mode='w', 
+            suffix=unique_suffix, 
+            delete=False,
+            prefix='hybex_prolog_',
+            encoding='utf-8'
+        )
         self.temp_files.append(temp_file.name)
         
         try:
@@ -886,6 +841,7 @@ class PrologEngine:
         # Define domain-to-file mappings (only load what's needed!)
         domain_mappings = {
             'legal_aid': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl'],
+            'fundamental_rights': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl'],  # Added: fundamental rights use legal aid rules
             'family_law': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl', 'family_law.pl', 'cross_domain_rules.pl'],
             'consumer_protection': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl', 'consumer_protection.pl', 'cross_domain_rules.pl'],
             'employment_law': ['foundational_rules_clean.pl', 'legal_aid_clean_v2.pl', 'employment_law.pl', 'cross_domain_rules.pl'],
@@ -1070,7 +1026,14 @@ class PrologEngine:
         If 'domains' are specified, only include rules relevant to those domains.
         Otherwise, include all loaded rules."""
         
-        temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.pl', delete=False, encoding='utf-8')
+        unique_suffix = f"_{int(time.time())}_{os.getpid()}.pl"
+        temp_file = tempfile.NamedTemporaryFile(
+            mode='w', 
+            suffix=unique_suffix, 
+            delete=False,
+            prefix='hybex_prolog_',
+            encoding='utf-8'
+        )
         self.temp_files.append(temp_file.name)
         
         try:
@@ -1078,6 +1041,7 @@ class PrologEngine:
             
             # ✅ CRITICAL: Suppress ALL discontiguous warnings globally
             temp_file.write(':- style_check(-discontiguous).\n')
+            temp_file.write(':- discontiguous case_data/3.\n\n')
             temp_file.write(':- style_check(-singleton).\n\n')
             
             temp_file.write(f'% Generated: {datetime.now().isoformat()}\n\n')
@@ -1114,6 +1078,26 @@ class PrologEngine:
                     temp_file.write(fact + '.\n')
                 else:
                     temp_file.write(fact + '\n')
+            temp_file.write('\n')  # ← Add blank line separator
+
+            # ===== ADD REASONING HELPERS (FIX FOR MISSING PREDICATES) =====
+            temp_file.write("\n% =============================================================\n")
+            temp_file.write("% REASONING HELPERS (FOR DETAILED EXPLANATIONS)\n")
+            temp_file.write("% =============================================================\n\n")
+            
+            reasoning_helpers_path = self.config.BASE_DIR / "knowledge_base" / "reasoning_helpers.pl"
+            if reasoning_helpers_path.exists():
+                try:
+                    with open(reasoning_helpers_path, 'r', encoding='utf-8') as rh_file:
+                        reasoning_helpers_content = rh_file.read()
+                        temp_file.write(reasoning_helpers_content)
+                        temp_file.write("\n")
+                    logger.info("✅ Included reasoning_helpers.pl in temp Prolog file")
+                except Exception as e:
+                    logger.warning(f"⚠️ Could not include reasoning_helpers.pl: {e}")
+            else:
+                logger.warning(f"⚠️ reasoning_helpers.pl not found at: {reasoning_helpers_path}")
+            # ===== END REASONING HELPERS =====
             
             temp_file.close()
             logger.info(f"Created comprehensive Prolog file: {temp_file.name} with {len(facts)} facts.")
@@ -1199,61 +1183,71 @@ class PrologEngine:
             return False, []
 
     def execute_prolog_query(self, prolog_file: str, query: PrologQuery, timeout_seconds: int = 60) -> Tuple[bool, List[Dict], str]:
+        """Execute a Prolog query with proper file loading."""
+        
         if not self.prolog_available:
             return self._advanced_fallback_reasoning(query.query_text)
-
+        
         if not Path(prolog_file).exists():
-            logger.error(f"Prolog file not found: {prolog_file}. Cannot execute query.")
-            return False, [], "Prolog file not found."
-
-        # Correctly format the path for Prolog, which may be on a different OS
-        safe_prolog_path = Path(prolog_file).as_posix()
+            logger.error(f"Prolog file not found: {prolog_file}")
+            return (False, [], "Prolog file not found.")
+        
+        # ✅ FIX: Use -l flag to LOAD the file, then -g to RUN the query
+        safe_prolog_path = str(Path(prolog_file).resolve())
+        
         for attempt in range(query.retry_count):
             try:
-                # Use single quotes around the file path in the command to handle spaces and special characters
-                # Add halt at the end to prevent SWI-Prolog from entering interactive mode
-                prolog_query_cmd = f"['{safe_prolog_path}'], {query.query_text}, halt"
-                # The -g flag requires a single goal, so we pass the whole thing as a string
-                cmd = ['swipl', '-q', '-g', prolog_query_cmd, '--stack-limit=2g', '--traditional']
+                # ✅ CORRECT SYNTAX: Load file with -l, run query with -g
+                cmd = [
+                    'swipl',
+                    '-q',                                    # Quiet mode
+                    '-l', safe_prolog_path,                  # Load the Prolog file
+                    '-g', f"{query.query_text}, halt",       # Run query then halt
+                    '--stack-limit=2g',
+                    '--traditional'
+                ]
                 
-                logger.info(f"Executing SWI-Prolog command: {' '.join(cmd)}")
+                logger.info(f"Executing SWI-Prolog: {' '.join(cmd)}")
                 
-                result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_seconds, check=False, encoding='utf-8')
-                
-                if result.returncode != 0:
-                    logger.warning(f"SWI-Prolog exited with code {result.returncode} (attempt {attempt + 1}). Stderr: {result.stderr.strip()}")
-                    if "Syntax error" in result.stderr or "ERROR" in result.stderr:
-                        return False, [], f"Prolog syntax or fatal error: {result.stderr.strip()}"
+                result = subprocess.run(
+                    cmd,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout_seconds,
+                    check=False,
+                    encoding='utf-8'
+                )
                 
                 output = result.stdout.strip()
                 
-                # Enhanced success evaluation: consider exit code 0 as success even with empty output
+                # ✅ Exit code 0 = success (true), 1 = false, 2+ = error
                 if result.returncode == 0:
-                    # For boolean queries (like eligible_for_legal_aid), exit code 0 means TRUE
-                    if not output.strip():
-                        success = True  # Empty output with exit code 0 = success
-                        output = "true"  # Set meaningful output
-                    else:
-                        success = self._evaluate_prolog_success(output)
+                    success = True
+                    logger.info(f"✅ Prolog query TRUE (exit code 0)")
+                elif result.returncode == 1:
+                    success = False
+                    logger.info(f"❌ Prolog query FALSE (exit code 1)")
                 else:
                     success = False
+                    logger.warning(f"⚠️ Prolog ERROR (exit code {result.returncode}): {result.stderr.strip()}")
                 
                 parsed_results = self._parse_prolog_output(output, query.expected_variables)
                 
                 if success:
-                    logger.info(f"Prolog query successful (attempt {attempt + 1}): {query.query_text}")
-                    return True, parsed_results, f"Prolog reasoning completed: {output}"
+                    logger.info(f"✅ Prolog query successful (attempt {attempt + 1}): {query.query_text}")
+                    return (True, parsed_results, output)  # ✅ Return raw output!
                 else:
-                    logger.warning(f"Prolog query returned false/no or empty (attempt {attempt + 1}): {query.query_text}. Output: {output}. Stderr: {result.stderr}")
+                    logger.warning(f"⚠️ Prolog query returned false/no (attempt {attempt + 1})")
                     if attempt == query.retry_count - 1:
-                        return False, parsed_results, f"Prolog query failed after {query.retry_count} attempts: {result.stderr.strip() or output}"
-                        
+                        return (False, parsed_results, output)  # ✅ Return raw output!
+            
             except subprocess.TimeoutExpired:
-                logger.error(f"Prolog query timeout (attempt {attempt + 1}): {query.query_text}")
+                logger.error(f"⏱️ Prolog query timeout (attempt {attempt + 1})")
                 if attempt == query.retry_count - 1:
-                    return False, [], f"Query timeout after {query.retry_count} attempts"
+                    return (False, [], f"Query timeout after {query.retry_count} attempts")
+            
             except Exception as e:
-                logger.error(f"Error executing Prolog query (attempt {attempt + 1}): {e}", exc_info=True)
+                logger.error(f"❌ Error executing Prolog query (attempt {attempt + 1}): {e}", exc_info=True)
                 if attempt == query.retry_count - 1:
                     return self._advanced_fallback_reasoning(query.query_text)
         
@@ -1300,6 +1294,64 @@ class PrologEngine:
                 results.append({'raw_output': output})
         
         return results if results else []
+
+    def _parse_prolog_output(self, output: str, query_type: str = 'eligibility') -> Dict[str, Any]:
+        """
+        Parse Prolog query output with robust handling
+        
+        FIX: Correctly interpret 'eligible' atom as True
+        """
+        result = {
+            'eligible': False,
+            'confidence': 0.5,
+            'reasoning': 'Default reasoning',
+            'primary_reason': 'No specific reason determined'
+        }
+        
+        if not output or output.strip() == '':
+            return result
+        
+        lines = output.strip().split('\n')
+        
+        for line in lines:
+            line = line.strip()
+            
+            # Parse eligible_with_confidence output
+            if 'Eligible' in line and 'Confidence' in line:
+                # Extract values: Eligible = eligible, Confidence = 0.70
+                try:
+                    parts = line.split(',')
+                    
+                    # Parse eligible status
+                    eligible_part = parts[0] if len(parts) > 0 else ''
+                    if '=' in eligible_part:
+                        eligible_value = eligible_part.split('=')[1].strip().lower()
+                        # FIX: 'eligible' atom means True, 'not_eligible' means False
+                        result['eligible'] = (eligible_value == 'eligible')
+                    
+                    # Parse confidence
+                    if len(parts) > 1 and '=' in parts[1]:
+                        conf_str = parts[1].split('=')[1].strip()
+                        try:
+                            result['confidence'] = float(conf_str)
+                        except:
+                            result['confidence'] = 0.70 if result['eligible'] else 0.30
+                
+                except Exception as e:
+                    logger.warning(f"Failed to parse eligible_with_confidence: {line}. Error: {e}")
+                    # Default to checking if 'eligible' appears in line
+                    result['eligible'] = 'eligible' in line.lower() and 'not_eligible' not in line.lower()
+            
+            # Parse reasoning
+            elif 'DetailedReason' in line or 'Reason' in line:
+                if '=' in line:
+                    reason = line.split('=', 1)[1].strip()
+                    if 'DetailedReason' in line:
+                        result['reasoning'] = reason
+                    elif 'Reason' in line and 'DetailedReason' not in line:
+                        result['primary_reason'] = reason
+        
+        return result
 
     def _advanced_fallback_reasoning(self, query_text: str) -> Tuple[bool, List[Dict], str]:
         """Provides a simulated advanced reasoning if Prolog is unavailable."""
@@ -1357,7 +1409,7 @@ class PrologEngine:
         
         logger.info(f"🎯 Using domain-specific rules for: {domains}")
         
-        facts = self._generate_comprehensive_facts(extracted_entities, case_id)
+        facts = self._generate_comprehensive_facts(extracted_entities, case_id, domains=domains)
         
         # 🚀 USE MODULAR APPROACH: Create Prolog file with only domain-specific rules
         prolog_file = self.create_domain_specific_prolog_file_modular(facts, domains[0])
@@ -1434,69 +1486,97 @@ class PrologEngine:
             self._cleanup_temp_files()
 
     def _analyze_eligibility(self, prolog_file: str, case_id: str) -> Dict[str, Any]:
-        """Analyze eligibility with ultra-fast optimized strategy."""
+        """Analyze eligibility using the CORRECT predicate from legal_aid_clean_v2.pl"""
         
-        # 🚀 STEP 1: Ultra-fast basic eligibility check (3s timeout)
-        logger.info(f"🎯 Ultra-fast eligibility check for {case_id}")
-        basic_query = PrologQuery(
-            query_text=f"eligible_for_legal_aid('{case_id}')",
+        # ✅ FIX: Use check_and_print_eligibility (the actual predicate name)
+        query = PrologQuery(
+            query_text=f"check_and_print_eligibility('{case_id}')",
             expected_variables=[],
-            timeout=3,
+            timeout=10,
+            retry_count=2
+        )
+        
+        success, results, explanation = self.execute_prolog_query(prolog_file, query, timeout_seconds=10)
+        
+        if success and explanation:
+            # Parse output: legal_aid_clean_v2.pl prints Decision and Confidence on separate lines
+            lines = [line.strip() for line in explanation.split('\n') if line.strip()]
+            
+            if len(lines) >= 2:
+                decision = lines[0].lower()
+                try:
+                    confidence = float(lines[1])
+                except (ValueError, IndexError):
+                    confidence = 0.7
+                
+                eligible = (decision == 'eligible')
+                
+                result = {
+                    'eligible': eligible,
+                    'confidence': confidence,
+                    'explanation': f"Prolog analysis: {decision}"
+                }
+                
+                logger.info(f"✅ Eligibility for {case_id}: {eligible} (confidence: {confidence})")
+                return result
+            
+            # Fallback parsing if format is different
+            if 'eligible' in explanation.lower() and 'not_eligible' not in explanation.lower():
+                return {'eligible': True, 'confidence': 0.85, 'explanation': explanation}
+        
+        logger.warning(f"⚠️ Prolog query failed for {case_id}, using fallback")
+        return {'eligible': False, 'confidence': 0.3, 'explanation': 'Prolog query failed'}
+    
+    def _analyze_reasoning(self, prolog_file: str, case_id: str) -> Dict[str, Any]:
+        """Analyze detailed reasoning using print predicates - CRITICAL FIX"""
+        
+        # Use print_detailed_reasoning for explicit stdout output
+        query = PrologQuery(
+            query_text=f"print_detailed_reasoning('{case_id}')",
+            expected_variables=[],  # Output goes to stdout, not variables
+            timeout=5,
             retry_count=1
         )
         
-        success, results, explanation = self.execute_prolog_query(prolog_file, basic_query, timeout_seconds=3)
+        success, results, explanation = self.execute_prolog_query(prolog_file, query, timeout_seconds=5)
         
-        if success:
-            logger.info(f"✅ FAST SUCCESS: Basic eligibility confirmed for {case_id}")
-            return {
-                'eligible': True,
-                'confidence': 0.85,  # High confidence for fast success
-                'explanation': f"Fast Prolog eligibility confirmed: {explanation}"
-            }
-        else:
-            logger.info(f"❌ FAST RESULT: Not eligible - {explanation}")
-            return {
-                'eligible': False,
-                'confidence': 0.9,   # High confidence for definitive no
-                'explanation': f"Fast Prolog check failed: {explanation}"
-            }
-    
-    def _analyze_reasoning(self, prolog_file: str, case_id: str) -> Dict[str, Any]:
-        """Analyze detailed reasoning for the decision using Prolog."""
+        detailed_reason = "System analysis"
+        if success and explanation:
+            for line in explanation.split('\n'):
+                if 'DetailedReason' in line and '=' in line:
+                    try:
+                        detailed_reason = line.split('=', 1)[1].strip()
+                        logger.info(f"✅ Parsed detailed reasoning: {detailed_reason[:50]}...")
+                        break
+                    except (IndexError, ValueError) as e:
+                        logger.warning(f"⚠️ Failed to parse detailed reason: {e}")
         
-        # Get primary reason using new JSON method
-        success_primary, results_primary = self._execute_prolog_query(
-            prolog_file, 
-            f"primary_eligibility_reason('{case_id}', Reason)",
-            ['Reason']
+        # Also get primary reason using print predicate
+        query_primary = PrologQuery(
+            query_text=f"print_primary_reason('{case_id}')",
+            expected_variables=[],
+            timeout=5,
+            retry_count=1
         )
+        
+        success_primary, _, explanation_primary = self.execute_prolog_query(prolog_file, query_primary, timeout_seconds=5)
         
         primary_reason = "System analysis"
-        if success_primary and results_primary:
-            for res_dict in results_primary:
-                if 'Reason' in res_dict:
-                    primary_reason = res_dict['Reason'].strip("'\"")  # Strip any outer quotes
-                    break
+        if success_primary and explanation_primary:
+            for line in explanation_primary.split('\n'):
+                if 'Reason' in line and '=' in line:
+                    try:
+                        primary_reason = line.split('=', 1)[1].strip()
+                        logger.info(f"✅ Parsed primary reason: {primary_reason}")
+                        break
+                    except (IndexError, ValueError) as e:
+                        logger.warning(f"⚠️ Failed to parse primary reason: {e}")
         
-        # Get detailed reasoning using new JSON method
-        success_detailed, results_detailed = self._execute_prolog_query(
-            prolog_file,
-            f"generate_detailed_reasoning('{case_id}', DetailedReason)",
-            ['DetailedReason']
-        )
-        
-        detailed_reasoning_list = []
-        if success_detailed and results_detailed:
-            for res_dict in results_detailed:
-                if 'DetailedReason' in res_dict:
-                    detailed_reasoning = res_dict['DetailedReason'].strip("'\"")  # Strip any outer quotes
-                    detailed_reasoning_list.append({
-                        'type': 'prolog_reasoning',
-                        'content': detailed_reasoning,
-                        'confidence': 0.95
-                    })
-                    break
+        detailed_reasoning_list = [{
+            'type': 'prolog_reasoning',
+            'content': detailed_reason,
+            'confidence': 0.95
+        }]
         
         return {
             'primary_reason': primary_reason,
@@ -1504,22 +1584,30 @@ class PrologEngine:
         }
 
     def _analyze_applicable_rules(self, prolog_file: str, case_id: str) -> Dict[str, Any]:
-        """Analyze applicable rules and legal citations using Prolog."""
+        """Analyze applicable rules using print predicates - CRITICAL FIX"""
         
-        # Use new JSON method for rules
-        success, results = self._execute_prolog_query(
-            prolog_file,
-            f"findall(Rule, applicable_rule('{case_id}', Rule, legal_aid), Rules)",
-            ['Rules']
+        # Use print_primary_reason for explicit stdout output  
+        query = PrologQuery(
+            query_text=f"print_primary_reason('{case_id}')",
+            expected_variables=[],  # Output goes to stdout
+            timeout=5,
+            retry_count=1
         )
         
+        success, results, explanation = self.execute_prolog_query(prolog_file, query, timeout_seconds=5)
+        
         applicable_rules = []
-        if success and results:
-            for res_dict in results:
-                if 'Rules' in res_dict:
-                    rules_str = res_dict['Rules'].strip('[]')  # Strip list brackets
-                    applicable_rules = [r.strip().strip("'\"") for r in rules_str.split(',') if r.strip()] if rules_str else []
-                    break
+        if success and explanation:
+            for line in explanation.split('\n'):
+                if 'Reason' in line and '=' in line:
+                    try:
+                        reason = line.split('=', 1)[1].strip()
+                        # Convert reason to rule format
+                        applicable_rules.append(reason)
+                        logger.info(f"✅ Parsed applicable rule: {reason}")
+                        break
+                    except (IndexError, ValueError) as e:
+                        logger.warning(f"⚠️ Failed to parse applicable rule: {e}")
 
         legal_citations = [
             "Legal Services Authorities Act, 1987 - Section 12",
@@ -1531,66 +1619,245 @@ class PrologEngine:
             'legal_citations': legal_citations
         }
 
+    def _clean_atom(self, value: Any) -> str:
+        """
+        Ensure Prolog atom has no extra quotes.
+        Handles cases where entities might have quotes embedded.
+        
+        Args:
+            value: The value to clean (can be str, int, etc.)
+            
+        Returns:
+            Cleaned string suitable for Prolog atom
+        """
+        if value is None:
+            return 'unknown'
+        return str(value).strip().strip("'").strip('"').lower()
+
     # In hybex_system/prolog_engine.py
 # REPLACE the entire _generate_comprehensive_facts method with this final version.
 
-    def _generate_comprehensive_facts(self, entities: Dict[str, Any], case_id: str) -> List[str]:
+    def _generate_comprehensive_facts(self, entities: Dict[str, Any], case_id: str, domains: List[str] = None) -> List[str]:
         """
-        Generate comprehensive Prolog facts from extracted and pre-normalized entities.
-        This version trusts that the DataProcessor has already cleaned the data.
+        Generate comprehensive Prolog facts from extracted entities
         """
-        facts = [f"person('{case_id}')."]
+        facts = []
         
-        # General & Demographic facts
-        if 'income' in entities:
-            facts.append(f"annual_income('{case_id}', {entities['income']}).")
-        if 'social_category' in entities:
-            # No normalization needed here, as data_processor now provides the correct short-form
-            facts.append(f"social_category('{case_id}', '{entities['social_category']}').")
-        if 'age' in entities:
-            facts.append(f"age('{case_id}', {entities['age']}).")
-        if 'gender' in entities:
-            facts.append(f"gender('{case_id}', '{entities['gender']}').")
+        # ALWAYS generate person fact
+        facts.append(f"person('{case_id}').")
+        
+        # ✅ CRITICAL FIX: Initialize vulnerable_groups list at the very beginning
+        # This must be tracked across ALL sections to prevent contradictions
+        vulnerable_groups = []
+        
+        # ================================================================
+        # STEP 1: INCOME HANDLING - BULLETPROOF WITH EXCEPTION HANDLING
+        # ================================================================
+        # CRITICAL: This MUST come first and NEVER FAIL - income status must always be known
+        try:
+            if 'income' in entities and entities['income'] is not None and entities['income'] > 0:
+                income = int(entities['income'])
+                facts.append(f"has_income('{case_id}').")  # EXPLICIT: income exists
+                facts.append(f"monthly_income('{case_id}', {income}).")
+                facts.append(f"annual_income('{case_id}', {income * 12}).")
+                
+                # ✅ Check for low income vulnerability
+                if entities.get('income_category') in ['low', 'very_low']:
+                    if 'low_income' not in vulnerable_groups:
+                        vulnerable_groups.append('low_income')
+                        facts.append(f"vulnerable_group('{case_id}', 'low_income').")
+            else:
+                # ✅ CRITICAL: no_income should ALWAYS make them eligible
+                facts.append(f"no_income('{case_id}').")
+        except Exception as e:
+            # DEFENSIVE: If ANY error occurs (KeyError, TypeError, ValueError, etc.),
+            # default to no_income to ensure income status is ALWAYS defined
+            logger.warning(f"⚠️ Income fact generation failed for {case_id}: {e}")
+            facts.append(f"no_income('{case_id}').")  # Fallback to no_income on ANY error
+        
+        # ================================================================
+        # STEP 2: OTHER DEMOGRAPHIC FACTS - WITH EXCEPTION HANDLING
+        # ================================================================
+        
+        # Core demographic facts
+        try:
+            if 'social_category' in entities:
+                value = self._clean_atom(entities['social_category'])
+                facts.append(f"social_category('{case_id}', {value}).")
+        except Exception as e:
+            logger.warning(f"⚠️ Social category fact generation failed for {case_id}: {e}")
+        
+        try:
+            if 'age' in entities:
+                facts.append(f"age('{case_id}', {entities['age']}).")
+        except Exception as e:
+            logger.warning(f"⚠️ Age fact generation failed for {case_id}: {e}")
+        
+        # FIX: CRITICAL - Generate gender fact WITH QUOTES
+        try:
+            if 'gender' in entities:
+                gender_value = entities['gender'].lower()  # Normalize to lowercase
+                facts.append(f"gender('{case_id}', '{gender_value}').")  # MUST have quotes!
+                
+                # ✅ FIX: Women are a vulnerable group per legal_aid_clean_v2.pl Rule 2
+                # Track 'women' in vulnerable_groups list to prevent no_vulnerable_group contradiction
+                if gender_value == 'female':
+                    if 'women' not in vulnerable_groups:
+                        vulnerable_groups.append('women')
+                        facts.append(f"vulnerable_group('{case_id}', women).")
+        except Exception as e:
+            logger.warning(f"⚠️ Gender fact generation failed for {case_id}: {e}")
+        
+        try:
+            if entities.get('is_disabled'):
+                vulnerable_groups.append('disabled')
+                facts.append(f"vulnerable_group('{case_id}', disabled).")
+            
+            if entities.get('is_senior_citizen'):
+                vulnerable_groups.append('senior_citizen')
+                facts.append(f"vulnerable_group('{case_id}', senior_citizen).")
+            
+            if entities.get('is_widow'):
+                vulnerable_groups.append('widow')
+                facts.append(f"vulnerable_group('{case_id}', widow).")
+            
+            if entities.get('is_single_parent'):
+                vulnerable_groups.append('single_parent')
+                facts.append(f"vulnerable_group('{case_id}', single_parent).")
+            
+            if entities.get('is_transgender'):
+                vulnerable_groups.append('transgender')
+                facts.append(f"vulnerable_group('{case_id}', transgender).")
+            
+            # ✅ CRITICAL FIX: Only add no_vulnerable_group if NO vulnerable groups exist
+            # This MUST come AFTER all vulnerable group checks
+            if not vulnerable_groups:
+                facts.append(f"no_vulnerable_group('{case_id}').")
+        except Exception as e:
+            logger.warning(f"⚠️ Vulnerable group fact generation failed for {case_id}: {e}")
+            # Ensure we still have the no_vulnerable_group fact if needed
+            if not vulnerable_groups:
+                facts.append(f"no_vulnerable_group('{case_id}').")
         
         # Employment Law Facts
         if 'employment_duration' in entities:
             facts.append(f"employment_duration('{case_id}', {entities['employment_duration']}).")
+        
         if 'daily_wage' in entities:
             facts.append(f"daily_wage('{case_id}', {entities['daily_wage']}).")
-            # Derive hourly wage for overtime calculations
             facts.append(f"hourly_wage('{case_id}', {int(entities['daily_wage'] / 8)}).")
+        
         if 'notice_period_given' in entities:
             facts.append(f"notice_period_given('{case_id}', {entities['notice_period_given']}).")
-        if entities.get('disciplinary_hearing_conducted', True): # Default to True unless explicitly False
+        
+        if entities.get('disciplinary_hearing_conducted', True):
             facts.append(f"disciplinary_hearing_conducted('{case_id}').")
-
+        
+        if entities.get('opportunity_to_explain_given', False):
+            facts.append(f"opportunity_to_explain_given('{case_id}').")
+        
+        if entities.get('harassment_incident_reported', False):
+            facts.append(f"harassment_incident_reported('{case_id}').")
+        
+        if 'actual_wage' in entities:
+            facts.append(f"actual_wage('{case_id}', {entities['actual_wage']}).")
+        
+        if 'employment_state' in entities:
+            value = self._clean_atom(entities['employment_state'])
+            facts.append(f"employment_state('{case_id}', {value}).")
+        
+        if 'daily_working_hours' in entities:
+            facts.append(f"daily_working_hours('{case_id}', {entities['daily_working_hours']}).")
+        
         # Family Law Facts
         if entities.get('is_married'):
             facts.append(f"married('{case_id}', 'spouse_of_{case_id}').")
+        
         if entities.get('has_children', 0) > 0:
-             facts.append(f"parent('{case_id}', 'child_of_{case_id}').")
-
+            facts.append(f"parent('{case_id}', 'child_of_{case_id}').")
+        
+        if entities.get('financial_dependency', False):
+            facts.append(f"financial_dependency('{case_id}', 'spouse_of_{case_id}').")
+        
+        if entities.get('children_custody'):
+            facts.append(f"children_custody('{case_id}', 'child_of_{case_id}').")
+        
+        if entities.get('stable_environment', False):
+            facts.append(f"stable_environment('{case_id}').")
+        
+        if entities.get('financial_capability', False):
+            facts.append(f"financial_capability('{case_id}').")
+        
+        if entities.get('emotional_bond', False):
+            facts.append(f"emotional_bond('child_of_{case_id}', '{case_id}').")
+        
         # Consumer Protection Facts
         if 'goods_value' in entities:
-            facts.append(f"goods_value('{case_id}', {entities['goods_value']}).")
+            facts.append(f"goods_value({entities['goods_value']}).")
             facts.append(f"transaction_amount('{case_id}', {entities['goods_value']}).")
         
+        if 'service_charges_paid' in entities:
+            facts.append(f"service_charges_paid({entities['service_charges_paid']}).")
+        
+        if entities.get('mental_agony_claimed', False):
+            facts.append(f"mental_agony_claimed('{case_id}', general_complaint).")
+        
+        # Date facts
         if 'incident_date' in entities:
             try:
                 y, m, d = map(int, entities['incident_date'].split('-'))
                 facts.append(f"incident_date('{case_id}', general_complaint, date({y}, {m}, {d})).")
+            except:
+                from datetime import datetime
                 today = datetime.now()
-                facts.append(f"complaint_date('{case_id}', general_complaint, date({today.year}, {today.month}, {today.day})).")
-            except (ValueError, IndexError):
-                logger.warning(f"Could not parse incident_date: {entities['incident_date']}")
-
-        # Add income threshold facts (essential for legal_aid_clean_v2.pl)
+                facts.append(f"incident_date('{case_id}', general_complaint, date({today.year}, {today.month}, {today.day})).")
+        else:
+            from datetime import datetime
+            today = datetime.now()
+            facts.append(f"incident_date('{case_id}', general_complaint, date({today.year}, {today.month}, {today.day})).")
+        
+        from datetime import datetime
+        today = datetime.now()
+        facts.append(f"complaint_date('{case_id}', general_complaint, date({today.year}, {today.month}, {today.day})).")
+        
+        # Case type
+        if 'case_type' in entities:
+            value = self._clean_atom(entities['case_type'])
+            facts.append(f"case_type('{case_id}', {value}).")
+        
+        # Discrimination
+        if 'discrimination_grounds' in entities:
+            value = self._clean_atom(entities['discrimination_grounds'])
+            facts.append(f"discriminated_against('{case_id}', {value}).")
+        
+        if entities.get('employee', False):
+            facts.append(f"employee('{case_id}').")
+        
+        if entities.get('workplace_discrimination', False):
+            facts.append(f"workplace_discrimination('{case_id}').")
+        
+        # Additional predicates
+        if 'has_grounds' in entities and entities['has_grounds']:
+            for ground_type in entities['has_grounds']:
+                value = self._clean_atom(ground_type)
+                facts.append(f"has_grounds('{case_id}', {value}).")
+        
+        if 'claim_value' in entities:
+            facts.append(f"claim_value('{case_id}', {entities['claim_value']}).")
+        
+        if 'disability_status' in entities:
+            disability = 'true' if entities['disability_status'] else 'false'
+            facts.append(f"disability_status('{case_id}', {disability}).")
+        
+        if 'occupation' in entities:
+            value = self._clean_atom(entities['occupation'])
+            facts.append(f"occupation('{case_id}', {value}).")
+        
+        # Add income thresholds and derived facts
         facts.extend(self._generate_income_threshold_facts())
         facts.extend(self._generate_derived_facts(entities, case_id))
         
-        # Changed from logger.info to logger.debug to prevent log spam during batch processing
-        logger.debug(f"Generated {len(facts)} comprehensive Prolog facts for {case_id}")
-        logger.debug(f"Facts generated: {facts}")
+        logger.debug(f"Generated {len(facts)} facts for {case_id}")
         return facts
 
     def _generate_income_threshold_facts(self) -> List[str]:
@@ -1696,137 +1963,76 @@ class PrologEngine:
         }
         return summary
 
+    def _create_fallback_result(self, case_id: str) -> LegalReasoning:
+        """Create a fallback result when Prolog analysis fails."""
+        return LegalReasoning(
+            case_id=case_id,
+            eligible=False,
+            confidence=0.3,
+            primary_reason='Analysis failed - using fallback',
+            detailed_reasoning=[{
+                'type': 'fallback',
+                'content': 'Prolog analysis could not be completed',
+                'confidence': 0.3
+            }],
+            applicable_rules=[],
+            legal_citations=[],
+            method='fallback'
+        )
+
     def batch_legal_analysis(self, cases: List[Dict[str, Any]]) -> List[LegalReasoning]:
-        """Perform batch legal analysis for multiple cases."""
-        logger.info(f"Batch analyzing {len(cases)} cases with Prolog engine.")
+        """
+        Perform batch legal analysis with COMPLETE ISOLATION per case.
+        Bug #10 Fix: Each case gets its own Prolog file to prevent contamination.
+        """
+        logger.info(f"🔍 Batch analyzing {len(cases)} cases with ISOLATED Prolog files.")
         
         results = []
-        all_facts_combined = []
-        case_ids_in_batch = []
         
-        # ✅ Track totals for summary logging
-        total_facts = 0
-        fact_generation_start = time.time()
-
-        # Generate all facts first and map case_id to original sample_id
-        for i, case_entities in enumerate(cases):
-            # Use original sample_id if available, otherwise generate a new one
-            # This 'sample_id' should map to the 'case_id' used in Prolog facts
-            # Assuming 'sample_id' is already in `case_entities` if coming from `DataProcessor`
-            case_id = case_entities.get('sample_id', f"batch_case_{self.session_id}_{i}")
-            case_ids_in_batch.append(case_id)
+        for i, case_sample in enumerate(cases, 1):
+            case_id = case_sample.get('sample_id', f'batch_case_{i}')
             
-            # Generate facts for each case using the *original* entities
-            # _generate_comprehensive_facts expects extracted_entities and case_id
-            current_case_facts = self._generate_comprehensive_facts(case_entities.get('extracted_entities', {}), case_id)
-            all_facts_combined.extend(current_case_facts)
-            total_facts += len(current_case_facts)
-        
-        fact_generation_time = time.time() - fact_generation_start
-        
-        # ✅ SUMMARY LOG: Replace 1436 individual logs with ONE summary
-        logger.info(
-            f"✅ Generated {total_facts} total facts across {len(cases)} cases "
-            f"(avg {total_facts/len(cases):.1f} facts/case) in {fact_generation_time:.2f}s"
-        )
-            
-        # Create a single Prolog file with all rules and all facts for efficiency
-        prolog_file = self.create_comprehensive_prolog_file(all_facts_combined)
-
-        if not prolog_file:
-            logger.error("Failed to create combined Prolog file for batch processing. Falling back for all cases.")
-            for case_entities in cases:
-                eligible, parsed_res, reason = self._advanced_fallback_reasoning(case_entities.get('query', ''))
-                results.append(LegalReasoning(
-                    case_id=case_entities.get('sample_id', 'N/A'),
-                    eligible=eligible,
-                    confidence=float(parsed_res[0].get('Confidence', 0.5)),
-                    primary_reason=reason,
-                    detailed_reasoning=[],
-                    applicable_rules=[],
-                    legal_citations=[],
-                    method='advanced_fallback'
-                ))
-            return results
-
-        try:
-            for case_entities in cases:
-                case_id = case_entities.get('sample_id', 'N/A') # Re-use or retrieve the case_id
+            try:
+                # Extract entities for THIS case only
+                entities = case_sample.get('extracted_entities', {})
                 
-                # Query each case_id for its final eligibility and reasoning directly from the combined file.
-                eligibility_query = PrologQuery(
-                    query_text=f"eligible_with_confidence('{case_id}', Eligible, Confidence)",
-                    expected_variables=['Eligible', 'Confidence']
-                )
-                eligible, eligibility_results, _ = self.execute_prolog_query(prolog_file, eligibility_query)
-
-                reasoning_query = PrologQuery(
-                    query_text=f"generate_detailed_reasoning('{case_id}', DetailedReason)",
-                    expected_variables=['DetailedReason']
-                )
-                success_detailed, results_detailed, _ = self.execute_prolog_query(prolog_file, reasoning_query)
+                # Generate facts for THIS case only
+                facts = self._generate_comprehensive_facts(entities, case_id, domains=['legal_aid'])
                 
-                primary_reason_query = PrologQuery(
-                    query_text=f"primary_eligibility_reason('{case_id}', Reason)",
-                    expected_variables=['Reason']
-                )
-                success_primary, results_primary, _ = self.execute_prolog_query(prolog_file, primary_reason_query)
-
-                primary_reason = "Determined by Prolog"
-                detailed_reasoning = []
-                if success_detailed and results_detailed:
-                    for res_dict in results_detailed:
-                        if 'DetailedReason' in res_dict:
-                            primary_reason = res_dict['DetailedReason'].replace("'", "")
-                            detailed_reasoning.append({
-                                'type': 'prolog_reasoning',
-                                'content': primary_reason,
-                                'confidence': 0.95
-                            })
-                            break
-                elif success_primary and results_primary: # Fallback to primary reason if detailed not found
-                     for res_dict in results_primary:
-                        if 'Reason' in res_dict:
-                            primary_reason = res_dict['Reason'].replace("'", "")
-                            detailed_reasoning.append({
-                                'type': 'prolog_reasoning',
-                                'content': primary_reason,
-                                'confidence': 0.9 # Slightly lower confidence for just primary
-                            })
-                            break
-
-                # For batch, we're not re-extracting rules/citations, assuming they apply generally
-                # Or, you'd need to modify _analyze_applicable_rules to work on the combined file
-                # A simpler way for batch is to provide a generic placeholder or pre-compute
+                # Create NEW Prolog file for THIS case
+                prolog_file = self.create_domain_specific_prolog_file_robust(facts, 'legal_aid')
                 
-                # Extract eligible and confidence from eligibility_results
-                current_eligible = False
-                current_confidence = 0.5
-                if eligible and eligibility_results:
-                    for res_dict in eligibility_results:
-                        if 'Eligible' in res_dict:
-                            current_eligible = (res_dict['Eligible'].lower() == 'true')
-                        if 'Confidence' in res_dict:
-                            try:
-                                current_confidence = float(res_dict['Confidence'])
-                            except ValueError:
-                                pass # Keep default or previously parsed
-
-                results.append(LegalReasoning(
-                    case_id=case_id,
-                    eligible=current_eligible,
-                    confidence=current_confidence,
-                    primary_reason=primary_reason,
-                    detailed_reasoning=detailed_reasoning,
-                    applicable_rules=["Rules applied from comprehensive knowledge base"], # Placeholder for batch
-                    legal_citations=["Legal Services Authorities Act, 1987"], # Placeholder for batch
-                    method='prolog' if self.prolog_available else 'advanced_fallback'
-                ))
+                if prolog_file:
+                    # Analyze eligibility for THIS case
+                    eligibility = self._analyze_eligibility(prolog_file, case_id)
+                    
+                    results.append(LegalReasoning(
+                        case_id=case_id,
+                        eligible=eligibility['eligible'],
+                        confidence=eligibility['confidence'],
+                        primary_reason=eligibility['explanation'],
+                        detailed_reasoning=[{
+                            'type': 'prolog_reasoning',
+                            'content': eligibility['explanation'],
+                            'confidence': eligibility['confidence']
+                        }],
+                        applicable_rules=['LSA Act 1987'],
+                        legal_citations=['Section 12'],
+                        method='prolog'
+                    ))
+                else:
+                    logger.warning(f"⚠️ Failed to create Prolog file for {case_id}, using fallback")
+                    results.append(self._create_fallback_result(case_id))
+                    
+            except Exception as e:
+                logger.error(f"❌ Error in case {case_id}: {e}", exc_info=True)
+                results.append(self._create_fallback_result(case_id))
+                
+            finally:
+                # ✅ CRITICAL: Clean up after EACH case to prevent contamination
+                self._cleanup_temp_files()
         
-        finally:
-            self._cleanup_temp_files()
-
-        logger.info(f"Batch analysis complete: {len(results)} results")
+        logger.info(f"✅ Batch analysis complete: {len(results)} results")
         return results
 
     def save_reasoning_results(self, results: List[Dict[str, Any]], filename: str = None) -> str:
@@ -1952,18 +2158,66 @@ class PrologEngine:
             # Ensure the path is in a format Prolog understands (forward slashes)
             kb_path_str = str(kb_path.resolve()).replace('\\', '/')
 
-            # This tells Prolog: "First, load all our rules from the main knowledge base..."
-            prolog_content = f":- include('{kb_path_str}').\n\n"
-            # "...Then, read all the specific facts for this case."
-            prolog_content += "% Case-specific facts for generation\n"
-            prolog_content += "\n".join(facts)
+            # ===== START FIX =====
+            # Get all necessary discontiguous directives
+            directives = self._get_discontiguous_directives()  # <-- Use the existing helper
+            directives_str = "\n".join(directives) + "\n\n"
+            # ===== END FIX =====
+
+            # CRITICAL ORDER: Write facts BEFORE loading KB rules!
+            # Step 1: Directives
+            prolog_content = directives_str
+            
+            # Step 2: Write all case-specific facts FIRST
+            prolog_content += "% Case-specific facts (MUST come before KB load)\n"
+            grouped_facts = self.group_facts_by_predicate(facts)
+            
+            # DEBUG: Log facts generation
+            logger.info(f"🔍 DEBUG: Received {len(facts)} facts for temp file")
+            logger.info(f"🔍 DEBUG: Grouped into {len(grouped_facts)} facts after grouping")
+            if len(facts) > 0:
+                logger.info(f"🔍 DEBUG: First 5 input facts: {facts[:5]}")
+                logger.info(f"🔍 DEBUG: First 5 grouped facts: {grouped_facts[:5]}")
+            
+            prolog_content += "\n".join(grouped_facts)
+            prolog_content += "\n\n"
+            
+            # Step 3: Load knowledge base rules AFTER facts are defined
+            prolog_content += f"% Load knowledge base rules (facts are now available)\n"
+            prolog_content += f":- include('{kb_path_str}').\n\n"
 
             # Now, write this combined prolog_content to your temporary file
-            temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.pl', delete=False, encoding='utf-8')
+            unique_suffix = f"_{int(time.time())}_{os.getpid()}.pl"
+            temp_file = tempfile.NamedTemporaryFile(
+                mode='w', 
+                suffix=unique_suffix, 
+                delete=False,
+                prefix='hybex_prolog_',
+                encoding='utf-8'
+            )
             self.temp_files.append(temp_file.name) # Track for cleanup
             
             temp_file.write(prolog_content)
             temp_file.close()
+            
+            # DEBUG: Log temp file creation and verify contents
+            logger.info(f"🔍 DEBUG: Created temp file: {temp_file.name}")
+            logger.info(f"🔍 DEBUG: Temp file size: {os.path.getsize(temp_file.name)} bytes")
+            logger.info(f"🔍 DEBUG: Content length: {len(prolog_content)} chars")
+            
+            # Verify what was actually written
+            with open(temp_file.name, 'r', encoding='utf-8') as verify:
+                written_content = verify.read()
+                has_no_income = 'no_income(' in written_content
+                has_has_income = 'has_income(' in written_content
+                logger.info(f"🔍 DEBUG: Temp file contains no_income: {has_no_income}")
+                logger.info(f"🔍 DEBUG: Temp file contains has_income: {has_has_income}")
+                if not has_no_income and not has_has_income:
+                    logger.error("❌ CRITICAL: No income facts found in written temp file!")
+                    logger.error(f"First 500 chars of temp file:\n{written_content[:500]}")
+            
+            # Optional: Add debug logging to see the start of the generated file
+            logger.debug(f"Generated Prolog file {temp_file.name} with {len(directives)} discontiguous directives.")
             
             return temp_file.name
         except Exception as e:

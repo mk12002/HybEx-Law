@@ -463,7 +463,7 @@ class TrainingOrchestrator:
         # Collect cases and track missing entities WITHOUT individual warnings
         for sample in test_samples:
             if 'extracted_entities' in sample and sample['extracted_entities']:
-                cases_for_prolog_batch.append(sample['extracted_entities'])
+                cases_for_prolog_batch.append(sample)  # ✅ FIX: Send FULL sample with sample_id
             else:
                 missing_entities_count += 1
                 # Extract on the fly silently
@@ -472,10 +472,11 @@ class TrainingOrchestrator:
                         sample.get('query', '')
                     )
                     sample['extracted_entities'] = extracted
-                    cases_for_prolog_batch.append(extracted)
+                    cases_for_prolog_batch.append(sample)  # ✅ FIX: Send FULL sample
                 except Exception as e:
                     logger.error(f"Failed to extract entities for {sample.get('sample_id')}: {e}")
-                    cases_for_prolog_batch.append({})
+                    # Still append sample even with empty entities
+                    cases_for_prolog_batch.append(sample)  # ✅ FIX: Send FULL sample
         
         # Single summary log for missing entities
         if missing_entities_count > 0:
@@ -636,6 +637,472 @@ class TrainingOrchestrator:
             self.components['prolog_engine'].cleanup()
         
         logger.info("Cleanup completed")
+
+
+# ============================================================================
+# ADVANCED TRAINING STRATEGY & DATA AUGMENTATION
+# ============================================================================
+
+class AdvancedTrainingStrategy:
+    """
+    Advanced training techniques for better convergence and generalization.
+    
+    Implements:
+    1. Mixup data augmentation - Improves generalization and calibration
+    2. Focal Loss - Focuses on hard examples, reduces over-confidence
+    3. Adversarial training (optional) - Improves robustness
+    4. Gradient clipping - Prevents exploding gradients
+    
+    These techniques are proven to improve model performance, especially
+    on imbalanced datasets and edge cases common in legal domains.
+    """
+    
+    def __init__(self, model, optimizer, train_loader, val_loader, config: Optional[HybExConfig] = None):
+        """
+        Initialize advanced training strategy.
+        
+        Args:
+            model: The neural model to train
+            optimizer: Optimizer instance
+            train_loader: Training data loader
+            val_loader: Validation data loader
+            config: Optional HybExConfig for customization
+        """
+        self.model = model
+        self.optimizer = optimizer
+        self.train_loader = train_loader
+        self.val_loader = val_loader
+        self.config = config
+        
+        # Training techniques (can be configured)
+        self.use_mixup = True
+        self.use_focal_loss = True
+        self.use_adversarial = False  # Optional: adversarial training (computationally expensive)
+        self.gradient_clip_value = 1.0
+        
+        # Hyperparameters
+        self.mixup_alpha = 0.2
+        self.focal_alpha = 0.25
+        self.focal_gamma = 2.0
+        
+        logger.info(f"AdvancedTrainingStrategy initialized - Mixup: {self.use_mixup}, "
+                   f"Focal Loss: {self.use_focal_loss}, Adversarial: {self.use_adversarial}")
+    
+    def mixup_data(self, x: torch.Tensor, y: torch.Tensor, alpha: float = 0.2) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, float]:
+        """
+        Mixup data augmentation: mix two samples.
+        
+        Mixup improves generalization by training on convex combinations of examples.
+        It also improves calibration (confidence alignment with accuracy).
+        
+        Reference: Zhang et al. "mixup: Beyond Empirical Risk Minimization" (2018)
+        
+        Args:
+            x: Input tensor [batch_size, ...]
+            y: Target tensor [batch_size]
+            alpha: Beta distribution parameter (typical: 0.2)
+        
+        Returns:
+            mixed_x: Mixed input tensor
+            y_a: First set of targets
+            y_b: Second set of targets (shuffled)
+            lam: Mixing coefficient (lambda)
+        """
+        if alpha > 0:
+            lam = np.random.beta(alpha, alpha)
+        else:
+            lam = 1.0
+        
+        batch_size = x.size(0)
+        index = torch.randperm(batch_size).to(x.device)
+        
+        # Mix inputs: x_mixed = λ * x_a + (1-λ) * x_b
+        mixed_x = lam * x + (1 - lam) * x[index]
+        y_a, y_b = y, y[index]
+        
+        return mixed_x, y_a, y_b, lam
+    
+    def focal_loss(self, logits: torch.Tensor, targets: torch.Tensor, 
+                   alpha: float = 0.25, gamma: float = 2.0) -> torch.Tensor:
+        """
+        Focal Loss: Focus training on hard examples.
+        
+        Focal Loss reduces the loss contribution of easy examples and focuses
+        on hard, misclassified examples. This is especially useful for imbalanced
+        datasets where the model might become over-confident on easy examples.
+        
+        Reference: Lin et al. "Focal Loss for Dense Object Detection" (2017)
+        
+        Formula: FL(p_t) = -α * (1 - p_t)^γ * log(p_t)
+        
+        Args:
+            logits: Model predictions [batch_size, num_classes]
+            targets: Ground truth labels [batch_size]
+            alpha: Weighting factor (typical: 0.25)
+            gamma: Focusing parameter (typical: 2.0)
+                   - γ=0: Focal Loss = Cross Entropy
+                   - γ>0: Down-weights easy examples
+        
+        Returns:
+            Focal loss value
+        """
+        # Compute cross-entropy loss without reduction
+        ce_loss = torch.nn.functional.cross_entropy(logits, targets, reduction='none')
+        
+        # Compute probability of true class: p_t = exp(-CE_loss)
+        pt = torch.exp(-ce_loss)
+        
+        # Apply focal term: α * (1 - p_t)^γ
+        focal_term = alpha * (1 - pt) ** gamma
+        
+        # Final focal loss
+        focal_loss = focal_term * ce_loss
+        
+        return focal_loss.mean()
+    
+    def train_epoch_with_techniques(self, epoch: int) -> Dict[str, float]:
+        """
+        Train one epoch with advanced techniques.
+        
+        Applies mixup augmentation and focal loss during training.
+        
+        Args:
+            epoch: Current epoch number
+        
+        Returns:
+            Dict with training metrics (loss, accuracy, etc.)
+        """
+        self.model.train()
+        total_loss = 0
+        correct_predictions = 0
+        total_samples = 0
+        
+        progress_bar = tqdm(self.train_loader, desc=f"Epoch {epoch}")
+        
+        for batch_idx, batch in enumerate(progress_bar):
+            # Extract batch data
+            input_ids = batch['input_ids'].to(self.model.device if hasattr(self.model, 'device') else 'cuda' if torch.cuda.is_available() else 'cpu')
+            attention_mask = batch['attention_mask'].to(input_ids.device)
+            labels = batch['labels'].to(input_ids.device)
+            
+            # Apply mixup (optional, with 50% probability)
+            if self.use_mixup and np.random.rand() > 0.5:
+                input_ids, labels_a, labels_b, lam = self.mixup_data(
+                    input_ids, labels, alpha=self.mixup_alpha
+                )
+                
+                # Forward pass
+                outputs = self.model(input_ids, attention_mask)
+                
+                # Handle different model output formats
+                if isinstance(outputs, tuple):
+                    logits = outputs[0]
+                else:
+                    logits = outputs
+                
+                # Compute mixed loss: λ * Loss(y_a) + (1-λ) * Loss(y_b)
+                if self.use_focal_loss:
+                    loss = (lam * self.focal_loss(logits, labels_a, self.focal_alpha, self.focal_gamma) +
+                           (1 - lam) * self.focal_loss(logits, labels_b, self.focal_alpha, self.focal_gamma))
+                else:
+                    loss = (lam * torch.nn.functional.cross_entropy(logits, labels_a) +
+                           (1 - lam) * torch.nn.functional.cross_entropy(logits, labels_b))
+                
+                # For accuracy calculation with mixup, use the dominant label
+                _, predicted = torch.max(logits, 1)
+                correct_predictions += (lam * (predicted == labels_a).sum().item() + 
+                                       (1 - lam) * (predicted == labels_b).sum().item())
+            else:
+                # Normal forward pass (no mixup)
+                outputs = self.model(input_ids, attention_mask)
+                
+                # Handle different model output formats
+                if isinstance(outputs, tuple):
+                    logits = outputs[0]
+                else:
+                    logits = outputs
+                
+                # Compute loss
+                if self.use_focal_loss:
+                    loss = self.focal_loss(logits, labels, self.focal_alpha, self.focal_gamma)
+                else:
+                    loss = torch.nn.functional.cross_entropy(logits, labels)
+                
+                # Calculate accuracy
+                _, predicted = torch.max(logits, 1)
+                correct_predictions += (predicted == labels).sum().item()
+            
+            total_samples += labels.size(0)
+            
+            # Backward pass
+            self.optimizer.zero_grad()
+            loss.backward()
+            
+            # Gradient clipping (prevents exploding gradients)
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip_value)
+            
+            # Optimizer step
+            self.optimizer.step()
+            
+            # Track loss
+            total_loss += loss.item()
+            
+            # Update progress bar
+            progress_bar.set_postfix({
+                'loss': f'{loss.item():.4f}',
+                'avg_loss': f'{total_loss / (batch_idx + 1):.4f}'
+            })
+        
+        # Calculate epoch metrics
+        avg_loss = total_loss / len(self.train_loader)
+        accuracy = correct_predictions / total_samples
+        
+        return {
+            'loss': avg_loss,
+            'accuracy': accuracy,
+            'total_samples': total_samples
+        }
+    
+    def validate(self) -> Dict[str, float]:
+        """
+        Validate model on validation set.
+        
+        Returns:
+            Dict with validation metrics
+        """
+        self.model.eval()
+        total_loss = 0
+        correct_predictions = 0
+        total_samples = 0
+        
+        with torch.no_grad():
+            for batch in self.val_loader:
+                input_ids = batch['input_ids'].to(self.model.device if hasattr(self.model, 'device') else 'cuda' if torch.cuda.is_available() else 'cpu')
+                attention_mask = batch['attention_mask'].to(input_ids.device)
+                labels = batch['labels'].to(input_ids.device)
+                
+                # Forward pass
+                outputs = self.model(input_ids, attention_mask)
+                
+                # Handle different model output formats
+                if isinstance(outputs, tuple):
+                    logits = outputs[0]
+                else:
+                    logits = outputs
+                
+                # Compute loss
+                loss = torch.nn.functional.cross_entropy(logits, labels)
+                total_loss += loss.item()
+                
+                # Calculate accuracy
+                _, predicted = torch.max(logits, 1)
+                correct_predictions += (predicted == labels).sum().item()
+                total_samples += labels.size(0)
+        
+        avg_loss = total_loss / len(self.val_loader)
+        accuracy = correct_predictions / total_samples
+        
+        return {
+            'loss': avg_loss,
+            'accuracy': accuracy,
+            'total_samples': total_samples
+        }
+
+
+class DataAugmenter:
+    """
+    Augment training data with synthetic variations.
+    
+    Provides multiple augmentation strategies:
+    1. Paraphrasing - Generate semantic variations
+    2. Noise injection - Add realistic typos and errors
+    3. Back-translation - Translate to another language and back (if available)
+    
+    These augmentations help models generalize better and handle noisy inputs.
+    """
+    
+    @staticmethod
+    def paraphrase_query(query: str) -> List[str]:
+        """
+        Generate paraphrased versions of query.
+        
+        Uses rule-based replacements to create semantic variations.
+        For production, consider using T5, BART, or GPT-based paraphrasing.
+        
+        Args:
+            query: Original query text
+        
+        Returns:
+            List of paraphrased variations (up to 3, including original)
+        """
+        variations = [query]  # Always include original
+        
+        # Define common phrase replacements
+        replacements = {
+            'I am': ['I\'m', 'I am currently', 'I happen to be'],
+            'I have': ['I\'ve', 'I have got', 'I possess'],
+            'do not': ['don\'t', 'do not', 'cannot'],
+            'cannot': ['can\'t', 'cannot', 'am unable to'],
+            'legal aid': ['free legal help', 'pro bono legal services', 'legal assistance', 'legal aid'],
+            'eligible': ['qualify', 'eligible', 'entitled', 'qualify for'],
+            'income': ['salary', 'earnings', 'income', 'wages'],
+            'fired': ['dismissed', 'terminated', 'fired', 'let go'],
+            'employer': ['company', 'boss', 'employer', 'workplace'],
+            'help': ['assistance', 'help', 'support', 'aid'],
+            'need': ['require', 'need', 'must have'],
+        }
+        
+        # Generate variations by replacing phrases
+        for original, options in replacements.items():
+            if original.lower() in query.lower():
+                for replacement in options:
+                    if replacement.lower() != original.lower():
+                        # Case-insensitive replacement
+                        import re
+                        pattern = re.compile(re.escape(original), re.IGNORECASE)
+                        new_query = pattern.sub(replacement, query, count=1)
+                        if new_query not in variations:
+                            variations.append(new_query)
+                            if len(variations) >= 3:
+                                return variations[:3]
+        
+        return variations[:3]  # Return up to 3 variations
+    
+    @staticmethod
+    def add_noise(query: str, noise_level: float = 0.1) -> str:
+        """
+        Add realistic noise (typos, missing words) to query.
+        
+        Simulates real-world user input with errors. This helps models
+        become robust to typos and informal language.
+        
+        Noise operations:
+        - Character swaps (typos)
+        - Word duplication (stuttering)
+        - Word removal (missing words)
+        
+        Args:
+            query: Original query text
+            noise_level: Proportion of words to modify (0.0 to 1.0)
+        
+        Returns:
+            Noisy version of query
+        """
+        import random
+        
+        words = query.split()
+        if len(words) == 0:
+            return query
+        
+        # Calculate number of changes
+        num_changes = max(1, int(len(words) * noise_level))
+        
+        for _ in range(num_changes):
+            if len(words) == 0:
+                break
+            
+            idx = random.randint(0, len(words) - 1)
+            
+            # Random operation
+            op = random.choice(['swap', 'duplicate', 'remove'])
+            
+            if op == 'swap' and len(words[idx]) > 2:
+                # Swap two adjacent characters (typo)
+                pos = random.randint(0, len(words[idx]) - 2)
+                word_list = list(words[idx])
+                word_list[pos], word_list[pos + 1] = word_list[pos + 1], word_list[pos]
+                words[idx] = ''.join(word_list)
+            
+            elif op == 'duplicate' and idx < len(words) - 1:
+                # Duplicate a word (stuttering)
+                words.insert(idx + 1, words[idx])
+            
+            elif op == 'remove' and len(words) > 5:
+                # Remove a word (only if query is long enough)
+                words.pop(idx)
+        
+        return ' '.join(words)
+    
+    @staticmethod
+    def augment_batch(queries: List[str], augmentation_factor: int = 2) -> List[str]:
+        """
+        Augment a batch of queries.
+        
+        Args:
+            queries: List of original queries
+            augmentation_factor: How many augmented versions per query
+        
+        Returns:
+            List containing original + augmented queries
+        """
+        augmented = []
+        
+        for query in queries:
+            # Always include original
+            augmented.append(query)
+            
+            # Add paraphrased versions
+            paraphrases = DataAugmenter.paraphrase_query(query)
+            augmented.extend(paraphrases[1:])  # Skip first (original)
+            
+            # Add noisy version if we need more
+            if len(paraphrases) < augmentation_factor:
+                noisy = DataAugmenter.add_noise(query, noise_level=0.1)
+                augmented.append(noisy)
+        
+        return augmented
+    
+    @staticmethod
+    def create_augmented_dataset(samples: List[Dict[str, Any]], 
+                                 augmentation_factor: int = 2) -> List[Dict[str, Any]]:
+        """
+        Create augmented dataset from original samples.
+        
+        Args:
+            samples: List of sample dictionaries with 'query' field
+            augmentation_factor: How many augmented versions per sample
+        
+        Returns:
+            List of augmented samples (original + augmented)
+        """
+        augmented_samples = []
+        
+        logger.info(f"Augmenting {len(samples)} samples with factor {augmentation_factor}")
+        
+        for sample in tqdm(samples, desc="Augmenting dataset"):
+            if 'query' not in sample:
+                augmented_samples.append(sample)
+                continue
+            
+            original_query = sample['query']
+            
+            # Add original sample
+            augmented_samples.append(sample)
+            
+            # Generate augmented versions
+            for i in range(augmentation_factor - 1):
+                augmented_sample = sample.copy()
+                
+                # Alternate between paraphrasing and noise
+                if i % 2 == 0:
+                    paraphrases = DataAugmenter.paraphrase_query(original_query)
+                    if len(paraphrases) > 1:
+                        augmented_sample['query'] = paraphrases[1]
+                    else:
+                        augmented_sample['query'] = original_query
+                else:
+                    augmented_sample['query'] = DataAugmenter.add_noise(original_query, 0.1)
+                
+                # Mark as augmented
+                augmented_sample['is_augmented'] = True
+                augmented_sample['augmentation_method'] = 'paraphrase' if i % 2 == 0 else 'noise'
+                
+                augmented_samples.append(augmented_sample)
+        
+        logger.info(f"Created {len(augmented_samples)} samples from {len(samples)} originals")
+        
+        return augmented_samples
+
 
 def main():
     """Main entry point for training pipeline"""
