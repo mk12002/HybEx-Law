@@ -54,6 +54,53 @@ class DomainClassifier(nn.Module):
         logits = self.classifier(pooled_output)
         return {'logits': logits}
 
+class DomainToEligibilityWrapper(nn.Module):
+    """
+    Wrapper to use Domain Classifier for eligibility prediction
+    Uses domain confidence as eligibility proxy
+    """
+    def __init__(self, domain_classifier, config):
+        super().__init__()
+        self.domain_classifier = domain_classifier
+        self.config = config
+        # ✅ FIX: Get output dimension from classifier's last layer
+        if hasattr(domain_classifier, 'classifier'):
+            input_dim = domain_classifier.classifier[-1].out_features
+        elif hasattr(domain_classifier, 'output_layer'):
+            input_dim = domain_classifier.output_layer.out_features
+        else:
+            # Fallback: inspect model structure
+            try:
+                dummy_input = torch.randn(1, 512).to(next(domain_classifier.parameters()).device)
+                dummy_output = domain_classifier(
+                    input_ids=torch.ones(1, 512, dtype=torch.long).to(dummy_input.device),
+                    attention_mask=torch.ones(1, 512, dtype=torch.long).to(dummy_input.device)
+                )
+                if isinstance(dummy_output, dict):
+                    input_dim = dummy_output['logits'].shape[-1]
+                else:
+                    input_dim = dummy_output.shape[-1]
+            except:
+                logger.warning("Could not infer domain classifier output dim, using 7")
+                input_dim = 7
+        # ✅ Eligibility head (must be trained separately!)
+        self.eligibility_head = nn.Sequential(
+            nn.Linear(input_dim, 64),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(64, 2)  # Binary eligibility
+        )
+
+    def forward(self, input_ids, attention_mask):
+        # Get domain predictions (frozen)
+        with torch.no_grad():
+            domain_logits = self.domain_classifier(input_ids, attention_mask)
+            if isinstance(domain_logits, dict):
+                domain_logits = domain_logits['logits']
+        # Map to eligibility
+        eligibility_logits = self.eligibility_head(domain_logits)
+        return {'logits': eligibility_logits}
+
 class EligibilityPredictor(nn.Module):
     """Binary classification model for legal aid eligibility."""
     def __init__(self, config: HybExConfig):
@@ -64,12 +111,65 @@ class EligibilityPredictor(nn.Module):
         self.dropout = nn.Dropout(model_config['dropout_prob'])
         self.classifier = nn.Linear(self.base_model.config.hidden_size, 1) # Binary classification
 
-    def forward(self, input_ids, attention_mask):
+    def forward(self, input_ids, attention_mask, return_dict=False):  # ← ADD return_dict param
         outputs = self.base_model(input_ids=input_ids, attention_mask=attention_mask)
         pooled_output = outputs.last_hidden_state[:, 0] # CLS token output
         pooled_output = self.dropout(pooled_output)
-        logits = self.classifier(pooled_output)
-        return {'logits': logits.squeeze(-1)} # Squeeze for BCEWithLogitsLoss
+        logits = self.classifier(pooled_output).squeeze(-1)
+        
+        if return_dict:
+            return {'logits': logits}
+        return logits
+
+class EnhancedLegalBERT(nn.Module):
+    """
+    Multi-task Legal BERT model
+    Outputs: domain classification + eligibility prediction
+    """
+    def __init__(self, config: HybExConfig):
+        super().__init__()
+        self.config = config
+        
+        # Load base BERT
+        self.base_model = AutoModel.from_pretrained(config.MODEL_CONFIG['base_model'])
+        hidden_size = self.base_model.config.hidden_size
+        
+        # Dropout
+        self.dropout = nn.Dropout(config.MODEL_CONFIG.get('dropout', 0.3))
+        
+        # Domain classification head (multi-label)
+        self.domain_classifier = nn.Sequential(
+            nn.Linear(hidden_size, 256),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(256, len(config.DOMAINS))  # Output: [batch, num_domains]
+        )
+        
+        # Eligibility classification head (binary)
+        self.eligibility_classifier = nn.Sequential(
+            nn.Linear(hidden_size, 128),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(128, 2)  # Output: [batch, 2] for binary classification
+        )
+    
+    def forward(self, input_ids, attention_mask, return_dict=True):
+        # Get BERT outputs
+        outputs = self.base_model(input_ids=input_ids, attention_mask=attention_mask)
+        pooled_output = outputs.last_hidden_state[:, 0]  # CLS token
+        pooled_output = self.dropout(pooled_output)
+        
+        # Get predictions from both heads
+        domain_logits = self.domain_classifier(pooled_output)
+        eligibility_logits = self.eligibility_classifier(pooled_output)
+        
+        if return_dict:
+            return {
+                'domain_logits': domain_logits,
+                'eligibility_logits': eligibility_logits,
+                'logits': eligibility_logits  # Default to eligibility for compatibility
+            }
+        return eligibility_logits  # For backward compatibility
 
 class LegalDataset(Dataset):
     """PyTorch Dataset for legal text processing"""

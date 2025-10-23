@@ -538,6 +538,91 @@ class KnowledgeGraphEngine:
         logger.info("✅ GNN training complete")
         return {'status': 'success', 'best_val_f1': best_val_f1}
     
+    def batch_predict_eligibility(self, entities_list: List[Dict], return_probabilities: bool = False) -> List:
+        """
+        Batch predict eligibility for multiple samples using GNN
+        
+        Args:
+            entities_list: List of entity dictionaries
+            return_probabilities: If True, return probabilities; else return binary predictions
+        
+        Returns:
+            List of predictions (0/1) or probabilities
+        """
+        if not hasattr(self, 'model') or self.model is None:
+            logger.warning("GNN model not loaded. Loading from checkpoint...")
+            self.load_gnn_model()
+        
+        self.model.eval()
+        predictions = []
+        
+        with torch.no_grad():
+            for entities in entities_list:
+                try:
+                    # Create graph for this sample
+                    graph_data = self.create_case_graph(entities, label=0)  # Dummy label
+                    
+                    # Move to device
+                    x = graph_data.x.to(self.device)
+                    edge_index = graph_data.edge_index.to(self.device)
+                    batch = torch.zeros(x.size(0), dtype=torch.long, device=self.device)
+                    
+                    # Forward pass
+                    node_emb = self.model(graph_data.to(self.device))
+                    graph_emb = global_mean_pool(node_emb, batch)
+                    logits = self.model.readout(graph_emb)
+                    
+                    if return_probabilities:
+                        probs = torch.softmax(logits, dim=1)
+                        predictions.append(probs[0, 1].item())  # Probability of class 1
+                    else:
+                        pred = torch.argmax(logits, dim=1).item()
+                        predictions.append(pred)
+                
+                except Exception as e:
+                    logger.warning(f"GNN prediction failed for sample: {e}")
+                    predictions.append(0)  # Conservative fallback
+        
+        return predictions
+    
+    def load_gnn_model(self):
+        """Load trained GNN model from checkpoint"""
+        # ✅ Use centralized config path (correct filename: gnn_model.pt)
+        model_path = self.config.GNN_MODEL_PATH
+        if not model_path.exists():
+            raise FileNotFoundError(f"GNN model not found at {model_path}")
+        
+        # Load checkpoint
+        checkpoint = torch.load(model_path, map_location=self.device)
+        
+        # Get feature dimension
+        if 'feature_dim' in checkpoint:
+            input_dim = checkpoint['feature_dim']
+        elif hasattr(self, 'feature_dim') and self.feature_dim:
+            input_dim = self.feature_dim
+        else:
+            # Infer from first layer weight shape
+            try:
+                first_layer_key = [k for k in checkpoint['model_state_dict'].keys() if 'conv1' in k and 'weight' in k][0]
+                input_dim = checkpoint['model_state_dict'][first_layer_key].shape[1]
+                logger.info(f"Inferred input_dim={input_dim} from model weights")
+            except Exception as e:
+                logger.warning(f"Could not infer input_dim from model weights: {e}")
+                input_dim = 128  # Final fallback
+        
+        # ✅ Use module-level LegalGAT class (NOT redefined!)
+        self.model = LegalGAT(
+            num_node_features=input_dim,
+            num_classes=2,
+            hidden_channels=256,
+            heads=4
+        ).to(self.device)
+        
+        self.model.load_state_dict(checkpoint['model_state_dict'])
+        self.model.eval()
+        self.feature_dim = input_dim  # Cache for future use
+        logger.info(f"✅ Loaded GNN model from {model_path} (input_dim={input_dim})")
+    
     # FIX #6: Integration methods (NEW - was completely missing)
     def get_case_embedding(self, entities: Dict) -> torch.Tensor:
         """Get GNN embedding with error handling"""
@@ -601,9 +686,17 @@ class KnowledgeGraphEngine:
         self.node_to_idx = checkpoint['node_to_idx']
         self.idx_to_node = checkpoint['idx_to_node']
         self.feature_dim = checkpoint['feature_dim']
-        self.model = LegalGAT(self.feature_dim, 2, 128, 8).to(self.device)
+        
+        # ✅ CORRECTED: Match training architecture (256 hidden, 4 heads)
+        self.model = LegalGAT(
+            self.feature_dim, 
+            2,               # num_classes
+            256,             # hidden_channels - MUST MATCH TRAINING!
+            4                # heads - MUST MATCH TRAINING!
+        ).to(self.device)
+        
         self.model.load_state_dict(checkpoint['model_state_dict'])
-        logger.info(f"✅ Model loaded from {path}")
+        logger.info(f"✅ Model loaded from {path} with architecture (256, 4)")
     
     def get_graph_stats(self) -> Dict[str, Any]:
         """Get statistics about the knowledge graph"""

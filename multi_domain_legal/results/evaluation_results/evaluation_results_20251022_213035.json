@@ -1,0 +1,3612 @@
+{
+  "timestamp": "2025-10-22T21:30:35.220135",
+  "overall_status": "Failed",
+  "neural_metrics": {
+    "domain_classifier": {
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "loss": 0.002607866521110314,
+      "classification_report": {
+        "0": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 529.0
+        },
+        "1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 112.0
+        },
+        "2": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 461.0
+        },
+        "3": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 160.0
+        },
+        "4": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 171.0
+        },
+        "micro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1433.0
+        },
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1433.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1433.0
+        },
+        "samples avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 1433.0
+        }
+      },
+      "confusion_matrix": null
+    },
+    "eligibility_predictor": {
+      "accuracy": 0.7920446615491975,
+      "f1_score": 0.8834115805946792,
+      "precision": 0.80355871886121,
+      "recall": 0.9808861859252823,
+      "loss": 0.43810088390294,
+      "classification_report": {
+        "0.0": {
+          "precision": 0.21428571428571427,
+          "recall": 0.02127659574468085,
+          "f1-score": 0.03870967741935484,
+          "support": 282.0
+        },
+        "1.0": {
+          "precision": 0.80355871886121,
+          "recall": 0.9808861859252823,
+          "f1-score": 0.8834115805946792,
+          "support": 1151.0
+        },
+        "accuracy": 0.7920446615491975,
+        "macro avg": {
+          "precision": 0.5089222165734621,
+          "recall": 0.5010813908349816,
+          "f1-score": 0.461060629007017,
+          "support": 1433.0
+        },
+        "weighted avg": {
+          "precision": 0.6875957130759415,
+          "recall": 0.7920446615491975,
+          "f1-score": 0.7171827343312868,
+          "support": 1433.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          6,
+          276
+        ],
+        [
+          22,
+          1129
+        ]
+      ]
+    }
+  },
+  "prolog_metrics": {
+    "accuracy": 0.7997208653175157,
+    "f1_score": 0.8887165568049632,
+    "precision": 0.7997208653175157,
+    "recall": 1.0,
+    "classification_report": {
+      "False": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 287.0
+      },
+      "True": {
+        "precision": 0.7997208653175157,
+        "recall": 1.0,
+        "f1-score": 0.8887165568049632,
+        "support": 1146.0
+      },
+      "accuracy": 0.7997208653175157,
+      "macro avg": {
+        "precision": 0.39986043265875787,
+        "recall": 0.5,
+        "f1-score": 0.4443582784024816,
+        "support": 1433.0
+      },
+      "weighted avg": {
+        "precision": 0.6395534624241961,
+        "recall": 0.7997208653175157,
+        "f1-score": 0.7107251738300683,
+        "support": 1433.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        0,
+        287
+      ],
+      [
+        0,
+        1146
+      ]
+    ],
+    "evaluated_samples": 1433
+  },
+  "hybrid_metrics": {
+    "accuracy": 0.8,
+    "f1_score": 0.8888888888888888,
+    "precision": 0.8,
+    "recall": 1.0,
+    "classification_report": {
+      "False": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 200.0
+      },
+      "True": {
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1-score": 0.8888888888888888,
+        "support": 800.0
+      },
+      "accuracy": 0.8,
+      "macro avg": {
+        "precision": 0.4,
+        "recall": 0.5,
+        "f1-score": 0.4444444444444444,
+        "support": 1000.0
+      },
+      "weighted avg": {
+        "precision": 0.64,
+        "recall": 0.8,
+        "f1-score": 0.7111111111111111,
+        "support": 1000.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        0,
+        200
+      ],
+      [
+        0,
+        800
+      ]
+    ],
+    "evaluated_samples": 1000
+  },
+  "component_agreement": {
+    "neural_prolog_agreement_rate": 0.979,
+    "total_hybrid_samples": 1000,
+    "neural_accuracy": 0.787,
+    "prolog_accuracy": 0.8
+  },
+  "error_analysis": [
+    {
+      "sample_id": "sample_3949",
+      "query": "During ATM transaction, insurance claim rejected without proper reason. I have suffered loss of Rs 500000. Can I file RBI complaint along with consumer protection case?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9555778503417969,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6928",
+      "query": "While working as Uber/Ola driver, promised incentives and benefits are not being provided. Are collective bargaining rights available to contractual workers? under labor laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5741784572601318,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_28",
+      "query": "I am a divorced but still facing harassment from ex-husband and dowry harassment and acid attack threats being given. How to get protection order under Domestic Violence Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5873157978057861,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4991",
+      "query": "While working in chemical factory during shift work, machinery maintenance is poor and worker safety compromised. Can I file case in Labor Court for unsafe working conditions? under Factory Act and safety laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6877931952476501,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1147",
+      "query": "After father's death, joint family property not giving daughters equal share. Can daughters claim equal share in ancestral property according to Hindu Succession Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8909049034118652,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1136",
+      "query": "I belong to Scheduled Caste and untouchability was practiced in public place and entry was denied. Can I file case under SC/ST Prevention of Atrocities Act? under SC/ST Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9531192183494568,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_334",
+      "query": "I am daily wage laborer and have been working in construction company for 2 years. refusing bonus payment despite company profits. Can I file unfair dismissal case in Labor Court?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.614452600479126,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_231",
+      "query": "While working as part-time employee at retail store, platform commission unexpectedly increased without consent. Can I demand social security benefits? under labor laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6417272686958313,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5438",
+      "query": "During net banking usage, bank is deducting extra charges without intimation. I have suffered loss of Rs 500000. Can I claim punitive damages along with compensation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5957189202308655,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_8024",
+      "query": "I am a person from economically weaker section earning Rs. 28000 per month. Government office is demanding bribe which violates my rights. I need to know my options for free legal aid under Legal Services Authorities Act? I live in urban area.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5771477222442627,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_613",
+      "query": "During road/infrastructure safety negligence, police brutality and torture occurred in custody. I need court orders for environmental protection?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7435018420219421,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_766",
+      "query": "I bought mobile phone from Amazon for Rs 200000. Wrong model delivered and not refunding price difference. Do I need lawyer or can file myself under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.916225016117096,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1845",
+      "query": "I got married 20 years ago. Husband is having extramarital affair and doesn't come home. What should I do for judicial separation? My parents are supporting but they also have financial problems",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5672452449798584,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_466",
+      "query": "I booked 2 BHK flat from government housing board by paying Rs 10 lakh advance. Amenities promised in brochure are not being provided. What is procedure to recover invested amount",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5973052978515625,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6374",
+      "query": "I am a person from economically weaker section earning Rs. 30000 per month. Insurance company is not settling my claim properly. I need to know my options for free legal aid under Legal Services Authorities Act? I live in metro city.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6176906824111938,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1648",
+      "query": "During hospital treatment refusal, contaminated water supply caused serious health issues. Can mandamus writ be issued for healthcare right enforcement?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7515038847923279,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2",
+      "query": "I bought furniture set from Snapdeal for Rs 25000. Fake/duplicate product sent at original price. Should I approach district forum or state commission under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6508527398109436,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2250",
+      "query": "I belong to Scheduled Tribe community and humiliation occurred during caste certificate verification at government office. Can I demand special court proceeding in atrocity case? under SC/ST Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8258876204490662,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6357",
+      "query": "During home delivery food order, food quality was very bad and unhygienic conditions. Missed office work due to food poisoning. Can multiple victims file complaint collectively?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.956683337688446,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_10589",
+      "query": "I got married 15 years ago. Husband is having extramarital affair and doesn't come home. What should I do for protection order? My parents are supporting but they also have financial problems",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5850246548652649,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1371",
+      "query": "I booked villa from reputed builder by paying Rs 15 lakh advance. Builder demanding extra charges not mentioned in agreement. What is procedure to recover invested amount",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.601242184638977,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_10648",
+      "query": "I filed RTI application about government tender allocation process 2 months ago. incomplete and misleading information was given. Can I file writ petition in High Court for RTI violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8203972578048706,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9487",
+      "query": "I booked plot from local builder by paying Rs 1 crore advance. Project delayed by 3 years without any intimation. Can I claim compensation for delay and harassment",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8166785836219788,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_11338",
+      "query": "After giving speech in public meeting, local authorities banned assembly without proper reason. Can I challenge internet shutdown on constitutional grounds? under Article 19(1)(a) freedom of speech?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.896786093711853,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_7981",
+      "query": "While working in chemical factory during shift work, hazardous chemical exposure causing respiratory problems. Can I file case in Labor Court for unsafe working conditions? under Factory Act and safety laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7048255205154419,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2236",
+      "query": "After father's death, in-laws are not giving me share in property. Can I apply for succession certificate in court according to Hindu Succession Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8432448506355286,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_765",
+      "query": "I booked commercial space from local builder by paying Rs 5 lakh advance. Builder changed approved plan without consent and reduced area. What is procedure to recover invested amount",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6255858540534973,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_7043",
+      "query": "I booked 2 BHK flat from local builder by paying Rs 10 lakh advance. Possession given but occupancy certificate not obtained. I need full refund with interest under RERA",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6661168336868286,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_629",
+      "query": "I bought laptop from Facebook marketplace for Rs 100000. EMI is being deducted but product is faulty and service is poor. Can I do credit card chargeback along with consumer case under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7695322632789612,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4904",
+      "query": "During surgery at private hospital, emergency treatment was delayed for money. I spent Rs 100000. Can I file complaint in Medical Council and consumer case both?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7080125212669373,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2196",
+      "query": "I am permanent employee and have been working in manufacturing unit for 1 year. sudden termination without notice period and due process. I need compensation for Maternity Benefit Act violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9479320645332336,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_11156",
+      "query": "I bought washing machine from Facebook marketplace for Rs 100000. Wrong model delivered and not refunding price difference. Can I file complaint in consumer court under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8112818598747253,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1119",
+      "query": "During treatment at nursing home, I had medicine allergies but doctor didn't check. I spent Rs 50000. Can I file complaint in Medical Council and consumer case both?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7670860886573792,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1920",
+      "query": "During road/infrastructure safety negligence, emergency medical treatment was denied due to lack of money. Can mandamus writ be issued for healthcare right enforcement?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7607721090316772,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1301",
+      "query": "I belong to Scheduled Tribe community and upper caste neighbors used caste slurs and did social boycott. Can I file case under SC/ST Prevention of Atrocities Act? under SC/ST Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6491912007331848,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2244",
+      "query": "During delivery at corporate hospital, emergency treatment was delayed for money. I spent Rs 500000. Can I file complaint in Medical Council and consumer case both?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7132929563522339,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2340",
+      "query": "While working in construction site with heavy machinery work, hazardous chemical exposure causing respiratory problems. Can I file both Pollution Control Board complaint and labor case? under Factory Act and safety laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6721974611282349,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2819",
+      "query": "In broadband internet service service, network problem but company is not resolving complaint. Is class action possible against same service provider?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5892873406410217,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_11141",
+      "query": "I booked commercial space from government housing board by paying Rs 75 lakh advance. Amenities promised in brochure are not being provided. What is procedure to recover invested amount",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.613263726234436,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3582",
+      "query": "I am security guard and have been working in textile factory for 10 years. not paying overtime despite 10-12 hours daily work. Can I file salary recovery case under Payment of Wages Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5205734968185425,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5751",
+      "query": "I am security guard and have been working in manufacturing unit for 15 years. denied maternity/paternity leave against company policy. Can I claim penalty for Industrial Relations Code violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8725499510765076,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3107",
+      "query": "I booked commercial space from cooperative society by paying Rs 10 lakh advance. Construction quality is very poor with major structural defects. How to get project completion timeline enforced",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9204344749450684,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2448",
+      "query": "I am a person from economically weaker section earning Rs. 30000 per month. Builder has cheated me under RERA and I need compensation. I need to know my options for free legal aid under Legal Services Authorities Act? I live in small town.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6375628113746643,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6917",
+      "query": "During wedding hall food, food poisoning occurred and 50 people were hospitalized. Spent Rs 50000 on medical treatment. Can I file criminal case also for food safety violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.747774064540863,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6443",
+      "query": "In religious place of worship management, harassment and legal threats in interfaith marriage. Can I file case in High Court against personal law interference? under Article 25-28 religious freedom?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7337709069252014,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9774",
+      "query": "I got married 20 years ago. In-laws give me mental torture and don't even give food. What should I do for judicial separation? I have 2 small children and I am housewife",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9832707047462463,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5824",
+      "query": "I bought washing machine from Myntra for Rs 50000. Wrong model delivered and not refunding price difference. Should I approach district forum or state commission under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6405685544013977,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1529",
+      "query": "I bought washing machine from Flipkart for Rs 25000. Wrong model delivered and not refunding price difference. Can I file complaint in consumer court under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8473367691040039,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2165",
+      "query": "During wedding hall food, foreign object found in food and teeth got damaged. Stomach problem became permanent. I need punitive damages along with medical expenses recovery?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8143652081489563,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4711",
+      "query": "During ATM transaction, insurance claim rejected without proper reason. I have suffered loss of Rs 100000. Can I file RBI complaint along with consumer protection case?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9522547125816345,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_96",
+      "query": "I booked plot from local builder by paying Rs 10 lakh advance. Project stopped midway and builder is not responding. Can I claim compensation for delay and harassment",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6739893555641174,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_10636",
+      "query": "I bought LED TV from Facebook marketplace for Rs 100000. Fake/duplicate product sent at original price. Can I do credit card chargeback along with consumer case under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7644524574279785,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2624",
+      "query": "During net banking usage, credit card fraud happened but bank says customer fault. I have suffered loss of Rs 500000. Can I file class action suit with multiple victims?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6830272078514099,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_20",
+      "query": "In religious place of worship management, religious conversion is being forced. Can I file criminal case against forced conversion? under Article 25-28 religious freedom?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7106024622917175,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1057",
+      "query": "I booked villa from government housing board by paying Rs 1 crore advance. Possession given but occupancy certificate not obtained. I need full refund with interest under RERA",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7113444805145264,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6544",
+      "query": "I booked 3 BHK apartment from cooperative society by paying Rs 5 lakh advance. Project stopped midway and builder is not responding. Can I claim compensation for delay and harassment",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6113640666007996,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_7636",
+      "query": "I booked villa from government housing board by paying Rs 25 lakh advance. Project delayed by 3 years without any intimation. I need full refund with interest under RERA",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6818926334381104,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4288",
+      "query": "I booked villa from government housing board by paying Rs 10 lakh advance. Amenities promised in brochure are not being provided. What is procedure to recover invested amount",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6049169898033142,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5184",
+      "query": "During credit card payment, insurance claim rejected without proper reason. I have suffered loss of Rs 10 lakh. Can I file class action suit with multiple victims?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9336639046669006,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_8226",
+      "query": "I bought furniture set from Amazon for Rs 75000. EMI is being deducted but product is faulty and service is poor. Can I file complaint in consumer court under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8649486899375916,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9313",
+      "query": "During taking union membership and facing retaliation, management is preventing union formation and giving threats. Can I petition Industrial Relations Court for union recognition? under Trade Union Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7785056233406067,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2198",
+      "query": "I got married 8 years ago. Husband threw me and children out of house without any fault. What should I do for maintenance? My parents are supporting but they also have financial problems",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6217812895774841,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4897",
+      "query": "During organizing strike/protest, union recognition is being denied despite majority membership. Can I apply for protection order against victimization? under Trade Union Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6206451058387756,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1114",
+      "query": "I booked 3 BHK apartment from cooperative society by paying Rs 75 lakh advance. Possession given but occupancy certificate not obtained. How to file complaint with RERA authority",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8296056389808655,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9403",
+      "query": "I am office staff and have been working in IT company for 1 year. refusing bonus payment despite company profits. Can I file salary recovery case under Payment of Wages Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5696426630020142,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_8948",
+      "query": "We are Parsi married under Parsi Marriage and Divorce Act. Husband is alcoholic and has became violent towards me and children. Can we get divorce under our personal law?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7096216678619385,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_74",
+      "query": "In broadband internet service service, tariff plan changed without consent and extra charges applied. Is class action possible against same service provider?",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.4275370240211487,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_382",
+      "query": "During ATM transaction, credit card fraud happened but bank says customer fault. I have suffered loss of Rs 200000. What is procedure for bank license action?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5513287782669067,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_7252",
+      "query": "During treatment at nursing home, I had medicine allergies but doctor didn't check. I spent Rs 50000. How to arrange expert medical opinion for case?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7388172149658203,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_531",
+      "query": "We are Christian married under Parsi Marriage and Divorce Act. Husband is alcoholic and has became violent towards me and children. Can we get divorce under our personal law?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7608550786972046,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_585",
+      "query": "I am a person from economically weaker section earning Rs. 28000 per month. Government office is demanding bribe which violates my rights. I need to know my options for free legal aid under Legal Services Authorities Act? I live in metro city.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5773537755012512,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3510",
+      "query": "After expressing religious/political opinion, media house was pressured to remove content. Can I file habeas corpus writ petition? under Article 19(1)(a) freedom of speech?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6741140484809875,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_741",
+      "query": "During FD/RD maturity, bank is deducting extra charges without intimation. I have suffered loss of Rs 25000. Can I file RBI complaint along with consumer protection case?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7998118996620178,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9797",
+      "query": "I got married 2 years ago. My husband does physical violence and keeps demanding dowry. What should I do for divorce? I am working but salary is low for survival",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9337146282196045,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_685",
+      "query": "I am contractual worker and have been working in retail chain for 10 years. deducting PF and ESI but not contributing. Can I file unfair dismissal case in Labor Court?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6668824553489685,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_180",
+      "query": "During marriage catering service, chemical/pesticide taste was there in food. Had to take emergency treatment for allergic reaction. Can I file criminal case also for food safety violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9574364423751831,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4920",
+      "query": "I booked villa from reputed builder by paying Rs 1 crore advance. Builder changed approved plan without consent and reduced area. How to get project completion timeline enforced",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6465387940406799,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9670",
+      "query": "I bought jewelry from OLX for Rs 15000. No delivery even after 1 month but payment was deducted. Can I do credit card chargeback along with consumer case under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6524158120155334,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5540",
+      "query": "I bought air conditioner from Snapdeal for Rs 50000. Fake/duplicate product sent at original price. Can I file complaint in consumer court under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7880195379257202,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3817",
+      "query": "During credit card payment, credit card fraud happened but bank says customer fault. I have suffered loss of Rs 200000. What is procedure for bank license action?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5437679886817932,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3758",
+      "query": "During ATM transaction, insurance claim rejected without proper reason. I have suffered loss of Rs 50000. What is procedure for bank license action?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8948220610618591,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1225",
+      "query": "During organizing strike/protest, salary deduction and punishment after strike participation. Can I apply for protection order against victimization? under Trade Union Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6575168371200562,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4531",
+      "query": "I am office staff and have been working in manufacturing unit for 6 months. denied maternity/paternity leave against company policy. Can I file unfair dismissal case in Labor Court?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.714274525642395,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_7830",
+      "query": "During insurance policy claim settlement, unauthorized transactions occurred and bank is not accepting liability. I have suffered loss of Rs 50000. Can I file case in Banking Ombudsman and Consumer Court both?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6638553738594055,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_8588",
+      "query": "I am a person from economically weaker section earning Rs. 30000 per month. My landlord is trying to evict me without proper notice under Rent Control Act. I need to know my options for free legal aid under Legal Services Authorities Act? I live in urban area.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5963997840881348,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3628",
+      "query": "I am a in live-in relationship for 3 years and partner financially controls me and doesn't give money. What is provision for maintenance and compensation under Domestic Violence Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.645312488079071,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_484",
+      "query": "During surgery at private hospital, doctor gave wrong diagnosis and did unnecessary surgery. I spent Rs 200000. Can I file complaint in Medical Council and consumer case both?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6679607629776001,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1621",
+      "query": "I am permanent employee and have been working in manufacturing unit for 10 years. not paying overtime despite 10-12 hours daily work. Can I file complaint with Labor Commissioner for wage recovery?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9654321670532227,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2990",
+      "query": "During collective bargaining with management, management is preventing union formation and giving threats. Can I file Labor Court case for unfair labor practices? under Trade Union Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6983718872070312,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5658",
+      "query": "I booked 3 BHK apartment from cooperative society by paying Rs 75 lakh advance. Builder demanding extra charges not mentioned in agreement. How to get project completion timeline enforced",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9039835929870605,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2874",
+      "query": "I belong to Dalit family and humiliation occurred during caste certificate verification at government office. Can I apply for protection order against social boycott? under SC/ST Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6064729690551758,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4185",
+      "query": "I booked 3 BHK apartment from local builder by paying Rs 15 lakh advance. Amenities promised in brochure are not being provided. Can I approach consumer court along with RERA",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.48732778429985046,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_668",
+      "query": "I bought refrigerator from Amazon for Rs 75000. Returned as per return policy but refund not received. Can I do credit card chargeback along with consumer case under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7681484222412109,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_658",
+      "query": "During delivery at corporate hospital, doctor gave wrong diagnosis and did unnecessary surgery. I spent Rs 100000. What is process to cancel hospital license?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5571146607398987,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1897",
+      "query": "I am security guard and have been working in retail chain for 1 year. deducting PF and ESI but not contributing. Can I file complaint with Labor Commissioner for wage recovery?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5720060467720032,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3248",
+      "query": "During forming employees association at office, union leaders are being targeted and victimized. Can I demand conciliation/arbitration for collective bargaining failure? under Trade Union Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8177645802497864,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5141",
+      "query": "During filing complaint at police station, different treatment was given based on religion. Can I file writ petition in High Court? under Article 14 Right to Equality?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7543824911117554,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_10830",
+      "query": "I bought washing machine from OLX for Rs 200000. Returned as per return policy but refund not received. How to claim full refund with compensation under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5651911497116089,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1907",
+      "query": "I am a single parent earning Rs. 30000 per month. I am facing domestic violence and need protection under DV Act 2005. I need to know my options for free legal aid under Legal Services Authorities Act? I live in urban area.",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.4860684275627136,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_488",
+      "query": "During home delivery food order, non-veg item served in vegetarian food. Spent Rs 50000 on medical treatment. Is FSSAI complaint along with civil case possible?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9211248755455017,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6814",
+      "query": "During surgery at private hospital, I had medicine allergies but doctor didn't check. I spent Rs 50000. What is process to cancel hospital license?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6205374598503113,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1634",
+      "query": "During family dinner at restaurant, food poisoning occurred and 50 people were hospitalized. Stomach problem became permanent. Can I file criminal case also for food safety violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7649334669113159,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_218",
+      "query": "During hotel room service, non-veg item served in vegetarian food. Spent Rs 50000 on medical treatment. I need punitive damages along with medical expenses recovery?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8605207204818726,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5503",
+      "query": "During marriage catering service, food poisoning occurred and 50 people were hospitalized. Had to stay admitted in hospital for 1 week. Can I file criminal case also for food safety violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7822945713996887,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_8042",
+      "query": "I bought jewelry from OLX for Rs 35000. Completely different product delivered and they are not accepting return. Do I need lawyer or can file myself under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7419825792312622,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2563",
+      "query": "During privacy violation by government surveillance, contaminated water supply caused serious health issues. Can mandamus writ be issued for healthcare right enforcement?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7783789038658142,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5015",
+      "query": "I got married 20 years ago. My husband does physical violence and keeps demanding dowry. What should I do for maintenance? I am working but salary is low for survival",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9400384426116943,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4684",
+      "query": "During net banking usage, insurance claim rejected without proper reason. I have suffered loss of Rs 25000. Can I file class action suit with multiple victims?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9745149612426758,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5688",
+      "query": "During bank loan processing, credit card fraud happened but bank says customer fault. I have suffered loss of Rs 500000. Can I file class action suit with multiple victims?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7026388645172119,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_10465",
+      "query": "I am office staff and have been working in IT company for 5 years. denied maternity/paternity leave against company policy. Can I file complaint with Labor Commissioner for wage recovery?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7223276495933533,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3258",
+      "query": "In electricity/water bill payment service, unauthorized value added services were activated. Can I claim damages for poor service quality?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.821366012096405,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9096",
+      "query": "I booked 2 BHK flat from local builder by paying Rs 15 lakh advance. Possession given but occupancy certificate not obtained. What is procedure to recover invested amount",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5572566390037537,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5126",
+      "query": "During root canal treatment at dental clinic, I had medicine allergies but doctor didn't check. I spent Rs 10 lakh. How to file medical negligence case in consumer court?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5386039614677429,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4866",
+      "query": "I got married 5 years ago. My husband does physical violence and keeps demanding dowry. What should I do for judicial separation? My parents are supporting but they also have financial problems",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6122292876243591,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4423",
+      "query": "While working as freelance consultant on project work, payment delays and unauthorized deductions are happening. Is remedy available against unfair termination? under labor laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.624805748462677,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6870",
+      "query": "During insurance policy claim settlement, credit card fraud happened but bank says customer fault. I have suffered loss of Rs 10 lakh. What is procedure for bank license action?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5090827941894531,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4313",
+      "query": "While working in food processing unit on production line, factory ventilation system is faulty and causing health problems. Can I claim occupational health hazard compensation? under Factory Act and safety laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6602168083190918,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_10686",
+      "query": "I belong to Scheduled Caste and caste threats and violence were used in land dispute. Can I file case under SC/ST Prevention of Atrocities Act? under SC/ST Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8273169994354248,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2120",
+      "query": "I bought LED TV from Flipkart for Rs 75000. Wrong model delivered and not refunding price difference. Can I file complaint in consumer court under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7517455816268921,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3350",
+      "query": "During family dinner at restaurant, foreign object found in food and teeth got damaged. Spent Rs 50000 on medical treatment. Can multiple victims file complaint collectively?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9426498413085938,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2923",
+      "query": "During eating from street food stall, non-veg item served in vegetarian food. Had to stay admitted in hospital for 1 week. Can I file compensation case in consumer court?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.913291871547699,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5561",
+      "query": "During home delivery food order, chemical/pesticide taste was there in food. Had to take emergency treatment for allergic reaction. Is FSSAI complaint along with civil case possible?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8855444192886353,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1279",
+      "query": "I am a single parent earning Rs. 28000 per month. Police have filed false case against me under IPC sections. I need to know my options for free legal aid under Legal Services Authorities Act? I live in small town.",
+      "true_label": false,
+      "neural_pred": false,
+      "neural_prob": 0.4820266664028168,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": true,
+        "neural_gt": false,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_11020",
+      "query": "During collective bargaining with management, union leaders are being targeted and victimized. Can I demand conciliation/arbitration for collective bargaining failure? under Trade Union Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7499273419380188,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_11595",
+      "query": "I bought furniture set from Flipkart for Rs 150000. Completely different product delivered and they are not accepting return. How to claim full refund with compensation under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5462788939476013,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1562",
+      "query": "I booked 2 BHK flat from cooperative society by paying Rs 50 lakh advance. Project delayed by 3 years without any intimation. How to file complaint with RERA authority",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8566155433654785,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6694",
+      "query": "I bought air conditioner from Facebook marketplace for Rs 200000. Returned as per return policy but refund not received. Do I need lawyer or can file myself under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8282443881034851,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1793",
+      "query": "I bought air conditioner from Flipkart for Rs 15000. No delivery even after 1 month but payment was deducted. Can I do credit card chargeback along with consumer case under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.588679850101471,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9550",
+      "query": "While working in food processing unit on production line, machinery maintenance is poor and worker safety compromised. Can I claim occupational health hazard compensation? under Factory Act and safety laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6850134134292603,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_818",
+      "query": "I filed RTI application about government employee recruitment details 6 months ago. incomplete and misleading information was given. Can I file writ petition in High Court for RTI violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9488534331321716,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_246",
+      "query": "I am security guard and have been working in construction company for 1 year. sudden termination without notice period and due process. I need compensation for Maternity Benefit Act violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7125263214111328,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_11122",
+      "query": "I am office staff and have been working in IT company for 6 months. salary delay for 2-3 months consistently. Can I take separate enforcement action for PF/ESI non-compliance?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5097949504852295,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1770",
+      "query": "I am factory worker and have been working in retail chain for 10 years. denied maternity/paternity leave against company policy. I need compensation for Maternity Benefit Act violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8416049480438232,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2279",
+      "query": "I got married 2 years ago. Husband drinks alcohol, doesn't work, only beats me. What should I do for judicial separation? Husband has property but nothing in my name",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8104074001312256,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3849",
+      "query": "During collective bargaining with management, collective bargaining is being refused and individual negotiations forced. Can I petition Industrial Relations Court for union recognition? under Trade Union Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7202813625335693,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1162",
+      "query": "I am daily wage laborer and have been working in textile factory for 6 months. sudden termination without notice period and due process. Can I take separate enforcement action for PF/ESI non-compliance?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6004396080970764,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1200",
+      "query": "I booked commercial space from government housing board by paying Rs 1 crore advance. Possession given but occupancy certificate not obtained. Can I claim compensation for delay and harassment",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7033300399780273,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_670",
+      "query": "While working in textile mill during machine operation, proper safety equipment not provided and accident occurred. Can I file Factory Inspector complaint for safety violations? under Factory Act and safety laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6328614950180054,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_8244",
+      "query": "I booked villa from government housing board by paying Rs 10 lakh advance. Possession given but occupancy certificate not obtained. Can I claim compensation for delay and harassment",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6825111508369446,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2410",
+      "query": "I got married 5 years ago. In-laws harass for dowry and give death threats. What should I do for cruelty case? My parents are supporting but they also have financial problems",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7130768299102783,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_10685",
+      "query": "During environment pollution, factory pollution caused health problems and government took no action. I need court orders for environmental protection?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6576216816902161,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3256",
+      "query": "We are Christian married under Parsi Marriage and Divorce Act. Found out spouse was already married before our wedding. What are grounds for dissolution of marriage?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6944149732589722,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1911",
+      "query": "During insurance policy claim settlement, bank is deducting extra charges without intimation. I have suffered loss of Rs 25000. Can I file class action suit with multiple victims?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8250662684440613,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1422",
+      "query": "During privacy violation by government surveillance, police brutality and torture occurred in custody. I need court orders for environmental protection?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7320396900177002,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_7712",
+      "query": "During school admission process, different treatment was given based on religion. Can I take punitive action for discrimination? under Article 14 Right to Equality?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7370508313179016,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_544",
+      "query": "I booked 2 BHK flat from cooperative society by paying Rs 50 lakh advance. Construction quality is very poor with major structural defects. How to file complaint with RERA authority",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9663029313087463,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1203",
+      "query": "I got married 15 years ago. In-laws give me mental torture and don't even give food. What should I do for cruelty case? I filed police complaint but they took no action",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6904832124710083,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4639",
+      "query": "In religious practices in educational institution, educational rights were denied to religious minority. Can I take court intervention for minority rights protection? under Article 25-28 religious freedom?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8281485438346863,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1919",
+      "query": "After expressing religious/political opinion, university administration banned student expression. Can I challenge prior restraint in court? under Article 19(1)(a) freedom of speech?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7807970643043518,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9482",
+      "query": "During net banking usage, advance fees taken for loan approval but loan was rejected. I have suffered loss of Rs 25000. Is cyber crime police complaint and consumer case together possible?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7648903727531433,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2162",
+      "query": "During MRI/CT scan at diagnostic center, doctor gave wrong diagnosis and did unnecessary surgery. I spent Rs 100000. What is process to cancel hospital license?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6764354705810547,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_7161",
+      "query": "During treatment at nursing home, doctor gave wrong diagnosis and did unnecessary surgery. I spent Rs 100000. How is compensation amount calculated in medical cases?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7343600988388062,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9177",
+      "query": "I am a divorced but still facing harassment from ex-husband and dowry harassment and acid attack threats being given. What is provision for maintenance and compensation under Domestic Violence Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6388568878173828,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_426",
+      "query": "I filed RTI application about policy formulation and decision-making process 3 months ago. demanded excessive fees for documents. Can I file PIL for transparency violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6512959599494934,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_183",
+      "query": "I filed RTI application about public distribution system functioning 2 months ago. demanded excessive fees for documents. Is it possible to get penalty imposed on PIO?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5239474773406982,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3846",
+      "query": "During net banking usage, bank is deducting extra charges without intimation. I have suffered loss of Rs 200000. Can I claim punitive damages along with compensation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5819454193115234,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3717",
+      "query": "During insurance policy claim settlement, bank is deducting extra charges without intimation. I have suffered loss of Rs 50000. Can I claim punitive damages along with compensation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6647903919219971,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3449",
+      "query": "I belong to Scheduled Tribe community and untouchability was practiced in public place and entry was denied. Can I file civil rights violation case for employment discrimination? under SC/ST Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9429701566696167,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1897",
+      "query": "During ATM transaction, insurance claim rejected without proper reason. I have suffered loss of Rs 50000. Is cyber crime police complaint and consumer case together possible?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9521450996398926,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5363",
+      "query": "I bought LED TV from Amazon for Rs 25000. Fake/duplicate product sent at original price. What is procedure for online transaction fraud under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8734659552574158,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_10218",
+      "query": "I got married 5 years ago. In-laws harass for dowry and give death threats. What should I do for protection order? I have 2 small children and I am housewife",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9843877553939819,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_11168",
+      "query": "During eating from street food stall, expired products were used in cooking. Stomach problem became permanent. Can multiple victims file complaint collectively?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9235633015632629,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1164",
+      "query": "During wedding hall food, non-veg item served in vegetarian food. Stomach problem became permanent. Can I file compensation case in consumer court?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8510212302207947,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_5599",
+      "query": "We are Christian married under Indian Christian Marriage Act. Spouse deserted the matrimonial home 2 years ago. Can we approach family court directly?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7485135793685913,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_10985",
+      "query": "During collective bargaining with management, union leaders are being targeted and victimized. Can I petition Industrial Relations Court for union recognition? under Trade Union Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7843576669692993,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3824",
+      "query": "I bought washing machine from Snapdeal for Rs 150000. Fake/duplicate product sent at original price. How to claim full refund with compensation under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7455273866653442,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2756",
+      "query": "I am a person from economically weaker section earning Rs. 28000 per month. Insurance company is not settling my claim properly. I need to know my options for free legal aid under Legal Services Authorities Act? I live in metro city.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5678563714027405,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_25",
+      "query": "I am office staff and have been working in textile factory for 1 year. sudden termination without notice period and due process. Can I file salary recovery case under Payment of Wages Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7694594264030457,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_8608",
+      "query": "During food/water contamination, unsafe infrastructure collapse caused injury/death. Can I file public interest litigation for government negligence?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7971484065055847,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1363",
+      "query": "During MRI/CT scan at diagnostic center, emergency treatment was delayed for money. I spent Rs 200000. How to file medical negligence case in consumer court?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6627681851387024,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1138",
+      "query": "I belong to Scheduled Tribe community and untouchability was practiced in public place and entry was denied. Can I file case under SC/ST Prevention of Atrocities Act? under SC/ST Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9790931940078735,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_8678",
+      "query": "During insurance policy claim settlement, unauthorized transactions occurred and bank is not accepting liability. I have suffered loss of Rs 500000. Can I file RBI complaint along with consumer protection case?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6064824461936951,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1078",
+      "query": "I booked villa from cooperative society by paying Rs 5 lakh advance. Amenities promised in brochure are not being provided. What is procedure to recover invested amount",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6257604360580444,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2227",
+      "query": "During home delivery food order, foreign object found in food and teeth got damaged. Had to stay admitted in hospital for 1 week. What is process to cancel hotel/restaurant license?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5556463003158569,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_17",
+      "query": "I am contractual worker and have been working in IT company for 6 months. sudden termination without notice period and due process. Can I file salary recovery case under Payment of Wages Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6678638458251953,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1864",
+      "query": "I am female employee working in private company and at workplace colleagues are making inappropriate comments and gestures daily. Is transfer/separation possible from accused? under POSH Act 2013?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9933386445045471,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_9311",
+      "query": "I belong to Scheduled Caste and untouchability was practiced in public place and entry was denied. Can I claim compensation for caste discrimination? under SC/ST Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7906666398048401,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_11431",
+      "query": "After criticizing government, government officials filed defamation case. Can I file habeas corpus writ petition? under Article 19(1)(a) freedom of speech?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6842607259750366,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4678",
+      "query": "I booked 3 BHK apartment from local builder by paying Rs 25 lakh advance. Construction quality is very poor with major structural defects. Can I claim compensation for delay and harassment",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5945808291435242,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_6412",
+      "query": "During delivery at corporate hospital, I had medicine allergies but doctor didn't check. I spent Rs 200000. Can I recover from insurance company separately?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6654267907142639,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1064",
+      "query": "During insurance policy claim settlement, FD premature withdrawal had wrong calculation and penalty. I have suffered loss of Rs 500000. Can I claim punitive damages along with compensation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8593147993087769,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_47",
+      "query": "I booked commercial space from reputed builder by paying Rs 15 lakh advance. Builder demanding extra charges not mentioned in agreement. How to get project completion timeline enforced",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.87599778175354,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2608",
+      "query": "During surgery at private hospital, doctor gave wrong diagnosis and did unnecessary surgery. I spent Rs 100000. How is compensation amount calculated in medical cases?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7168242931365967,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_861",
+      "query": "In government policy implementation, religious conversion is being forced. Is constitutional remedy available for religious freedom violation? under Article 25-28 religious freedom?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7658010721206665,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_669",
+      "query": "I got married 10 years ago. Husband threw me and children out of house without any fault. What should I do for protection order? I am working but salary is low for survival",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9161916971206665,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_11117",
+      "query": "I got married 10 years ago. Husband threw me and children out of house without any fault. What should I do for judicial separation? I am working but salary is low for survival",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8855394721031189,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1080",
+      "query": "I got married 10 years ago. Husband is having extramarital affair and doesn't come home. What should I do for protection order? My parents are supporting but they also have financial problems",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5823699235916138,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_7479",
+      "query": "I filed RTI application about government tender allocation process 1 month ago. PIO avoided by claiming lack of jurisdiction. Can I file writ petition in High Court for RTI violation?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6903252005577087,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_4156",
+      "query": "I am daily wage laborer and have been working in construction company for 10 years. refusing bonus payment despite company profits. Can I file salary recovery case under Payment of Wages Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6022948026657104,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_845",
+      "query": "I belong to Scheduled Tribe community and untouchability was practiced in public place and entry was denied. Can I demand special court proceeding in atrocity case? under SC/ST Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9094492793083191,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1154",
+      "query": "During court proceedings, service was denied based on economic status. I need relief by invoking equal protection clause? under Article 14 Right to Equality?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6499893069267273,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3842",
+      "query": "While working as part-time employee at retail store, promised incentives and benefits are not being provided. Can I file labor law violation case against platform companies? under labor laws?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5975268483161926,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_2127",
+      "query": "After divorce/separation husband has taken children away from me and not allowing to meet. Can father's parental rights be terminated under Guardians and Wards Act?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.8162420988082886,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_623",
+      "query": "During treatment at nursing home, emergency treatment was delayed for money. I spent Rs 200000. What is process to cancel hospital license?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5861639976501465,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1780",
+      "query": "I am a person from economically weaker section earning Rs. 30000 per month. Government office is demanding bribe which violates my rights. I need to know my options for free legal aid under Legal Services Authorities Act? I live in tier-2 city.",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6327930092811584,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_7802",
+      "query": "I bought furniture set from Facebook marketplace for Rs 200000. Completely different product delivered and they are not accepting return. How to claim full refund with compensation under Consumer Protection Act 2019?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6666086316108704,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_8179",
+      "query": "I booked plot from local builder by paying Rs 50 lakh advance. Construction quality is very poor with major structural defects. How to file complaint with RERA authority",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.9810779690742493,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_728",
+      "query": "I am office staff and have been working in IT company for 2 years. refusing bonus payment despite company profits. Can I take separate enforcement action for PF/ESI non-compliance?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.5088484287261963,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_1077",
+      "query": "During cataract operation at eye hospital, doctor gave wrong diagnosis and did unnecessary surgery. I spent Rs 50000. What is process to cancel hospital license?",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.7323326468467712,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    },
+    {
+      "sample_id": "sample_3249",
+      "query": "I booked 2 BHK flat from cooperative society by paying Rs 10 lakh advance. Project delayed by 3 years without any intimation. What is procedure to recover invested amount",
+      "true_label": false,
+      "neural_pred": true,
+      "neural_prob": 0.6055455803871155,
+      "prolog_pred": true,
+      "prolog_confidence": 0.95,
+      "hybrid_pred": true,
+      "fusion_method": "prolog_override",
+      "error_type": "False Positive",
+      "disagreement": {
+        "neural_prolog": false,
+        "neural_gt": true,
+        "prolog_gt": true
+      }
+    }
+  ],
+  "sample_size": 1433,
+  "config_summary": "HybEx-Law Config - Data: verified_fallback, Models: 4, Legal Sources: Unknown"
+}

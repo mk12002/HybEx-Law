@@ -1,0 +1,90 @@
+================================================================================
+HYBEX-LAW ABLATION STUDY REPORT
+================================================================================
+
+RANKINGS (by F1 Score):
+--------------------------------------------------------------------------------
+1. 01_prolog
+   Models: prolog
+   Accuracy: 0.8032
+   F1: 0.8909
+   Precision: 0.8032
+   Recall: 1.0000
+
+2. 02_gnn
+   Models: gnn
+   Accuracy: 0.8032
+   F1: 0.8909
+   Precision: 0.8032
+   Recall: 1.0000
+
+3. 12_prolog_domain
+   Models: prolog, domain_classifier
+   Accuracy: 0.8032
+   F1: 0.8909
+   Precision: 0.8032
+   Recall: 1.0000
+
+4. 14_prolog_gnn
+   Models: prolog, gnn
+   Accuracy: 0.8032
+   F1: 0.8909
+   Precision: 0.8032
+   Recall: 1.0000
+
+5. 04_eligibility
+   Models: eligibility_predictor
+   Accuracy: 0.8025
+   F1: 0.8889
+   Precision: 0.8109
+   Recall: 0.9835
+
+6. 10_gnn_eligibility
+   Models: gnn, eligibility_predictor
+   Accuracy: 0.8025
+   F1: 0.8889
+   Precision: 0.8109
+   Recall: 0.9835
+
+7. 13_prolog_eligibility
+   Models: prolog, eligibility_predictor
+   Accuracy: 0.8025
+   F1: 0.8889
+   Precision: 0.8109
+   Recall: 0.9835
+
+8. 16_hybrid_best
+   Models: prolog, eligibility_predictor, gnn
+   Accuracy: 0.8025
+   F1: 0.8889
+   Precision: 0.8109
+   Recall: 0.9835
+
+9. 06_domain_eligibility
+   Models: domain_classifier, eligibility_predictor
+   Accuracy: 0.7083
+   F1: 0.8063
+   Precision: 0.8640
+   Recall: 0.7559
+
+10. 09_gnn_domain
+   Models: gnn, domain_classifier
+   Accuracy: 0.5415
+   F1: 0.6059
+   Precision: 0.9787
+   Recall: 0.4387
+
+11. 03_domain
+   Models: domain_classifier
+   Accuracy: 0.2812
+   F1: 0.2897
+   Precision: 0.7023
+   Recall: 0.1825
+
+
+================================================================================
+KEY INSIGHTS:
+--------------------------------------------------------------------------------
+Best Overall: 01_prolog (F1: 0.8909)
+Best Single Model: 01_prolog (F1: 0.8909)
+Best Pair: 12_prolog_domain (F1: 0.8909)

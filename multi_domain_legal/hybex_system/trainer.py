@@ -28,7 +28,161 @@ from .evaluator import ModelEvaluator
 # Setup logging
 logger = logging.getLogger(__name__)
 
+
+# ============================================================================
+# SMART PATH RESOLUTION HELPER
+# ============================================================================
+
+def find_model_file(model_dir: Path, model_name: str) -> Optional[Path]:
+    """
+    Smart model file finder - handles different naming conventions
+    
+    Args:
+        model_dir: Directory containing the model
+        model_name: Name of the model (e.g., 'enhanced_legal_bert')
+    
+    Returns:
+        Path to the model file, or None if not found
+    """
+    if not model_dir.exists():
+        logger.debug(f"Model directory does not exist: {model_dir}")
+        return None
+    
+    # Define search patterns (in priority order)
+    search_patterns = {
+        'domain_classifier': [
+            'model.pt',
+            'domain_classifier.pt',
+            'best_model.pt',
+            'domain_classifier_best.pt'
+        ],
+        'eligibility_predictor': [
+            'model.pt',
+            'eligibility_predictor.pt',
+            'best_model.pt',
+            'eligibility_predictor_best.pt'
+        ],
+        'enhanced_legal_bert': [
+            'enhanced_legal_bert_best.pt',  # MOST LIKELY ACTUAL FILE!
+            'enhanced_legal_bert.pt',
+            'model.pt',
+            'enhanced_bert_best.pt',
+            'enhanced_bert.pt',
+            'best_model.pt'
+        ],
+        'enhanced_bert': [  # Alternative directory name
+            'enhanced_legal_bert_best.pt',
+            'model.pt',
+            'enhanced_bert.pt',
+            'best_model.pt'
+        ],
+        'gnn_model': [
+            'gnn_model.pt',  # CORRECT NAMING
+            'model.pt',
+            'best_model.pt',
+            'gnn_model_best.pt'
+        ]
+    }
+    
+    # Get patterns for this model (default to 'model.pt')
+    patterns = search_patterns.get(model_name, ['model.pt', 'best_model.pt'])
+    
+    # Try each pattern
+    for pattern in patterns:
+        model_path = model_dir / pattern
+        if model_path.exists():
+            logger.debug(f"Found {model_name} at: {model_path}")
+            return model_path
+    
+    # If not found, log all files in directory for debugging
+    logger.debug(f"Model file not found for {model_name} in {model_dir}")
+    if model_dir.exists():
+        files = list(model_dir.glob('*.pt'))
+        if files:
+            logger.debug(f"Available .pt files: {[f.name for f in files]}")
+    
+    return None
+
+
+# ============================================================================
+# TRAINING ORCHESTRATOR CLASS
+# ============================================================================
+
 class TrainingOrchestrator:
+
+    def train_domain_to_eligibility_wrapper(self, train_dataloader, val_dataloader, epochs=5):
+        """
+        ✅ NEW: Train the domain->eligibility wrapper
+        (Domain classifier weights are frozen, only eligibility head is trained)
+        """
+        from .neural_models import DomainToEligibilityWrapper
+        import torch
+        import torch.nn as nn
+        from sklearn.metrics import f1_score
+
+        logger.info("\n" + "="*70)
+        logger.info("TRAINING DOMAIN-TO-ELIGIBILITY WRAPPER")
+        logger.info("="*70)
+
+        # Load trained domain classifier
+        domain_classifier = self.components['model_trainer'].load_model('domain_classifier')
+        domain_classifier.eval()  # Freeze
+        for param in domain_classifier.parameters():
+            param.requires_grad = False
+
+        # Create wrapper
+        wrapper = DomainToEligibilityWrapper(domain_classifier, self.config).to(self.device)
+
+        # Only train eligibility_head
+        optimizer = torch.optim.Adam(wrapper.eligibility_head.parameters(), lr=1e-4)
+        criterion = nn.CrossEntropyLoss()
+
+        best_val_f1 = 0.0
+        for epoch in range(epochs):
+            # Training
+            wrapper.train()
+            total_loss = 0
+            for batch in train_dataloader:
+                input_ids = batch['input_ids'].to(self.device)
+                attention_mask = batch['attention_mask'].to(self.device)
+                labels = batch['labels'].to(self.device).long()
+
+                optimizer.zero_grad()
+                outputs = wrapper(input_ids, attention_mask)
+                loss = criterion(outputs['logits'], labels)
+                loss.backward()
+                optimizer.step()
+
+                total_loss += loss.item()
+
+            # Validation
+            wrapper.eval()
+            val_preds, val_labels = [], []
+            with torch.no_grad():
+                for batch in val_dataloader:
+                    input_ids = batch['input_ids'].to(self.device)
+                    attention_mask = batch['attention_mask'].to(self.device)
+                    labels = batch['labels'].to(self.device)
+
+                    outputs = wrapper(input_ids, attention_mask)
+                    preds = torch.argmax(outputs['logits'], dim=1)
+
+                    val_preds.extend(preds.cpu().numpy())
+                    val_labels.extend(labels.cpu().numpy())
+
+            val_f1 = f1_score(val_labels, val_preds, average='binary')
+
+            logger.info(f"Epoch {epoch+1}/{epochs} | Loss: {total_loss/len(train_dataloader):.4f} | Val F1: {val_f1:.4f}")
+
+            if val_f1 > best_val_f1:
+                best_val_f1 = val_f1
+                # Save wrapper
+                save_path = self.config.MODELS_DIR / 'domain_to_eligibility' / 'model.pt'
+                save_path.parent.mkdir(parents=True, exist_ok=True)
+                torch.save(wrapper.state_dict(), save_path)
+
+        logger.info(f"✅ Wrapper training complete. Best F1: {best_val_f1:.4f}")
+        return wrapper
     """Main training pipeline orchestrator"""
     
     def __init__(self, config: HybExConfig):
@@ -203,6 +357,27 @@ class TrainingOrchestrator:
                     raise ValueError("Train/Val overlap detected - data leakage!")
                 
                 logger.info(f"Data loaded: {len(train_queries)} unique train queries, {len(val_queries)} unique val queries")
+
+                # ✅ Check for entity/fact leakage
+                entity_leakage = 0
+                for train_sample in processed_data['train_samples']:
+                    train_entities = train_sample.get('extracted_entities', {})
+                    for val_sample in processed_data['val_samples']:
+                        val_entities = val_sample.get('extracted_entities', {})
+                        # Check for exact entity match
+                        if train_entities and val_entities:
+                            # Compare key facts (income, category, etc.)
+                            key_facts = ['income', 'social_category', 'annual_income']
+                            matches = sum(
+                                train_entities.get(k) == val_entities.get(k)
+                                for k in key_facts
+                                if k in train_entities and k in val_entities
+                            )
+                            if matches >= 2:  # 2+ matching facts = potential leakage
+                                entity_leakage += 1
+                                break
+                if entity_leakage > 0:
+                    logger.warning(f"⚠️ Potential entity leakage: {entity_leakage} train samples have matching facts with validation")
 
             # 2) Domain distribution check for imbalance
             try:
@@ -463,20 +638,19 @@ class TrainingOrchestrator:
         # Collect cases and track missing entities WITHOUT individual warnings
         for sample in test_samples:
             if 'extracted_entities' in sample and sample['extracted_entities']:
-                cases_for_prolog_batch.append(sample)  # ✅ FIX: Send FULL sample with sample_id
+                cases_for_prolog_batch.append(sample)
             else:
                 missing_entities_count += 1
-                # Extract on the fly silently
                 try:
                     extracted = self.components['data_processor'].extract_entities(
                         sample.get('query', '')
                     )
-                    sample['extracted_entities'] = extracted
-                    cases_for_prolog_batch.append(sample)  # ✅ FIX: Send FULL sample
+                    sample['extracted_entities'] = extracted  # ✅ SAVE BACK TO SAMPLE
+                    cases_for_prolog_batch.append(sample)
                 except Exception as e:
                     logger.error(f"Failed to extract entities for {sample.get('sample_id')}: {e}")
-                    # Still append sample even with empty entities
-                    cases_for_prolog_batch.append(sample)  # ✅ FIX: Send FULL sample
+                    sample['extracted_entities'] = {}  # ✅ SET EMPTY DICT
+                    cases_for_prolog_batch.append(sample)
         
         # Single summary log for missing entities
         if missing_entities_count > 0:
@@ -628,6 +802,443 @@ class TrainingOrchestrator:
         logger.info("\n" + "="*80)
         logger.info("Report Generation Complete")
         logger.info("="*80)
+    
+    def run_comprehensive_evaluation(self):
+        """
+        Run comprehensive evaluation on all trained models
+        UPDATED: Now includes EnhancedLegalBERT + Advanced Evaluator
+        """
+        logger.info("="*80)
+        logger.info("STAGE 5: COMPREHENSIVE EVALUATION")
+        logger.info("="*80)
+        logger.info("\n--- Starting Comprehensive End-to-End System Evaluation ---")
+        
+        start_time = time.time()
+        
+        try:
+            # Initialize evaluator
+            evaluator = ModelEvaluator(self.config)
+            
+            # Load test data
+            test_data_path = self.config.DATA_DIR / 'val_split.json'
+            if not test_data_path.exists():
+                logger.error(f"Test data not found: {test_data_path}")
+                return {'status': 'failed', 'error': 'Test data not found'}
+            
+            with open(test_data_path, 'r', encoding='utf-8') as f:
+                test_data = json.load(f)
+            
+            logger.info(f"Loaded {len(test_data)} test samples")
+            
+            # Dictionary to store all model results
+            all_model_results = {}
+            model_predictions = {}  # Store predictions for ensemble
+            
+            # ========================================
+            # EVALUATE EACH MODEL WITH SMART PATH RESOLUTION
+            # ========================================
+            
+            # 1. Domain Classifier
+            logger.info("\n[1/5] Evaluating Domain Classifier...")
+            try:
+                domain_dir = self.config.MODELS_DIR / 'domain_classifier'
+                domain_path = find_model_file(domain_dir, 'domain_classifier')
+                
+                if domain_path:
+                    logger.info(f"✓ Found: {domain_path.name}")
+                    domain_results = evaluator.evaluate_single_model(
+                        model_path=domain_dir,
+                        model_type='domain_classifier',
+                        test_data=test_data
+                    )
+                    all_model_results['domain_classifier'] = domain_results
+                    model_predictions['domain_classifier'] = domain_results.get('predictions', {})
+                    logger.info(f"✅ Domain Classifier - Acc: {domain_results.get('accuracy', 0):.4f}, F1: {domain_results.get('f1', 0):.4f}")
+                else:
+                    logger.warning(f"⚠️  Domain Classifier model not found in {domain_dir}")
+            except Exception as e:
+                logger.error(f"❌ Domain Classifier evaluation failed: {str(e)}")
+            
+            # 2. Eligibility Predictor
+            logger.info("\n[2/5] Evaluating Eligibility Predictor...")
+            try:
+                eligibility_dir = self.config.MODELS_DIR / 'eligibility_predictor'
+                eligibility_path = find_model_file(eligibility_dir, 'eligibility_predictor')
+                
+                if eligibility_path:
+                    logger.info(f"✓ Found: {eligibility_path.name}")
+                    eligibility_results = evaluator.evaluate_single_model(
+                        model_path=eligibility_dir,
+                        model_type='eligibility_predictor',
+                        test_data=test_data
+                    )
+                    all_model_results['eligibility_predictor'] = eligibility_results
+                    model_predictions['eligibility_predictor'] = eligibility_results.get('predictions', {})
+                    logger.info(f"✅ Eligibility Predictor - Acc: {eligibility_results.get('accuracy', 0):.4f}, F1: {eligibility_results.get('f1', 0):.4f}")
+                else:
+                    logger.warning(f"⚠️  Eligibility Predictor model not found in {eligibility_dir}")
+            except Exception as e:
+                logger.error(f"❌ Eligibility Predictor evaluation failed: {str(e)}")
+            
+            # 3. EnhancedLegalBERT with smart path resolution
+            logger.info("\n[3/5] Evaluating EnhancedLegalBERT (Multi-Task)...")
+            try:
+                # Try primary directory first
+                enhanced_dir = self.config.MODELS_DIR / 'enhanced_legal_bert'
+                enhanced_path = find_model_file(enhanced_dir, 'enhanced_legal_bert')
+                
+                # Fallback to alternative directory name
+                if not enhanced_path:
+                    enhanced_dir = self.config.MODELS_DIR / 'enhanced_bert'
+                    enhanced_path = find_model_file(enhanced_dir, 'enhanced_bert')
+                
+                if enhanced_path:
+                    logger.info(f"✓ Found: {enhanced_path.name}")
+                    
+                    # Load model directly with state_dict
+                    from .neural_models import EnhancedLegalBERT
+                    
+                    # Get device
+                    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+                    
+                    # Initialize and load model
+                    enhanced_model = EnhancedLegalBERT(self.config)
+                    enhanced_model.load_state_dict(
+                        torch.load(enhanced_path, map_location=device)
+                    )
+                    enhanced_model.to(device)
+                    enhanced_model.eval()
+                    
+                    logger.info(f"✅ EnhancedLegalBERT model loaded successfully")
+                    
+                    # Evaluate using model instance
+                    enhanced_results = evaluator.evaluate_model_instance(
+                        model=enhanced_model,
+                        model_name='enhanced_legal_bert',
+                        test_data=test_data,
+                        device=device
+                    )
+                    
+                    all_model_results['enhanced_legal_bert'] = enhanced_results
+                    model_predictions['enhanced_legal_bert'] = enhanced_results.get('predictions', {})
+                    logger.info(f"✅ EnhancedLegalBERT - Acc: {enhanced_results.get('accuracy', 0):.4f}, F1: {enhanced_results.get('f1', 0):.4f}")
+                else:
+                    logger.warning(f"⚠️  EnhancedLegalBERT model not found")
+                    logger.warning(f"    Searched: enhanced_legal_bert/ and enhanced_bert/")
+            except Exception as e:
+                logger.error(f"❌ EnhancedLegalBERT evaluation failed: {str(e)}")
+                import traceback
+                logger.error(traceback.format_exc())
+            
+            # 4. GNN with smart path resolution
+            logger.info("\n[4/5] Evaluating Knowledge Graph Neural Network...")
+            try:
+                gnn_dir = self.config.MODELS_DIR / 'gnn_model'
+                gnn_path = find_model_file(gnn_dir, 'gnn_model')
+                
+                if gnn_path:
+                    logger.info(f"✓ Found: {gnn_path.name}")
+                    gnn_results = evaluator.evaluate_gnn_model(
+                        model_path=gnn_path,
+                        test_data=test_data
+                    )
+                    all_model_results['gnn_model'] = gnn_results
+                    model_predictions['gnn_model'] = gnn_results.get('predictions', {})
+                    logger.info(f"✅ GNN - Acc: {gnn_results.get('accuracy', 0):.4f}, F1: {gnn_results.get('f1', 0):.4f}")
+                else:
+                    logger.warning(f"⚠️  GNN model not found in {gnn_dir}")
+            except Exception as e:
+                logger.error(f"❌ GNN evaluation failed: {str(e)}")
+            
+            # 5. Prolog
+            logger.info("\n[5/5] Evaluating Prolog Reasoning Engine...")
+            try:
+                prolog_results = evaluator.evaluate_prolog_engine(test_data)
+                all_model_results['prolog'] = prolog_results
+                model_predictions['prolog'] = prolog_results.get('predictions', {})
+                logger.info(f"✅ Prolog - Acc: {prolog_results.get('accuracy', 0):.4f}, F1: {prolog_results.get('f1', 0):.4f}")
+            except Exception as e:
+                logger.error(f"❌ Prolog evaluation failed: {str(e)}")
+            
+            # ========================================
+            # PRINT SUMMARY TABLE
+            # ========================================
+            logger.info("\n" + "="*80)
+            logger.info("MODEL PERFORMANCE SUMMARY")
+            logger.info("="*80)
+            logger.info(f"{'Model':<30} {'Accuracy':<12} {'F1 Score':<12} {'Precision':<12} {'Recall':<12}")
+            logger.info("-"*80)
+            for model_name, results in all_model_results.items():
+                acc = results.get('accuracy', 0)
+                f1 = results.get('f1', 0)
+                prec = results.get('precision', 0)
+                rec = results.get('recall', 0)
+                logger.info(f"{model_name:<30} {acc:<12.4f} {f1:<12.4f} {prec:<12.4f} {rec:<12.4f}")
+            logger.info("="*80)
+            
+            # ========================================
+            # SAVE INDIVIDUAL MODEL RESULTS
+            # ========================================
+            results_dir = self.config.RESULTS_DIR / 'evaluation_results'
+            results_dir.mkdir(parents=True, exist_ok=True)
+            
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            results_file = results_dir / f'individual_models_{timestamp}.json'
+            
+            with open(results_file, 'w', encoding='utf-8') as f:
+                json.dump(all_model_results, f, indent=2, ensure_ascii=False)
+            
+            logger.info(f"\n✅ Individual model results saved to: {results_file}")
+            
+            # ========================================
+            # RUN ADVANCED EVALUATION (NEW!)
+            # ========================================
+            
+            advanced_results = self.run_advanced_evaluation(all_model_results, test_data)
+            
+            # Record evaluation time
+            eval_duration = time.time() - start_time
+            logger.info(f"Total evaluation completed in {eval_duration:.2f} seconds")
+            
+            return {
+                'status': 'completed',
+                'duration': eval_duration,
+                'model_results': all_model_results,
+                'advanced_results': advanced_results,  # NEW!
+                'results_file': str(results_file)
+            }
+            
+        except Exception as e:
+            logger.error(f"Comprehensive evaluation failed: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
+            return {
+                'status': 'failed',
+                'error': str(e),
+                'duration': time.time() - start_time
+            }
+    
+    def run_advanced_evaluation(self, model_results: Dict, test_data: List[Dict]):
+        """
+        Run advanced evaluation with stratification, calibration, and fairness analysis
+        This uses the AdvancedEvaluator class for comprehensive metrics
+        
+        Args:
+            model_results: Dictionary of model evaluation results
+            test_data: List of test samples
+        
+        Returns:
+            Dictionary with advanced evaluation results
+        """
+        logger.info("\n" + "="*80)
+        logger.info("RUNNING ADVANCED EVALUATION")
+        logger.info("="*80)
+        
+        try:
+            from .advanced_evaluator import AdvancedEvaluator
+            
+            # Initialize Advanced Evaluator
+            advanced_eval = AdvancedEvaluator(
+                output_dir=self.config.RESULTS_DIR / "advanced_evaluation"
+            )
+            
+            logger.info("✅ AdvancedEvaluator initialized")
+            
+            # ========================================
+            # PREPARE DATA FOR ADVANCED EVALUATION
+            # ========================================
+            
+            predictions_list = []
+            ground_truth = []
+            metadata = []
+            
+            logger.info("Preparing data for advanced evaluation...")
+            
+            for sample in test_data:
+                sample_id = sample.get('sample_id', 'unknown')
+                entities = sample.get('extracted_entities', {})
+                expected = sample.get('expected_eligibility', False)
+                
+                # Collect predictions from all available models
+                sample_predictions = {}
+                for model_name, results in model_results.items():
+                    if 'predictions' in results and sample_id in results['predictions']:
+                        sample_predictions[model_name] = results['predictions'][sample_id]
+                
+                # Create ensemble prediction
+                if sample_predictions:
+                    ensemble_pred = self._create_ensemble_prediction(sample_predictions)
+                else:
+                    ensemble_pred = {'eligible': False, 'confidence': 0.5, 'method': 'none'}
+                
+                # Add to lists
+                predictions_list.append({
+                    'eligible': ensemble_pred.get('eligible', False),
+                    'confidence': ensemble_pred.get('confidence', 0.5),
+                    'method': ensemble_pred.get('method', 'ensemble')
+                })
+                
+                ground_truth.append(expected)
+                
+                # Prepare metadata
+                metadata.append({
+                    'case_id': sample_id,
+                    'income': entities.get('income', 0),
+                    'category': entities.get('social_category', 'unknown'),
+                    'vulnerable': entities.get('is_disabled', False) or entities.get('is_woman', False),
+                    'query': sample.get('query', '')[:200]  # Truncate for storage
+                })
+            
+            logger.info(f"Prepared {len(predictions_list)} predictions for advanced analysis")
+            
+            # ========================================
+            # RUN ADVANCED EVALUATION
+            # ========================================
+            
+            logger.info("Running comprehensive advanced evaluation...")
+            logger.info("  - Stratified analysis (income, category, vulnerability)")
+            logger.info("  - Calibration curves")
+            logger.info("  - Fairness metrics")
+            logger.info("  - Error analysis")
+            
+            advanced_results = advanced_eval.comprehensive_evaluation(
+                predictions=predictions_list,
+                ground_truth=ground_truth,
+                metadata=metadata
+            )
+            
+            # ========================================
+            # LOG ADVANCED RESULTS
+            # ========================================
+            
+            logger.info("\n" + "="*80)
+            logger.info("ADVANCED EVALUATION RESULTS")
+            logger.info("="*80)
+            
+            # Overall metrics
+            overall = advanced_results.get('overall_metrics', {})
+            logger.info("\n📊 Overall Metrics:")
+            logger.info(f"  Accuracy: {overall.get('accuracy', 0):.4f}")
+            logger.info(f"  Precision: {overall.get('precision', 0):.4f}")
+            logger.info(f"  Recall: {overall.get('recall', 0):.4f}")
+            logger.info(f"  F1 Score: {overall.get('f1', 0):.4f}")
+            
+            # Calibration
+            calibration_error = advanced_results.get('calibration_error', 0)
+            logger.info(f"\n📈 Calibration Error: {calibration_error:.4f}")
+            if calibration_error < 0.10:
+                logger.info("  ✅ Excellent calibration (< 0.10)")
+            elif calibration_error < 0.15:
+                logger.info("  ⚠️  Good calibration (0.10 - 0.15)")
+            else:
+                logger.info("  ❌ Poor calibration (> 0.15) - consider recalibration")
+            
+            # Stratified metrics
+            stratified = advanced_results.get('stratified_metrics', {})
+            if stratified:
+                logger.info("\n📊 Stratified Performance:")
+                
+                # By income bracket
+                if 'income_brackets' in stratified:
+                    logger.info("  By Income Bracket:")
+                    for bracket, metrics in stratified['income_brackets'].items():
+                        logger.info(f"    {bracket}: F1={metrics.get('f1', 0):.4f}, Count={metrics.get('count', 0)}")
+                
+                # By social category
+                if 'categories' in stratified:
+                    logger.info("  By Social Category:")
+                    for category, metrics in stratified['categories'].items():
+                        logger.info(f"    {category}: F1={metrics.get('f1', 0):.4f}, Count={metrics.get('count', 0)}")
+                
+                # By vulnerability
+                if 'vulnerability' in stratified:
+                    logger.info("  By Vulnerability:")
+                    for vuln, metrics in stratified['vulnerability'].items():
+                        logger.info(f"    {vuln}: F1={metrics.get('f1', 0):.4f}, Count={metrics.get('count', 0)}")
+            
+            # Fairness metrics
+            fairness = advanced_results.get('fairness_metrics', {})
+            if fairness:
+                logger.info("\n⚖️  Fairness Analysis:")
+                logger.info(f"  Income Disparity: {fairness.get('income_disparity', 0):.4f}")
+                logger.info(f"  Category Parity: {fairness.get('category_parity', 0):.4f}")
+                logger.info(f"  Vulnerability Fairness: {fairness.get('vulnerability_fairness', 0):.4f}")
+            
+            # Error analysis
+            error_analysis = advanced_results.get('error_analysis', [])
+            if error_analysis:
+                logger.info(f"\n❌ Error Analysis: {len(error_analysis)} misclassified cases")
+                logger.info("  Top 5 errors:")
+                for i, error in enumerate(error_analysis[:5], 1):
+                    logger.info(f"    {i}. Case {error.get('case_id')}: {error.get('error_type')} (conf={error.get('confidence', 0):.3f})")
+            
+            # Visualizations saved
+            viz_dir = self.config.RESULTS_DIR / "advanced_evaluation"
+            logger.info(f"\n📊 Visualizations saved to: {viz_dir}")
+            logger.info("  - confusion_matrix.png")
+            logger.info("  - calibration_curve.png")
+            logger.info("  - stratified_performance.png")
+            logger.info("  - fairness_analysis.png")
+            
+            logger.info("\n" + "="*80)
+            logger.info("✅ ADVANCED EVALUATION COMPLETED")
+            logger.info("="*80)
+            
+            return advanced_results
+            
+        except Exception as e:
+            logger.error(f"❌ Advanced evaluation failed: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
+            return {'status': 'failed', 'error': str(e)}
+    
+    def _create_ensemble_prediction(self, sample_predictions: Dict) -> Dict:
+        """
+        Create weighted ensemble prediction from multiple models
+        
+        Args:
+            sample_predictions: Dictionary mapping model_name -> prediction value
+        
+        Returns:
+            Dictionary with ensemble prediction
+        """
+        weights = {
+            'prolog': 0.30,
+            'enhanced_legal_bert': 0.25,
+            'eligibility_predictor': 0.20,
+            'gnn_model': 0.15,
+            'domain_classifier': 0.10
+        }
+        
+        weighted_sum = 0.0
+        total_weight = 0.0
+        
+        for model_name, pred_value in sample_predictions.items():
+            weight = weights.get(model_name, 0.2)
+            
+            # Handle different prediction formats
+            if isinstance(pred_value, dict):
+                pred_score = float(pred_value.get('eligible', 0.5))
+            elif isinstance(pred_value, (int, float)):
+                pred_score = float(pred_value)
+            elif isinstance(pred_value, bool):
+                pred_score = 1.0 if pred_value else 0.0
+            else:
+                pred_score = 0.5
+            
+            weighted_sum += pred_score * weight
+            total_weight += weight
+        
+        if total_weight == 0:
+            return {'eligible': False, 'confidence': 0.5, 'method': 'default'}
+        
+        final_score = weighted_sum / total_weight
+        
+        return {
+            'eligible': final_score >= 0.5,
+            'confidence': abs(final_score - 0.5) * 2,  # Convert to [0, 1] confidence
+            'method': 'weighted_ensemble'
+        }
     
     def cleanup(self):
         """Clean up resources"""

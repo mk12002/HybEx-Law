@@ -14,6 +14,8 @@ from typing import Dict, Any, Optional
 logger = logging.getLogger(__name__)
 
 class HybExConfig:
+
+
     """Central configuration for HybEx-Law system"""
     
     def __init__(self):
@@ -25,6 +27,12 @@ class HybExConfig:
         self.LOGS_DIR = self.BASE_DIR / "logs"
         self.RESULTS_DIR = self.BASE_DIR / "results"
         self.PLOTS_DIR = self.RESULTS_DIR / "plots"
+        
+        # ✅ FIX: Add explicit GNN model path (actual file is gnn_model.pt, not model.pt)
+        self.GNN_MODEL_PATH = self.MODELS_DIR / 'gnn_model' / 'gnn_model.pt'
+        
+        # ✅ Add explicit Enhanced BERT model path (actual file is enhanced_legal_bert_best.pt)
+        self.ENHANCED_BERT_MODEL_PATH = self.MODELS_DIR / 'enhanced_legal_bert' / 'enhanced_legal_bert_best.pt'
         
         # Create directories
         for dir_path in [self.MODELS_DIR, self.LOGS_DIR, self.RESULTS_DIR, self.PLOTS_DIR]:

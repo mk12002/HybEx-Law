@@ -1,0 +1,63 @@
+HybEx-Law System Evaluation Report - 2025-10-22T21:30:35.220135
+================================================================================
+
+📊 Overall Status: Failed
+Total Test Samples: 1433
+
+🧠 Neural Model Performance:
+  - **Domain Classifier**:
+    Accuracy: 1.0000
+    F1 Score: 1.0000
+    Precision: 1.0000
+    Recall: 1.0000
+    Loss: 0.0026
+  - **Eligibility Predictor**:
+    Accuracy: 0.7920
+    F1 Score: 0.8834
+    Precision: 0.8036
+    Recall: 0.9809
+    Loss: 0.4381
+
+⚖️ Prolog Reasoning Performance:
+  Accuracy: 0.7997
+  F1 Score: 0.8887
+  Precision: 0.7997
+  Recall: 1.0000
+
+🤝 Hybrid System Performance:
+  Accuracy: 0.8000
+  F1 Score: 0.8889
+
+🔗 Component Agreement:
+  Neural-Prolog Agreement Rate: 97.90%
+  Neural Accuracy: 0.7870
+  Prolog Accuracy: 0.8000
+
+🚨 Error Analysis (200 cases with disagreement):
+  Error 1 (Sample ID: sample_3949):
+    Query: During ATM transaction, insurance claim rejected without proper reason. I have suffered loss of Rs 5...
+    True: False, Hybrid Pred: True
+    Error Type: False Positive (Fusion Method: prolog_override)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 2 (Sample ID: sample_6928):
+    Query: While working as Uber/Ola driver, promised incentives and benefits are not being provided. Are colle...
+    True: False, Hybrid Pred: True
+    Error Type: False Positive (Fusion Method: prolog_override)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 3 (Sample ID: sample_28):
+    Query: I am a divorced but still facing harassment from ex-husband and dowry harassment and acid attack thr...
+    True: False, Hybrid Pred: True
+    Error Type: False Positive (Fusion Method: prolog_override)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 4 (Sample ID: sample_4991):
+    Query: While working in chemical factory during shift work, machinery maintenance is poor and worker safety...
+    True: False, Hybrid Pred: True
+    Error Type: False Positive (Fusion Method: prolog_override)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 5 (Sample ID: sample_1147):
+    Query: After father's death, joint family property not giving daughters equal share. Can daughters claim eq...
+    True: False, Hybrid Pred: True
+    Error Type: False Positive (Fusion Method: prolog_override)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  ... and 195 more errors. See full results JSON for details.
+

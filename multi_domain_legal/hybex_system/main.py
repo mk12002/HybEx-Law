@@ -369,6 +369,35 @@ class HybExLawSystem:
         
         try:
             results = self.trainer.run_complete_training_pipeline(data_dir)
+
+            # ✅ NEW: Fit confidence calibrators
+            logger.info("\n" + "="*70)
+            logger.info("FITTING CONFIDENCE CALIBRATORS")
+            logger.info("="*70)
+
+            import json
+            val_data_path = self.config.DATA_DIR / 'val_split.json'
+            if val_data_path.exists():
+                with open(val_data_path) as f:
+                    val_data = json.load(f)
+
+                # Create hybrid predictor
+                from hybex_system.hybrid_predictor import IntelligentHybridPredictor
+
+                # Assume prolog_engine and kg_engine are available as attributes
+                hybrid = IntelligentHybridPredictor(
+                    prolog_engine=self.prolog_engine,
+                    gnn_model=self.knowledge_graph_engine,
+                    bert_model=None,  # Will load internally
+                    config=self.config
+                )
+
+                # Fit calibrators on validation set (first 500 samples for speed)
+                hybrid.fit_calibrator(val_data[:500])
+                logger.info("✅ Confidence calibration complete")
+            else:
+                logger.warning("⚠️  No validation data found - skipping calibration")
+
             return results
         except Exception as e:
             logger.error(f"Training pipeline failed: {e}")
@@ -515,9 +544,13 @@ class HybExLawSystem:
         
         # Check for trained models (UPDATED: Now checks all 4 models)
         if self.config.MODELS_DIR.exists():
-            for model_name in ['domain_classifier', 'eligibility_predictor', 'enhanced_bert', 'gnn_model']:
+            for model_name in ['domain_classifier', 'eligibility_predictor', 'enhanced_bert']:
                 model_path = self.config.MODELS_DIR / model_name / "model.pt"
                 status['trained_models'][model_name] = model_path.exists()
+            
+            # GNN model has different naming convention
+            gnn_model_path = self.config.MODELS_DIR / 'gnn_model' / 'gnn_model.pt'
+            status['trained_models']['gnn_model'] = gnn_model_path.exists()
         
         # Check Prolog availability
         try:
@@ -760,11 +793,31 @@ def main():
         elif args.command == 'train':
             logger.info("Starting training command")
             results = system.train_complete_system(args.data_dir)
-            
+
             # Check the result status before printing success
             if results.get('status') == 'success' or results.get('status') == 'completed':
                 print("\nTraining completed successfully!")
                 print(f"Results saved to: {results.get('results_file', 'N/A')}")
+
+                # ✅ NEW: Fit confidence calibrators on validation set
+                logger.info("Fitting confidence calibrators...")
+                from hybex_system.hybrid_predictor import IntelligentHybridPredictor
+                # Load validation data
+                val_path = system.config.DATA_DIR / 'val_split.json'
+                if val_path.exists():
+                    val_data = system.data_processor.load_json_data(val_path)
+                    # Create hybrid predictor
+                    hybrid = IntelligentHybridPredictor(
+                        prolog_engine=system.prolog_engine,
+                        gnn_model=system.knowledge_graph_engine,
+                        bert_model=None,  # Load if needed
+                        config=system.config
+                    )
+                    # Fit calibrators
+                    hybrid.fit_calibrator(val_data[:500])  # Use subset for speed
+                    logger.info("✅ Confidence calibration complete")
+                else:
+                    logger.warning(f"Validation data not found at {val_path}, skipping calibrator fitting.")
             else:
                 print("\nTraining failed.")
                 print(f"Error: {results.get('error', 'An unknown error occurred during training.')}")
@@ -862,9 +915,9 @@ def main():
             
             logger.info("Loading GNN model...")
             evaluator.kg_engine = KnowledgeGraphEngine(system.config)
-            gnn_model_path = system.config.MODELS_DIR / 'hybex_system' / 'gnn_model' / 'model.pt'
-            if not gnn_model_path.exists():
-                gnn_model_path = system.config.MODELS_DIR / 'gnn_model' / 'model.pt'
+            # FIX: Correct GNN model path (avoid double path issue)
+            # Correct path: models/hybex_system/gnn_model/gnn_model.pt (not /model.pt)
+            gnn_model_path = system.config.MODELS_DIR / 'gnn_model' / 'gnn_model.pt'
             if gnn_model_path.exists():
                 evaluator.kg_engine.load_model(str(gnn_model_path))
             else:
@@ -902,15 +955,11 @@ def main():
             if hasattr(args, 'ablation') and args.ablation:
                 logger.info("\n" + "="*80)
                 logger.info("STARTING ABLATION STUDY")
-                logger.info("Testing all 16 model combinations to find optimal ensemble")
+                logger.info("Testing all model combinations to find optimal ensemble")
                 logger.info("="*80)
                 
-                # Convert test data to DataLoader format expected by ablation study
-                from torch.utils.data import DataLoader, TensorDataset
-                
-                # Create DataLoader from test_data
-                # Note: This assumes test_data is a list of dicts with 'text' and 'label' keys
-                # Adjust based on your actual data format
+                # Run ablation study with raw test data
+                # The evaluator will create proper DataLoaders internally for neural models
                 try:
                     ablation_results = evaluator.evaluate_ablation_combinations(test_data, evaluator.device)
                     

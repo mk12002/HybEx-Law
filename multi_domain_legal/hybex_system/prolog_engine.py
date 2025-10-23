@@ -1229,7 +1229,11 @@ class PrologEngine:
                     logger.info(f"❌ Prolog query FALSE (exit code 1)")
                 else:
                     success = False
-                    logger.warning(f"⚠️ Prolog ERROR (exit code {result.returncode}): {result.stderr.strip()}")
+                    # Suppress "Unknown procedure" warnings for optional predicates
+                    if 'Unknown procedure' in result.stderr and ('print_detailed_reasoning' in result.stderr or 'print_primary_reason' in result.stderr):
+                        logger.debug(f"Optional Prolog predicate skipped: {result.stderr.split(':')[1] if ':' in result.stderr else 'unknown'}")
+                    else:
+                        logger.warning(f"⚠️ Prolog ERROR (exit code {result.returncode}): {result.stderr.strip()}")
                 
                 parsed_results = self._parse_prolog_output(output, query.expected_variables)
                 
@@ -1237,7 +1241,15 @@ class PrologEngine:
                     logger.info(f"✅ Prolog query successful (attempt {attempt + 1}): {query.query_text}")
                     return (True, parsed_results, output)  # ✅ Return raw output!
                 else:
-                    logger.warning(f"⚠️ Prolog query returned false/no (attempt {attempt + 1})")
+                    # Check if this is an optional predicate query
+                    optional_predicates = ['print_detailed_reasoning', 'print_primary_reason']
+                    is_optional = any(pred in query.query_text for pred in optional_predicates)
+                    
+                    if is_optional:
+                        logger.debug(f"Optional Prolog query skipped (attempt {attempt + 1}): {query.query_text[:50]}...")
+                    else:
+                        logger.warning(f"⚠️ Prolog query returned false/no (attempt {attempt + 1})")
+                    
                     if attempt == query.retry_count - 1:
                         return (False, parsed_results, output)  # ✅ Return raw output!
             
@@ -1484,6 +1496,52 @@ class PrologEngine:
         
         finally:
             self._cleanup_temp_files()
+
+    def evaluate_eligibility(self, entities: Dict[str, Any], query_text: str = "") -> Dict[str, Any]:
+        """
+        Simplified eligibility evaluation wrapper for ablation study and testing.
+        
+        This is a convenience method that wraps comprehensive_legal_analysis()
+        and returns a dictionary format compatible with older test code.
+        
+        Args:
+            entities: Dictionary of extracted entities (income, category, etc.)
+            query_text: Optional query text (not used, for compatibility)
+        
+        Returns:
+            Dictionary with:
+                - eligible: bool
+                - confidence: float
+                - reasoning: str
+                - primary_reason: str
+                - case_id: str
+                - method: str
+        """
+        try:
+            # Use the main comprehensive analysis method
+            reasoning = self.comprehensive_legal_analysis(entities)
+            
+            # Convert LegalReasoning object to dictionary format
+            return {
+                'eligible': reasoning.eligible,
+                'confidence': reasoning.confidence,
+                'reasoning': reasoning.primary_reason,
+                'primary_reason': reasoning.primary_reason,
+                'case_id': reasoning.case_id,
+                'method': reasoning.method,
+                'detailed_reasoning': reasoning.detailed_reasoning
+            }
+            
+        except Exception as e:
+            logger.error(f"Eligibility evaluation failed: {str(e)}")
+            return {
+                'eligible': False,
+                'confidence': 0.0,
+                'reasoning': f"Evaluation error: {str(e)}",
+                'primary_reason': 'error',
+                'case_id': 'error',
+                'method': 'error'
+            }
 
     def _analyze_eligibility(self, prolog_file: str, case_id: str) -> Dict[str, Any]:
         """Analyze eligibility using the CORRECT predicate from legal_aid_clean_v2.pl"""

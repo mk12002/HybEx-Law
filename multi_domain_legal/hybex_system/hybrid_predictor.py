@@ -137,14 +137,17 @@ class IntelligentHybridPredictor:
         
         # Learned ensemble parameters (tune on validation set)
         self.ensemble_params = {
-            'prolog_threshold': 0.90,      # Use Prolog if confidence > this
-            'gnn_threshold': 0.80,          # Use GNN if confidence > this
-            'bert_threshold': 0.85,         # Use BERT if confidence > this
-            'prolog_weight': 0.50,          # Weight in ensemble (favor Prolog for legal rules)
-            'bert_weight': 0.30,
-            'gnn_weight': 0.20,
-            'uncertainty_threshold': 0.70,  # Flag for review if confidence < this
-            'conflict_penalty': 0.15        # Reduce confidence when systems disagree
+            'prolog_threshold': 0.75,  # ✅ REDUCED from 0.92
+            'gnn_threshold': 0.70,     # ✅ REDUCED from 0.75
+            'bert_threshold': 0.75,    # ✅ REDUCED from 0.80
+            # ✅ REBALANCED weights to favor neural models
+            'prolog_weight': 0.15,  # ← REDUCED from 0.20
+            'bert_weight': 0.40,    # ← INCREASED from 0.32
+            'gnn_weight': 0.35,     # ← INCREASED from 0.28
+            'domain_weight': 0.05,  # ← REDUCED from 0.10
+            'enhanced_bert_weight': 0.05,  # ← REDUCED from 0.10
+            'uncertainty_threshold': 0.60,
+            'conflict_penalty': 0.05  # ✅ REDUCED from 0.08
         }
         
         # Track performance for adaptive weighting
@@ -253,14 +256,47 @@ class IntelligentHybridPredictor:
         enhanced_res = self.predict_with_enhanced_bert_safe(case_data)
         
         # Strategy 1: High-confidence Prolog (trust legal rules)
-        if prolog_res and prolog_conf_cal >= self.ensemble_params['prolog_threshold']:
-            return {
-                'eligible': prolog_res.eligible,
-                'confidence': prolog_conf_cal,
-                'method': 'prolog',
-                'reasoning': f"Prolog high confidence ({prolog_conf_cal:.2f})",
-                'rationale': f"Legal rules clearly indicate {'ELIGIBLE' if prolog_res.eligible else 'NOT ELIGIBLE'}"
-            }
+        # ✅ REMOVED: Don't auto-return Prolog
+        # Now Prolog participates in ensemble ALWAYS, not override
+
+        # Strategy 1: Check for HIGH-CONFIDENCE AGREEMENT
+        predictions = []
+        if bert_res:
+            predictions.append(('bert', bert_res.eligible, bert_conf_cal))
+        if prolog_res:
+            predictions.append(('prolog', prolog_res.eligible, prolog_conf_cal))
+        if gnn_res:
+            predictions.append(('gnn', gnn_res.eligible, gnn_conf_cal))
+        if domain_res:
+            predictions.append(('domain_classifier', domain_res.eligible, domain_res.confidence))
+        if enhanced_res:
+            predictions.append(('enhanced_bert', enhanced_res.eligible, enhanced_res.confidence))
+
+        if len(predictions) >= 3:
+            eligibilities = [p[1] for p in predictions]
+            confidences = [p[2] for p in predictions]
+            # If ALL models agree AND average confidence > 0.85
+            if len(set(eligibilities)) == 1 and np.mean(confidences) > 0.85:
+                boosted_conf = min(0.98, np.mean(confidences) * 1.12)
+                return {
+                    'eligible': eligibilities[0],
+                    'confidence': boosted_conf,
+                    'method': 'strong_consensus',
+                    'reasoning': f"All {len(predictions)} models strongly agree (avg conf={np.mean(confidences):.2f})",
+                    'rationale': "Unanimous decision with high confidence across symbolic and neural methods"
+                }
+            # If Prolog + 2 neural models agree (3+ total)
+            if prolog_res and prolog_conf_cal > 0.80:
+                neural_agree = sum(1 for p in predictions if p[0] != 'prolog' and p[1] == prolog_res.eligible)
+                if neural_agree >= 2:  # At least 2 neural models agree with Prolog
+                    boosted_conf = min(0.95, (prolog_conf_cal + np.mean([p[2] for p in predictions if p[0] != 'prolog'])) / 2)
+                    return {
+                        'eligible': prolog_res.eligible,
+                        'confidence': boosted_conf,
+                        'method': 'prolog_neural_consensus',
+                        'reasoning': f"Prolog ({prolog_conf_cal:.2f}) + {neural_agree} neural models agree",
+                        'rationale': "Legal rules confirmed by independent neural analysis"
+                    }
         
         # Strategy 2: Check for conflict between all systems
         predictions = []
@@ -278,36 +314,41 @@ class IntelligentHybridPredictor:
         # Check if there's disagreement
         if len(predictions) >= 2:
             eligibilities = [p[1] for p in predictions]
-            if len(set(eligibilities)) > 1:  # Systems disagree
-                
-                # If Prolog says NOT eligible and others say eligible
-                if prolog_res and not prolog_res.eligible and prolog_conf_cal > 0.75:
-                    # Trust Prolog for negative cases (stricter legal interpretation)
-                    return {
-                        'eligible': False,
-                        'confidence': prolog_conf_cal * 0.9,  # Slightly reduce due to conflict
-                        'method': 'prolog',
-                        'reasoning': f"Conflict resolved: Prolog NOT eligible ({prolog_conf_cal:.2f}) overrides neural models",
-                        'rationale': "Legal rules take precedence for rejection cases"
-                    }
-                
-                # If Prolog says eligible and others say NOT eligible
-                elif prolog_res and prolog_res.eligible and prolog_conf_cal > 0.80:
-                    # Trust Prolog for positive cases (legal entitlement)
+            if len(set(eligibilities)) > 1:  # Disagreement exists
+                # Count votes
+                votes_eligible = sum(1 for e in eligibilities if e)
+                votes_not = len(eligibilities) - votes_eligible
+                # Get average confidence for each side
+                conf_eligible = np.mean([p[2] for p in predictions if p[1] == True]) if votes_eligible > 0 else 0.0
+                conf_not = np.mean([p[2] for p in predictions if p[1] == False]) if votes_not > 0 else 0.0
+                # ✅ EQUAL VOTING - Remove Prolog bonus
+                if prolog_res:
+                    prolog_vote = prolog_res.eligible
+                    # REMOVED: prolog_weight_factor = 1.5
+                    # Just count as 1 vote like all others
+                    if prolog_vote:
+                        votes_eligible += 1  # ✅ Changed from += 1.5/0.5
+                    else:
+                        votes_not += 1
+                # Decision based on simple majority
+                if votes_eligible > votes_not:
+                    final_conf = conf_eligible * 0.95  # ✅ Reduced penalty from 0.92
                     return {
                         'eligible': True,
-                        'confidence': prolog_conf_cal * 0.9,
-                        'method': 'prolog',
-                        'reasoning': f"Conflict resolved: Prolog eligible ({prolog_conf_cal:.2f}) overrides neural models",
-                        'rationale': "Legal entitlement established by rules"
+                        'confidence': final_conf,
+                        'method': 'majority_vote_eligible',
+                        'reasoning': f"Majority: {votes_eligible:.0f} eligible vs {votes_not:.0f} not",
+                        'rationale': "Democratic voting without Prolog bias"
                     }
-                
-                # Can't resolve - use weighted ensemble with conflict penalty
-                return self._weighted_ensemble(
-                    bert_res, prolog_res, gnn_res, domain_res, enhanced_res,
-                    bert_conf_cal, prolog_conf_cal, gnn_conf_cal,
-                    conflict_penalty=self.ensemble_params['conflict_penalty']
-                )
+                else:
+                    final_conf = conf_not * 0.95
+                    return {
+                        'eligible': False,
+                        'confidence': final_conf,
+                        'method': 'majority_vote_not_eligible',
+                        'reasoning': f"Majority: {votes_not:.0f} not eligible vs {votes_eligible:.0f}",
+                        'rationale': "Democratic voting without Prolog bias"
+                    }
         
         # Strategy 3: Systems agree - boost confidence
         if len(predictions) >= 2:
@@ -345,32 +386,73 @@ class IntelligentHybridPredictor:
         - EnhancedBERT: 0.20 (multi-task model)
         """
         
-        # Calculate weighted probability
+        # ✅ FIXED: Confidence-weighted ensemble
         eligible_score = 0.0
         total_weight = 0.0
         components = []
-        
-        # Base 3 models (existing)
+
+        # ✅ BERT - Adaptive weighting
         if bert_res:
-            weight = self.ensemble_params.get('bert_weight', 0.20)
+            base_weight = 0.30
+            # Scale weight by confidence (0.5-1.5x multiplier)
+            conf_multiplier = 0.5 + bert_conf_cal
+            conf_weight = base_weight * conf_multiplier
             score = bert_conf_cal if bert_res.eligible else (1 - bert_conf_cal)
-            eligible_score += weight * score
-            total_weight += weight
-            components.append(f"BERT={score:.2f}({weight})")
-        
+            eligible_score += conf_weight * score
+            total_weight += conf_weight
+            components.append(f"BERT:{score:.2f}×{conf_weight:.2f}")
+
+        # ✅ Prolog - EQUAL confidence scaling as neural models
         if prolog_res:
-            weight = self.ensemble_params.get('prolog_weight', 0.30)
+            base_weight = 0.15  # ← ALREADY REDUCED
+            conf_multiplier = 0.5 + prolog_conf_cal  # ✅ SAME AS BERT NOW
+            conf_weight = base_weight * conf_multiplier
             score = prolog_conf_cal if prolog_res.eligible else (1 - prolog_conf_cal)
-            eligible_score += weight * score
-            total_weight += weight
-            components.append(f"Prolog={score:.2f}({weight})")
-        
+            eligible_score += conf_weight * score
+            total_weight += conf_weight
+            components.append(f"Prolog:{score:.2f}×{conf_weight:.2f}")
+
+        # ✅ GNN - Higher base weight
         if gnn_res:
-            weight = self.ensemble_params.get('gnn_weight', 0.15)
+            base_weight = 0.30  # ← INCREASED from 0.25
+            conf_multiplier = 0.5 + gnn_conf_cal
+            conf_weight = base_weight * conf_multiplier
             score = gnn_conf_cal if gnn_res.eligible else (1 - gnn_conf_cal)
-            eligible_score += weight * score
-            total_weight += weight
-            components.append(f"GNN={score:.2f}({weight})")
+            eligible_score += conf_weight * score
+            total_weight += conf_weight
+            components.append(f"GNN:{score:.2f}×{conf_weight:.2f}")
+
+        # Domain Classifier
+        if domain_res:
+            base_weight = 0.10  # ← INCREASED from 0.05
+            conf_weight = base_weight * (0.5 + 0.5 * domain_res.confidence)
+            score = domain_res.confidence if domain_res.eligible else (1 - domain_res.confidence)
+            eligible_score += conf_weight * score
+            total_weight += conf_weight
+            components.append(f"Domain:{score:.2f}×{conf_weight:.2f}")
+
+        # Enhanced BERT
+        if enhanced_res:
+            base_weight = 0.10  # ← REDUCED from 0.15
+            conf_weight = base_weight * (0.8 + 0.4 * enhanced_res.confidence)
+            score = enhanced_res.confidence if enhanced_res.eligible else (1 - enhanced_res.confidence)
+            eligible_score += conf_weight * score
+            total_weight += conf_weight
+            components.append(f"Enhanced:{score:.2f}×{conf_weight:.2f}")
+
+        if total_weight > 0:
+            eligible_score /= total_weight
+
+        final_confidence = eligible_score * (1 - conflict_penalty)
+        eligible = eligible_score > 0.5
+
+        return {
+            'eligible': eligible,
+            'confidence': final_confidence,
+            'method': 'weighted_ensemble',
+            'reasoning': f"Weighted: {', '.join(components)}",
+            'rationale': f"Adaptive weighting {'(penalty applied)' if conflict_penalty > 0 else ''}"
+        }
         
         # NEW: Domain Classifier
         if domain_res:
@@ -641,36 +723,43 @@ class IntelligentHybridPredictor:
                 self.bert.eligibility_model.eval()
                 outputs = self.bert.eligibility_model(**inputs)
                 
-                # Handle dict/tensor/object outputs
+                # ✅ ROBUST logits normalization
                 if isinstance(outputs, dict):
                     logits = outputs.get('logits', outputs.get(list(outputs.keys())[0]))
                 elif isinstance(outputs, torch.Tensor):
                     logits = outputs
                 else:
                     logits = outputs.logits
-                
-                # FIX: Handle both 1D and 2D logits
+
+                # ✅ UNIFIED shape handling
                 if logits.dim() == 1:
-                    # Model outputs raw scores [batch_size] - treat as binary logits
-                    # Reshape to [batch_size, 2] with [not_eligible_score, eligible_score]
-                    logits = torch.stack([1 - logits, logits], dim=1)
-                elif logits.dim() == 2 and logits.size(1) == 1:
-                    # Model outputs [batch_size, 1] - convert to [batch_size, 2]
-                    logits = torch.cat([1 - logits, logits], dim=1)
-                
-                # Now safe to apply softmax on dim=1
-                probs = torch.softmax(logits, dim=1)
-                pred_class = torch.argmax(probs, dim=1).item()
-                confidence = probs[0, pred_class].item()
-            
-            return HybridPrediction(
-                case_id=case_id,
-                eligible=bool(pred_class),
-                confidence=confidence,
-                method_used='bert',
-                bert_result={'probs': probs.cpu().numpy().tolist()},
-                reasoning=f"BERT: {len(query)} chars"
-            )
+                    # [batch_size] - binary logits
+                    probs = torch.sigmoid(logits)
+                    pred_class = (probs > 0.5).long().item()
+                    confidence = probs.item() if pred_class == 1 else (1 - probs.item())
+                elif logits.dim() == 2:
+                    if logits.size(1) == 1:
+                        # [batch_size, 1] - squeeze and treat as 1D
+                        logits = logits.squeeze(1)
+                        probs = torch.sigmoid(logits)
+                        pred_class = (probs > 0.5).long().item()
+                        confidence = probs.item() if pred_class == 1 else (1 - probs.item())
+                    else:
+                        # [batch_size, 2] - proper softmax
+                        probs = torch.softmax(logits, dim=1)
+                        pred_class = torch.argmax(probs, dim=1).item()
+                        confidence = probs[0, pred_class].item()
+                else:
+                    raise ValueError(f"Unexpected logits shape: {logits.shape}")
+
+                return HybridPrediction(
+                    case_id=case_id,
+                    eligible=bool(pred_class),
+                    confidence=confidence,
+                    method_used='bert',
+                    bert_result={'probs': probs.cpu().numpy().tolist() if hasattr(probs, 'cpu') else probs},
+                    reasoning=f"BERT: {len(query)} chars"
+                )
             
         except Exception as e:
             logger.warning(f"BERT failed for {case_data.get('sample_id')}: {str(e)[:100]}")

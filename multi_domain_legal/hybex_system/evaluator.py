@@ -1,12 +1,10 @@
-# hybex_system/evaluator.py
 
 import json
 import logging
 import os
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Any
-import gc # Import garbage collector
-
+import gc # Import garbage collecto
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
@@ -17,18 +15,16 @@ from datetime import datetime
 from sklearn.metrics import (accuracy_score, classification_report,
                              confusion_matrix, f1_score, precision_score,
                              recall_score)
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
-from transformers import AutoTokenizer
-
+from transformers import AutoTokenize
 from .config import HybExConfig
 from .neural_models import (DomainClassifier, EligibilityPredictor,
                             LegalDataset, ModelMetrics)
-from .prolog_engine import LegalReasoning, PrologEngine # Added PrologEngine
-from .knowledge_graph_engine import KnowledgeGraphEngine # Added KnowledgeGraphEngine
-from .data_processor import DataPreprocessor # Added DataPreprocessor for internal use
-from .advanced_evaluator import AdvancedEvaluator # Added AdvancedEvaluator for comprehensive metrics
-
+from .prolog_engine import LegalReasoning, PrologEngine
+from .knowledge_graph_engine import KnowledgeGraphEngine
+from .data_processor import DataPreprocessor
+from .advanced_evaluator import AdvancedEvaluato
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -46,36 +42,98 @@ class EvaluationResults:
     sample_size: int
     config_summary: Dict[str, Any]
 
-def _convert_numpy_to_list(obj):
-    """Recursively convert numpy arrays and numpy types to lists/native types."""
-    if isinstance(obj, np.ndarray):
-        return obj.tolist()
-    elif isinstance(obj, (np.generic, np.number)):
-         return obj.item()
-    elif isinstance(obj, dict):
-        return {k: _convert_numpy_to_list(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [_convert_numpy_to_list(item) for item in obj]
-    else:
-        return obj
+    def _convert_numpy_to_list(obj):
+        """Recursively convert numpy arrays and numpy types to lists/native types."""
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, (np.generic, np.number)):
+             return obj.item()
+        elif isinstance(obj, dict):
+            return {k: _convert_numpy_to_list(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [_convert_numpy_to_list(item) for item in obj]
+        else:
+            return obj
 
+
+# ============================================================================
+# HELPER CLASSES
+# ============================================================================
+
+class AblationDataset(Dataset):
+    """PyTorch Dataset for ablation study evaluation"""
+    
+    def __init__(self, data, tokenizer, max_length=512):
+        self.data = data
+        self.tokenizer = tokenizer
+        self.max_length = max_length
+    
+    def __len__(self):
+        return len(self.data)
+    
+    def __getitem__(self, idx):
+        sample = self.data[idx]
+        text = sample.get('query', '')
+        label = int(sample.get('expected_eligibility', 0))
+        
+        encoding = self.tokenizer(
+            text,
+            max_length=self.max_length,
+            padding='max_length',
+            truncation=True,
+            return_tensors='pt'
+        )
+        
+        return {
+            'input_ids': encoding['input_ids'].squeeze(0),
+            'attention_mask': encoding['attention_mask'].squeeze(0),
+            'label': torch.tensor(label, dtype=torch.long),
+            'sample_idx': idx
+        }
 class ModelEvaluator:
     """Comprehensive model evaluation framework for HybEx-Law system."""
     
-    def __init__(self, config: HybExConfig):
-        self.config = config
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.tokenizer = AutoTokenizer.from_pretrained(config.MODEL_CONFIG['base_model'])
-        if self.tokenizer.pad_token is None:
-            self.tokenizer.pad_token = self.tokenizer.eos_token
-        
-        # Initialize internal components for evaluation tasks
-        self._data_processor_cache = DataPreprocessor(self.config)
-        self._knowledge_graph_engine_cache = KnowledgeGraphEngine(self.config)
-        self._prolog_engine_cache = PrologEngine(self.config)
-
-        self.setup_logging()
-        logger.info(f"ModelEvaluator initialized on device: {self.device}")
+# --- MODULE-LEVEL ModelWrapper ---
+class ModelWrapper:
+    """Wrapper to provide consistent interface for different model types"""
+    def __init__(self, evaluator):
+        self.evaluator = evaluator
+        self.device = evaluator.device
+        self.tokenizer = evaluator.tokenizer
+        self.kg_engine = getattr(evaluator, 'kg_engine', None) or getattr(evaluator, '_knowledge_graph_engine_cache', None)
+        self.eligibility_model = None
+    def predict(self, model_type: str, model_obj: Any, input_data: Any) -> Any:
+        """
+        Generic prediction interface
+        Args:
+            model_type: Type of model ('prolog', 'gnn', 'bert', etc.)
+            model_obj: The model object
+            input_data: Input data dict or string
+        Returns:
+            Prediction result
+        """
+        if model_type == 'prolog':
+            return model_obj.query_eligibility(input_data)
+        elif model_type == 'gnn':
+            return model_obj.predict(input_data)
+        elif model_type in ['bert', 'domain', 'eligibility']:
+            with torch.no_grad():
+                model_obj.eval()
+                query = input_data if isinstance(input_data, str) else input_data.get('query', '')
+                encoding = self.tokenizer(
+                    query,
+                    return_tensors='pt',
+                    max_length=512,
+                    truncation=True,
+                    padding='max_length'
+                ).to(self.device)
+                logits = model_obj(**encoding)
+                if isinstance(logits, tuple):
+                    logits = logits[0]
+                pred = torch.argmax(logits, dim=1).item()
+                return pred
+        else:
+            raise ValueError(f"Unknown model type: {model_type}")
 
     def setup_logging(self):
         log_file = self.config.get_log_path('model_evaluation')
@@ -178,9 +236,28 @@ class ModelEvaluator:
                     loss = criterion(logits, labels)
                     preds = (torch.sigmoid(logits) > 0.5).cpu().numpy()
                 elif task_type == "eligibility_prediction":
-                    # Added squeeze to logits for BCEWithLogitsLoss
-                    loss = criterion(logits.squeeze(), labels) 
-                    preds = (torch.sigmoid(logits.squeeze()) > 0.5).cpu().numpy()
+                    # FIX: Handle different output shapes for eligibility prediction
+                    # Ensure labels and logits have compatible shapes
+                    if logits.dim() == 1:
+                        # Binary classification with single output per sample: [batch_size]
+                        # Keep as-is, ensure labels are also 1D
+                        labels = labels.squeeze() if labels.dim() > 1 else labels
+                    elif logits.dim() == 2 and logits.size(1) == 1:
+                        # Binary classification with [batch_size, 1] output
+                        # Squeeze to [batch_size]
+                        logits = logits.squeeze(1)
+                        labels = labels.squeeze() if labels.dim() > 1 else labels
+                    elif logits.dim() == 0:
+                        # Single sample with scalar output
+                        # Add batch dimension
+                        logits = logits.unsqueeze(0)
+                        labels = labels.unsqueeze(0) if labels.dim() == 0 else labels
+                    
+                    # Ensure labels are float for BCEWithLogitsLoss
+                    labels = labels.float()
+                    
+                    loss = criterion(logits, labels)
+                    preds = (torch.sigmoid(logits) > 0.5).cpu().numpy()
                 else:
                     loss = criterion(logits, labels.long())
                     preds = torch.argmax(logits, dim=-1).cpu().numpy()
@@ -208,7 +285,7 @@ class ModelEvaluator:
             accuracy=accuracy_score(true_labels_np, predictions_np) if len(true_labels_np) > 0 else 0.0,
             f1_score=f1_score(true_labels_np, predictions_np, average=average_type, zero_division=0) if len(true_labels_np) > 0 else 0.0,
             precision=precision_score(true_labels_np, predictions_np, average=average_type, zero_division=0) if len(true_labels_np) > 0 else 0.0,
-            recall=recall_score(true_labels_np, predictions_np, average=average_type, zero_division=0) if len(true_labels_np) > 0 else 0.0,
+            recall=recall_score(true_labels_np, predictions_np, average=average_type, zero_division=0) if len(true_labelsNp) > 0 else 0.0,
             loss=avg_loss,
             classification_report=classification_report(true_labels_np, predictions_np, output_dict=True, zero_division=0),
             confusion_matrix=cm
@@ -443,14 +520,6 @@ class ModelEvaluator:
         logger.info("HYBRID SYSTEM EVALUATION (WITH ADVANCED METRICS)")
         logger.info("="*70)
         
-        # FIX: Create a wrapper object with the correct attributes for HybridPredictor
-        class ModelWrapper:
-            def __init__(self, evaluator):
-                self.device = evaluator.device
-                self.tokenizer = evaluator.tokenizer
-                # Use correct attribute names
-                self.kg_engine = getattr(evaluator, 'kg_engine', None) or evaluator._knowledge_graph_engine_cache
-                self.eligibility_model = None  # Will be set dynamically
         
         # Create wrapper
         model_wrapper = ModelWrapper(self)
@@ -612,172 +681,468 @@ class ModelEvaluator:
         
         return results
 
-    def evaluate_ablation_combinations(self, test_loader: DataLoader, device: torch.device) -> Dict:
+    def evaluate_ablation_combinations(self, test_data: List[Dict], device) -> Dict:
         """
-        Evaluate ALL model combinations for ablation study.
-        Tests: Prolog, Domain, Eligibility, EnhancedBERT, GNN, and all combinations.
+        Run ablation study - Test ALL 17 model combinations
+        ✅ Handles all models: prolog, gnn, domain, eligibility, enhanced_bert
+        ✅ Fixed domain classifier to use legal_aid domain probability
+        ✅ Proper error handling and GPU memory cleanup
         """
-        logger.info("\n" + "="*70)
-        logger.info("RUNNING ABLATION STUDY - ALL MODEL COMBINATIONS")
-        logger.info("="*70)
+        from transformers import AutoTokenizer
+        from torch.utils.data import Dataset, DataLoader
+        import pandas as pd
         
-        # Define combinations
+        logger.info(f"\n{'='*80}")
+        logger.info("COMPREHENSIVE ABLATION STUDY - ALL 17 MODEL COMBINATIONS")
+        logger.info(f"{'='*80}")
+        
+        # Initialize tokenizer
+        tokenizer = AutoTokenizer.from_pretrained(self.config.MODEL_CONFIG['base_model'])
+        
+        # ===== ALL 17 COMBINATIONS =====
         combinations = {
-            # Single Models
-            'prolog_only': ['prolog'],
-            'domain_only': ['domain_classifier'],
-            'eligibility_only': ['eligibility_predictor'],
-            'enhanced_bert_only': ['enhanced_bert'],
-            'gnn_only': ['gnn'],
+            # Singles (5)
+            '01_prolog': ['prolog'],
+            '02_gnn': ['gnn'],
+            '03_domain': ['domain_classifier'],
+            '04_eligibility': ['eligibility_predictor'],
+            '05_enhanced_bert': ['enhanced_legal_bert'],
             
-            # Pairs
-            'prolog_bert': ['prolog', 'enhanced_bert'],
-            'prolog_gnn': ['prolog', 'gnn'],
-            'bert_gnn': ['enhanced_bert', 'gnn'],
-            'domain_eligibility': ['domain_classifier', 'eligibility_predictor'],
+            # Pairs (6)
+            '06_domain_eligibility': ['domain_classifier', 'eligibility_predictor'],
+            '07_domain_bert': ['domain_classifier', 'enhanced_legal_bert'],
+            '08_eligibility_bert': ['eligibility_predictor', 'enhanced_legal_bert'],
+            '09_gnn_domain': ['gnn', 'domain_classifier'],
+            '10_gnn_eligibility': ['gnn', 'eligibility_predictor'],
+            '11_gnn_bert': ['gnn', 'enhanced_legal_bert'],
             
-            # Triples
-            'prolog_bert_gnn': ['prolog', 'enhanced_bert', 'gnn'],
-            'all_separate': ['domain_classifier', 'eligibility_predictor', 'gnn'],
-            'all_neural': ['enhanced_bert', 'eligibility_predictor', 'gnn'],
+            # With Prolog (3)
+            '12_prolog_domain': ['prolog', 'domain_classifier'],
+            '13_prolog_eligibility': ['prolog', 'eligibility_predictor'],
+            '14_prolog_gnn': ['prolog', 'gnn'],
             
-            # Quartets
-            'prolog_all_neural': ['prolog', 'enhanced_bert', 'eligibility_predictor', 'gnn'],
-            
-            # Full Ensemble
-            'full_ensemble': ['prolog', 'domain_classifier', 'eligibility_predictor', 'enhanced_bert', 'gnn'],
-            
-            # Comparisons
-            'multitask_focus': ['prolog', 'enhanced_bert', 'gnn'],  # Recommended
-            'singletask_focus': ['prolog', 'domain_classifier', 'eligibility_predictor', 'gnn'],
+            # Ensembles (3)
+            '15_all_neural': ['domain_classifier', 'eligibility_predictor', 'enhanced_legal_bert', 'gnn'],
+            '16_hybrid_best': ['prolog', 'eligibility_predictor', 'gnn'],
+            '17_full_ensemble': ['prolog', 'domain_classifier', 'eligibility_predictor', 'gnn', 'enhanced_legal_bert'],
         }
         
-        # Define weights for each combination
-        weights = {
-            'prolog_bert': {'prolog': 0.6, 'enhanced_bert': 0.4},
-            'prolog_gnn': {'prolog': 0.6, 'gnn': 0.4},
-            'bert_gnn': {'enhanced_bert': 0.6, 'gnn': 0.4},
-            'domain_eligibility': {'domain_classifier': 0.3, 'eligibility_predictor': 0.7},
-            'prolog_bert_gnn': {'prolog': 0.4, 'enhanced_bert': 0.35, 'gnn': 0.25},
-            'all_separate': {'domain_classifier': 0.2, 'eligibility_predictor': 0.5, 'gnn': 0.3},
-            'all_neural': {'enhanced_bert': 0.4, 'eligibility_predictor': 0.3, 'gnn': 0.3},
-            'prolog_all_neural': {'prolog': 0.3, 'enhanced_bert': 0.3, 'eligibility_predictor': 0.2, 'gnn': 0.2},
-            'full_ensemble': {'prolog': 0.25, 'domain_classifier': 0.10, 'eligibility_predictor': 0.15, 
-                              'enhanced_bert': 0.30, 'gnn': 0.20},
-            'multitask_focus': {'prolog': 0.35, 'enhanced_bert': 0.45, 'gnn': 0.20},
-            'singletask_focus': {'prolog': 0.35, 'domain_classifier': 0.15, 'eligibility_predictor': 0.30, 'gnn': 0.20},
-        }
+        all_results = []
         
-        all_results = {}
+        # Helper to check model availability
+        def check_models_available(models_list):
+            for model_name in models_list:
+                if model_name == 'prolog':
+                    if not hasattr(self, '_prolog_engine_cache') or self._prolog_engine_cache is None:
+                        return False, "Prolog engine not initialized"
+                elif model_name == 'gnn':
+                    if not hasattr(self, '_knowledge_graph_engine_cache') or self._knowledge_graph_engine_cache is None:
+                        return False, "GNN engine not initialized"
+                    if not self.config.GNN_MODEL_PATH.exists():
+                        return False, f"GNN model not found at {self.config.GNN_MODEL_PATH}"
+                elif model_name in ['domain_classifier', 'eligibility_predictor']:
+                    model_path = self.config.MODELS_DIR / model_name / 'model.pt'
+                    if not model_path.exists():
+                        return False, f"{model_name} not found at {model_path}"
+                elif model_name == 'enhanced_legal_bert':
+                    if not self.config.ENHANCED_BERT_MODEL_PATH.exists():
+                        return False, f"Enhanced BERT not found at {self.config.ENHANCED_BERT_MODEL_PATH}"
+            return True, "All models available"
         
         # Evaluate each combination
-        for comb_name, models in combinations.items():
-            logger.info(f"\n{'='*70}")
-            logger.info(f"Testing: {comb_name}")
+        for combo_name, models in combinations.items():
+            logger.info(f"\n{'='*80}")
+            logger.info(f"Testing: {combo_name}")
             logger.info(f"Models: {models}")
             
-            # Check if models are available
-            available_models = []
-            for model_name in models:
-                if model_name == 'prolog':
-                    available_models.append(model_name)
-                elif model_name in ['domain_classifier', 'eligibility_predictor', 'enhanced_bert', 'gnn']:
-                    model_path = self.config.MODELS_DIR / model_name
-                    if model_path.exists():
-                        available_models.append(model_name)
-            
-            if len(available_models) != len(models):
-                logger.warning(f"⚠️  Skipping {comb_name}: Some models not trained yet")
-                continue
-            
-            # Get combination weights (or equal weights if not specified)
-            comb_weights = weights.get(comb_name, {m: 1/len(models) for m in models})
-            
-            # Evaluate this combination
-            result = self._evaluate_combination(
-                test_loader, 
-                device, 
-                models, 
-                comb_weights
-            )
-            
-            all_results[comb_name] = result
-            logger.info(f"✅ {comb_name}: Accuracy={result['accuracy']:.4f}, F1={result['f1']:.4f}")
+            try:
+                # Check availability
+                available, msg = check_models_available(models)
+                if not available:
+                    logger.warning(f"⚠️  Skipping {combo_name}: {msg}")
+                    continue
+                
+                predictions = []
+                ground_truth = []
+                
+                # ===== PROLOG-ONLY =====
+                if models == ['prolog']:
+                    for sample in tqdm(test_data, desc=f"Evaluating {combo_name}"):
+                        try:
+                            entities = sample.get('extracted_entities', {})
+                            query = sample.get('query', '')
+                            result = self._prolog_engine_cache.evaluate_eligibility(entities, query)
+                            predictions.append(1 if result.get('eligible', False) else 0)
+                        except Exception as e:
+                            logger.debug(f"Prolog prediction failed: {e}")
+                            predictions.append(0)
+                        ground_truth.append(int(sample.get('expected_eligibility', 0)))
+                
+                # ===== GNN-ONLY =====
+                elif models == ['gnn']:
+                    try:
+                        self._knowledge_graph_engine_cache.load_model(str(self.config.GNN_MODEL_PATH))
+                        logger.info("✅ GNN model loaded")
+                    except Exception as e:
+                        logger.error(f"Failed to load GNN: {e}")
+                        continue
+                    
+                    entities_list = [s.get('extracted_entities', {}) for s in test_data]
+                    predictions = self._knowledge_graph_engine_cache.batch_predict_eligibility(
+                        entities_list, return_probabilities=False
+                    )
+                    ground_truth = [int(s.get('expected_eligibility', 0)) for s in test_data]
+                
+                # ===== HYBRID (Prolog + GNN) =====
+                elif set(models) == {'prolog', 'gnn'}:
+                    prolog_preds = []
+                    for sample in test_data:
+                        try:
+                            result = self._prolog_engine_cache.evaluate_eligibility(
+                                sample.get('extracted_entities', {}),
+                                sample.get('query', '')
+                            )
+                            prolog_preds.append(1 if result.get('eligible', False) else 0)
+                        except:
+                            prolog_preds.append(0)
+                    
+                    entities_list = [s.get('extracted_entities', {}) for s in test_data]
+                    gnn_preds = self._knowledge_graph_engine_cache.batch_predict_eligibility(entities_list)
+                    
+                    # Weighted combination
+                    predictions = []
+                    for p, g in zip(prolog_preds, gnn_preds):
+                        combined = 0.5 * p + 0.5 * g
+                        predictions.append(1 if combined > 0.5 else 0)
+                    
+                    ground_truth = [int(s.get('expected_eligibility', 0)) for s in test_data]
+                
+                # ===== NEURAL MODELS (with or without Prolog) =====
+                else:
+                    # Create dataset
+                    dataset = AblationDataset(test_data, tokenizer)
+                    dataloader = DataLoader(dataset, batch_size=8, shuffle=False)
+                    
+                    # Load neural models
+                    loaded_models = {}
+                    for model_name in models:
+                        if model_name in ['prolog', 'gnn']:
+                            continue  # Handle separately
+                        
+                        if model_name == 'domain_classifier':
+                            from .neural_models import DomainClassifier
+                            model = DomainClassifier(self.config).to(device)
+                            model.load_state_dict(torch.load(
+                                self.config.MODELS_DIR / 'domain_classifier' / 'model.pt',
+                                map_location=device
+                            ))
+                            model.eval()
+                            loaded_models[model_name] = model
+                        
+                        elif model_name == 'eligibility_predictor':
+                            from .neural_models import EligibilityPredictor
+                            model = EligibilityPredictor(self.config).to(device)
+                            model.load_state_dict(torch.load(
+                                self.config.MODELS_DIR / 'eligibility_predictor' / 'model.pt',
+                                map_location=device
+                            ))
+                            model.eval()
+                            loaded_models[model_name] = model
+                        
+                        elif model_name == 'enhanced_legal_bert':
+                            from .neural_models import EnhancedLegalBERT
+                            model = EnhancedLegalBERT(self.config).to(device)
+                            model.load_state_dict(torch.load(
+                                self.config.ENHANCED_BERT_MODEL_PATH,
+                                map_location=device
+                            ))
+                            model.eval()
+                            loaded_models[model_name] = model
+                    
+                    # Get Prolog predictions if needed
+                    prolog_preds = None
+                    if 'prolog' in models:
+                        prolog_preds = []
+                        for sample in test_data:
+                            try:
+                                result = self._prolog_engine_cache.evaluate_eligibility(
+                                    sample.get('extracted_entities', {}),
+                                    sample.get('query', '')
+                                )
+                                prolog_preds.append(1 if result.get('eligible', False) else 0)
+                            except:
+                                prolog_preds.append(0)
+                    
+                    # Get GNN predictions if needed
+                    gnn_preds = None
+                    if 'gnn' in models:
+                        entities_list = [s.get('extracted_entities', {}) for s in test_data]
+                        gnn_preds = self._knowledge_graph_engine_cache.batch_predict_eligibility(entities_list)
+                    
+                    # Neural model evaluation
+                    neural_predictions = []
+                    with torch.no_grad():
+                        for batch in tqdm(dataloader, desc=f"Evaluating {combo_name}"):
+                            input_ids = batch['input_ids'].to(device)
+                            attention_mask = batch['attention_mask'].to(device)
+                            labels = batch['label']
+                            
+                            batch_preds = []
+                            
+                            for model_name, model in loaded_models.items():
+                                outputs = model(input_ids, attention_mask)
+                                
+                                # Extract logits
+                                if isinstance(outputs, dict):
+                                    logits = outputs.get('logits', outputs.get('eligibility_logits', None))
+                                    if logits is None:
+                                        logits = list(outputs.values())[0]
+                                else:
+                                    logits = outputs
+                                
+                                # ✅ CRITICAL FIX: Domain classifier
+                                if model_name == 'domain_classifier':
+                                    probs = torch.sigmoid(logits)
+                                    # Use legal_aid domain (index 0) as eligibility proxy
+                                    legal_aid_prob = probs[:, 0] if probs.dim() > 1 else probs
+                                    preds = (legal_aid_prob > 0.5).long()
+                                else:
+                                    if logits.dim() == 1:
+                                        probs = torch.sigmoid(logits)
+                                        preds = (probs > 0.5).long()
+                                    else:
+                                        preds = torch.argmax(logits, dim=1)
+                                
+                                batch_preds.append(preds.cpu())
+                            
+                            # Ensemble neural predictions
+                            if len(batch_preds) > 1:
+                                stacked = torch.stack(batch_preds)
+                                batch_ensemble = torch.mode(stacked, dim=0).values
+                            else:
+                                batch_ensemble = batch_preds[0]
+                            
+                            neural_predictions.extend(batch_ensemble.tolist())
+                            ground_truth.extend(labels.tolist())
+                    
+                    # Combine with Prolog/GNN if present
+                    if prolog_preds is not None or gnn_preds is not None:
+                        all_preds = [neural_predictions]
+                        if prolog_preds is not None:
+                            all_preds.append(prolog_preds)
+                        if gnn_preds is not None:
+                            all_preds.append(gnn_preds)
+                        
+                        # Majority vote
+                        predictions = []
+                        for i in range(len(neural_predictions)):
+                            votes = [pred_list[i] for pred_list in all_preds]
+                            predictions.append(1 if sum(votes) > len(votes) / 2 else 0)
+                    else:
+                        predictions = neural_predictions
+                
+                # Calculate metrics
+                accuracy = accuracy_score(ground_truth, predictions)
+                precision = precision_score(ground_truth, predictions, zero_division=0)
+                recall = recall_score(ground_truth, predictions, zero_division=0)
+                f1 = f1_score(ground_truth, predictions, zero_division=0)
+                
+                result = {
+                    'combination': combo_name,
+                    'models': models,
+                    'accuracy': accuracy,
+                    'precision': precision,
+                    'recall': recall,
+                    'f1': f1,
+                    'num_samples': len(predictions)
+                }
+                
+                all_results.append(result)
+                
+                # Logging
+                logger.info(f"\n{'='*70}")
+                logger.info(f"RESULTS: {combo_name}")
+                logger.info(f"{'='*70}")
+                logger.info(f"Models: {' + '.join(models)}")
+                logger.info(f"Accuracy:  {accuracy:.4f} ({accuracy*100:.2f}%)")
+                logger.info(f"Precision: {precision:.4f}")
+                logger.info(f"Recall:    {recall:.4f}")
+                logger.info(f"F1 Score:  {f1:.4f}")
+                logger.info(f"Samples:   {len(predictions)}")
+                
+                # GPU cleanup
+                del predictions, ground_truth
+                if 'loaded_models' in locals():
+                    for model in loaded_models.values():
+                        del model
+                    loaded_models.clear()
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+                gc.collect()
+                
+            except Exception as e:
+                logger.error(f"❌ Failed {combo_name}: {str(e)}")
+                import traceback
+                logger.error(traceback.format_exc())
         
-        # Generate comparison report
+        # Generate report
         self._generate_ablation_report(all_results)
         
-        return all_results
+        # Save results
+        results_dir = self.config.RESULTS_DIR / 'ablation_study'
+        results_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        
+        # Save CSV
+        df_data = []
+        for r in all_results:
+            df_data.append({
+                'Combination': r['combination'],
+                'Models': ' + '.join(r['models']),
+                'Accuracy': f"{r['accuracy']*100:.2f}%",
+                'Precision': f"{r['precision']*100:.2f}%",
+                'Recall': f"{r['recall']*100:.2f}%",
+                'F1': f"{r['f1']:.4f}",
+                'Samples': r['num_samples']
+            })
+        
+        df = pd.DataFrame(df_data)
+        csv_path = results_dir / f'ablation_results_{timestamp}.csv'
+        df.to_csv(csv_path, index=False)
+        logger.info(f"✅ CSV saved: {csv_path}")
+        
+        # Save JSON
+        json_path = results_dir / f'ablation_results_{timestamp}.json'
+        with open(json_path, 'w') as f:
+            json.dump(all_results, f, indent=2)
+        logger.info(f"✅ JSON saved: {json_path}")
+        
+        return {'all_results': all_results, 'results_file': str(json_path)}
 
     def _evaluate_combination(self, test_loader: DataLoader, device: torch.device, 
                              models: List[str], weights: Dict[str, float]) -> Dict[str, Any]:
-        """Evaluate a specific model combination with proper prediction aggregation."""
+        """
+        Evaluate a specific model combination with proper prediction aggregation
+        FIXED: Handle Prolog-only combinations without requiring neural model inputs
+        """
         from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
         
-        y_true = []
-        y_pred_scores = []
+        combination_name = '+'.join(models)
+        logger.info(f"\n{'='*70}")
+        logger.info(f"Testing: {combination_name}")
+        logger.info(f"Models: {models}")
         
-        for batch in tqdm(test_loader, desc=f"Evaluating {'+'.join(models)}", leave=False):
-            input_ids = batch['input_ids'].to(device)
-            attention_mask = batch['attention_mask'].to(device)
-            labels = batch['labels'].cpu().numpy()
-            y_true.extend(labels)
+        try:
+            y_true = []
+            y_pred_scores = []
             
-            # Get predictions from each model in combination
-            predictions = {}
+            # ✅ FIX: Check if only Prolog is being used (no neural models)
+            neural_models_present = any(m in ['domain_classifier', 'eligibility_predictor', 
+                                              'enhanced_bert', 'gnn'] 
+                                       for m in models)
             
-            for model_name in models:
-                if model_name == 'prolog':
-                    # Prolog predictions
-                    prolog_preds = self._get_prolog_predictions(batch, device)
-                    predictions['prolog'] = prolog_preds
+            if not neural_models_present and 'prolog' in models:
+                # ✅ Prolog-only: Don't use DataLoader batching, use raw samples
+                logger.info("Prolog-only combination - using direct evaluation")
                 
-                elif model_name == 'domain_classifier':
-                    # Domain classifier
-                    predictions['domain_classifier'] = self._get_model_predictions(
-                        'domain_classifier', input_ids, attention_mask, device
-                    )
+                # Access the underlying dataset
+                dataset = test_loader.dataset if hasattr(test_loader, 'dataset') else None
+                if dataset is None:
+                    raise ValueError("Cannot access dataset for Prolog-only evaluation")
                 
-                elif model_name == 'eligibility_predictor':
-                    # Eligibility predictor
-                    predictions['eligibility_predictor'] = self._get_model_predictions(
-                        'eligibility_predictor', input_ids, attention_mask, device
-                    )
-                
-                elif model_name == 'enhanced_bert':
-                    # EnhancedBERT
-                    predictions['enhanced_bert'] = self._get_model_predictions(
-                        'enhanced_bert', input_ids, attention_mask, device
-                    )
-                
-                elif model_name == 'gnn':
-                    # GNN
-                    predictions['gnn'] = self._get_gnn_predictions(batch, device)
+                for sample in tqdm(dataset, desc=f"Evaluating {combination_name}"):
+                    # Get Prolog prediction
+                    prolog_pred = self._get_prolog_prediction(sample)
+                    y_pred_scores.append(1.0 if prolog_pred else 0.0)
+                    
+                    # Get ground truth
+                    label = sample.get('expected_eligibility', sample.get('label', 0))
+                    y_true.append(int(label))
             
-            # Weighted average for this batch
-            batch_size = len(labels)
-            batch_scores = []
-            for i in range(batch_size):
-                weighted_score = sum(
-                    predictions[m][i] * weights.get(m, 1/len(models)) 
-                    for m in predictions
-                )
-                batch_scores.append(weighted_score)
+            else:
+                # ✅ Neural models present: Use DataLoader batching
+                for batch in tqdm(test_loader, desc=f"Evaluating {combination_name}", leave=False):
+                    input_ids = batch['input_ids'].to(device)
+                    attention_mask = batch['attention_mask'].to(device)
+                    labels = batch['labels'].cpu().numpy()
+                    y_true.extend(labels)
+                    
+                    # Get predictions from each model in combination
+                    predictions = {}
+                    
+                    for model_name in models:
+                        if model_name == 'prolog':
+                            # Prolog predictions
+                            prolog_preds = self._get_prolog_predictions(batch, device)
+                            predictions['prolog'] = prolog_preds
+                        
+                        elif model_name == 'domain_classifier':
+                            # Domain classifier
+                            predictions['domain_classifier'] = self._get_model_predictions(
+                                'domain_classifier', input_ids, attention_mask, device
+                            )
+                        
+                        elif model_name == 'eligibility_predictor':
+                            # Eligibility predictor
+                            predictions['eligibility_predictor'] = self._get_model_predictions(
+                                'eligibility_predictor', input_ids, attention_mask, device
+                            )
+                        
+                        elif model_name == 'enhanced_bert':
+                            # EnhancedBERT
+                            predictions['enhanced_bert'] = self._get_model_predictions(
+                                'enhanced_bert', input_ids, attention_mask, device
+                            )
+                        
+                        elif model_name == 'gnn':
+                            # GNN
+                            predictions['gnn'] = self._get_gnn_predictions(batch, device)
+                    
+                    # Weighted average for this batch
+                    batch_size = len(labels)
+                    batch_scores = []
+                    for i in range(batch_size):
+                        weighted_score = sum(
+                            predictions[m][i] * weights.get(m, 1/len(models)) 
+                            for m in predictions
+                        )
+                        batch_scores.append(weighted_score)
+                    
+                    y_pred_scores.extend(batch_scores)
             
-            y_pred_scores.extend(batch_scores)
-        
-        # Convert to binary predictions
-        y_pred = [1 if score >= 0.5 else 0 for score in y_pred_scores]
-        
-        # Calculate metrics
-        return {
-            'accuracy': float(accuracy_score(y_true, y_pred)),
-            'precision': float(precision_score(y_true, y_pred, zero_division=0)),
-            'recall': float(recall_score(y_true, y_pred, zero_division=0)),
-            'f1': float(f1_score(y_true, y_pred, zero_division=0)),
-            'models': models,
-            'weights': weights
-        }
+            # Convert to binary predictions
+            y_pred = [1 if score >= 0.5 else 0 for score in y_pred_scores]
+            
+            # Calculate metrics
+            accuracy = float(accuracy_score(y_true, y_pred))
+            precision = float(precision_score(y_true, y_pred, zero_division=0))
+            recall = float(recall_score(y_true, y_pred, zero_division=0))
+            f1 = float(f1_score(y_true, y_pred, zero_division=0))
+            
+            logger.info(f"✓ Accuracy: {accuracy:.4f}")
+            logger.info(f"✓ F1 Score: {f1:.4f}")
+            
+            return {
+                'accuracy': accuracy,
+                'precision': precision,
+                'recall': recall,
+                'f1': f1,
+                'models': models,
+                'weights': weights,
+                'num_samples': len(y_pred)
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to evaluate {combination_name}: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
+            return {
+                'combination': combination_name,
+                'models': models,
+                'error': str(e),
+                'accuracy': 0.0,
+                'f1': 0.0
+            }
 
     def _get_model_predictions(self, model_name: str, input_ids: torch.Tensor, 
                                attention_mask: torch.Tensor, device: torch.device) -> List[float]:
@@ -852,6 +1217,333 @@ class ModelEvaluator:
         except Exception as e:
             logger.error(f"Prolog predictions failed: {e}")
             return [0.5] * batch['input_ids'].size(0)
+    
+    def _get_prolog_prediction(self, sample: Dict) -> bool:
+        """
+        Get Prolog prediction for a single sample
+        
+        Args:
+            sample: Test sample dictionary with 'query' and/or 'extracted_entities'
+        
+        Returns:
+            Boolean eligibility prediction
+        """
+        try:
+            # Try to get entities from sample
+            entities = sample.get('extracted_entities', {})
+            query_text = sample.get('query', '')
+            
+            # Extract entities if not present
+            if not entities and query_text:
+                if hasattr(self, '_data_processor_cache') and self._data_processor_cache:
+                    entities = self._data_processor_cache.extract_entities(query_text)
+                else:
+                    logger.warning("Data processor not available for entity extraction")
+                    return False
+            
+            # Query Prolog engine
+            if hasattr(self, '_prolog_engine_cache') and self._prolog_engine_cache:
+                # (actual logic for single-sample Prolog prediction continues here)
+                pass
+        
+        # Generate reports
+        self._generate_ablation_report(all_results)
+        
+        # Save results
+        results_dir = self.config.RESULTS_DIR / 'ablation_study'
+        results_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        
+        # Save CSV
+        import pandas as pd
+        df_data = []
+        for r in all_results:
+            if 'error' not in r:
+                df_data.append({
+                    'Rank': len(df_data) + 1,
+                    'Combination': r['combination'],
+                    'Models': ' + '.join(r['models']),
+                    'Accuracy': f"{r['accuracy']*100:.2f}%",
+                    'Precision': f"{r['precision']*100:.2f}%",
+                    'Recall': f"{r['recall']*100:.2f}%",
+                    'F1': f"{r['f1']:.4f}",
+                    'Samples': r['num_samples']
+                })
+        
+        # Sort by F1 score
+        df = pd.DataFrame(df_data)
+        df = df.sort_values('F1', ascending=False).reset_index(drop=True)
+        df['Rank'] = range(1, len(df) + 1)
+        
+        csv_path = results_dir / f'ablation_complete_{timestamp}.csv'
+        df.to_csv(csv_path, index=False)
+
+        logger.info(f"✅ CSV saved: {csv_path}")
+
+        # Automated best model detection and summary
+        best_combo = max(all_results, key=lambda x: x.get('f1', 0))
+        prolog_only = next((r for r in all_results if r['combination'] == '01_prolog'), None)
+
+        logger.info(f"\n{'='*70}")
+        logger.info("ABLATION STUDY SUMMARY")
+        logger.info(f"{'='*70}")
+        logger.info(f"Best Combination: {best_combo['combination']}")
+        logger.info(f"  Models: {' + '.join(best_combo['models'])}")
+        logger.info(f"  F1 Score: {best_combo['f1']:.4f}")
+        logger.info(f"  Accuracy: {best_combo['accuracy']:.4f}")
+
+        if prolog_only:
+            improvement = (best_combo['f1'] - prolog_only['f1']) / prolog_only['f1'] * 100 if prolog_only['f1'] else 0.0
+            logger.info(f"\nImprovement over Prolog-only: {improvement:+.2f}%")
+            if improvement < 1.0:
+                logger.warning("⚠️ WARNING: Mixture models NOT outperforming Prolog!")
+                logger.warning("Recommended actions:")
+                logger.warning("  1. Check neural model training convergence")
+                logger.warning("  2. Verify entity extraction quality")
+                logger.warning("  3. Review ensemble weight calibration")
+
+        # Save JSON
+        json_path = results_dir / f'ablation_complete_{timestamp}.json'
+        with open(json_path, 'w') as f:
+            json.dump(all_results, f, indent=2)
+        logger.info(f"✅ JSON saved: {json_path}")
+
+        return {'all_results': all_results, 'results_file': str(json_path)}
+
+        
+    def _evaluate_combination(self, test_loader: DataLoader, device: torch.device, 
+                             models: List[str], weights: Dict[str, float]) -> Dict[str, Any]:
+        """
+        Evaluate a specific model combination with proper prediction aggregation
+        FIXED: Handle Prolog-only combinations without requiring neural model inputs
+        """
+        from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+        
+        combination_name = '+'.join(models)
+        logger.info(f"\n{'='*70}")
+        logger.info(f"Testing: {combination_name}")
+        logger.info(f"Models: {models}")
+        
+        try:
+            y_true = []
+            y_pred_scores = []
+            
+            # ✅ FIX: Check if only Prolog is being used (no neural models)
+            neural_models_present = any(m in ['domain_classifier', 'eligibility_predictor', 
+                                              'enhanced_bert', 'gnn'] 
+                                       for m in models)
+            
+            if not neural_models_present and 'prolog' in models:
+                # ✅ Prolog-only: Don't use DataLoader batching, use raw samples
+                logger.info("Prolog-only combination - using direct evaluation")
+                
+                # Access the underlying dataset
+                dataset = test_loader.dataset if hasattr(test_loader, 'dataset') else None
+                if dataset is None:
+                    raise ValueError("Cannot access dataset for Prolog-only evaluation")
+                
+                for sample in tqdm(dataset, desc=f"Evaluating {combination_name}"):
+                    # Get Prolog prediction
+                    prolog_pred = self._get_prolog_prediction(sample)
+                    y_pred_scores.append(1.0 if prolog_pred else 0.0)
+                    
+                    # Get ground truth
+                    label = sample.get('expected_eligibility', sample.get('label', 0))
+                    y_true.append(int(label))
+            
+            else:
+                # ✅ Neural models present: Use DataLoader batching
+                for batch in tqdm(test_loader, desc=f"Evaluating {combination_name}", leave=False):
+                    input_ids = batch['input_ids'].to(device)
+                    attention_mask = batch['attention_mask'].to(device)
+                    labels = batch['labels'].cpu().numpy()
+                    y_true.extend(labels)
+                    
+                    # Get predictions from each model in combination
+                    predictions = {}
+                    
+                    for model_name in models:
+                        if model_name == 'prolog':
+                            # Prolog predictions
+                            prolog_preds = self._get_prolog_predictions(batch, device)
+                            predictions['prolog'] = prolog_preds
+                        
+                        elif model_name == 'domain_classifier':
+                            # Domain classifier
+                            predictions['domain_classifier'] = self._get_model_predictions(
+                                'domain_classifier', input_ids, attention_mask, device
+                            )
+                        
+                        elif model_name == 'eligibility_predictor':
+                            # Eligibility predictor
+                            predictions['eligibility_predictor'] = self._get_model_predictions(
+                                'eligibility_predictor', input_ids, attention_mask, device
+                            )
+                        
+                        elif model_name == 'enhanced_bert':
+                            # EnhancedBERT
+                            predictions['enhanced_bert'] = self._get_model_predictions(
+                                'enhanced_bert', input_ids, attention_mask, device
+                            )
+                        
+                        elif model_name == 'gnn':
+                            # GNN
+                            predictions['gnn'] = self._get_gnn_predictions(batch, device)
+                    
+                    # Weighted average for this batch
+                    batch_size = len(labels)
+                    batch_scores = []
+                    for i in range(batch_size):
+                        weighted_score = sum(
+                            predictions[m][i] * weights.get(m, 1/len(models)) 
+                            for m in predictions
+                        )
+                        batch_scores.append(weighted_score)
+                    
+                    y_pred_scores.extend(batch_scores)
+            
+            # Convert to binary predictions
+            y_pred = [1 if score >= 0.5 else 0 for score in y_pred_scores]
+            
+            # Calculate metrics
+            accuracy = float(accuracy_score(y_true, y_pred))
+            precision = float(precision_score(y_true, y_pred, zero_division=0))
+            recall = float(recall_score(y_true, y_pred, zero_division=0))
+            f1 = float(f1_score(y_true, y_pred, zero_division=0))
+            
+            logger.info(f"✓ Accuracy: {accuracy:.4f}")
+            logger.info(f"✓ F1 Score: {f1:.4f}")
+            
+            return {
+                'accuracy': accuracy,
+                'precision': precision,
+                'recall': recall,
+                'f1': f1,
+                'models': models,
+                'weights': weights,
+                'num_samples': len(y_pred)
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to evaluate {combination_name}: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
+            return {
+                'combination': combination_name,
+                'models': models,
+                'error': str(e),
+                'accuracy': 0.0,
+                'f1': 0.0
+            }
+
+    def _get_model_predictions(self, model_name: str, input_ids: torch.Tensor, 
+                               attention_mask: torch.Tensor, device: torch.device) -> List[float]:
+        """Get predictions from a neural model."""
+        try:
+            model_path = self.config.MODELS_DIR / model_name
+            
+            if not model_path.exists():
+                logger.warning(f"Model {model_name} not found at {model_path}")
+                return [0.5] * input_ids.size(0)
+            
+            # Load model
+            model = self.load_trained_model(str(model_path), model_name)
+            model.to(device)
+            model.eval()
+            
+            # Get predictions
+            with torch.no_grad():
+                outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+                logits = outputs['logits']
+                probs = torch.sigmoid(logits.squeeze())
+                
+                # Handle single sample case
+                if probs.dim() == 0:
+                    probs = probs.unsqueeze(0)
+                
+                return probs.cpu().numpy().tolist()
+        
+        except Exception as e:
+            logger.warning(f"Failed to get predictions from {model_name}: {e}")
+            return [0.5] * input_ids.size(0)
+
+    def _get_prolog_predictions(self, batch: Dict, device: torch.device) -> List[float]:
+        """Get Prolog predictions using the PrologEngine."""
+        try:
+            predictions = []
+            
+            # Get raw text queries from batch if available
+            if 'raw_query' in batch:
+                queries = batch['raw_query']
+            elif hasattr(batch, 'dataset') and hasattr(batch.dataset, 'samples'):
+                # Try to get original queries from dataset
+                queries = [sample.get('query', '') for sample in batch.dataset.samples]
+            else:
+                # Fallback: return neutral predictions
+                logger.warning("Cannot extract queries for Prolog, using neutral predictions")
+                return [0.5] * batch['input_ids'].size(0)
+            
+            # Use cached Prolog engine
+            for query in queries:
+                try:
+                    # Extract entities
+                    entities = self._data_processor_cache.extract_entities(query)
+                    
+                    # Get Prolog reasoning
+                    reasoning = self._prolog_engine_cache.legal_analysis(entities)
+                    
+                    # Convert to probability (eligible=1.0, not_eligible=0.0)
+                    prob = 1.0 if reasoning.eligible else 0.0
+                    
+                    # Weight by confidence
+                    prob = prob * reasoning.confidence
+                    
+                    predictions.append(prob)
+                
+                except Exception as e:
+                    logger.warning(f"Prolog prediction failed for query: {e}")
+                    predictions.append(0.5)  # Neutral fallback
+            
+            return predictions
+        
+        except Exception as e:
+            logger.error(f"Prolog predictions failed: {e}")
+            return [0.5] * batch['input_ids'].size(0)
+    
+    def _get_prolog_prediction(self, sample: Dict) -> bool:
+        """
+        Get Prolog prediction for a single sample
+        
+        Args:
+            sample: Test sample dictionary with 'query' and/or 'extracted_entities'
+        
+        Returns:
+            Boolean eligibility prediction
+        """
+        try:
+            # Try to get entities from sample
+            entities = sample.get('extracted_entities', {})
+            query_text = sample.get('query', '')
+            
+            # Extract entities if not present
+            if not entities and query_text:
+                if hasattr(self, '_data_processor_cache') and self._data_processor_cache:
+                    entities = self._data_processor_cache.extract_entities(query_text)
+                else:
+                    logger.warning("Data processor not available for entity extraction")
+                    return False
+            
+            # Query Prolog engine
+            if hasattr(self, '_prolog_engine_cache') and self._prolog_engine_cache:
+                result = self._prolog_engine_cache.evaluate_eligibility(entities)
+                return result.get('eligible', False)
+            else:
+                logger.warning("Prolog engine not available")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Prolog prediction failed: {str(e)}")
+            return False
 
     def _get_gnn_predictions(self, batch: Dict, device: torch.device) -> List[float]:
         """Get GNN predictions using the KnowledgeGraphEngine."""
@@ -893,106 +1585,137 @@ class ModelEvaluator:
             logger.error(f"GNN predictions failed: {e}")
             return [0.8] * batch['input_ids'].size(0)
 
-    def _generate_ablation_report(self, all_results: Dict[str, Dict]) -> None:
-        """Generate comprehensive ablation study report with DataFrame visualization."""
+    def _generate_ablation_report(self, all_results: List[Dict]) -> None:
+        """
+        Generate comprehensive ablation study report with DataFrame visualization
+        FIXED: Handle missing metrics safely, accepts list of result dicts
+        FIXED: Remove emoji for Windows compatibility
+        """
         import pandas as pd
         
         logger.info("\n" + "="*80)
         logger.info("ABLATION STUDY RESULTS - ALL COMBINATIONS")
         logger.info("="*80)
         
-        # Convert to DataFrame for better visualization
-        data = []
-        for comb_name, metrics in all_results.items():
-            data.append({
-                'Combination': comb_name,
-                'Models': ' + '.join(metrics['models']),
-                'Accuracy': f"{metrics['accuracy']*100:.2f}%",
-                'Precision': f"{metrics['precision']*100:.2f}%",
-                'Recall': f"{metrics['recall']*100:.2f}%",
-                'F1': f"{metrics['f1']:.4f}"
-            })
-        
-        df = pd.DataFrame(data)
-        
-        # Sort by F1 score (convert F1 string to float for sorting)
-        df['F1_numeric'] = df['F1'].astype(float)
-        df = df.sort_values('F1_numeric', ascending=False)
-        df = df.drop('F1_numeric', axis=1)
-        
-        # Print formatted table to console
-        print("\n" + df.to_string(index=False))
-        
-        # Save results to multiple formats
-        output_dir = self.config.RESULTS_DIR / 'ablation_study'
-        output_dir.mkdir(parents=True, exist_ok=True)
-        
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
-        # Save CSV
-        csv_path = output_dir / f'ablation_results_{timestamp}.csv'
-        df.to_csv(csv_path, index=False)
-        logger.info(f"✅ CSV results saved to: {csv_path}")
-        
-        # Save JSON (with full numeric values)
-        json_path = output_dir / f'ablation_results_{timestamp}.json'
-        with open(json_path, 'w') as f:
-            json.dump(all_results, f, indent=2)
-        logger.info(f"✅ JSON results saved to: {json_path}")
-        
-        # Save text report
-        report_path = output_dir / f'ablation_report_{timestamp}.txt'
-        with open(report_path, 'w') as f:
-            f.write("="*80 + "\n")
-            f.write("ABLATION STUDY REPORT\n")
-            f.write("="*80 + "\n\n")
+        # Filter out failed results
+        valid_results = []
+        for result in all_results:
+            # Skip if error or f1 is 0
+            if 'error' in result or result.get('f1', 0) == 0:
+                logger.warning(f"⚠️  Skipping {result.get('combination', 'Unknown')} from report (failed or zero F1)")
+                continue
             
-            # Sort by F1 score
-            sorted_results = sorted(all_results.items(), key=lambda x: x[1]['f1'], reverse=True)
-            
-            f.write("RANKINGS (by F1 Score):\n")
-            f.write("-"*80 + "\n")
-            
-            for rank, (name, result) in enumerate(sorted_results, 1):
-                f.write(f"{rank}. {name}\n")
-                f.write(f"   Models: {', '.join(result['models'])}\n")
-                f.write(f"   Accuracy: {result['accuracy']:.4f}\n")
-                f.write(f"   F1: {result['f1']:.4f}\n")
-                f.write(f"   Precision: {result['precision']:.4f}\n")
-                f.write(f"   Recall: {result['recall']:.4f}\n\n")
-            
-            f.write("\n" + "="*80 + "\n")
-            f.write("KEY INSIGHTS:\n")
-            f.write("-"*80 + "\n")
-            
-            # Best overall
-            best = sorted_results[0]
-            f.write(f"🏆 Best Overall: {best[0]} (F1: {best[1]['f1']:.4f})\n")
-            
-            # Best single model
-            single_models = [(n, r) for n, r in sorted_results if len(r['models']) == 1]
-            if single_models:
-                best_single = single_models[0]
-                f.write(f"🥇 Best Single Model: {best_single[0]} (F1: {best_single[1]['f1']:.4f})\n")
-            
-            # Best pair
-            pairs = [(n, r) for n, r in sorted_results if len(r['models']) == 2]
-            if pairs:
-                best_pair = pairs[0]
-                f.write(f"🥈 Best Pair: {best_pair[0]} (F1: {best_pair[1]['f1']:.4f})\n")
+            valid_results.append(result)
         
-        logger.info(f"✅ Text report saved to: {report_path}")
+        if not valid_results:
+            logger.warning("⚠️  No valid ablation results to report")
+            return
         
-        # Print best combination summary
-        best_comb = df.iloc[0]
-        logger.info("\n" + "="*80)
-        logger.info("🏆 BEST COMBINATION")
-        logger.info("="*80)
-        logger.info(f"Name: {best_comb['Combination']}")
-        logger.info(f"Models: {best_comb['Models']}")
-        logger.info(f"Accuracy: {best_comb['Accuracy']}")
-        logger.info(f"F1 Score: {best_comb['F1']}")
-        logger.info("="*80)
+        # Sort by F1 score
+        sorted_results = sorted(valid_results, key=lambda x: x.get('f1', 0), reverse=True)
+        
+        # Console output (can use emoji)
+        logger.info(f"\n{'Rank':<6} {'Combination':<30} {'Accuracy':<12} {'Precision':<12} {'Recall':<12} {'F1 Score':<12}")
+        logger.info("-" * 90)
+        
+        for i, result in enumerate(sorted_results, 1):
+            comb_name = result.get('combination', 'Unknown')[:28]
+            acc = result.get('accuracy', 0) * 100
+            prec = result.get('precision', 0) * 100
+            rec = result.get('recall', 0) * 100
+            f1 = result.get('f1', 0) * 100
+            
+            logger.info(f"{i:<6} {comb_name:<30} {acc:>10.2f}% {prec:>10.2f}% {rec:>10.2f}% {f1:>10.2f}%")
+        
+        # Best combination (console - can use emoji)
+        best = sorted_results[0]
+        logger.info(f"\n{'='*80}")
+        logger.info(f"🏆 BEST COMBINATION: {best.get('combination', 'Unknown')}")
+        logger.info(f"{'='*80}")
+        logger.info(f"   Models: {', '.join(best.get('models', []))}")
+        logger.info(f"   Accuracy: {best.get('accuracy', 0)*100:.2f}%")
+        logger.info(f"   F1 Score: {best.get('f1', 0)*100:.2f}%")
+        logger.info(f"   Precision: {best.get('precision', 0)*100:.2f}%")
+        logger.info(f"   Recall: {best.get('recall', 0)*100:.2f}%")
+        logger.info(f"   Samples: {best.get('num_samples', 0)}")
+        
+        # Save results to files
+        try:
+            output_dir = self.config.RESULTS_DIR / 'ablation_study'
+            output_dir.mkdir(parents=True, exist_ok=True)
+            
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            
+            # Convert to DataFrame
+            df_data = []
+            for result in sorted_results:
+                df_data.append({
+                    'Combination': result.get('combination', 'Unknown'),
+                    'Models': ' + '.join(result.get('models', [])),
+                    'Accuracy': f"{result.get('accuracy', 0)*100:.2f}%",
+                    'Precision': f"{result.get('precision', 0)*100:.2f}%",
+                    'Recall': f"{result.get('recall', 0)*100:.2f}%",
+                    'F1': f"{result.get('f1', 0):.4f}",
+                    'Samples': result.get('num_samples', 0)
+                })
+            
+            df = pd.DataFrame(df_data)
+            
+            # Save CSV
+            csv_path = output_dir / f'ablation_results_{timestamp}.csv'
+            df.to_csv(csv_path, index=False)
+            logger.info(f"\n✅ CSV results saved to: {csv_path}")
+            
+            # Save JSON (with full numeric values)
+            json_path = output_dir / f'ablation_results_{timestamp}.json'
+            json_data = {r['combination']: r for r in sorted_results}
+            with open(json_path, 'w') as f:
+                json.dump(json_data, f, indent=2)
+            logger.info(f"✅ JSON results saved to: {json_path}")
+            
+            # ✅ FIX: Save text report WITHOUT emoji (Windows compatible)
+            report_path = output_dir / f'ablation_report_{timestamp}.txt'
+            with open(report_path, 'w', encoding='utf-8') as f:  # ← Use UTF-8 encoding
+                f.write("="*80 + "\n")
+                f.write("HYBEX-LAW ABLATION STUDY REPORT\n")  # ← No emoji
+                f.write("="*80 + "\n\n")
+                
+                f.write("RANKINGS (by F1 Score):\n")
+                f.write("-"*80 + "\n")
+                
+                for rank, result in enumerate(sorted_results, 1):
+                    f.write(f"{rank}. {result.get('combination', 'Unknown')}\n")
+                    f.write(f"   Models: {', '.join(result.get('models', []))}\n")
+                    f.write(f"   Accuracy: {result.get('accuracy', 0):.4f}\n")
+                    f.write(f"   F1: {result.get('f1', 0):.4f}\n")
+                    f.write(f"   Precision: {result.get('precision', 0):.4f}\n")
+                    f.write(f"   Recall: {result.get('recall', 0):.4f}\n\n")
+                
+                f.write("\n" + "="*80 + "\n")
+                f.write("KEY INSIGHTS:\n")
+                f.write("-"*80 + "\n")
+                
+                # ✅ FIX: Best overall WITHOUT emoji (Windows compatible)
+                f.write(f"Best Overall: {best.get('combination', 'Unknown')} (F1: {best.get('f1', 0):.4f})\n")
+                
+                # Best single model
+                single_models = [r for r in sorted_results if len(r.get('models', [])) == 1]
+                if single_models:
+                    best_single = single_models[0]
+                    f.write(f"Best Single Model: {best_single.get('combination', 'Unknown')} (F1: {best_single.get('f1', 0):.4f})\n")
+                
+                # Best pair
+                pairs = [r for r in sorted_results if len(r.get('models', [])) == 2]
+                if pairs:
+                    best_pair = pairs[0]
+                    f.write(f"Best Pair: {best_pair.get('combination', 'Unknown')} (F1: {best_pair.get('f1', 0):.4f})\n")
+            
+            logger.info(f"✅ Text report saved to: {report_path}")
+            
+        except Exception as e:
+            logger.error(f"Failed to save ablation reports: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
 
 
 

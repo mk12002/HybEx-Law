@@ -1,15 +1,15 @@
 {
   "train_losses": [
-    0.07739206774616038,
-    0.008930593711537713,
-    0.005328231965237073,
-    0.004001658125917031
+    0.07644311405705512,
+    0.008769893268738393,
+    0.005103985882831407,
+    0.0039054431876342052
   ],
   "val_losses": [
-    0.008413853040004,
-    0.004697781322768148,
-    0.002917511837759589,
-    0.0027466010619890116
+    0.008244796778819676,
+    0.004578915194736864,
+    0.002823451201715916,
+    0.0026611066571108196
   ],
   "learning_rates": [
     1e-05,
@@ -19,64 +19,64 @@
   ],
   "train_metrics": [
     {
-      "accuracy": 0.9084654501944361,
-      "f1_score": 0.9267990014731671,
-      "precision": 0.97320640951861,
-      "recall": 0.885296512078488,
-      "loss": 0.07739206774616038,
+      "accuracy": 0.9157941968291954,
+      "f1_score": 0.9327188726688744,
+      "precision": 0.9712819033590984,
+      "recall": 0.8981592486616226,
+      "loss": 0.07644311405705512,
       "classification_report": {
         "legal_aid": {
-          "precision": 0.9869253479544496,
-          "recall": 0.9539339584182633,
-          "f1-score": 0.9701492537313433,
+          "precision": 0.9786789297658863,
+          "recall": 0.9543416225030574,
+          "f1-score": 0.9663570691434469,
           "support": 2453.0
         },
         "family_law": {
-          "precision": 0.9543726235741445,
-          "recall": 0.8408710217755444,
-          "f1-score": 0.8940338379341051,
+          "precision": 0.9683426443202979,
+          "recall": 0.8710217755443886,
+          "f1-score": 0.9171075837742504,
           "support": 597.0
         },
         "consumer_protection": {
-          "precision": 0.9868554095045501,
-          "recall": 0.9264356905552918,
-          "f1-score": 0.9556915544675643,
+          "precision": 0.9580520732883318,
+          "recall": 0.943046986236355,
+          "f1-score": 0.9504903133221717,
           "support": 2107.0
         },
         "employment_law": {
-          "precision": 0.9861878453038674,
-          "recall": 0.8633615477629988,
-          "f1-score": 0.9206963249516441,
+          "precision": 0.9824324324324324,
+          "recall": 0.879081015719468,
+          "f1-score": 0.9278876834716018,
           "support": 827.0
         },
         "fundamental_rights": {
-          "precision": 0.9516908212560387,
-          "recall": 0.8418803418803419,
-          "f1-score": 0.8934240362811792,
+          "precision": 0.9689034369885434,
+          "recall": 0.8433048433048433,
+          "f1-score": 0.9017517136329017,
           "support": 702.0
         },
         "micro avg": {
-          "precision": 0.9805466237942122,
-          "recall": 0.9122046066407419,
-          "f1-score": 0.9451417945141795,
+          "precision": 0.9705697198615045,
+          "recall": 0.9223751121746934,
+          "f1-score": 0.9458588957055215,
           "support": 6686.0
         },
         "macro avg": {
-          "precision": 0.97320640951861,
-          "recall": 0.885296512078488,
-          "f1-score": 0.9267990014731671,
+          "precision": 0.9712819033590984,
+          "recall": 0.8981592486616226,
+          "f1-score": 0.9327188726688744,
           "support": 6686.0
         },
         "weighted avg": {
-          "precision": 0.9802059508256287,
-          "recall": 0.9122046066407419,
-          "f1-score": 0.9446239844626386,
+          "precision": 0.9706936174365887,
+          "recall": 0.9223751121746934,
+          "f1-score": 0.9454177423711083,
           "support": 6686.0
         },
         "samples avg": {
-          "precision": 0.9102602452886629,
-          "recall": 0.9122046066407419,
-          "f1-score": 0.9108834380297137,
+          "precision": 0.9186484195832086,
+          "recall": 0.9223751121746934,
+          "f1-score": 0.9197377604945658,
           "support": 6686.0
         }
       },
@@ -87,7 +87,7 @@
       "f1_score": 1.0,
       "precision": 1.0,
       "recall": 1.0,
-      "loss": 0.008930593711537713,
+      "loss": 0.008769893268738393,
       "classification_report": {
         "legal_aid": {
           "precision": 1.0,
@@ -141,70 +141,6 @@
           "precision": 1.0,
           "recall": 1.0,
           "f1-score": 1.0,
-          "support": 6686.0
-        }
-      },
-      "confusion_matrix": null
-    },
-    {
-      "accuracy": 0.9998504337421478,
-      "f1_score": 0.9999592252803261,
-      "precision": 1.0,
-      "recall": 0.9999184671830411,
-      "loss": 0.005328231965237073,
-      "classification_report": {
-        "legal_aid": {
-          "precision": 1.0,
-          "recall": 0.9995923359152059,
-          "f1-score": 0.999796126401631,
-          "support": 2453.0
-        },
-        "family_law": {
-          "precision": 1.0,
-          "recall": 1.0,
-          "f1-score": 1.0,
-          "support": 597.0
-        },
-        "consumer_protection": {
-          "precision": 1.0,
-          "recall": 1.0,
-          "f1-score": 1.0,
-          "support": 2107.0
-        },
-        "employment_law": {
-          "precision": 1.0,
-          "recall": 1.0,
-          "f1-score": 1.0,
-          "support": 827.0
-        },
-        "fundamental_rights": {
-          "precision": 1.0,
-          "recall": 1.0,
-          "f1-score": 1.0,
-          "support": 702.0
-        },
-        "micro avg": {
-          "precision": 1.0,
-          "recall": 0.9998504337421478,
-          "f1-score": 0.9999252112781393,
-          "support": 6686.0
-        },
-        "macro avg": {
-          "precision": 1.0,
-          "recall": 0.9999184671830411,
-          "f1-score": 0.9999592252803261,
-          "support": 6686.0
-        },
-        "weighted avg": {
-          "precision": 1.0,
-          "recall": 0.9998504337421478,
-          "f1-score": 0.9999252016247683,
-          "support": 6686.0
-        },
-        "samples avg": {
-          "precision": 0.9998504337421478,
-          "recall": 0.9998504337421478,
-          "f1-score": 0.9998504337421478,
           "support": 6686.0
         }
       },
@@ -215,7 +151,71 @@
       "f1_score": 1.0,
       "precision": 1.0,
       "recall": 1.0,
-      "loss": 0.004001658125917031,
+      "loss": 0.005103985882831407,
+      "classification_report": {
+        "legal_aid": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 2453.0
+        },
+        "family_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 597.0
+        },
+        "consumer_protection": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 2107.0
+        },
+        "employment_law": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 827.0
+        },
+        "fundamental_rights": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 702.0
+        },
+        "micro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6686.0
+        },
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6686.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6686.0
+        },
+        "samples avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 6686.0
+        }
+      },
+      "confusion_matrix": null
+    },
+    {
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "loss": 0.0039054431876342052,
       "classification_report": {
         "legal_aid": {
           "precision": 1.0,
@@ -281,7 +281,7 @@
       "f1_score": 1.0,
       "precision": 1.0,
       "recall": 1.0,
-      "loss": 0.008413853040004,
+      "loss": 0.008244796778819676,
       "classification_report": {
         "legal_aid": {
           "precision": 1.0,
@@ -345,7 +345,7 @@
       "f1_score": 1.0,
       "precision": 1.0,
       "recall": 1.0,
-      "loss": 0.004697781322768148,
+      "loss": 0.004578915194736864,
       "classification_report": {
         "legal_aid": {
           "precision": 1.0,
@@ -409,7 +409,7 @@
       "f1_score": 1.0,
       "precision": 1.0,
       "recall": 1.0,
-      "loss": 0.002917511837759589,
+      "loss": 0.002823451201715916,
       "classification_report": {
         "legal_aid": {
           "precision": 1.0,
@@ -473,7 +473,7 @@
       "f1_score": 1.0,
       "precision": 1.0,
       "recall": 1.0,
-      "loss": 0.0027466010619890116,
+      "loss": 0.0026611066571108196,
       "classification_report": {
         "legal_aid": {
           "precision": 1.0,

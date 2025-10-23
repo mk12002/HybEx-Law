@@ -1,0 +1,12 @@
+Combination,Models,Accuracy,Precision,Recall,F1,Samples
+01_prolog,prolog,80.32%,80.32%,100.00%,0.8909,1433
+02_gnn,gnn,80.32%,80.32%,100.00%,0.8909,1433
+12_prolog_domain,prolog + domain_classifier,80.32%,80.32%,100.00%,0.8909,1433
+14_prolog_gnn,prolog + gnn,80.32%,80.32%,100.00%,0.8909,1433
+04_eligibility,eligibility_predictor,80.25%,81.09%,98.35%,0.8889,1433
+10_gnn_eligibility,gnn + eligibility_predictor,80.25%,81.09%,98.35%,0.8889,1433
+13_prolog_eligibility,prolog + eligibility_predictor,80.25%,81.09%,98.35%,0.8889,1433
+16_hybrid_best,prolog + eligibility_predictor + gnn,80.25%,81.09%,98.35%,0.8889,1433
+06_domain_eligibility,domain_classifier + eligibility_predictor,70.83%,86.40%,75.59%,0.8063,1433
+09_gnn_domain,gnn + domain_classifier,54.15%,97.87%,43.87%,0.6059,1433
+03_domain,domain_classifier,28.12%,70.23%,18.25%,0.2897,1433
