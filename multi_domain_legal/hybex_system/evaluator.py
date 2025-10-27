@@ -2,9 +2,10 @@
 import json
 import logging
 import os
+import pandas as pd
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Any
-import gc # Import garbage collecto
+import gc  # Import garbage collector
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
@@ -17,17 +18,30 @@ from sklearn.metrics import (accuracy_score, classification_report,
                              recall_score)
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
-from transformers import AutoTokenize
+from transformers import AutoTokenizer
 from .config import HybExConfig
 from .neural_models import (DomainClassifier, EligibilityPredictor,
                             LegalDataset, ModelMetrics)
 from .prolog_engine import LegalReasoning, PrologEngine
 from .knowledge_graph_engine import KnowledgeGraphEngine
 from .data_processor import DataPreprocessor
-from .advanced_evaluator import AdvancedEvaluato
+from .advanced_evaluator import AdvancedEvaluator
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+def _convert_numpy_to_list(obj):
+    """Recursively convert numpy arrays and numpy types to lists/native types."""
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, (np.generic, np.number)):
+        return obj.item()
+    elif isinstance(obj, dict):
+        return {k: _convert_numpy_to_list(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_convert_numpy_to_list(item) for item in obj]
+    else:
+        return obj
 
 @dataclass
 class EvaluationResults:
@@ -41,19 +55,6 @@ class EvaluationResults:
     error_analysis: List[Dict[str, Any]]
     sample_size: int
     config_summary: Dict[str, Any]
-
-    def _convert_numpy_to_list(obj):
-        """Recursively convert numpy arrays and numpy types to lists/native types."""
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        elif isinstance(obj, (np.generic, np.number)):
-             return obj.item()
-        elif isinstance(obj, dict):
-            return {k: _convert_numpy_to_list(v) for k, v in obj.items()}
-        elif isinstance(obj, list):
-            return [_convert_numpy_to_list(item) for item in obj]
-        else:
-            return obj
 
 
 # ============================================================================
@@ -93,49 +94,97 @@ class AblationDataset(Dataset):
 class ModelEvaluator:
     """Comprehensive model evaluation framework for HybEx-Law system."""
     
-# --- MODULE-LEVEL ModelWrapper ---
-class ModelWrapper:
-    """Wrapper to provide consistent interface for different model types"""
-    def __init__(self, evaluator):
-        self.evaluator = evaluator
-        self.device = evaluator.device
-        self.tokenizer = evaluator.tokenizer
-        self.kg_engine = getattr(evaluator, 'kg_engine', None) or getattr(evaluator, '_knowledge_graph_engine_cache', None)
-        self.eligibility_model = None
-    def predict(self, model_type: str, model_obj: Any, input_data: Any) -> Any:
+    def __init__(self, config: HybExConfig):
         """
-        Generic prediction interface
+        Initialize ModelEvaluator
+        
         Args:
-            model_type: Type of model ('prolog', 'gnn', 'bert', etc.)
-            model_obj: The model object
-            input_data: Input data dict or string
-        Returns:
-            Prediction result
+            config: HybExConfig instance with system configuration
         """
-        if model_type == 'prolog':
-            return model_obj.query_eligibility(input_data)
-        elif model_type == 'gnn':
-            return model_obj.predict(input_data)
-        elif model_type in ['bert', 'domain', 'eligibility']:
-            with torch.no_grad():
-                model_obj.eval()
-                query = input_data if isinstance(input_data, str) else input_data.get('query', '')
-                encoding = self.tokenizer(
-                    query,
-                    return_tensors='pt',
-                    max_length=512,
-                    truncation=True,
-                    padding='max_length'
-                ).to(self.device)
-                logits = model_obj(**encoding)
-                if isinstance(logits, tuple):
-                    logits = logits[0]
-                pred = torch.argmax(logits, dim=1).item()
-                return pred
-        else:
-            raise ValueError(f"Unknown model type: {model_type}")
+        self.config = config
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        
+        # Initialize tokenizer
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            config.MODEL_CONFIG['base_model']
+        )
+        
+        # Initialize/cache engines (lazy loading)
+        self._prolog_engine_cache = None
+        self._knowledge_graph_engine_cache = None
+        self._data_processor_cache = None
+        
+        # Setup logging
+        self.setup_logging()
+        
+        logger.info(f"ModelEvaluator initialized with device: {self.device}")
+    
+    @property
+    def prolog_engine(self) -> PrologEngine:
+        """Lazy-load Prolog engine"""
+        if self._prolog_engine_cache is None:
+            self._prolog_engine_cache = PrologEngine(self.config)
+        return self._prolog_engine_cache
+    
+    @property
+    def kg_engine(self) -> KnowledgeGraphEngine:
+        """Lazy-load Knowledge Graph engine"""
+        if self._knowledge_graph_engine_cache is None:
+            self._knowledge_graph_engine_cache = KnowledgeGraphEngine(self.config, self.prolog_engine)
+        return self._knowledge_graph_engine_cache
+    
+    @property
+    def data_processor(self) -> DataPreprocessor:
+        """Lazy-load Data Processor"""
+        if self._data_processor_cache is None:
+            self._data_processor_cache = DataPreprocessor(self.config)
+        return self._data_processor_cache
+
+    # --- NESTED ModelWrapper CLASS ---
+    class ModelWrapper:
+        """Wrapper to provide consistent interface for different model types"""
+        def __init__(self, evaluator):
+            self.evaluator = evaluator
+            self.device = evaluator.device
+            self.tokenizer = evaluator.tokenizer
+            self.kg_engine = getattr(evaluator, 'kg_engine', None) or getattr(evaluator, '_knowledge_graph_engine_cache', None)
+            self.eligibility_model = None
+        
+        def predict(self, model_type: str, model_obj: Any, input_data: Any) -> Any:
+            """
+            Generic prediction interface
+            Args:
+                model_type: Type of model ('prolog', 'gnn', 'bert', etc.)
+                model_obj: The model object
+                input_data: Input data dict or string
+            Returns:
+                Prediction result
+            """
+            if model_type == 'prolog':
+                return model_obj.query_eligibility(input_data)
+            elif model_type == 'gnn':
+                return model_obj.predict(input_data)
+            elif model_type in ['bert', 'domain', 'eligibility']:
+                with torch.no_grad():
+                    model_obj.eval()
+                    query = input_data if isinstance(input_data, str) else input_data.get('query', '')
+                    encoding = self.tokenizer(
+                        query,
+                        return_tensors='pt',
+                        max_length=512,
+                        truncation=True,
+                        padding='max_length'
+                    ).to(self.device)
+                    logits = model_obj(**encoding)
+                    if isinstance(logits, tuple):
+                        logits = logits[0]
+                    pred = torch.argmax(logits, dim=1).item()
+                    return pred
+            else:
+                raise ValueError(f"Unknown model type: {model_type}")
 
     def setup_logging(self):
+        """Setup logging for the evaluator"""
         log_file = self.config.get_log_path('model_evaluation')
         if not any(isinstance(h, logging.FileHandler) and h.baseFilename.endswith('model_evaluation.log') for h in logger.handlers):
             file_handler = logging.FileHandler(log_file, encoding='utf-8')
@@ -285,7 +334,7 @@ class ModelWrapper:
             accuracy=accuracy_score(true_labels_np, predictions_np) if len(true_labels_np) > 0 else 0.0,
             f1_score=f1_score(true_labels_np, predictions_np, average=average_type, zero_division=0) if len(true_labels_np) > 0 else 0.0,
             precision=precision_score(true_labels_np, predictions_np, average=average_type, zero_division=0) if len(true_labels_np) > 0 else 0.0,
-            recall=recall_score(true_labels_np, predictions_np, average=average_type, zero_division=0) if len(true_labelsNp) > 0 else 0.0,
+            recall=recall_score(true_labels_np, predictions_np, average=average_type, zero_division=0) if len(true_labels_np) > 0 else 0.0,
             loss=avg_loss,
             classification_report=classification_report(true_labels_np, predictions_np, output_dict=True, zero_division=0),
             confusion_matrix=cm
@@ -521,8 +570,8 @@ class ModelWrapper:
         logger.info("="*70)
         
         
-        # Create wrapper
-        model_wrapper = ModelWrapper(self)
+        # Create wrapper (use self.ModelWrapper for nested class)
+        model_wrapper = self.ModelWrapper(self)
         
         # Check if eligibility_model was set by main.py
         if hasattr(self, 'eligibility_model'):
@@ -551,7 +600,7 @@ class ModelWrapper:
         predictions = hybrid.batch_predict(test_data)
         
         # Extract ground truth and predictions
-        y_true = [sample['expected_eligibility'] for sample in test_data]
+        y_true = [sample.get('expected_eligibility', 0) for sample in test_data]
         y_pred = [pred.eligible for pred in predictions]
         
         # Calculate metrics
@@ -885,7 +934,7 @@ class ModelWrapper:
                         for batch in tqdm(dataloader, desc=f"Evaluating {combo_name}"):
                             input_ids = batch['input_ids'].to(device)
                             attention_mask = batch['attention_mask'].to(device)
-                            labels = batch['label']
+                            labels = batch.get('label', batch.get('labels', torch.tensor([0])))
                             
                             batch_preds = []
                             
@@ -1243,9 +1292,18 @@ class ModelWrapper:
             
             # Query Prolog engine
             if hasattr(self, '_prolog_engine_cache') and self._prolog_engine_cache:
-                # (actual logic for single-sample Prolog prediction continues here)
-                pass
-        
+                result = self._prolog_engine_cache.evaluate_eligibility(entities, query_text)
+                return result.get('eligible', False)
+            else:
+                logger.warning("Prolog engine not available")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Prolog prediction failed: {str(e)}")
+            return False
+
+    def _finalize_ablation_results(self, all_results: List[Dict]) -> Dict:
+        """Finalize ablation study results with reports and summaries."""
         # Generate reports
         self._generate_ablation_report(all_results)
         
@@ -1904,6 +1962,118 @@ class ModelWrapper:
             logger.warning("No samples processed for hybrid evaluation.")
             return {'error': 'No hybrid predictions generated'}, {}, []
 
+    def stratified_analysis(self, preds: List[Dict], truth: List[int], metadata: List[Dict]) -> Dict[str, Any]:
+        """
+        Perform stratified analysis across different dimensions (income level, social category, etc.)
+        
+        Args:
+            preds: List of prediction dictionaries with 'eligible' and 'confidence' keys
+            truth: List of ground truth labels (0 or 1)
+            metadata: List of metadata dictionaries containing demographic/contextual info
+        
+        Returns:
+            Dictionary containing stratified results for each dimension
+        """
+        logger.info("Starting stratified analysis across multiple dimensions...")
+        
+        # Initialize strata tracking
+        strata = {
+            "income_level": [],
+            "social_category": [],
+            "vulnerability_status": [],
+            "has_income": []
+        }
+        
+        # Populate strata data
+        for i, (pred, truelabel, meta) in enumerate(zip(preds, truth, metadata)):
+            # Income level stratification
+            income = meta.get('income', 0)
+            if income == 0:
+                income_level = 'no_income'
+            elif income < 15000:
+                income_level = 'very_low'
+            elif income < 25000:
+                income_level = 'low'
+            elif income < 40000:
+                income_level = 'medium'
+            else:
+                income_level = 'high'
+            
+            strata['income_level'].append({
+                'stratum': income_level,
+                'pred': pred['eligible'],
+                'truth': truelabel,
+                'confidence': pred['confidence']
+            })
+            
+            # Social category stratification (if available)
+            social_cat = meta.get('social_category', 'unknown')
+            strata['social_category'].append({
+                'stratum': social_cat,
+                'pred': pred['eligible'],
+                'truth': truelabel,
+                'confidence': pred['confidence']
+            })
+            
+            # Vulnerability status (if available)
+            vulnerability = meta.get('vulnerability_status', 'unknown')
+            strata['vulnerability_status'].append({
+                'stratum': vulnerability,
+                'pred': pred['eligible'],
+                'truth': truelabel,
+                'confidence': pred['confidence']
+            })
+            
+            # Has income (binary)
+            has_income = 'yes' if income > 0 else 'no'
+            strata['has_income'].append({
+                'stratum': has_income,
+                'pred': pred['eligible'],
+                'truth': truelabel,
+                'confidence': pred['confidence']
+            })
+        
+        # Calculate metrics for each dimension and stratum
+        stratified_results = {}
+        for dimension, data in strata.items():
+            df = pd.DataFrame(data)
+            grouped = df.groupby('stratum')
+            dimension_results = {}
+            
+            for stratum_name, group in grouped:
+                # Calculate accuracy
+                accuracy = (group['pred'] == group['truth']).mean()
+                
+                # Calculate precision (for positive predictions)
+                positive_preds = group[group['pred'] == True]
+                precision = positive_preds['truth'].mean() if len(positive_preds) > 0 else 0.0
+                
+                # Calculate recall (for positive ground truth)
+                positive_truth = group[group['truth'] == True]
+                recall = positive_truth['pred'].mean() if len(positive_truth) > 0 else 0.0
+                
+                # Store results
+                dimension_results[stratum_name] = {
+                    'count': len(group),
+                    'accuracy': float(accuracy),
+                    'precision': float(precision),
+                    'recall': float(recall),
+                    'avg_confidence': float(group['confidence'].mean())
+                }
+            
+            stratified_results[dimension] = dimension_results
+        
+        # Log summary
+        logger.info("✅ Stratified analysis complete")
+        for dimension, results in stratified_results.items():
+            logger.info(f"\n{dimension.upper()}:")
+            for stratum, metrics in results.items():
+                logger.info(f"  {stratum}: Acc={metrics['accuracy']:.3f}, "
+                          f"Prec={metrics['precision']:.3f}, Rec={metrics['recall']:.3f}, "
+                          f"N={metrics['count']}")
+        
+        return stratified_results
+
     def save_evaluation_results(self, evaluation_results: Dict[str, Any], filename: Optional[str] = None) -> str:
         """Save evaluation results to a JSON file."""
         if filename is None:
@@ -2029,3 +2199,260 @@ class ModelWrapper:
                     logger.warning(f"Could not generate {title} confusion matrix: {e}")
 
         logger.info(f"✅ Evaluation visualizations saved to {plots_dir}")
+
+    def generate_visualizations(self, results: Dict[str, Any], preds: List[int], truth: List[int]):
+        """
+        Generate comprehensive visualizations for evaluation results.
+        
+        Args:
+            results: Dictionary containing evaluation results with various metrics
+            preds: List of predictions (0 or 1)
+            truth: List of ground truth labels (0 or 1)
+        """
+        try:
+            logger.info("Generating comprehensive visualizations...")
+            
+            # Create output directory if not exists
+            output_dir = Path(self.config.RESULTS_DIR) / 'advanced_evaluation'
+            output_dir.mkdir(parents=True, exist_ok=True)
+            
+            # 1. Plot confusion matrix
+            self.plot_confusion_matrix(preds, truth, output_dir)
+            
+            # 2. Plot calibration curve (if confidence analysis available)
+            if 'confidence_analysis' in results:
+                self.plot_calibration_curve(results['confidence_analysis'], output_dir)
+            
+            # 3. Plot stratified performance (if available)
+            if 'stratified_analysis' in results:
+                self.plot_stratified_performance(results['stratified_analysis'], output_dir)
+            
+            # 4. Plot method comparison (if available)
+            if 'method_comparison' in results:
+                self.plot_method_comparison(results['method_comparison'], output_dir)
+            
+            logger.info(f"✅ Visualizations saved to {output_dir}")
+            
+        except Exception as e:
+            logger.error(f"Visualization error: {e}", exc_info=True)
+
+    def plot_confusion_matrix(self, preds: List[int], truth: List[int], output_dir: Path):
+        """
+        Plot and save confusion matrix.
+        
+        Args:
+            preds: Predictions
+            truth: Ground truth labels
+            output_dir: Directory to save the plot
+        """
+        try:
+            from sklearn.metrics import confusion_matrix
+            
+            cm = confusion_matrix(truth, preds)
+            
+            plt.figure(figsize=(8, 6))
+            sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                       xticklabels=['Not Eligible', 'Eligible'],
+                       yticklabels=['Not Eligible', 'Eligible'],
+                       cbar_kws={'label': 'Count'})
+            plt.title('Confusion Matrix', fontsize=14, fontweight='bold')
+            plt.xlabel('Predicted Label', fontsize=12)
+            plt.ylabel('True Label', fontsize=12)
+            plt.tight_layout()
+            
+            save_path = output_dir / 'confusion_matrix.png'
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            plt.close()
+            
+            logger.info(f"✅ Confusion matrix saved to {save_path}")
+            
+        except Exception as e:
+            logger.error(f"Failed to plot confusion matrix: {e}")
+            plt.close()
+
+    def plot_calibration_curve(self, confidence_analysis: Dict[str, Any], output_dir: Path):
+        """
+        Plot calibration curve showing predicted vs actual confidence.
+        
+        Args:
+            confidence_analysis: Dictionary containing confidence metrics
+            output_dir: Directory to save the plot
+        """
+        try:
+            # Extract calibration data if available
+            if 'calibration_curve' in confidence_analysis:
+                bins = confidence_analysis['calibration_curve'].get('bins', [])
+                accuracies = confidence_analysis['calibration_curve'].get('accuracies', [])
+                
+                plt.figure(figsize=(8, 6))
+                plt.plot(bins, accuracies, 'o-', linewidth=2, markersize=8, label='Model Calibration')
+                plt.plot([0, 1], [0, 1], 'r--', linewidth=2, label='Perfect Calibration')
+                
+                plt.xlabel('Confidence Bin', fontsize=12)
+                plt.ylabel('Accuracy', fontsize=12)
+                plt.title('Model Calibration Curve', fontsize=14, fontweight='bold')
+                plt.legend(fontsize=10)
+                plt.grid(True, alpha=0.3)
+                plt.tight_layout()
+                
+                save_path = output_dir / 'calibration_curve.png'
+                plt.savefig(save_path, dpi=300, bbox_inches='tight')
+                plt.close()
+                
+                logger.info(f"✅ Calibration curve saved to {save_path}")
+            else:
+                logger.warning("No calibration curve data found in confidence_analysis")
+                
+        except Exception as e:
+            logger.error(f"Failed to plot calibration curve: {e}")
+            plt.close()
+
+    def plot_stratified_performance(self, stratified_analysis: Dict[str, Dict], output_dir: Path):
+        """
+        Plot stratified performance across different dimensions.
+        
+        Args:
+            stratified_analysis: Dictionary with stratified results
+            output_dir: Directory to save the plots
+        """
+        try:
+            for dimension, strata_results in stratified_analysis.items():
+                if not strata_results:
+                    continue
+                
+                # Extract data
+                strata_names = list(strata_results.keys())
+                accuracies = [strata_results[s]['accuracy'] for s in strata_names]
+                precisions = [strata_results[s]['precision'] for s in strata_names]
+                recalls = [strata_results[s]['recall'] for s in strata_names]
+                counts = [strata_results[s]['count'] for s in strata_names]
+                
+                # Create subplot
+                fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+                fig.suptitle(f'Stratified Performance: {dimension.replace("_", " ").title()}', 
+                           fontsize=16, fontweight='bold')
+                
+                # 1. Accuracy by stratum
+                axes[0, 0].bar(range(len(strata_names)), accuracies, color='steelblue', alpha=0.7)
+                axes[0, 0].set_xticks(range(len(strata_names)))
+                axes[0, 0].set_xticklabels(strata_names, rotation=45, ha='right')
+                axes[0, 0].set_ylabel('Accuracy', fontsize=11)
+                axes[0, 0].set_title('Accuracy by Stratum', fontsize=12)
+                axes[0, 0].set_ylim([0, 1])
+                axes[0, 0].grid(axis='y', alpha=0.3)
+                
+                # 2. Precision vs Recall
+                axes[0, 1].scatter(recalls, precisions, s=[c*2 for c in counts], 
+                                 alpha=0.6, c=range(len(strata_names)), cmap='viridis')
+                for i, name in enumerate(strata_names):
+                    axes[0, 1].annotate(name, (recalls[i], precisions[i]), 
+                                      fontsize=8, alpha=0.7)
+                axes[0, 1].set_xlabel('Recall', fontsize=11)
+                axes[0, 1].set_ylabel('Precision', fontsize=11)
+                axes[0, 1].set_title('Precision vs Recall (size = count)', fontsize=12)
+                axes[0, 1].set_xlim([0, 1])
+                axes[0, 1].set_ylim([0, 1])
+                axes[0, 1].grid(True, alpha=0.3)
+                
+                # 3. Sample distribution
+                axes[1, 0].bar(range(len(strata_names)), counts, color='coral', alpha=0.7)
+                axes[1, 0].set_xticks(range(len(strata_names)))
+                axes[1, 0].set_xticklabels(strata_names, rotation=45, ha='right')
+                axes[1, 0].set_ylabel('Sample Count', fontsize=11)
+                axes[1, 0].set_title('Sample Distribution', fontsize=12)
+                axes[1, 0].grid(axis='y', alpha=0.3)
+                
+                # 4. Combined metrics heatmap
+                metrics_matrix = np.array([accuracies, precisions, recalls])
+                im = axes[1, 1].imshow(metrics_matrix, aspect='auto', cmap='YlGnBu', vmin=0, vmax=1)
+                axes[1, 1].set_xticks(range(len(strata_names)))
+                axes[1, 1].set_xticklabels(strata_names, rotation=45, ha='right')
+                axes[1, 1].set_yticks([0, 1, 2])
+                axes[1, 1].set_yticklabels(['Accuracy', 'Precision', 'Recall'])
+                axes[1, 1].set_title('Metrics Heatmap', fontsize=12)
+                
+                # Add colorbar
+                cbar = plt.colorbar(im, ax=axes[1, 1])
+                cbar.set_label('Score', fontsize=10)
+                
+                # Add text annotations
+                for i in range(3):
+                    for j in range(len(strata_names)):
+                        text = axes[1, 1].text(j, i, f'{metrics_matrix[i, j]:.2f}',
+                                             ha='center', va='center', color='black', fontsize=9)
+                
+                plt.tight_layout()
+                
+                save_path = output_dir / f'stratified_{dimension}.png'
+                plt.savefig(save_path, dpi=300, bbox_inches='tight')
+                plt.close()
+                
+                logger.info(f"✅ Stratified plot for {dimension} saved to {save_path}")
+                
+        except Exception as e:
+            logger.error(f"Failed to plot stratified performance: {e}", exc_info=True)
+            plt.close()
+
+    def plot_method_comparison(self, method_comparison: Dict[str, Dict], output_dir: Path):
+        """
+        Plot comparison of different prediction methods.
+        
+        Args:
+            method_comparison: Dictionary with metrics for each method
+            output_dir: Directory to save the plot
+        """
+        try:
+            methods = list(method_comparison.keys())
+            
+            # Extract metrics
+            accuracies = [method_comparison[m].get('accuracy', 0) for m in methods]
+            precisions = [method_comparison[m].get('precision', 0) for m in methods]
+            recalls = [method_comparison[m].get('recall', 0) for m in methods]
+            f1_scores = [method_comparison[m].get('f1', 0) for m in methods]
+            counts = [method_comparison[m].get('count', 0) for m in methods]
+            
+            # Create figure with subplots
+            fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+            fig.suptitle('Method Comparison', fontsize=16, fontweight='bold')
+            
+            # 1. Grouped bar chart for metrics
+            x = np.arange(len(methods))
+            width = 0.2
+            
+            axes[0].bar(x - 1.5*width, accuracies, width, label='Accuracy', alpha=0.8)
+            axes[0].bar(x - 0.5*width, precisions, width, label='Precision', alpha=0.8)
+            axes[0].bar(x + 0.5*width, recalls, width, label='Recall', alpha=0.8)
+            axes[0].bar(x + 1.5*width, f1_scores, width, label='F1 Score', alpha=0.8)
+            
+            axes[0].set_xlabel('Method', fontsize=12)
+            axes[0].set_ylabel('Score', fontsize=12)
+            axes[0].set_title('Performance Metrics by Method', fontsize=13)
+            axes[0].set_xticks(x)
+            axes[0].set_xticklabels(methods, rotation=45, ha='right')
+            axes[0].legend(fontsize=10)
+            axes[0].set_ylim([0, 1])
+            axes[0].grid(axis='y', alpha=0.3)
+            
+            # 2. Sample distribution
+            axes[1].bar(methods, counts, color='teal', alpha=0.7)
+            axes[1].set_xlabel('Method', fontsize=12)
+            axes[1].set_ylabel('Number of Cases', fontsize=12)
+            axes[1].set_title('Sample Distribution by Method', fontsize=13)
+            axes[1].set_xticklabels(methods, rotation=45, ha='right')
+            axes[1].grid(axis='y', alpha=0.3)
+            
+            # Add value labels on bars
+            for i, count in enumerate(counts):
+                axes[1].text(i, count, str(count), ha='center', va='bottom', fontsize=10)
+            
+            plt.tight_layout()
+            
+            save_path = output_dir / 'method_comparison.png'
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            plt.close()
+            
+            logger.info(f"✅ Method comparison plot saved to {save_path}")
+            
+        except Exception as e:
+            logger.error(f"Failed to plot method comparison: {e}", exc_info=True)
+            plt.close()
