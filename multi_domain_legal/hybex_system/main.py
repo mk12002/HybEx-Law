@@ -908,37 +908,54 @@ def main():
             
             # Initialize evaluator
             evaluator = ModelEvaluator(system.config)
-            
-            # Load all models
-            logger.info("\nLoading Prolog engine...")
-            evaluator.prolog_engine = PrologEngine(system.config)
-            
-            logger.info("Loading GNN model...")
-            evaluator.kg_engine = KnowledgeGraphEngine(system.config)
-            # FIX: Correct GNN model path (avoid double path issue)
-            # Correct path: models/hybex_system/gnn_model/gnn_model.pt (not /model.pt)
-            gnn_model_path = system.config.MODELS_DIR / 'gnn_model' / 'gnn_model.pt'
-            if gnn_model_path.exists():
-                evaluator.kg_engine.load_model(str(gnn_model_path))
-            else:
-                logger.warning(f"GNN model not found at {gnn_model_path}")
-            
-            logger.info("Loading BERT model...")
-            evaluator.eligibility_model = EligibilityPredictor(system.config)
-            bert_model_path = system.config.MODELS_DIR / 'hybex_system' / 'eligibility_predictor' / 'model.pt'
-            if not bert_model_path.exists():
-                bert_model_path = system.config.MODELS_DIR / 'eligibility_predictor' / 'model.pt'
-            if bert_model_path.exists():
-                evaluator.eligibility_model.load_state_dict(
-                    torch.load(bert_model_path, map_location=evaluator.device)
-                )
-                evaluator.eligibility_model.to(evaluator.device)
-                evaluator.eligibility_model.eval()
-            else:
-                logger.warning(f"BERT model not found at {bert_model_path}")
-            
-            logger.info("\nAll models loaded successfully!")
-            
+
+            # Trigger lazy-loading of heavy components (safe, doesn't reassign properties)
+            try:
+                logger.info("\nLoading Prolog engine...")
+                _ = evaluator.prolog_engine  # Trigger lazy load
+                logger.info("Prolog engine loaded successfully!")
+
+                logger.info("Loading GNN model...")
+                _ = evaluator.kg_engine  # Trigger lazy load
+
+                # Attempt to load a saved GNN checkpoint into kg_engine if available
+                gnn_model_path = system.config.MODELS_DIR / 'gnn_model' / 'gnn_model.pt'
+                if gnn_model_path.exists():
+                    try:
+                        evaluator.kg_engine.load_model(str(gnn_model_path))
+                        logger.info(f"✅ GNN model loaded from {gnn_model_path}")
+                    except Exception as e:
+                        logger.warning(f"Failed to load GNN model from {gnn_model_path}: {e}")
+                else:
+                    logger.warning(f"GNN model not found at {gnn_model_path}")
+
+                logger.info("Loading BERT model (Eligibility predictor)...")
+                # Prefer existing evaluator.eligibility_model if present, otherwise create and load
+                if not hasattr(evaluator, 'eligibility_model') or evaluator.eligibility_model is None:
+                    evaluator.eligibility_model = EligibilityPredictor(system.config)
+
+                bert_model_path = system.config.MODELS_DIR / 'hybex_system' / 'eligibility_predictor' / 'model.pt'
+                if not bert_model_path.exists():
+                    bert_model_path = system.config.MODELS_DIR / 'eligibility_predictor' / 'model.pt'
+
+                if bert_model_path.exists():
+                    try:
+                        evaluator.eligibility_model.load_state_dict(
+                            torch.load(bert_model_path, map_location=evaluator.device)
+                        )
+                        evaluator.eligibility_model.to(evaluator.device)
+                        evaluator.eligibility_model.eval()
+                        logger.info(f"✅ BERT eligibility model loaded from {bert_model_path}")
+                    except Exception as e:
+                        logger.warning(f"Failed to load BERT model at {bert_model_path}: {e}")
+                else:
+                    logger.warning(f"BERT model not found at {bert_model_path}")
+
+                logger.info("\nAll models initialized (lazy-loaded where possible).")
+
+            except Exception as e:
+                logger.error(f"Failed during model initialization: {e}", exc_info=True)
+
             # Run standard hybrid evaluation
             results = evaluator.evaluate_hybrid_system(test_data)
             
