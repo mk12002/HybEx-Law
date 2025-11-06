@@ -210,18 +210,22 @@ class KnowledgeGraphEngine:
         structural = F.one_hot(torch.arange(num_nodes), num_classes=num_nodes).float()
         entity_features = torch.zeros(num_nodes, 1)
         
-        # CRITICAL FIX: Direct entity-to-node mapping
+        # ================================================================
+        # CRITICAL FIX: Map to predicates that ACTUALLY EXIST in Prolog KB
+        # ================================================================
+        # Map entities to predicates that are parsed from the Prolog rules
         entity_to_node_map = {
-            'income': 'income_eligible',
-            'annual_income': 'income_eligible',
-            'social_category': 'categorically_eligible',
-            'is_disabled': 'disability_protection',
-            'is_senior_citizen': 'senior_citizen',
-            'is_widow': 'vulnerable_group',
-            'is_single_parent': 'vulnerable_group',
-            'is_transgender': 'gender_based_protection',
-            'gender': 'gender_discrimination',
-            'age': 'age'  # Will map to multiple predicates
+            'income': 'annual_income',                        # Maps to annual_income/2 predicate
+            'annual_income': 'annual_income',                 # Direct mapping
+            'monthly_income': 'monthly_income',               # Maps to monthly_income/2 predicate
+            'social_category': 'social_category',             # Maps to social_category/2 predicate
+            'is_disabled': 'vulnerable_group',                # Maps to vulnerable_group/2 predicate
+            'is_senior_citizen': 'vulnerable_group',          # Maps to vulnerable_group/2 predicate
+            'is_widow': 'vulnerable_group',                   # Maps to vulnerable_group/2 predicate
+            'is_single_parent': 'vulnerable_group',           # Maps to vulnerable_group/2 predicate
+            'is_transgender': 'vulnerable_group',             # Maps to vulnerable_group/2 predicate
+            'gender': 'vulnerable_group',                     # Women map to vulnerable_group/2
+            'age': 'vulnerable_group'                         # Age-based vulnerability
         }
         
         for entity_key, entity_value in (entities or {}).items():
@@ -267,8 +271,8 @@ class KnowledgeGraphEngine:
             social_cat = entities.get('social_category', 'general')
             if social_cat in ['sc', 'st']:
                 # Assume low income (eligible threshold)
-                if 'income_eligible' in self.node_to_idx:
-                    entity_features[self.node_to_idx['income_eligible'], 0] = 0.7
+                if 'annual_income' in self.node_to_idx:
+                    entity_features[self.node_to_idx['annual_income'], 0] = 0.7
         
         x = torch.cat([structural, entity_features], dim=1)
         

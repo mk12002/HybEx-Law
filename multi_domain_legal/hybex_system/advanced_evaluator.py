@@ -12,6 +12,7 @@ from typing import Dict, List, Tuple
 import json
 from pathlib import Path
 import logging
+from utils.json_utils import safe_json_dump
 
 logger = logging.getLogger(__name__)
 
@@ -715,9 +716,8 @@ class AdvancedEvaluator:
     def _save_comprehensive_report(self, results):
         """Save detailed report as JSON and markdown."""
         
-        # Save JSON
-        with open(self.output_dir / 'evaluation_report.json', 'w') as f:
-            json.dump(results, f, indent=2, default=str)
+        # Save JSON with safe handling of numpy/torch types
+        safe_json_dump(results, self.output_dir / 'evaluation_report.json')
         
         # Generate markdown report
         report_lines = [

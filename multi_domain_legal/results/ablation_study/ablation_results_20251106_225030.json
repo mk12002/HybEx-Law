@@ -1,0 +1,131 @@
+[
+  {
+    "combination": "01_prolog",
+    "models": [
+      "prolog"
+    ],
+    "accuracy": 0.5606375606375607,
+    "precision": 0.9618055555555556,
+    "recall": 0.4751286449399657,
+    "f1": 0.6360505166475315,
+    "num_samples": 1443
+  },
+  {
+    "combination": "02_gnn",
+    "models": [
+      "gnn"
+    ],
+    "accuracy": 0.808038808038808,
+    "precision": 0.808038808038808,
+    "recall": 1.0,
+    "f1": 0.8938290532771177,
+    "num_samples": 1443
+  },
+  {
+    "combination": "03_domain",
+    "models": [
+      "domain_classifier"
+    ],
+    "accuracy": 0.5627165627165627,
+    "precision": 0.9837251356238698,
+    "recall": 0.4665523156089194,
+    "f1": 0.6329261198371146,
+    "num_samples": 1443
+  },
+  {
+    "combination": "04_eligibility",
+    "models": [
+      "eligibility_predictor"
+    ],
+    "accuracy": 0.6424116424116424,
+    "precision": 0.8963414634146342,
+    "recall": 0.630360205831904,
+    "f1": 0.7401812688821753,
+    "num_samples": 1443
+  },
+  {
+    "combination": "06_domain_eligibility",
+    "models": [
+      "domain_classifier",
+      "eligibility_predictor"
+    ],
+    "accuracy": 0.568953568953569,
+    "precision": 1.0,
+    "recall": 0.4665523156089194,
+    "f1": 0.6362573099415205,
+    "num_samples": 1443
+  },
+  {
+    "combination": "09_gnn_domain",
+    "models": [
+      "gnn",
+      "domain_classifier"
+    ],
+    "accuracy": 0.5627165627165627,
+    "precision": 0.9837251356238698,
+    "recall": 0.4665523156089194,
+    "f1": 0.6329261198371146,
+    "num_samples": 1443
+  },
+  {
+    "combination": "10_gnn_eligibility",
+    "models": [
+      "gnn",
+      "eligibility_predictor"
+    ],
+    "accuracy": 0.6424116424116424,
+    "precision": 0.8963414634146342,
+    "recall": 0.630360205831904,
+    "f1": 0.7401812688821753,
+    "num_samples": 1443
+  },
+  {
+    "combination": "12_prolog_domain",
+    "models": [
+      "prolog",
+      "domain_classifier"
+    ],
+    "accuracy": 0.5474705474705475,
+    "precision": 0.9830508474576272,
+    "recall": 0.44768439108061747,
+    "f1": 0.6152032999410725,
+    "num_samples": 1443
+  },
+  {
+    "combination": "13_prolog_eligibility",
+    "models": [
+      "prolog",
+      "eligibility_predictor"
+    ],
+    "accuracy": 0.5550935550935551,
+    "precision": 1.0,
+    "recall": 0.44939965694682676,
+    "f1": 0.6201183431952663,
+    "num_samples": 1443
+  },
+  {
+    "combination": "14_prolog_gnn",
+    "models": [
+      "prolog",
+      "gnn"
+    ],
+    "accuracy": 0.5606375606375607,
+    "precision": 0.9618055555555556,
+    "recall": 0.4751286449399657,
+    "f1": 0.6360505166475315,
+    "num_samples": 1443
+  },
+  {
+    "combination": "16_hybrid_best",
+    "models": [
+      "prolog",
+      "eligibility_predictor",
+      "gnn"
+    ],
+    "accuracy": 0.647955647955648,
+    "precision": 0.8772935779816514,
+    "recall": 0.6560891938250428,
+    "f1": 0.7507360157016683,
+    "num_samples": 1443
+  }
+]

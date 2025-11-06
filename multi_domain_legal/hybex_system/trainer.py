@@ -24,6 +24,7 @@ from .data_processor import DataPreprocessor
 from .neural_models import ModelTrainer
 from .prolog_engine import PrologEngine
 from .evaluator import ModelEvaluator
+from utils.repro import set_seed
 
 # Setup logging
 logger = logging.getLogger(__name__)
@@ -186,6 +187,9 @@ class TrainingOrchestrator:
     """Main training pipeline orchestrator"""
     
     def __init__(self, config: HybExConfig):
+        # Set random seed for reproducibility
+        set_seed(42, deterministic=False)
+        
         self.config = config
         self.start_time = None
         self.components = {}

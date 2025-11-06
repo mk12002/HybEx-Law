@@ -1,0 +1,16 @@
+{
+  "accuracy": 0.808038808038808,
+  "f1_score": 0.8938290532771177,
+  "precision": 0.808038808038808,
+  "recall": 1.0,
+  "method_metrics": {
+    "fallback": {
+      "count": 1443,
+      "accuracy": 0.808038808038808,
+      "f1": 0.8938290532771177,
+      "precision": 0.808038808038808,
+      "recall": 1.0
+    }
+  },
+  "classification_report": "              precision    recall  f1-score   support\n\nNot Eligible     0.0000    0.0000    0.0000       277\n    Eligible     0.8080    1.0000    0.8938      1166\n\n    accuracy                         0.8080      1443\n   macro avg     0.4040    0.5000    0.4469      1443\nweighted avg     0.6529    0.8080    0.7222      1443\n"
+}

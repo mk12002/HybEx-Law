@@ -12,6 +12,10 @@ from datetime import datetime
 from tqdm import tqdm
 
 from .config import HybExConfig
+# ✅ FIX: Import the fix_data_leakage function
+import sys
+sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+from fix_data_leakage import fix_data_leakage
 
 logger = logging.getLogger(__name__)
 
@@ -795,7 +799,7 @@ class DataPreprocessor:
         4. Splits data into train, validation, and test sets.
         5. Saves processed data to files.
         
-        NOTE: If pre-split files (*_split.json) are detected, skips re-splitting.
+        NOTE: If pre-split files (*_split.json) are detected, **runs data leakage fix** and skips re-splitting.
         """
         logger.info(f"Running preprocessing pipeline for data in: {data_directory}")
         data_path = Path(data_directory)
@@ -808,9 +812,20 @@ class DataPreprocessor:
         test_file = data_path / "test_split.json"
         
         if train_file.exists() and val_file.exists() and test_file.exists():
-            logger.info("✅ Detected pre-split data files (*_split.json). Loading without re-splitting...")
+            logger.info("✅ Detected pre-split data files (*_split.json).")
             
-            # Load pre-split files directly
+            # ✅ FIX: Run the data leakage fix script on the data directory.
+            # This will deduplicate and re-split the files in place.
+            try:
+                logger.info(f"Running data leakage fix on directory: {data_path}")
+                fix_results = fix_data_leakage(str(data_path))
+                logger.info(f"✅ Data leakage fix complete. {fix_results['duplicates_removed']} duplicates removed.")
+            except Exception as e:
+                logger.error(f"❌ Failed to run data leakage fix: {e}. Proceeding with potentially leaky data.")
+
+            logger.info("Loading fixed pre-split files...")
+            
+            # Load the newly fixed files
             with open(train_file, 'r', encoding='utf-8') as f:
                 train_samples = json.load(f)
             with open(val_file, 'r', encoding='utf-8') as f:
@@ -820,20 +835,20 @@ class DataPreprocessor:
             
             logger.info(f"Loaded {len(train_samples)} train, {len(val_samples)} val, {len(test_samples)} test samples")
             
-            # CRITICAL FIX: Always extract entities if missing
             all_pre_split_samples = train_samples + val_samples + test_samples
-            missing_entities_count = sum(1 for s in all_pre_split_samples if 'extracted_entities' not in s)
             
+            # ✅ FIX: Check if entities are missing OR empty
+            missing_entities_count = sum(1 for s in all_pre_split_samples if not s.get('extracted_entities'))
+
             if missing_entities_count > 0:
                 feature_type = "entities and enhanced features" if self.use_enhanced_features else "entities"
-                logger.info(f"Extracting {feature_type} for {missing_entities_count} samples without 'extracted_entities'...")
+                logger.info(f"Extracting {feature_type} for {missing_entities_count} samples with missing/empty 'extracted_entities'...")
                 
                 extraction_errors = 0
                 for sample in tqdm(all_pre_split_samples, desc=f"Extracting {feature_type} for pre-split data", unit="samples"):
-                    if 'extracted_entities' not in sample:
+                    if not sample.get('extracted_entities'): # Check if missing or empty
                         if 'query' in sample:
                             try:
-                                # Use extract_all_features which handles both basic and enhanced features
                                 sample['extracted_entities'] = self.extract_all_features(sample['query'])
                             except Exception as e:
                                 logger.error(f"Failed to extract features for {sample.get('sample_id')}: {e}")
@@ -847,7 +862,6 @@ class DataPreprocessor:
                 
                 logger.info(f"✅ Feature extraction completed for pre-split data ({feature_type})")
                 
-                # ✅ CRITICAL: Save updated data BACK to original *_split.json files
                 logger.info("💾 Saving extracted entities back to original split files...")
                 with open(train_file, 'w', encoding='utf-8') as f:
                     json.dump(train_samples, f, indent=2, ensure_ascii=False)
@@ -857,7 +871,7 @@ class DataPreprocessor:
                     json.dump(test_samples, f, indent=2, ensure_ascii=False)
                 logger.info("✅ Entities saved back to split files - future runs will skip extraction")
             else:
-                logger.info("✅ All samples already have extracted_entities")
+                logger.info("✅ All samples already have non-empty extracted_entities")
 
             # Save to processed_data directory as well
             processed_dir = self.config.RESULTS_DIR / "processed_data"
@@ -887,8 +901,8 @@ class DataPreprocessor:
                     'test_data_file': str(test_file_out)
                 },
                 'validation_stats': {
-                    'status': 'presplit_with_entities',
-                    'message': 'Pre-split data loaded and entities extracted',
+                    'status': 'presplit_fixed_and_entities_extracted',
+                    'message': 'Pre-split data fixed for leakage and entities extracted',
                     'missing_entities_filled': missing_entities_count
                 }
             }
@@ -898,14 +912,12 @@ class DataPreprocessor:
         # ========================================
         logger.info("No pre-split files detected. Proceeding with full preprocessing pipeline...")
         
-        # 1. Load raw data
         all_samples = []
         json_files = list(data_path.glob("*.json"))
         if not json_files:
             raise FileNotFoundError(f"No JSON data files found in {data_directory}. Please ensure your raw data is in JSON format in the specified directory.")
         
         for file_path in json_files:
-            # Skip scraping report files - they contain metadata, not training samples
             if 'scraping_report' in file_path.name:
                 logger.info(f"Skipping non-sample JSON report file: {file_path.name}")
                 continue
@@ -914,10 +926,8 @@ class DataPreprocessor:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     file_data = json.load(f)
                     if isinstance(file_data, list):
-                        # Direct list of samples
                         all_samples.extend(file_data)
                     elif isinstance(file_data, dict) and 'samples' in file_data:
-                        # Structured format with metadata and samples
                         samples = file_data['samples']
                         if isinstance(samples, list):
                             all_samples.extend(samples)
@@ -936,32 +946,28 @@ class DataPreprocessor:
         
         logger.info(f"Loaded {len(all_samples)} raw samples from {len(json_files)} files.")
 
-        # 2. Validate data quality
         validation_stats = self.validate_data_quality(data_path)
         if validation_stats['status'] != 'success':
             logger.warning("Data quality validation found issues. Proceeding but review errors.")
 
-        # 3. Extract entities and enrich samples
         feature_type = "entities and enhanced features" if self.use_enhanced_features else "entities"
         logger.info(f"Extracting {feature_type} and enriching samples...")
         extraction_errors = 0
         
         desc_text = "Extracting legal features" if self.use_enhanced_features else "Extracting legal entities"
         for i, sample in enumerate(tqdm(all_samples, desc=desc_text, unit="samples")):
-            # Ensure each sample has a unique ID, useful for tracking
             if 'sample_id' not in sample:
                 sample['sample_id'] = f"sample_{i+1}"
             
             if 'query' in sample:
                 try:
-                    # Use extract_all_features which handles both basic and enhanced features
                     sample['extracted_entities'] = self.extract_all_features(sample['query'])
                 except Exception as e:
                     logger.error(f"Failed to extract features for sample {sample.get('sample_id')}: {e}")
-                    sample['extracted_entities'] = {}  # Empty dict as fallback
+                    sample['extracted_entities'] = {}
                     extraction_errors += 1
             else:
-                sample['extracted_entities'] = {}  # No query, no entities
+                sample['extracted_entities'] = {}
                 logger.warning(f"Sample {sample.get('sample_id', i)} has no 'query' field for feature extraction.")
         
         if extraction_errors > 0:
@@ -969,32 +975,26 @@ class DataPreprocessor:
         else:
             logger.info(f"✅ Successfully extracted {feature_type} for all {len(all_samples)} samples")
 
-        # 4. Split data into train, validation, and test sets
         logger.info("Splitting data into train, validation, and test sets...")
-        
-        # Stratified split on 'expected_eligibility' if possible, or 'domains'
-        # For multi-label 'domains', direct stratification is complex.
-        # We'll stratify by 'expected_eligibility' as it's binary.
         
         labels_for_stratification = [s.get('expected_eligibility', False) for s in all_samples]
         
         train_val_samples, test_samples = train_test_split(
             all_samples, test_size=self.config.DATA_CONFIG['test_split'], 
             random_state=self.config.DATA_CONFIG['random_seed'],
-            stratify=labels_for_stratification # Stratify by eligibility
+            stratify=labels_for_stratification
         )
         
         train_samples, val_samples = train_test_split(
             train_val_samples, test_size=self.config.DATA_CONFIG['val_split'] / (1 - self.config.DATA_CONFIG['test_split']),
             random_state=self.config.DATA_CONFIG['random_seed'],
-            stratify=[s.get('expected_eligibility', False) for s in train_val_samples] # Stratify by eligibility
+            stratify=[s.get('expected_eligibility', False) for s in train_val_samples]
         )
         
         logger.info(f"Train samples: {len(train_samples)}")
         logger.info(f"Validation samples: {len(val_samples)}")
         logger.info(f"Test samples: {len(test_samples)}")
         
-        # 5. Save processed data to files
         processed_data_dir = self.config.RESULTS_DIR / "processed_data"
         processed_data_dir.mkdir(parents=True, exist_ok=True)
         
@@ -1015,3 +1015,25 @@ class DataPreprocessor:
             'saved_files': saved_files,
             'validation_stats': validation_stats
         }
+
+    # ✅ FIX: Add this new method to the DataPreprocessor class
+    def load_json_data(self, file_path: Path) -> List[Dict]:
+        """Loads a JSON file containing a list of samples."""
+        if not file_path.exists():
+            logger.error(f"File not found: {file_path}")
+            return []
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            if isinstance(data, list):
+                logger.info(f"Successfully loaded {len(data)} samples from {file_path}")
+                return data
+            else:
+                logger.warning(f"File {file_path} does not contain a list.")
+                return []
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to decode JSON from {file_path}: {e}")
+            return []
+        except Exception as e:
+            logger.error(f"Failed to load data from {file_path}: {e}")
+            return []

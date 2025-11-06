@@ -8,6 +8,9 @@ import logging
 from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass, field
 import numpy as np
+from transformers import AutoTokenizer
+from .neural_models import EligibilityPredictor, DomainClassifier, EnhancedLegalBERT
+from .config import HybExConfig
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +29,11 @@ class ConfidenceCalibrator:
         self.bert_calibrator = None
         self.prolog_calibrator = None
         self.gnn_calibrator = None
+        self.domain_calibrator = None
+        self.enhanced_calibrator = None
         self.calibrated = False
         
-    def fit(self, bert_scores, prolog_scores, gnn_scores, true_labels):
+    def fit(self, bert_scores, prolog_scores, gnn_scores, true_labels, domain_scores=None, enhanced_scores=None):
         """
         Fit calibrators on validation set.
         
@@ -36,6 +41,8 @@ class ConfidenceCalibrator:
             bert_scores: List of (confidence, prediction) tuples from BERT
             prolog_scores: List of (confidence, prediction) tuples from Prolog
             gnn_scores: List of (confidence, prediction) tuples from GNN
+            domain_scores: List of (confidence, prediction) tuples from DomainClassifier
+            enhanced_scores: List of (confidence, prediction) tuples from EnhancedBERT
             true_labels: Ground truth labels
         """
         try:
@@ -60,6 +67,18 @@ class ConfidenceCalibrator:
             if len(gnn_confidences) > 10:
                 self.gnn_calibrator = IsotonicRegression(out_of_bounds='clip')
                 self.gnn_calibrator.fit(gnn_confidences, labels[:len(gnn_confidences)])
+                
+            if domain_scores:
+                domain_confidences = np.array([s[0] for s in domain_scores if s is not None and s[0] is not None])
+                if len(domain_confidences) > 10:
+                    self.domain_calibrator = IsotonicRegression(out_of_bounds='clip')
+                    self.domain_calibrator.fit(domain_confidences, labels[:len(domain_confidences)])
+
+            if enhanced_scores:
+                enhanced_confidences = np.array([s[0] for s in enhanced_scores if s is not None and s[0] is not None])
+                if len(enhanced_confidences) > 10:
+                    self.enhanced_calibrator = IsotonicRegression(out_of_bounds='clip')
+                    self.enhanced_calibrator.fit(enhanced_confidences, labels[:len(enhanced_confidences)])
             
             self.calibrated = True
             logger.info("✅ Confidence calibrators fitted")
@@ -96,6 +115,24 @@ class ConfidenceCalibrator:
         except:
             return confidence
 
+    def calibrate_domain(self, confidence):
+        """Calibrate Domain Classifier confidence score."""
+        if not self.calibrated or self.domain_calibrator is None:
+            return confidence
+        try:
+            return float(self.domain_calibrator.predict([confidence])[0])
+        except:
+            return confidence
+
+    def calibrate_enhanced(self, confidence):
+        """Calibrate EnhancedBERT confidence score."""
+        if not self.calibrated or self.enhanced_calibrator is None:
+            return confidence
+        try:
+            return float(self.enhanced_calibrator.predict([confidence])[0])
+        except:
+            return confidence
+
 
 # ============================================================================
 # PREDICTION RESULTS
@@ -126,31 +163,100 @@ class IntelligentHybridPredictor:
     4. Uncertainty quantification
     """
     
-    def __init__(self, prolog_engine, gnn_model, bert_model, config):
+    # ✅ REPLACE THE ENTIRE __init__ METHOD
+    def __init__(self, prolog_engine, gnn_model, bert_model, config: HybExConfig):
         self.prolog = prolog_engine
         self.gnn = gnn_model
-        self.bert = bert_model
+        self.bert = bert_model  # This might be None or a wrapper
         self.config = config
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        # ✅ FIX: Load tokenizer independently
+        try:
+            self.tokenizer = AutoTokenizer.from_pretrained(config.MODEL_CONFIG['base_model'])
+            if self.tokenizer.pad_token is None:
+                # Add pad token if missing
+                self.tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+            logger.info("HybridPredictor loaded its own tokenizer.")
+        except Exception as e:
+            logger.error(f"HybridPredictor failed to load tokenizer: {e}")
+            self.tokenizer = None
+
+        # ✅ FIX: Load models if bert_model wrapper is not provided
+        self.eligibility_model = None
+        self.domain_classifier = None
+        self.enhanced_bert = None
+
+        if self.bert is None:
+            logger.warning("bert_model is None. HybridPredictor loading models manually.")
+            try:
+                # Load Eligibility Predictor
+                elig_path = self.config.MODELS_DIR / 'eligibility_predictor' / 'model.pt'
+                if elig_path.exists():
+                    self.eligibility_model = EligibilityPredictor(self.config).to(self.device)
+                    self.eligibility_model.load_state_dict(torch.load(elig_path, map_location=self.device))
+                    self.eligibility_model.eval()
+                    logger.info("HybridPredictor loaded EligibilityPredictor.")
+                else:
+                    logger.warning(f"HybridPredictor could not find EligibilityPredictor at {elig_path}")
+
+                # Load Domain Classifier
+                domain_path = self.config.MODELS_DIR / 'domain_classifier' / 'model.pt'
+                if domain_path.exists():
+                    self.domain_classifier = DomainClassifier(self.config).to(self.device)
+                    self.domain_classifier.load_state_dict(torch.load(domain_path, map_location=self.device))
+                    self.domain_classifier.eval()
+                    logger.info("HybridPredictor loaded DomainClassifier.")
+                else:
+                    logger.warning(f"HybridPredictor could not find DomainClassifier at {domain_path}")
+
+                # Load EnhancedLegalBERT
+                enhanced_path = self.config.ENHANCED_BERT_MODEL_PATH
+                if enhanced_path.exists():
+                    self.enhanced_bert = EnhancedLegalBERT(self.config).to(self.device)
+                    # Load checkpoint, which might be a dict
+                    checkpoint = torch.load(enhanced_path, map_location=self.device)
+                    if isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
+                        self.enhanced_bert.load_state_dict(checkpoint['model_state_dict'])
+                    else:
+                        self.enhanced_bert.load_state_dict(checkpoint) # Assume it's just the state_dict
+                    self.enhanced_bert.eval()
+                    logger.info("HybridPredictor loaded EnhancedLegalBERT.")
+                else:
+                     logger.warning(f"HybridPredictor could not find EnhancedLegalBERT at {enhanced_path}")
+
+            except Exception as e:
+                logger.error(f"HybridPredictor failed to manually load models: {e}", exc_info=True)
+        else:
+            logger.info("HybridPredictor using provided bert_model wrapper.")
+            # Assign models from the wrapper if it exists
+            if hasattr(self.bert, 'eligibility_model'):
+                self.eligibility_model = self.bert.eligibility_model
+            if hasattr(self.bert, 'domain_classifier'):
+                self.domain_classifier = self.bert.domain_classifier
+            if hasattr(self.bert, 'enhanced_bert'):
+                self.enhanced_bert = self.bert.enhanced_bert
+            # Inherit tokenizer from wrapper if it exists
+            if hasattr(self.bert, 'tokenizer'):
+                self.tokenizer = self.bert.tokenizer
         
         # Confidence calibrator
         self.calibrator = ConfidenceCalibrator()
         
-        # Learned ensemble parameters (tune on validation set)
+        # Learned ensemble parameters
         self.ensemble_params = {
-            'prolog_threshold': 0.75,  # ✅ REDUCED from 0.92
-            'gnn_threshold': 0.70,     # ✅ REDUCED from 0.75
-            'bert_threshold': 0.75,    # ✅ REDUCED from 0.80
-            # ✅ REBALANCED weights to favor neural models
-            'prolog_weight': 0.15,  # ← REDUCED from 0.20
-            'bert_weight': 0.40,    # ← INCREASED from 0.32
-            'gnn_weight': 0.35,     # ← INCREASED from 0.28
-            'domain_weight': 0.05,  # ← REDUCED from 0.10
-            'enhanced_bert_weight': 0.05,  # ← REDUCED from 0.10
+            'prolog_threshold': 0.75,
+            'gnn_threshold': 0.70,
+            'bert_threshold': 0.75,
+            'prolog_weight': 0.15,
+            'bert_weight': 0.40,
+            'gnn_weight': 0.35,
+            'domain_weight': 0.05,
+            'enhanced_bert_weight': 0.05,
             'uncertainty_threshold': 0.60,
-            'conflict_penalty': 0.05  # ✅ REDUCED from 0.08
+            'conflict_penalty': 0.05
         }
         
-        # Track performance for adaptive weighting
         self.method_history = {
             'bert': {'correct': 0, 'total': 0},
             'prolog': {'correct': 0, 'total': 0},
@@ -172,30 +278,54 @@ class IntelligentHybridPredictor:
             query = case_data.get('query', '')
             entities = case_data.get('extracted_entities', {})
             
-            # Get predictions from all systems
+            # 1. Get Domain Prediction FIRST
+            domain_res = self.predict_with_domain_classifier_safe(case_data)
+            predicted_domain_index = 0 # Default to 'legal_aid' (index 0)
+            
+            if domain_res and domain_res.bert_result and 'domain_probs' in domain_res.bert_result:
+                probs = domain_res.bert_result['domain_probs']
+                if isinstance(probs, list):
+                    probs = np.array(probs)
+                if probs.ndim > 1:
+                    probs = probs.flatten() # Ensure 1D array
+                if probs.size > 0:
+                    predicted_domain_index = np.argmax(probs)
+            
+            # 2. Get predictions from other systems
             bert_result = self._predict_with_bert_safe(case_data)
             prolog_result = self._predict_with_prolog_safe(case_data)
             gnn_result = self._predict_with_gnn_safe(case_data)
             
+            # 3. Get EnhancedBERT prediction, PASSING IN THE DOMAIN
+            enhanced_res = self.predict_with_enhanced_bert_safe(case_data, int(predicted_domain_index))
+            
             # If all failed, use fallback
-            if not any([bert_result, prolog_result, gnn_result]):
+            if not any([bert_result, prolog_result, gnn_result, domain_res, enhanced_res]):
                 return self._fallback_prediction(case_data)
             
             # Extract raw confidences
             bert_conf = bert_result.confidence if bert_result else 0.5
             prolog_conf = prolog_result.confidence if prolog_result else 0.5
             gnn_conf = gnn_result.confidence if gnn_result else 0.5
+            domain_conf = domain_res.confidence if domain_res else 0.5
+            enhanced_conf = enhanced_res.confidence if enhanced_res else 0.5
             
             # Calibrate confidences
             bert_conf_cal = self.calibrator.calibrate_bert(bert_conf)
             prolog_conf_cal = self.calibrator.calibrate_prolog(prolog_conf)
             gnn_conf_cal = self.calibrator.calibrate_gnn(gnn_conf)
+            domain_conf_cal = self.calibrator.calibrate_domain(domain_conf)
+            enhanced_conf_cal = self.calibrator.calibrate_enhanced(enhanced_conf)
             
             # Make hybrid decision with intelligent routing
             decision = self._make_hybrid_decision(
                 bert_result, prolog_result, gnn_result,
                 bert_conf_cal, prolog_conf_cal, gnn_conf_cal,
-                entities
+                entities,
+                domain_res,      # Pass the result
+                enhanced_res,    # Pass the result
+                domain_conf_cal, # Pass calibrated confidence
+                enhanced_conf_cal # Pass calibrated confidence
             )
             
             # Calculate uncertainty (epistemic + aleatoric)
@@ -231,34 +361,20 @@ class IntelligentHybridPredictor:
             logger.error(f"Prediction failed for {case_data.get('sample_id')}: {e}")
             return self._fallback_prediction(case_data)
     
+    # ✅ REPLACE THIS ENTIRE METHOD
     def _make_hybrid_decision(self, bert_res, prolog_res, gnn_res,
-                             bert_conf_cal, prolog_conf_cal, gnn_conf_cal, entities):
+                             bert_conf_cal, prolog_conf_cal, gnn_conf_cal, entities,
+                             domain_res, enhanced_res, 
+                             domain_conf_cal, enhanced_conf_cal): # <-- ✅ FIX 1: Added all 11 arguments
         """
         UPDATED: Intelligent hybrid decision with ALL 5 models
-        
-        Models:
-        1. Prolog (symbolic reasoning)
-        2. GNN (graph-based)
-        3. Eligibility Predictor (BERT)
-        4. Domain Classifier (BERT)
-        5. EnhancedLegalBERT (Multi-task BERT)
-        
-        Strategies:
-        1. High-confidence Prolog (trust symbolic reasoning)
-        2. Conflict resolution between systems
-        3. Agreement boosting
-        4. Weighted ensemble fallback
         """
         
-        # Try to get additional predictions from domain classifier and enhanced BERT
-        case_data = {'extracted_entities': entities, 'query': entities.get('query', '')}
-        domain_res = self.predict_with_domain_classifier_safe(case_data)
-        enhanced_res = self.predict_with_enhanced_bert_safe(case_data)
+        # ✅ FIX 2: Removed redundant calls. Models are now passed as arguments.
+        # case_data = {'extracted_entities': entities, 'query': entities.get('query', '')}
+        # domain_res = self.predict_with_domain_classifier_safe(case_data)
+        # enhanced_res = self.predict_with_enhanced_bert_safe(case_data)
         
-        # Strategy 1: High-confidence Prolog (trust legal rules)
-        # ✅ REMOVED: Don't auto-return Prolog
-        # Now Prolog participates in ensemble ALWAYS, not override
-
         # Strategy 1: Check for HIGH-CONFIDENCE AGREEMENT
         predictions = []
         if bert_res:
@@ -267,15 +383,17 @@ class IntelligentHybridPredictor:
             predictions.append(('prolog', prolog_res.eligible, prolog_conf_cal))
         if gnn_res:
             predictions.append(('gnn', gnn_res.eligible, gnn_conf_cal))
+        
+        # ✅ FIX 3: Use the calibrated confidences passed into the function
         if domain_res:
-            predictions.append(('domain_classifier', domain_res.eligible, domain_res.confidence))
+            predictions.append(('domain_classifier', domain_res.eligible, domain_conf_cal))
         if enhanced_res:
-            predictions.append(('enhanced_bert', enhanced_res.eligible, enhanced_res.confidence))
+            predictions.append(('enhanced_bert', enhanced_res.eligible, enhanced_conf_cal))
 
         if len(predictions) >= 3:
             eligibilities = [p[1] for p in predictions]
             confidences = [p[2] for p in predictions]
-            # If ALL models agree AND average confidence > 0.85
+            
             if len(set(eligibilities)) == 1 and np.mean(confidences) > 0.85:
                 boosted_conf = min(0.98, np.mean(confidences) * 1.12)
                 return {
@@ -283,62 +401,44 @@ class IntelligentHybridPredictor:
                     'confidence': boosted_conf,
                     'method': 'strong_consensus',
                     'reasoning': f"All {len(predictions)} models strongly agree (avg conf={np.mean(confidences):.2f})",
-                    'rationale': "Unanimous decision with high confidence across symbolic and neural methods"
+                    'rationale': "Unanimous decision with high confidence"
                 }
-            # If Prolog + 2 neural models agree (3+ total)
+            
             if prolog_res and prolog_conf_cal > 0.80:
                 neural_agree = sum(1 for p in predictions if p[0] != 'prolog' and p[1] == prolog_res.eligible)
-                if neural_agree >= 2:  # At least 2 neural models agree with Prolog
+                if neural_agree >= 2:
                     boosted_conf = min(0.95, (prolog_conf_cal + np.mean([p[2] for p in predictions if p[0] != 'prolog'])) / 2)
                     return {
                         'eligible': prolog_res.eligible,
                         'confidence': boosted_conf,
                         'method': 'prolog_neural_consensus',
                         'reasoning': f"Prolog ({prolog_conf_cal:.2f}) + {neural_agree} neural models agree",
-                        'rationale': "Legal rules confirmed by independent neural analysis"
+                        'rationale': "Legal rules confirmed by neural analysis"
                     }
         
-        # Strategy 2: Check for conflict between all systems
-        predictions = []
-        if bert_res:
-            predictions.append(('bert', bert_res.eligible, bert_conf_cal))
-        if prolog_res:
-            predictions.append(('prolog', prolog_res.eligible, prolog_conf_cal))
-        if gnn_res:
-            predictions.append(('gnn', gnn_res.eligible, gnn_conf_cal))
-        if domain_res:
-            predictions.append(('domain_classifier', domain_res.eligible, domain_res.confidence))
-        if enhanced_res:
-            predictions.append(('enhanced_bert', enhanced_res.eligible, enhanced_res.confidence))
-        
-        # Check if there's disagreement
+        # Strategy 2: Check for conflict
         if len(predictions) >= 2:
             eligibilities = [p[1] for p in predictions]
-            if len(set(eligibilities)) > 1:  # Disagreement exists
-                # Count votes
+            if len(set(eligibilities)) > 1:  # Disagreement
                 votes_eligible = sum(1 for e in eligibilities if e)
                 votes_not = len(eligibilities) - votes_eligible
-                # Get average confidence for each side
                 conf_eligible = np.mean([p[2] for p in predictions if p[1] == True]) if votes_eligible > 0 else 0.0
                 conf_not = np.mean([p[2] for p in predictions if p[1] == False]) if votes_not > 0 else 0.0
-                # ✅ EQUAL VOTING - Remove Prolog bonus
+                
                 if prolog_res:
-                    prolog_vote = prolog_res.eligible
-                    # REMOVED: prolog_weight_factor = 1.5
-                    # Just count as 1 vote like all others
-                    if prolog_vote:
-                        votes_eligible += 1  # ✅ Changed from += 1.5/0.5
+                    if prolog_res.eligible:
+                        votes_eligible += 1
                     else:
                         votes_not += 1
-                # Decision based on simple majority
+                
                 if votes_eligible > votes_not:
-                    final_conf = conf_eligible * 0.95  # ✅ Reduced penalty from 0.92
+                    final_conf = conf_eligible * 0.95
                     return {
                         'eligible': True,
                         'confidence': final_conf,
                         'method': 'majority_vote_eligible',
                         'reasoning': f"Majority: {votes_eligible:.0f} eligible vs {votes_not:.0f} not",
-                        'rationale': "Democratic voting without Prolog bias"
+                        'rationale': "Democratic voting"
                     }
                 else:
                     final_conf = conf_not * 0.95
@@ -347,29 +447,29 @@ class IntelligentHybridPredictor:
                         'confidence': final_conf,
                         'method': 'majority_vote_not_eligible',
                         'reasoning': f"Majority: {votes_not:.0f} not eligible vs {votes_eligible:.0f}",
-                        'rationale': "Democratic voting without Prolog bias"
+                        'rationale': "Democratic voting"
                     }
         
-        # Strategy 3: Systems agree - boost confidence
+        # Strategy 3: Systems agree
         if len(predictions) >= 2:
-            if len(set(eligibilities)) == 1:  # All agree
+            eligibilities = [p[1] for p in predictions] # Re-check (might be redundant but safe)
+            if len(set(eligibilities)) == 1:
                 avg_conf = np.mean([p[2] for p in predictions])
-                
-                # Boost confidence when systems agree
                 boosted_conf = min(0.98, avg_conf * 1.15)
-                
                 return {
                     'eligible': eligibilities[0],
                     'confidence': boosted_conf,
                     'method': 'ensemble',
                     'reasoning': f"All {len(predictions)} systems agree ({eligibilities[0]}): avg_conf={avg_conf:.2f}",
-                    'rationale': "Strong consensus across all models"
+                    'rationale': "Strong consensus"
                 }
         
         # Strategy 4: Default weighted ensemble
+        # ✅ FIX 4: Pass all models and their calibrated confidences
         return self._weighted_ensemble(
             bert_res, prolog_res, gnn_res, domain_res, enhanced_res,
-            bert_conf_cal, prolog_conf_cal, gnn_conf_cal
+            bert_conf_cal, prolog_conf_cal, gnn_conf_cal,
+            domain_conf_cal, enhanced_conf_cal # <-- Pass the missing args
         )
     
     def _weighted_ensemble(self, bert_res, prolog_res, gnn_res, domain_res, enhanced_res,
@@ -650,48 +750,34 @@ class IntelligentHybridPredictor:
             return None
     
     def _predict_with_gnn_safe(self, case_data: Dict) -> Optional[HybridPrediction]:
-        """FIX: Correct GNN forward pass for 2-layer model"""
+        """FIX: Use the GNN's own prediction method for correct inference."""
         try:
             case_id = case_data.get('sample_id', 'unknown')
             entities = case_data.get('extracted_entities', {})
             
-            kg_engine = getattr(self.gnn, 'kg_engine', None) or getattr(self.gnn, '_knowledge_graph_engine_cache', None)
-            if kg_engine is None:
+            # self.gnn IS the knowledge graph engine
+            if self.gnn is None:
                 return None
             
-            graph = kg_engine.create_case_graph(entities, label=0.0)
-            gnn_model = getattr(kg_engine, 'model', None)
-            if gnn_model is None:
-                return None
+            # Ensure the GNN model is loaded within the engine
+            if self.gnn.model is None:
+                self.gnn.load_model(str(self.config.GNN_MODEL_PATH))
+
+            # Use the engine's built-in prediction method
+            # This correctly uses the GAT.forward(), global_mean_pool, and readout layer
+            prediction, probabilities = self.gnn.predict_eligibility(
+                entities, 
+                return_probabilities=True
+            )
             
-            graph = graph.to(self.gnn.device)
-            
-            with torch.no_grad():
-                gnn_model.eval()
-                x, edge_index = graph.x, graph.edge_index
-                
-                # FIX: Only 2 conv layers (conv1, conv2)
-                h = gnn_model.conv1(x, edge_index)
-                h = torch.relu(h)
-                h = gnn_model.conv2(h, edge_index)
-                h = torch.relu(h)
-                # No conv3!
-                
-                # Global pooling
-                graph_embedding = torch.mean(h, dim=0, keepdim=True)
-                
-                # Classification
-                logits = gnn_model.readout(graph_embedding)
-                probs = torch.softmax(logits, dim=1)
-                pred_class = torch.argmax(probs, dim=1).item()
-                confidence = probs[0, pred_class].item()
+            confidence = probabilities[prediction].item()
             
             return HybridPrediction(
                 case_id=case_id,
-                eligible=bool(pred_class),
+                eligible=bool(prediction),
                 confidence=confidence,
                 method_used='gnn',
-                gnn_result={'probs': probs.cpu().numpy().tolist()},
+                gnn_result={'probs': probabilities.cpu().numpy().tolist()},
                 reasoning=f"GNN: {len(entities)} features"
             )
             
@@ -699,16 +785,22 @@ class IntelligentHybridPredictor:
             logger.warning(f"GNN failed for {case_data.get('sample_id')}: {str(e)[:100]}")
             return None
     
+    # ✅ REPLACE _predict_with_bert_safe
     def _predict_with_bert_safe(self, case_data: Dict) -> Optional[HybridPrediction]:
-        """FIX: Handle 1D and 2D BERT outputs properly"""
+        """FIX: Use self.tokenizer and self.eligibility_model"""
         try:
             case_id = case_data.get('sample_id', 'unknown')
             query = case_data.get('query', '')
             
-            if not query:
+            # ✅ FIX: Check for self.tokenizer and self.eligibility_model
+            if not query or self.tokenizer is None:
+                logger.warning(f"BERT failed for {case_id}: Missing query or tokenizer.")
+                return None
+            if self.eligibility_model is None:
+                logger.warning(f"BERT failed for {case_id}: Eligibility model not loaded.")
                 return None
             
-            inputs = self.bert.tokenizer(
+            inputs = self.tokenizer(
                 query,
                 max_length=512,
                 padding='max_length',
@@ -717,13 +809,12 @@ class IntelligentHybridPredictor:
                 return_token_type_ids=False
             )
             
-            inputs = {k: v.to(self.bert.device) for k, v in inputs.items()}
+            inputs = {k: v.to(self.device) for k, v in inputs.items()}
             
             with torch.no_grad():
-                self.bert.eligibility_model.eval()
-                outputs = self.bert.eligibility_model(**inputs)
+                self.eligibility_model.eval()
+                outputs = self.eligibility_model(**inputs) # This model now returns a dict
                 
-                # ✅ ROBUST logits normalization
                 if isinstance(outputs, dict):
                     logits = outputs.get('logits', outputs.get(list(outputs.keys())[0]))
                 elif isinstance(outputs, torch.Tensor):
@@ -731,21 +822,17 @@ class IntelligentHybridPredictor:
                 else:
                     logits = outputs.logits
 
-                # ✅ UNIFIED shape handling
                 if logits.dim() == 1:
-                    # [batch_size] - binary logits
                     probs = torch.sigmoid(logits)
                     pred_class = (probs > 0.5).long().item()
                     confidence = probs.item() if pred_class == 1 else (1 - probs.item())
                 elif logits.dim() == 2:
                     if logits.size(1) == 1:
-                        # [batch_size, 1] - squeeze and treat as 1D
                         logits = logits.squeeze(1)
                         probs = torch.sigmoid(logits)
                         pred_class = (probs > 0.5).long().item()
                         confidence = probs.item() if pred_class == 1 else (1 - probs.item())
                     else:
-                        # [batch_size, 2] - proper softmax
                         probs = torch.softmax(logits, dim=1)
                         pred_class = torch.argmax(probs, dim=1).item()
                         confidence = probs[0, pred_class].item()
@@ -765,36 +852,41 @@ class IntelligentHybridPredictor:
             logger.warning(f"BERT failed for {case_data.get('sample_id')}: {str(e)[:100]}")
             return None
     
+    # ✅ REPLACE predict_with_domain_classifier_safe
     def predict_with_domain_classifier_safe(self, case_data: Dict) -> Optional[HybridPrediction]:
         """Get domain classification as eligibility proxy"""
         try:
             case_id = case_data.get('sample_id', 'unknown')
             query = case_data.get('query', '')
             
-            if not query:
+            # ✅ FIX: Check for self.tokenizer and self.domain_classifier
+            if not query or self.tokenizer is None:
+                logger.warning(f"Domain classifier failed for {case_id}: Missing query or tokenizer.")
+                return None
+            if self.domain_classifier is None:
+                logger.warning(f"Domain classifier failed for {case_id}: Model not loaded.")
                 return None
             
-            # Domain classifier
-            domain_classifier = getattr(self.bert, 'domain_classifier', None)
-            if domain_classifier is None:
-                return None
-            
-            inputs = self.bert.tokenizer(
+            inputs = self.tokenizer(
                 query,
                 max_length=512,
                 padding='max_length',
                 truncation=True,
                 return_tensors='pt'
             )
-            inputs = {k: v.to(self.bert.device) for k, v in inputs.items()}
+            inputs = {k: v.to(self.device) for k, v in inputs.items()}
             
             with torch.no_grad():
-                domain_classifier.eval()
-                logits = domain_classifier(**inputs).logits
-                probs = torch.sigmoid(logits)  # Multi-label
+                self.domain_classifier.eval()
+                # ✅ FIX: Pass return_dict=True (as per model signature)
+                logits = self.domain_classifier(
+                    input_ids=inputs['input_ids'], 
+                    attention_mask=inputs['attention_mask'],
+                    return_dict=True
+                )['logits']
                 
-                # Use legal_aid domain probability as eligibility indicator
-                legal_aid_idx = 0  # Assuming legal_aid is index 0
+                probs = torch.sigmoid(logits)
+                legal_aid_idx = 0
                 confidence = float(probs[0, legal_aid_idx])
                 eligible = confidence >= 0.5
             
@@ -809,44 +901,52 @@ class IntelligentHybridPredictor:
         except Exception as e:
             logger.warning(f"Domain classifier failed: {str(e)[:100]}")
             return None
-    
-    def predict_with_enhanced_bert_safe(self, case_data: Dict) -> Optional[HybridPrediction]:
+
+    # ✅ REPLACE predict_with_enhanced_bert_safe
+    def predict_with_enhanced_bert_safe(self, case_data: Dict, domain_index: int = 0) -> Optional[HybridPrediction]:
         """Get prediction from EnhancedLegalBERT (multi-task model)"""
         try:
             case_id = case_data.get('sample_id', 'unknown')
             query = case_data.get('query', '')
             
-            if not query:
+            # ✅ FIX: Check for self.tokenizer and self.enhanced_bert
+            if not query or self.tokenizer is None:
+                logger.warning(f"EnhancedBERT failed for {case_id}: Missing query or tokenizer.")
+                return None
+            if self.enhanced_bert is None:
+                logger.warning(f"EnhancedBERT failed for {case_id}: Model not loaded.")
                 return None
             
-            # EnhancedLegalBERT
-            enhanced_bert = getattr(self.bert, 'enhanced_bert', None)
-            if enhanced_bert is None:
-                return None
-            
-            inputs = self.bert.tokenizer(
+            inputs = self.tokenizer(
                 query,
                 max_length=512,
                 padding='max_length',
                 truncation=True,
                 return_tensors='pt'
             )
-            inputs = {k: v.to(self.bert.device) for k, v in inputs.items()}
+            inputs = {k: v.to(self.device) for k, v in inputs.items()}
             
+            domain_tensor = torch.tensor([domain_index], dtype=torch.long).to(self.device)
+
             with torch.no_grad():
-                enhanced_bert.eval()
-                outputs = enhanced_bert(**inputs)
+                self.enhanced_bert.eval()
                 
-                # EnhancedBERT returns both eligibility and domain
+                outputs = self.enhanced_bert(
+                    input_ids=inputs['input_ids'], 
+                    attention_mask=inputs['attention_mask'],
+                    domains=domain_tensor,
+                    return_dict=True,
+                    return_confidence=True
+                )
+                
                 eligibility_logits = outputs['eligibility_logits']
                 domain_logits = outputs.get('domain_logits', None)
                 
-                # Get eligibility prediction
                 if eligibility_logits.dim() == 1:
                     prob = torch.sigmoid(eligibility_logits).item()
                 else:
                     probs = torch.softmax(eligibility_logits, dim=1)
-                    prob = probs[0, 1].item()  # Probability of eligible class
+                    prob = probs[0, 1].item()
                 
                 eligible = prob >= 0.5
             

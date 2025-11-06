@@ -651,6 +651,65 @@ class PrologEngine:
             '''
         ]
 
+    def _create_prolog_file(self, facts: List[str]) -> str:
+        """
+        Creates a temporary Prolog file that consults the MASTER knowledge_base.pl
+        and appends the case-specific facts. This is the single correct way.
+        """
+        unique_suffix = f"_{int(time.time())}_{os.getpid()}.pl"
+        temp_file = tempfile.NamedTemporaryFile(
+            mode='w',
+            suffix=unique_suffix,
+            delete=False,
+            prefix='hybex_prolog_',
+            encoding='utf-8'
+        )
+        self.temp_files.append(temp_file.name)
+        
+        try:
+            # Header
+            temp_file.write(f'% HybEx-Law Legal Reasoning Session: {self.session_id}\n')
+            temp_file.write(':- style_check(-discontiguous).\n')
+            temp_file.write(':- style_check(-singleton).\n\n')
+            
+            # ✅ CRITICAL FIX: Consult the MASTER knowledge_base.pl file
+            kb_path = self.config.BASE_DIR / "knowledge_base" / "knowledge_base.pl"
+            
+            if kb_path.exists():
+                # Convert Windows path to Prolog-friendly format
+                prolog_path = str(kb_path.resolve()).replace('\\', '/')
+                temp_file.write(f":- consult('{prolog_path}').\n\n")
+                logger.info(f"✅ Consulting MASTER knowledge_base.pl from {kb_path}")
+            else:
+                logger.error(f"❌ CRITICAL: MASTER knowledge_base.pl not found at {kb_path}")
+                raise FileNotFoundError(f"Missing master KB: {kb_path}")
+            
+            # Write all facts (grouped)
+            temp_file.write('% CASE-SPECIFIC FACTS (GROUPED)\n')
+            grouped_facts = self.group_facts_by_predicate(facts)
+            for fact in grouped_facts:
+                if fact.strip():
+                    if not fact.strip().endswith('.'):
+                        temp_file.write(fact.strip() + '.\n')
+                    else:
+                        temp_file.write(fact.strip() + '\n')
+            
+            temp_file.write('\n')
+            temp_file.flush()
+            temp_file.close()
+            
+            logger.info(f"✅ Created Prolog file with {len(facts)} facts: {temp_file.name}")
+            return temp_file.name
+            
+        except Exception as e:
+            logger.error(f"Failed to create Prolog file: {e}", exc_info=True)
+            if hasattr(temp_file, 'name'):
+                try:
+                    os.unlink(temp_file.name)
+                except:
+                    pass
+            return None
+
     def create_domain_specific_prolog_file_robust(self, facts: List[str], domain: str) -> str:
         """Create a Prolog file that ACTUALLY loads the legal_aid rules."""
         unique_suffix = f"_{int(time.time())}_{os.getpid()}.pl"
@@ -1423,13 +1482,8 @@ class PrologEngine:
         
         facts = self._generate_comprehensive_facts(extracted_entities, case_id, domains=domains)
         
-        # 🚀 USE MODULAR APPROACH: Create Prolog file with only domain-specific rules
-        prolog_file = self.create_domain_specific_prolog_file_modular(facts, domains[0])
-        
-        # Fallback to robust approach if modular fails
-        if not prolog_file:
-            logger.warning("🔄 Modular approach failed, falling back to robust approach")
-            prolog_file = self.create_domain_specific_prolog_file_robust(facts, domains[0])
+        # 🚀 USE THE SINGLE CORRECT FILE CREATOR
+        prolog_file = self._create_prolog_file(facts)
         
         if not prolog_file:
             logger.error(f"Failed to create domain-specific Prolog file for {case_id}. Using fallback analysis.")
@@ -1709,29 +1763,39 @@ class PrologEngine:
         vulnerable_groups = []
         
         # ================================================================
-        # STEP 1: INCOME HANDLING - BULLETPROOF WITH EXCEPTION HANDLING
+        # STEP 1: INCOME HANDLING - IMPROVED WITH EXPLICIT LOGIC
+        # START OF FIX
         # ================================================================
-        # CRITICAL: This MUST come first and NEVER FAIL - income status must always be known
+        # CRITICAL: This MUST come first and handle all income scenarios explicitly
         try:
-            if 'income' in entities and entities['income'] is not None and entities['income'] > 0:
+            # Check if income key exists and is not None
+            if 'income' in entities and entities['income'] is not None:
                 income = int(entities['income'])
-                facts.append(f"has_income('{case_id}').")  # EXPLICIT: income exists
-                facts.append(f"monthly_income('{case_id}', {income}).")
-                facts.append(f"annual_income('{case_id}', {income * 12}).")
                 
-                # ✅ Check for low income vulnerability
-                if entities.get('income_category') in ['low', 'very_low']:
-                    if 'low_income' not in vulnerable_groups:
-                        vulnerable_groups.append('low_income')
-                        facts.append(f"vulnerable_group('{case_id}', 'low_income').")
-            else:
-                # ✅ CRITICAL: no_income should ALWAYS make them eligible
-                facts.append(f"no_income('{case_id}').")
+                if income > 0:
+                    # Income is positive, assert has_income and values
+                    facts.append(f"has_income('{case_id}').")
+                    facts.append(f"monthly_income('{case_id}', {income}).")
+                    facts.append(f"annual_income('{case_id}', {income * 12}).")
+                    
+                    # ✅ Check for low income vulnerability
+                    if entities.get('income_category') in ['low', 'very_low']:
+                        if 'low_income' not in vulnerable_groups:
+                            vulnerable_groups.append('low_income')
+                            facts.append(f"vulnerable_group('{case_id}', 'low_income').")
+                else:
+                    # Income is explicitly 0
+                    facts.append(f"no_income('{case_id}').")
+            
+            # If 'income' key is not in entities, assert NOTHING.
+            # This allows Prolog's default 'not_eligible' rule to work.
+            
         except Exception as e:
-            # DEFENSIVE: If ANY error occurs (KeyError, TypeError, ValueError, etc.),
-            # default to no_income to ensure income status is ALWAYS defined
             logger.warning(f"⚠️ Income fact generation failed for {case_id}: {e}")
-            facts.append(f"no_income('{case_id}').")  # Fallback to no_income on ANY error
+            # Do not assert no_income as a fallback - let Prolog rules handle missing data
+        # ================================================================
+        # END OF FIX
+        # ================================================================
         
         # ================================================================
         # STEP 2: OTHER DEMOGRAPHIC FACTS - WITH EXCEPTION HANDLING

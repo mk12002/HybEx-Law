@@ -1,35 +1,35 @@
 # Comprehensive Evaluation Report
 
 
-Generated: 2025-10-23 00:40:19.684001
+Generated: 2025-11-06 23:06:48.946999
 
 
 ## Overall Metrics
 
 
 ```
-accuracy: 0.8032
-precision: 0.8032
-recall: 1.0000
-f1_score: 0.8909
-mcc: 0.0000
-kappa: 0.0000
-true_positives: 1151
-true_negatives: 0
-false_positives: 282
-false_negatives: 0
-specificity: 0.0000
-balanced_accuracy: 0.5000
+accuracy: 0.5752
+precision: 0.9631
+recall: 0.4931
+f1_score: 0.6523
+mcc: 0.3308
+kappa: 0.2320
+true_positives: 575
+true_negatives: 255
+false_positives: 22
+false_negatives: 591
+specificity: 0.9206
+balanced_accuracy: 0.7069
 ```
 
 
 ## Confidence Calibration
 
-- Expected Calibration Error: 0.1468
-- Quality: needs_improvement
+- Expected Calibration Error: 0.0998
+- Quality: good
 
 
 ## Error Analysis
 
-- False Positives: 282
-- False Negatives: 0
+- False Positives: 22
+- False Negatives: 591

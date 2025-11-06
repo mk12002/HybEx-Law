@@ -1,0 +1,63 @@
+HybEx-Law System Evaluation Report - 2025-11-06T21:06:50.520336
+================================================================================
+
+📊 Overall Status: Failed
+Total Test Samples: 1443
+
+🧠 Neural Model Performance:
+  - **Domain Classifier**:
+    Accuracy: 1.0000
+    F1 Score: 1.0000
+    Precision: 1.0000
+    Recall: 1.0000
+    Loss: 0.0031
+  - **Eligibility Predictor**:
+    Accuracy: 0.6445
+    F1 Score: 0.7434
+    Precision: 0.8930
+    Recall: 0.6367
+    Loss: 0.4913
+
+⚖️ Prolog Reasoning Performance:
+  Accuracy: 0.5357
+  F1 Score: 0.6123
+  Precision: 0.9379
+  Recall: 0.4545
+
+🤝 Hybrid System Performance:
+  Accuracy: 0.6480
+  F1 Score: 0.7535
+
+🔗 Component Agreement:
+  Neural-Prolog Agreement Rate: 71.60%
+  Neural Accuracy: 0.6420
+  Prolog Accuracy: 0.5300
+
+🚨 Error Analysis (352 cases with disagreement):
+  Error 1 (Sample ID: sample_1216):
+    Query: I booked plot from reputed builder by paying Rs 1 crore advance. Possession given but occupancy cert...
+    True: True, Hybrid Pred: False
+    Error Type: False Negative (Fusion Method: simple_neural)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 2 (Sample ID: sample_1548):
+    Query: After uncle's natural death, my brothers are not including me in father's property division. What is...
+    True: True, Hybrid Pred: False
+    Error Type: False Negative (Fusion Method: simple_neural)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 3 (Sample ID: sample_5011):
+    Query: During root canal treatment at dental clinic, I had medicine allergies but doctor didn't check. I sp...
+    True: True, Hybrid Pred: False
+    Error Type: False Negative (Fusion Method: simple_neural)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 4 (Sample ID: sample_8859):
+    Query: I am daily wage laborer and have been working in textile factory for 15 years. deducting PF and ESI ...
+    True: False, Hybrid Pred: True
+    Error Type: False Positive (Fusion Method: simple_neural)
+    Disagreements: {"neural_prolog": true, "neural_gt": true, "prolog_gt": false}
+  Error 5 (Sample ID: sample_10633):
+    Query: During cataract operation at eye hospital, emergency treatment was delayed for money. I spent Rs 500...
+    True: True, Hybrid Pred: False
+    Error Type: False Negative (Fusion Method: simple_neural)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  ... and 347 more errors. See full results JSON for details.
+

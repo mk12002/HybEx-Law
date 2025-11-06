@@ -1,0 +1,63 @@
+HybEx-Law System Evaluation Report - 2025-11-06T19:06:37.261322
+================================================================================
+
+📊 Overall Status: Failed
+Total Test Samples: 1443
+
+🧠 Neural Model Performance:
+  - **Domain Classifier**:
+    Accuracy: 1.0000
+    F1 Score: 1.0000
+    Precision: 1.0000
+    Recall: 1.0000
+    Loss: 0.0031
+  - **Eligibility Predictor**:
+    Accuracy: 0.6563
+    F1 Score: 0.7549
+    Precision: 0.8915
+    Recall: 0.6547
+    Loss: 0.5296
+
+⚖️ Prolog Reasoning Performance:
+  Accuracy: 0.5253
+  F1 Score: 0.5982
+  Precision: 0.9533
+  Recall: 0.4359
+
+🤝 Hybrid System Performance:
+  Accuracy: 0.6650
+  F1 Score: 0.7672
+
+🔗 Component Agreement:
+  Neural-Prolog Agreement Rate: 69.60%
+  Neural Accuracy: 0.6640
+  Prolog Accuracy: 0.5180
+
+🚨 Error Analysis (335 cases with disagreement):
+  Error 1 (Sample ID: sample_1554):
+    Query: I am factory worker and have been working in construction company for 2 years. sudden termination wi...
+    True: True, Hybrid Pred: False
+    Error Type: False Negative (Fusion Method: simple_neural)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 2 (Sample ID: sample_2832):
+    Query: While working as contract laborer at construction site, safety equipment not provided for hazardous ...
+    True: True, Hybrid Pred: False
+    Error Type: False Negative (Fusion Method: simple_neural)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 3 (Sample ID: sample_7226):
+    Query: I am female employee working in private company and at workplace work assignments are being denied a...
+    True: False, Hybrid Pred: True
+    Error Type: False Positive (Fusion Method: simple_neural)
+    Disagreements: {"neural_prolog": true, "neural_gt": true, "prolog_gt": false}
+  Error 4 (Sample ID: sample_233):
+    Query: During cataract operation at eye hospital, insurance was cashless approved but they forced extra pay...
+    True: True, Hybrid Pred: False
+    Error Type: False Negative (Fusion Method: simple_neural)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  Error 5 (Sample ID: sample_1304):
+    Query: I am daily wage laborer and have been working in construction company for 2 years. not paying overti...
+    True: True, Hybrid Pred: False
+    Error Type: False Negative (Fusion Method: simple_neural)
+    Disagreements: {"neural_prolog": false, "neural_gt": true, "prolog_gt": true}
+  ... and 330 more errors. See full results JSON for details.
+

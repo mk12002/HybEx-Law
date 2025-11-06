@@ -47,11 +47,13 @@ class DomainClassifier(nn.Module):
         self.dropout = nn.Dropout(model_config['dropout_prob']) 
         self.classifier = nn.Linear(self.base_model.config.hidden_size, self.num_labels)
 
-    def forward(self, input_ids, attention_mask):
+    # ✅ FIX: Added 'return_dict=False' to the signature to accept the argument
+    def forward(self, input_ids, attention_mask, return_dict=False):
         outputs = self.base_model(input_ids=input_ids, attention_mask=attention_mask)
         pooled_output = outputs.last_hidden_state[:, 0] # CLS token output
         pooled_output = self.dropout(pooled_output)
         logits = self.classifier(pooled_output)
+        # This model already correctly returns a dictionary
         return {'logits': logits}
 
 class DomainToEligibilityWrapper(nn.Module):
@@ -111,65 +113,206 @@ class EligibilityPredictor(nn.Module):
         self.dropout = nn.Dropout(model_config['dropout_prob'])
         self.classifier = nn.Linear(self.base_model.config.hidden_size, 1) # Binary classification
 
-    def forward(self, input_ids, attention_mask, return_dict=False):  # ← ADD return_dict param
+    def forward(self, input_ids, attention_mask, return_dict=False):  # <-- Signature kept for compatibility
         outputs = self.base_model(input_ids=input_ids, attention_mask=attention_mask)
         pooled_output = outputs.last_hidden_state[:, 0] # CLS token output
         pooled_output = self.dropout(pooled_output)
         logits = self.classifier(pooled_output).squeeze(-1)
         
-        if return_dict:
-            return {'logits': logits}
-        return logits
+        # ✅ FIX: Always return a dictionary, regardless of the return_dict flag.
+        # This makes it consistent with DomainClassifier and robust to wrappers.
+        return {'logits': logits}
 
 class EnhancedLegalBERT(nn.Module):
     """
-    Multi-task Legal BERT model
-    Outputs: domain classification + eligibility prediction
+    Enhanced Multi-task Legal BERT model with:
+    1. Legal domain adaptation
+    2. Multi-task learning (eligibility + domain classification)
+    3. Attention pooling
+    4. Uncertainty estimation
+    5. Domain-specific projections
     """
-    def __init__(self, config: HybExConfig):
+    def __init__(self, config: HybExConfig): # <-- FIX 1: Only accept config
         super().__init__()
-        self.config = config
         
-        # Load base BERT
-        self.base_model = AutoModel.from_pretrained(config.MODEL_CONFIG['base_model'])
-        hidden_size = self.base_model.config.hidden_size
+        # Get parameters from config
+        self.config_obj = config
+        model_name = config.MODEL_CONFIG.get('base_model', 'nlpaueb/legal-bert-base-uncased')
+        num_domains = len(config.ENTITY_CONFIG.get('domains', []))
+        if num_domains == 0:
+            logger.warning("No domains found in config, defaulting to 5")
+            num_domains = 5 # Default fallback
+            
+        enhanced_config = config.MODEL_CONFIGS.get('enhanced_legal_bert', {})
+        dropout = enhanced_config.get('dropout_prob', 0.3)
+        freeze_layers = enhanced_config.get('freeze_bottom_layers', 6)
+        num_heads = enhanced_config.get('num_attention_heads', 8)
+
+        # Load pre-trained legal BERT
+        self.bert_config = AutoConfig.from_pretrained(model_name)
+        self.bert = AutoModel.from_pretrained(model_name)
         
-        # Dropout
-        self.dropout = nn.Dropout(config.MODEL_CONFIG.get('dropout', 0.3))
+        hidden_size = self.bert_config.hidden_size  # 768
         
-        # Domain classification head (multi-label)
+        # Freeze bottom N layers
+        if freeze_layers > 0:
+            logger.info(f"Freezing bottom {freeze_layers} BERT layers")
+            for param in self.bert.encoder.layer[:freeze_layers].parameters():
+                param.requires_grad = False
+        
+        # Attention-based pooling
+        self.attention_weights = nn.Linear(hidden_size, 1)
+        
+        # Multi-head attention
+        self.multihead_attn = nn.MultiheadAttention(
+            embed_dim=hidden_size,
+            num_heads=num_heads,
+            dropout=dropout,
+            batch_first=True
+        )
+        
+        # Domain-specific projection layers
+        self.domain_names = config.ENTITY_CONFIG.get('domains', ['legal_aid', 'family_law', 'consumer_protection', 'employment_law', 'fundamental_rights'])
+        self.domain_projection = nn.ModuleDict({
+            domain: nn.Linear(hidden_size, hidden_size) for domain in self.domain_names
+        })
+        
+        # Main classification head (eligibility)
+        self.classifier = nn.Sequential(
+            nn.Linear(hidden_size, hidden_size // 2),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.LayerNorm(hidden_size // 2),
+            nn.Linear(hidden_size // 2, hidden_size // 4),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_size // 4, 2)  # Binary: eligible/not_eligible
+        )
+        
+        # Auxiliary task: Domain classification
         self.domain_classifier = nn.Sequential(
-            nn.Linear(hidden_size, 256),
+            nn.Linear(hidden_size, hidden_size // 2),
             nn.ReLU(),
-            nn.Dropout(0.2),
-            nn.Linear(256, len(config.DOMAINS))  # Output: [batch, num_domains]
+            nn.Dropout(dropout),
+            nn.Linear(hidden_size // 2, num_domains)
         )
         
-        # Eligibility classification head (binary)
-        self.eligibility_classifier = nn.Sequential(
-            nn.Linear(hidden_size, 128),
+        # Confidence estimation head
+        self.confidence_head = nn.Sequential(
+            nn.Linear(hidden_size, hidden_size // 2),
             nn.ReLU(),
-            nn.Dropout(0.2),
-            nn.Linear(128, 2)  # Output: [batch, 2] for binary classification
+            nn.Dropout(dropout),
+            nn.Linear(hidden_size // 2, 1),
+            nn.Sigmoid()
         )
+        
+        self.num_domains = num_domains
     
-    def forward(self, input_ids, attention_mask, return_dict=True):
-        # Get BERT outputs
-        outputs = self.base_model(input_ids=input_ids, attention_mask=attention_mask)
-        pooled_output = outputs.last_hidden_state[:, 0]  # CLS token
-        pooled_output = self.dropout(pooled_output)
+    def attention_pooling(self, hidden_states, attention_mask):
+        """
+        Attention-weighted pooling over sequence.
+        Better than just using [CLS] token.
+        """
+        # hidden_states: [batch, seq_len, hidden]
+        # attention_mask: [batch, seq_len]
         
-        # Get predictions from both heads
-        domain_logits = self.domain_classifier(pooled_output)
-        eligibility_logits = self.eligibility_classifier(pooled_output)
+        # Calculate attention scores
+        attention_scores = self.attention_weights(hidden_states).squeeze(-1)
+        # attention_scores: [batch, seq_len]
+        
+        # Mask padded tokens
+        attention_scores = attention_scores.masked_fill(
+            attention_mask == 0, float('-inf')
+        )
+        
+        # Softmax to get attention distribution
+        attention_probs = F.softmax(attention_scores, dim=-1).unsqueeze(-1)
+        # attention_probs: [batch, seq_len, 1]
+        
+        # Weighted sum
+        pooled = torch.sum(hidden_states * attention_probs, dim=1)
+        # pooled: [batch, hidden]
+        
+        return pooled
+    
+    def forward(self, input_ids, attention_mask, domains=None, return_dict=False, return_confidence=False):
+        """
+        Forward pass with multi-task learning.
+        
+        Args:
+            input_ids: [batch, seq_len]
+            attention_mask: [batch, seq_len]
+            domains: [batch] - domain indices for each sample
+            return_dict: If True, return dict; if False, return tuple
+            return_confidence: Whether to return confidence scores
+        
+        Returns:
+            If return_dict=True: dict with 'logits', 'domain_logits', 'eligibility_logits', 'confidence'
+            If return_dict=False: tuple (logits, domain_logits, confidence)
+        """
+        # BERT encoding
+        outputs = self.bert(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            output_hidden_states=True
+        )
+        
+        # Get hidden states from last layer
+        hidden_states = outputs.last_hidden_state  # [batch, seq_len, hidden]
+        
+        # Attention pooling
+        pooled = self.attention_pooling(hidden_states, attention_mask)
+        # pooled: [batch, hidden]
+        
+        # Multi-head self-attention for better representation
+        pooled_attn, _ = self.multihead_attn(
+            pooled.unsqueeze(1),  # [batch, 1, hidden]
+            pooled.unsqueeze(1),
+            pooled.unsqueeze(1),
+            key_padding_mask=None
+        )
+        pooled_attn = pooled_attn.squeeze(1)  # [batch, hidden]
+        
+        # Combine original and attention-enhanced representations
+        combined = pooled + pooled_attn
+        
+        # Domain-specific projection (if domains provided)
+        if domains is not None:
+            domain_enhanced = []
+            
+            # Ensure domains is on CPU and is iterable
+            if isinstance(domains, torch.Tensor):
+                domains_list = domains.cpu().tolist()
+            else:
+                domains_list = domains # Assume it's already a list/array
+                
+            for i, domain_idx in enumerate(domains_list):
+                domain_idx_int = int(domain_idx)
+                # Use modulo for safety against out-of-bounds
+                domain_name = self.domain_names[domain_idx_int % len(self.domain_names)] 
+                proj = self.domain_projection[domain_name](combined[i:i+1])
+                domain_enhanced.append(proj)
+            combined = torch.cat(domain_enhanced, dim=0)
+        
+        # Main task: Eligibility classification
+        logits = self.classifier(combined)
+        
+        # Auxiliary task: Domain classification
+        domain_logits = self.domain_classifier(combined)
+        
+        # Confidence estimation
+        confidence = None
+        if return_confidence:
+            confidence = self.confidence_head(combined).squeeze(-1)
         
         if return_dict:
             return {
+                'logits': logits,
                 'domain_logits': domain_logits,
-                'eligibility_logits': eligibility_logits,
-                'logits': eligibility_logits  # Default to eligibility for compatibility
+                'eligibility_logits': logits,  # Alias for compatibility
+                'confidence': confidence
             }
-        return eligibility_logits  # For backward compatibility
+        return logits, domain_logits, confidence
 
 class LegalDataset(Dataset):
     """PyTorch Dataset for legal text processing"""
@@ -273,16 +416,17 @@ class ModelTrainer:
         # Load tokenizer first
         self.tokenizer = AutoTokenizer.from_pretrained(config.MODEL_CONFIG['base_model'])
 
-        # Corrected: Ensure pad_token is set appropriately for BERT-style models
+        # Replace existing tokenizer pad-token fallback with:
         if self.tokenizer.pad_token is None:
-            # Check if a default pad_token_id exists for the model's vocabulary
             if self.tokenizer.pad_token_id is not None:
                 self.tokenizer.pad_token = self.tokenizer.convert_ids_to_tokens(self.tokenizer.pad_token_id)
             else:
-                # Fallback: Add a new pad token if none exists and no ID is defined
-                # Note: This requires resizing the model's token embeddings later if needed.
-                self.tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-                logger.info("Added a new [PAD] token to the tokenizer.")
+                # Add a pad token and remember we added tokens so models should be resized
+                added = self.tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+                if added:
+                    logger.info("Added a new [PAD] token to the tokenizer (will require model.resize_token_embeddings after model creation).")
+                else:
+                    logger.warning("Attempted to add [PAD] token but tokenizer reported 0 added tokens.")
 
         self.setup_logging()
         logger.info(f"ModelTrainer initialized on device: {self.device}")
@@ -306,6 +450,22 @@ class ModelTrainer:
         # Use .get with a safe fallback
         return self.config.MODEL_CONFIGS.get(model_name, self.config.MODEL_CONFIGS.get('domain_classifier', {}))
 
+    def _resize_model_embeddings_if_tokenizer_changed(self, model):
+        """
+        If the tokenizer was updated (added tokens), ensure the model embedding matrix is resized.
+        Call this right after instantiating/loading any HuggingFace model.
+        """
+        try:
+            # Only proceed if tokenizer has been used to add tokens
+            if hasattr(self.tokenizer, 'added_tokens_encoder') and len(self.tokenizer.added_tokens_encoder) > 0:
+                new_vocab_size = len(self.tokenizer)
+                # Check model supports resize_token_embeddings
+                if hasattr(model, 'resize_token_embeddings'):
+                    model.resize_token_embeddings(new_vocab_size)
+                    logger.info(f"Resized model embeddings to {new_vocab_size} tokens after tokenizer change.")
+        except Exception as e:
+            logger.warning(f"Could not resize model embeddings automatically: {e}")
+
     def train_model(self, model: nn.Module, train_loader: DataLoader, val_loader: DataLoader,
                     model_name: str, task_type: str) -> Dict[str, Any]:
         """Train a model with comprehensive monitoring, gradient accumulation, and mixed precision."""
@@ -322,14 +482,35 @@ class ModelTrainer:
         )
 
         # Mixed precision training for memory optimization
-        from torch.cuda.amp import autocast, GradScaler
-        scaler = GradScaler() if self.device.type == 'cuda' else None
+        scaler = torch.amp.GradScaler('cuda', enabled=(self.device.type == 'cuda'))
 
-        # Use weights for BCEWithLogitsLoss if class imbalance is an issue
-        if task_type in ["domain_classification", "eligibility_prediction"]:
+        # ================================================================
+        # START OF FIX
+        # ================================================================
+        if task_type == "domain_classification":
             criterion = nn.BCEWithLogitsLoss()
+        elif task_type == "eligibility_prediction":
+            try:
+                # Calculate pos_weight for imbalance
+                # This makes the loss punish misclassifying the minority class (not eligible) more
+                labels = [s.get('expected_eligibility', 0) for s in train_loader.dataset.samples]
+                pos_count = sum(labels)
+                neg_count = len(labels) - pos_count
+                
+                # pos_weight = ratio of negative to positive samples
+                pos_weight_value = neg_count / max(1, pos_count)
+                
+                pos_weight = torch.tensor([pos_weight_value], device=self.device)
+                logger.info(f"Using pos_weight for eligibility: {pos_weight.item():.2f} (Pos: {pos_count}, Neg: {neg_count})")
+                criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+            except Exception as e:
+                logger.warning(f"Could not calculate pos_weight, using unweighted loss. Error: {e}")
+                criterion = nn.BCEWithLogitsLoss()
         else:
             raise ValueError(f"Unsupported task type for training: {task_type}")
+        # ================================================================
+        # END OF FIX
+        # ================================================================
 
         best_val_f1 = -1.0
         best_model_state = None
@@ -345,7 +526,7 @@ class ModelTrainer:
         }
 
         logger.info(f"Starting training for {model_name} with gradient accumulation (steps={ACCUMULATION_STEPS})")
-        if scaler:
+        if scaler.is_enabled():
             logger.info("Mixed precision training enabled (FP16)")
 
         # Progress bar for epochs
@@ -367,18 +548,12 @@ class ModelTrainer:
                 attention_mask = batch['attention_mask'].to(self.device)
                 labels = batch['labels'].to(self.device)
 
-                # Use autocast for mixed precision if CUDA available
-                if scaler:
-                    with autocast():
-                        outputs = model(input_ids=input_ids, attention_mask=attention_mask)
-                        logits = outputs['logits']
-                        loss = criterion(logits, labels)
-                        loss = loss / ACCUMULATION_STEPS  # Normalize for accumulation
-                else:
-                    outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+                with torch.amp.autocast('cuda', enabled=(self.device.type == 'cuda')):
+                    # Apply return_dict=True to the model call
+                    outputs = model(input_ids=input_ids, attention_mask=attention_mask, return_dict=True)
                     logits = outputs['logits']
                     loss = criterion(logits, labels)
-                    loss = loss / ACCUMULATION_STEPS
+                    loss = loss / ACCUMULATION_STEPS  # Normalize for accumulation
                 
                 # Predictions
                 if task_type == "eligibility_prediction":
@@ -386,22 +561,14 @@ class ModelTrainer:
                 elif task_type == "domain_classification":
                     preds = (torch.sigmoid(logits) > 0.5).cpu().numpy()
 
-                # Backward pass
-                if scaler:
-                    scaler.scale(loss).backward()
-                else:
-                    loss.backward()
+                scaler.scale(loss).backward()
 
                 # Update weights every ACCUMULATION_STEPS or on last batch
                 if ((batch_idx + 1) % ACCUMULATION_STEPS == 0) or (batch_idx + 1 == len(train_loader)):
-                    if scaler:
-                        scaler.unscale_(optimizer)
-                        torch.nn.utils.clip_grad_norm_(model.parameters(), model_config['gradient_clip_val'])
-                        scaler.step(optimizer)
-                        scaler.update()
-                    else:
-                        torch.nn.utils.clip_grad_norm_(model.parameters(), model_config['gradient_clip_val'])
-                        optimizer.step()
+                    scaler.unscale_(optimizer)
+                    torch.nn.utils.clip_grad_norm_(model.parameters(), model_config['gradient_clip_val'])
+                    scaler.step(optimizer)
+                    scaler.update()
                     optimizer.zero_grad()
 
                 total_train_loss += loss.item() * ACCUMULATION_STEPS  # De-normalize for logging
@@ -433,7 +600,7 @@ class ModelTrainer:
                     attention_mask = batch['attention_mask'].to(self.device)
                     labels = batch['labels'].to(self.device)
 
-                    outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+                    outputs = model(input_ids=input_ids, attention_mask=attention_mask, return_dict=True)
                     logits = outputs['logits']
 
                     loss = criterion(logits, labels)
@@ -740,6 +907,9 @@ class ModelTrainer:
         # Train Domain Classifier
         logger.info("\n--- Training Domain Classifier ---")
         domain_classifier = DomainClassifier(self.config)
+        # Resize embeddings if tokenizer was modified
+        self._resize_model_embeddings_if_tokenizer_changed(domain_classifier.base_model)
+        
         domain_config = self.config.MODEL_CONFIGS['domain_classifier']
         domain_train_dataset = LegalDataset(train_samples, self.tokenizer, self.config, task_type="domain_classification", model_config=domain_config)
         domain_val_dataset = LegalDataset(val_samples, self.tokenizer, self.config, task_type="domain_classification", model_config=domain_config)
@@ -759,6 +929,9 @@ class ModelTrainer:
         # Train Eligibility Predictor
         logger.info("\n--- Training Eligibility Predictor ---")
         eligibility_predictor = EligibilityPredictor(self.config)
+        # Resize embeddings if tokenizer was modified
+        self._resize_model_embeddings_if_tokenizer_changed(eligibility_predictor.base_model)
+        
         eligibility_config = self.config.MODEL_CONFIGS['eligibility_predictor']
         eligibility_train_dataset = LegalDataset(train_samples, self.tokenizer, self.config, task_type="eligibility_prediction", model_config=eligibility_config)
         eligibility_val_dataset = LegalDataset(val_samples, self.tokenizer, self.config, task_type="eligibility_prediction", model_config=eligibility_config)
@@ -800,12 +973,12 @@ class ModelTrainer:
             'early_stopping_patience': 5
         })
         
-        # Initialize model
-        model = EnhancedLegalBERT(
-            model_name='nlpaueb/legal-bert-base-uncased',
-            num_domains=len(self.config.ENTITY_CONFIG['domains']),
-            dropout=0.3
-        ).to(self.device)
+        # --- START FIX 2 ---
+        # Initialize model using the config object
+        model = EnhancedLegalBERT(self.config).to(self.device)
+        # Resize embeddings if tokenizer was modified
+        self._resize_model_embeddings_if_tokenizer_changed(model.bert)
+        # --- END FIX 2 ---
         
         # Initialize trainer
         trainer = EnhancedLegalBERTTrainer(model, device=self.device)
@@ -1067,168 +1240,7 @@ class ModelTrainer:
 
 # ============================================================================
 # ENHANCED LEGAL-BERT ARCHITECTURE
-# ============================================================================
 
-class EnhancedLegalBERT(nn.Module):
-    """
-    Enhanced BERT model with:
-    1. Legal domain adaptation
-    2. Multi-task learning (eligibility + domain classification)
-    3. Attention pooling
-    4. Uncertainty estimation
-    """
-    
-    def __init__(self, model_name='nlpaueb/legal-bert-base-uncased', 
-                 num_domains=5, dropout=0.3):
-        super().__init__()
-        
-        # Load pre-trained legal BERT (better than vanilla BERT for legal text)
-        self.config = AutoConfig.from_pretrained(model_name)
-        self.bert = AutoModel.from_pretrained(model_name)
-        
-        hidden_size = self.config.hidden_size  # 768
-        
-        # Freeze bottom 6 layers (keep legal knowledge, fine-tune top layers)
-        for param in self.bert.encoder.layer[:6].parameters():
-            param.requires_grad = False
-        
-        # Attention-based pooling (better than CLS token alone)
-        self.attention_weights = nn.Linear(hidden_size, 1)
-        
-        # Multi-head attention for better representation
-        self.multihead_attn = nn.MultiheadAttention(
-            embed_dim=hidden_size,
-            num_heads=8,
-            dropout=dropout
-        )
-        
-        # Domain-specific projection layers
-        self.domain_projection = nn.ModuleDict({
-            'legalaid': nn.Linear(hidden_size, hidden_size),
-            'familylaw': nn.Linear(hidden_size, hidden_size),
-            'consumerprotection': nn.Linear(hidden_size, hidden_size),
-            'employmentlaw': nn.Linear(hidden_size, hidden_size),
-            'fundamentalrights': nn.Linear(hidden_size, hidden_size)
-        })
-        
-        # Main classification head with dropout
-        self.classifier = nn.Sequential(
-            nn.Linear(hidden_size, hidden_size // 2),
-            nn.ReLU(),
-            nn.Dropout(dropout),
-            nn.LayerNorm(hidden_size // 2),
-            nn.Linear(hidden_size // 2, hidden_size // 4),
-            nn.ReLU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden_size // 4, 2)  # Binary: eligible/not_eligible
-        )
-        
-        # Auxiliary task: Domain classification (multi-task learning)
-        self.domain_classifier = nn.Sequential(
-            nn.Linear(hidden_size, hidden_size // 2),
-            nn.ReLU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden_size // 2, num_domains)
-        )
-        
-        # Confidence estimation head
-        self.confidence_head = nn.Sequential(
-            nn.Linear(hidden_size, hidden_size // 2),
-            nn.ReLU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden_size // 2, 1),
-            nn.Sigmoid()  # Output: 0-1 confidence score
-        )
-        
-    def attention_pooling(self, hidden_states, attention_mask):
-        """
-        Attention-weighted pooling over sequence.
-        Better than just using [CLS] token.
-        """
-        # hidden_states: [batch, seq_len, hidden]
-        # attention_mask: [batch, seq_len]
-        
-        # Calculate attention scores
-        attention_scores = self.attention_weights(hidden_states).squeeze(-1)
-        # attention_scores: [batch, seq_len]
-        
-        # Mask padded tokens
-        attention_scores = attention_scores.masked_fill(
-            attention_mask == 0, float('-inf')
-        )
-        
-        # Softmax to get attention distribution
-        attention_probs = F.softmax(attention_scores, dim=-1).unsqueeze(-1)
-        # attention_probs: [batch, seq_len, 1]
-        
-        # Weighted sum
-        pooled = torch.sum(hidden_states * attention_probs, dim=1)
-        # pooled: [batch, hidden]
-        
-        return pooled
-    
-    def forward(self, input_ids, attention_mask, domains=None, return_confidence=False):
-        """
-        Forward pass with multi-task learning.
-        
-        Args:
-            input_ids: [batch, seq_len]
-            attention_mask: [batch, seq_len]
-            domains: [batch] - domain indices for each sample
-            return_confidence: Whether to return confidence scores
-        
-        Returns:
-            logits: [batch, 2] - eligibility scores
-            domain_logits: [batch, num_domains] - domain classification scores
-            confidence: [batch] - confidence scores (if return_confidence=True)
-        """
-        # BERT encoding
-        outputs = self.bert(
-            input_ids=input_ids,
-            attention_mask=attention_mask,
-            output_hidden_states=True
-        )
-        
-        # Get hidden states from last layer
-        hidden_states = outputs.last_hidden_state  # [batch, seq_len, hidden]
-        
-        # Attention pooling
-        pooled = self.attention_pooling(hidden_states, attention_mask)
-        # pooled: [batch, hidden]
-        
-        # Multi-head self-attention for better representation
-        pooled_attn, _ = self.multihead_attn(
-            pooled.unsqueeze(0),  # [1, batch, hidden]
-            pooled.unsqueeze(0),
-            pooled.unsqueeze(0)
-        )
-        pooled_attn = pooled_attn.squeeze(0)  # [batch, hidden]
-        
-        # Combine original and attention-enhanced representations
-        combined = pooled + pooled_attn
-        
-        # Domain-specific projection (if domains provided)
-        if domains is not None:
-            domain_enhanced = []
-            for i, domain_idx in enumerate(domains):
-                domain_name = ['legalaid', 'familylaw', 'consumerprotection', 
-                               'employmentlaw', 'fundamentalrights'][domain_idx]
-                proj = self.domain_projection[domain_name](combined[i:i+1])
-                domain_enhanced.append(proj)
-            combined = torch.cat(domain_enhanced, dim=0)
-        
-        # Main task: Eligibility classification
-        logits = self.classifier(combined)
-        
-        # Auxiliary task: Domain classification
-        domain_logits = self.domain_classifier(combined)
-        
-        # Confidence estimation
-        confidence = None
-        if return_confidence:
-            confidence = self.confidence_head(combined).squeeze(-1)
-        
-        return logits, domain_logits, confidence
 
 
 # ============================================================================

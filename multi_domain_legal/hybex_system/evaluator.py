@@ -19,13 +19,35 @@ from sklearn.metrics import (accuracy_score, classification_report,
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 from transformers import AutoTokenizer
+from utils.json_utils import safe_json_dump
 from .config import HybExConfig
 from .neural_models import (DomainClassifier, EligibilityPredictor,
-                            LegalDataset, ModelMetrics)
+                            LegalDataset, ModelMetrics, EnhancedLegalBERT)
 from .prolog_engine import LegalReasoning, PrologEngine
 from .knowledge_graph_engine import KnowledgeGraphEngine
 from .data_processor import DataPreprocessor
 from .advanced_evaluator import AdvancedEvaluator
+import pickle
+import collections
+import numpy.dtypes  # For numpy dtype types
+
+# --- SAFE GLOBALS ALLOWLIST ---
+# Allowlist specific types for safe torch.load() without weights_only=False
+# This is safer than disabling weights_only entirely
+try:
+    torch.serialization.add_safe_globals([
+        np._core.multiarray.scalar,  # For numpy scalar types in checkpoints
+        collections.OrderedDict,     # For PyTorch state dicts
+        dict,                        # For standard dictionaries
+        np.dtype,                    # For numpy dtype objects
+        np.dtypes.Float64DType       # For numpy Float64 dtype
+    ])
+except AttributeError:
+    # Handle older torch versions that might not have add_safe_globals
+    pass
+# --- END SAFE GLOBALS ---
+# --- END SAFE GLOBALS ---
+
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -148,7 +170,11 @@ class ModelEvaluator:
             self.device = evaluator.device
             self.tokenizer = evaluator.tokenizer
             self.kg_engine = getattr(evaluator, 'kg_engine', None) or getattr(evaluator, '_knowledge_graph_engine_cache', None)
+            
+            # Add placeholders for all models
             self.eligibility_model = None
+            self.domain_classifier = None
+            self.enhanced_bert = None
         
         def predict(self, model_type: str, model_obj: Any, input_data: Any) -> Any:
             """
@@ -168,18 +194,39 @@ class ModelEvaluator:
                 with torch.no_grad():
                     model_obj.eval()
                     query = input_data if isinstance(input_data, str) else input_data.get('query', '')
+                    # Tokenize
                     encoding = self.tokenizer(
                         query,
                         return_tensors='pt',
                         max_length=512,
                         truncation=True,
                         padding='max_length'
-                    ).to(self.device)
-                    logits = model_obj(**encoding)
-                    if isinstance(logits, tuple):
-                        logits = logits[0]
-                    pred = torch.argmax(logits, dim=1).item()
-                    return pred
+                    )
+                    # Move tensors to device safely
+                    for k, v in encoding.items():
+                        if isinstance(v, torch.Tensor):
+                            encoding[k] = v.to(self.device)
+
+                    # Call model - handle models returning dict/tuple or raw logits
+                    outputs = model_obj(**encoding)
+                    # Normalize common output shapes:
+                    if isinstance(outputs, dict):
+                        logits = outputs.get('logits') or outputs.get('last_hidden_state') or None
+                    elif isinstance(outputs, tuple):
+                        logits = outputs[0]
+                    else:
+                        logits = outputs
+
+                    if logits is None:
+                        raise RuntimeError("Model returned no logits - check model's forward signature.")
+
+                    if logits.dim() == 1:
+                        # squeeze and make it batch-shaped
+                        pred = int(torch.round(torch.sigmoid(logits)).item())
+                        return pred
+                    else:
+                        pred = torch.argmax(logits, dim=1).item()
+                        return pred
             else:
                 raise ValueError(f"Unknown model type: {model_type}")
 
@@ -208,15 +255,19 @@ class ModelEvaluator:
     def load_trained_model(self, model_path: str, model_type: str) -> nn.Module:
         """Load a trained neural model."""
         path = Path(model_path)
-        if not path.exists():
-            # Check for the parent directory if path refers to the model's directory
+        
+        # Check if model_path is the directory
+        if path.is_dir():
             model_state_path = path / "model.pt"
-            if not model_state_path.exists():
-                raise FileNotFoundError(f"Model directory/file not found at {path} or {model_state_path}")
+        # Check if it's the file itself (and get parent)
+        elif path.is_file():
+            model_state_path = path
+            path = path.parent
         else:
-             model_state_path = path / "model.pt"
-             if not model_state_path.exists():
-                 raise FileNotFoundError(f"Model state file not found at {model_state_path}")
+             raise FileNotFoundError(f"Model path does not exist: {model_path}")
+
+        if not model_state_path.exists():
+            raise FileNotFoundError(f"Model state file 'model.pt' not found in {path}")
         
         model_class = None
         if model_type == 'domain_classifier':
@@ -224,19 +275,51 @@ class ModelEvaluator:
         elif model_type == 'eligibility_predictor':
             model_class = EligibilityPredictor
         elif model_type == 'gnn_model':
-            # Assuming GNNModel is defined in neural_models.py (or imported). 
-            # If not, this needs correction based on the actual architecture.
-            # For now, we skip GNN loading here as GNN logic is separate in the orchestrator.
-            raise ValueError(f"GNN model loading must be handled separately/differently: {model_type}")
+            # Attempt to load a PyTorch Geometric / graph model saved as state_dict or full model.
+            gnn_path = self.config.GNN_MODEL_PATH
+            if not Path(gnn_path).exists():
+                raise FileNotFoundError(f"GNN model not found at: {gnn_path}")
+            try:
+                # Use KnowledgeGraphEngine which has its own GNN model wrapper
+                from .knowledge_graph_engine import KnowledgeGraphEngine
+                kg_engine = KnowledgeGraphEngine(self.config, prolog_engine=None)
+                kg_engine.load_model(str(gnn_path))
+                logger.info(f"✅ Loaded GNN model from {gnn_path}")
+                return kg_engine  # Return the engine, not just the model
+            except Exception as e:
+                logger.error(f"Failed to load GNN model: {e}")
+                raise
+        elif model_type == 'enhanced_legal_bert':
+            model_class = EnhancedLegalBERT
         
         if model_class is None:
             raise ValueError(f"Unknown neural model type: {model_type}")
         
-        model = model_class(self.config)
-        model.load_state_dict(torch.load(model_state_path, map_location=self.device))
+        # Handle EnhancedLegalBERT loading with special care
+        if model_type == 'enhanced_legal_bert':
+            path = Path(self.config.ENHANCED_BERT_MODEL_PATH)
+            if not path.exists():
+                raise FileNotFoundError(f"Enhanced BERT model file not found at: {path}")
+            model = model_class(self.config)  # assumes this builds HF model inside class
+            # Ensure embeddings match tokenizer if tokenizer changed
+            if hasattr(self, 'tokenizer') and hasattr(model, 'resize_token_embeddings'):
+                try:
+                    model.resize_token_embeddings(len(self.tokenizer))
+                except Exception:
+                    logger.warning("Could not resize tokenizer embeddings for EnhancedLegalBERT (check model/tokenizer).")
+            # Load state dict
+            state = torch.load(path, map_location=self.device)
+            # Support both checkpoint dict and raw state_dict
+            if isinstance(state, dict) and 'model_state_dict' in state:
+                state = state['model_state_dict']
+            model.load_state_dict(state)
+        else:
+            model = model_class(self.config)
+            model.load_state_dict(torch.load(model_state_path, map_location=self.device))
+            
         model.to(self.device)
         model.eval()
-        logger.info(f"✅ Loaded {model_type} from {model_state_path.parent}")
+        logger.info(f"✅ Loaded {model_type} from {model_state_path.parent if model_type != 'enhanced_legal_bert' else path.parent}")
         return model
 
     def evaluate_neural_model(self, model: nn.Module, test_samples: List[Dict], task_type: str) -> ModelMetrics:
@@ -564,6 +647,9 @@ class ModelEvaluator:
             Dict with standard metrics, method breakdown, and advanced analytics
         """
         from .hybrid_predictor import HybridPredictor, HybridPrediction
+        # --- START FIX 4 ---
+        from .neural_models import DomainClassifier, EnhancedLegalBERT # <-- IMPORT MODELS
+        # --- END FIX 4 ---
         
         logger.info("\n" + "="*70)
         logger.info("HYBRID SYSTEM EVALUATION (WITH ADVANCED METRICS)")
@@ -573,28 +659,58 @@ class ModelEvaluator:
         # Create wrapper (use self.ModelWrapper for nested class)
         model_wrapper = self.ModelWrapper(self)
         
+        # --- START FIX 4 ---
+        
+        # 1. Load ALL required models into the wrapper
+        
         # Check if eligibility_model was set by main.py
-        if hasattr(self, 'eligibility_model'):
+        if hasattr(self, 'eligibility_model') and self.eligibility_model is not None:
             model_wrapper.eligibility_model = self.eligibility_model
+            logger.info("Using pre-loaded Eligibility Predictor.")
         else:
             # Load it if not present
             logger.info("Loading BERT eligibility model...")
-            bert_path = self.config.MODELS_DIR / 'eligibility_predictor' / 'model.pt'
-            if bert_path.exists():
-                model_wrapper.eligibility_model = EligibilityPredictor(self.config)
-                model_wrapper.eligibility_model.load_state_dict(torch.load(bert_path, map_location=self.device))
-                model_wrapper.eligibility_model.to(self.device)
-                model_wrapper.eligibility_model.eval()
+            bert_path = self.config.MODELS_DIR / 'eligibility_predictor'
+            if (bert_path / 'model.pt').exists():
+                model_wrapper.eligibility_model = self.load_trained_model(str(bert_path), 'eligibility_predictor')
             else:
-                logger.warning(f"BERT model not found at {bert_path}")
+                logger.error(f"BERT eligibility model not found at {bert_path}")
+
+        # 2. Load Domain Classifier
+        logger.info("Loading BERT domain classifier...")
+        domain_path = self.config.MODELS_DIR / 'domain_classifier'
+        if (domain_path / 'model.pt').exists():
+            model_wrapper.domain_classifier = self.load_trained_model(str(domain_path), 'domain_classifier')
+        else:
+            logger.warning(f"Domain classifier not found at {domain_path}")
+
+        # 3. Load EnhancedLegalBERT
+        logger.info("Loading EnhancedLegalBERT model...")
+        enhanced_path = self.config.ENHANCED_BERT_MODEL_PATH
+        if enhanced_path.exists():
+            try:
+                # Use the correct class defined in neural_models.py
+                model_wrapper.enhanced_bert = EnhancedLegalBERT(self.config).to(self.device)
+                # Load the state dict from the .pt file
+                # The .pt file for enhanced_bert is a checkpoint dict, not just a state_dict
+                checkpoint = torch.load(enhanced_path, map_location=self.device)
+                model_wrapper.enhanced_bert.load_state_dict(checkpoint['model_state_dict'])
+                model_wrapper.enhanced_bert.eval()
+                logger.info(f"✅ EnhancedLegalBERT model loaded from {enhanced_path}")
+            except Exception as e:
+                logger.error(f"Failed to load EnhancedLegalBERT: {e}", exc_info=True)
+        else:
+            logger.warning(f"EnhancedLegalBERT model not found at {enhanced_path}")
+        
         
         # Initialize hybrid predictor with corrected references
         hybrid = HybridPredictor(
-            prolog_engine=self._prolog_engine_cache,
-            gnn_model=model_wrapper,  # Pass wrapper instead of self
-            bert_model=model_wrapper,  # Pass wrapper instead of self
+            prolog_engine=self.prolog_engine,  # Use property
+            gnn_model=self.kg_engine,          # Use property
+            bert_model=model_wrapper,          # Pass the fully populated wrapper
             config=self.config
         )
+        # --- END FIX 4 ---
         
         # Get predictions
         predictions = hybrid.batch_predict(test_data)
@@ -723,8 +839,8 @@ class ModelEvaluator:
             'classification_report': report
         }
         
-        with open(results_path, 'w') as f:
-            json.dump(serializable_results, f, indent=2)
+        # Save results with safe JSON handling
+        safe_json_dump(serializable_results, results_path)
         
         logger.info(f"\n✓ Hybrid results saved to: {results_path}")
         
@@ -900,11 +1016,18 @@ class ModelEvaluator:
                         
                         elif model_name == 'enhanced_legal_bert':
                             from .neural_models import EnhancedLegalBERT
+                            # ✅ FIX: Instantiate with self.config, not model_name
                             model = EnhancedLegalBERT(self.config).to(device)
-                            model.load_state_dict(torch.load(
-                                self.config.ENHANCED_BERT_MODEL_PATH,
-                                map_location=device
-                            ))
+                            
+                            # Load from the checkpoint dict
+                            checkpoint = torch.load(self.config.ENHANCED_BERT_MODEL_PATH, map_location=device)
+                            
+                            # Handle both checkpoint dict and raw state_dict
+                            if isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
+                                model.load_state_dict(checkpoint['model_state_dict'])
+                            else:
+                                model.load_state_dict(checkpoint)
+                                
                             model.eval()
                             loaded_models[model_name] = model
                     
@@ -939,7 +1062,8 @@ class ModelEvaluator:
                             batch_preds = []
                             
                             for model_name, model in loaded_models.items():
-                                outputs = model(input_ids, attention_mask)
+                                # ✅ FIX: Pass return_dict=True for compatibility
+                                outputs = model(input_ids, attention_mask, return_dict=True)
                                 
                                 # Extract logits
                                 if isinstance(outputs, dict):
@@ -1060,10 +1184,9 @@ class ModelEvaluator:
         df.to_csv(csv_path, index=False)
         logger.info(f"✅ CSV saved: {csv_path}")
         
-        # Save JSON
+        # Save JSON with safe handling
         json_path = results_dir / f'ablation_results_{timestamp}.json'
-        with open(json_path, 'w') as f:
-            json.dump(all_results, f, indent=2)
+        safe_json_dump(all_results, json_path)
         logger.info(f"✅ JSON saved: {json_path}")
         
         return {'all_results': all_results, 'results_file': str(json_path)}
@@ -1360,10 +1483,9 @@ class ModelEvaluator:
                 logger.warning("  2. Verify entity extraction quality")
                 logger.warning("  3. Review ensemble weight calibration")
 
-        # Save JSON
+        # Save JSON with safe handling
         json_path = results_dir / f'ablation_complete_{timestamp}.json'
-        with open(json_path, 'w') as f:
-            json.dump(all_results, f, indent=2)
+        safe_json_dump(all_results, json_path)
         logger.info(f"✅ JSON saved: {json_path}")
 
         return {'all_results': all_results, 'results_file': str(json_path)}
@@ -1724,11 +1846,10 @@ class ModelEvaluator:
             df.to_csv(csv_path, index=False)
             logger.info(f"\n✅ CSV results saved to: {csv_path}")
             
-            # Save JSON (with full numeric values)
+            # Save JSON with safe handling (with full numeric values)
             json_path = output_dir / f'ablation_results_{timestamp}.json'
             json_data = {r['combination']: r for r in sorted_results}
-            with open(json_path, 'w') as f:
-                json.dump(json_data, f, indent=2)
+            safe_json_dump(json_data, json_path)
             logger.info(f"✅ JSON results saved to: {json_path}")
             
             # ✅ FIX: Save text report WITHOUT emoji (Windows compatible)
@@ -2085,8 +2206,8 @@ class ModelEvaluator:
         
         try:
             serializable_results = _convert_numpy_to_list(evaluation_results)
-            with open(results_path, 'w', encoding='utf-8') as f:
-                json.dump(serializable_results, f, indent=2, ensure_ascii=False)
+            # Use safe_json_dump for better type handling
+            safe_json_dump(serializable_results, results_path)
             logger.info(f"✅ Evaluation results saved to {results_path}")
             return str(results_path)
         except Exception as e:

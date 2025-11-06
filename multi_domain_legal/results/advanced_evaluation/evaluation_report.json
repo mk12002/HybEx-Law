@@ -1,109 +1,109 @@
 {
   "overall_metrics": {
-    "accuracy": 0.8032100488485694,
-    "precision": 0.8032100488485694,
-    "recall": 1.0,
-    "f1_score": 0.8908668730650154,
-    "mcc": 0.0,
-    "kappa": 0.0,
-    "true_positives": 1151,
-    "true_negatives": 0,
-    "false_positives": 282,
-    "false_negatives": 0,
-    "specificity": 0.0,
-    "balanced_accuracy": 0.5
+    "accuracy": 0.5751905751905751,
+    "precision": 0.9631490787269682,
+    "recall": 0.49313893653516294,
+    "f1_score": 0.6522972206466251,
+    "mcc": 0.33084129427056147,
+    "kappa": 0.23202364983656087,
+    "true_positives": 575,
+    "true_negatives": 255,
+    "false_positives": 22,
+    "false_negatives": 591,
+    "specificity": 0.9205776173285198,
+    "balanced_accuracy": 0.7068582769318414
   },
   "stratified_analysis": {
     "income_level": {
       "low": {
-        "count": 193,
+        "count": 203,
         "accuracy": 1.0,
         "precision": 1.0,
         "recall": 1.0,
-        "avg_confidence": 0.9499999999999998
+        "avg_confidence": 0.9196235753534756
       },
       "medium": {
-        "count": 80,
-        "accuracy": 0.8625,
-        "precision": 0.8625,
+        "count": 68,
+        "accuracy": 0.8676470588235294,
+        "precision": 0.8676470588235294,
         "recall": 1.0,
-        "avg_confidence": 0.95
+        "avg_confidence": 0.9459356689539462
       },
       "no_income": {
-        "count": 971,
-        "accuracy": 0.7209062821833162,
-        "precision": 0.7209062821833162,
-        "recall": 1.0,
-        "avg_confidence": 0.9499999999999998
+        "count": 944,
+        "accuracy": 0.3601694915254237,
+        "precision": 0.8673469387755102,
+        "recall": 0.1257396449704142,
+        "avg_confidence": 0.43761184799332464
       },
       "very_low": {
-        "count": 189,
+        "count": 228,
         "accuracy": 1.0,
         "precision": 1.0,
         "recall": 1.0,
-        "avg_confidence": 0.9500000000000001
+        "avg_confidence": 0.8931052925612841
       }
     },
     "social_category": {
       "general": {
-        "count": 1224,
-        "accuracy": 0.7736928104575164,
-        "precision": 0.7736928104575164,
-        "recall": 1.0,
-        "avg_confidence": 0.9500000000000002
+        "count": 1246,
+        "accuracy": 0.5208667736757624,
+        "precision": 0.9477434679334917,
+        "recall": 0.40965092402464065,
+        "avg_confidence": 0.5638781892100644
       },
       "obc": {
-        "count": 33,
+        "count": 27,
         "accuracy": 1.0,
         "precision": 1.0,
         "recall": 1.0,
-        "avg_confidence": 0.95
+        "avg_confidence": 0.8729874879673676
       },
       "sc": {
-        "count": 57,
+        "count": 55,
         "accuracy": 1.0,
         "precision": 1.0,
         "recall": 1.0,
-        "avg_confidence": 0.9500000000000001
+        "avg_confidence": 0.8766853597991034
       },
       "st": {
-        "count": 119,
-        "accuracy": 0.957983193277311,
-        "precision": 0.957983193277311,
-        "recall": 1.0,
-        "avg_confidence": 0.95
+        "count": 115,
+        "accuracy": 0.8608695652173913,
+        "precision": 1.0,
+        "recall": 0.8545454545454545,
+        "avg_confidence": 0.8118280154390041
       }
     },
     "vulnerability_status": {
       "not_vulnerable": {
-        "count": 1232,
-        "accuracy": 0.7881493506493507,
-        "precision": 0.7881493506493507,
-        "recall": 1.0,
-        "avg_confidence": 0.9500000000000001
+        "count": 1231,
+        "accuracy": 0.512591389114541,
+        "precision": 0.9766233766233766,
+        "recall": 0.38883143743536713,
+        "avg_confidence": 0.5508307369761156
       },
       "vulnerable": {
-        "count": 201,
-        "accuracy": 0.8955223880597015,
-        "precision": 0.8955223880597015,
+        "count": 212,
+        "accuracy": 0.9386792452830188,
+        "precision": 0.9386792452830188,
         "recall": 1.0,
-        "avg_confidence": 0.95
+        "avg_confidence": 0.8946611569702682
       }
     },
     "has_income": {
       "has_income": {
-        "count": 462,
-        "accuracy": 0.9761904761904762,
-        "precision": 0.9761904761904762,
+        "count": 499,
+        "accuracy": 0.9819639278557114,
+        "precision": 0.9819639278557114,
         "recall": 1.0,
-        "avg_confidence": 0.9499999999999998
+        "avg_confidence": 0.9110926212216367
       },
       "no_income": {
-        "count": 971,
-        "accuracy": 0.7209062821833162,
-        "precision": 0.7209062821833162,
-        "recall": 1.0,
-        "avg_confidence": 0.9499999999999998
+        "count": 944,
+        "accuracy": 0.3601694915254237,
+        "precision": 0.8673469387755102,
+        "recall": 0.1257396449704142,
+        "avg_confidence": 0.43761184799332464
       }
     }
   },
@@ -112,13 +112,13 @@
       null,
       null,
       null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      0.8032100488485694
+      0.30952380952380953,
+      0.2955032119914347,
+      0.0,
+      0.9,
+      0.7777777777777778,
+      0.9738372093023255,
+      1.0
     ],
     "bin_confidences": [
       0.05,
@@ -136,245 +136,437 @@
       0,
       0,
       0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1433
+      378,
+      467,
+      1,
+      10,
+      54,
+      344,
+      189
     ],
-    "expected_calibration_error": 0.14678995115143056,
-    "calibration_quality": "needs_improvement"
+    "expected_calibration_error": 0.09982674982674981,
+    "calibration_quality": "good"
   },
   "error_analysis": {
     "false_positives": {
-      "count": 282,
+      "count": 22,
       "top_errors": [
         {
-          "index": 1,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
-          "social_category": "general",
-          "is_vulnerable": false,
-          "query_snippet": "I am permanent employee and have been working in private company for 1 year. deducting PF and ESI bu"
-        },
-        {
-          "index": 4,
-          "confidence": 0.95,
-          "method": "prolog",
+          "index": 676,
+          "confidence": 0.8973954258486628,
+          "method": "prolog_neural_consensus",
           "income": 30000,
           "social_category": "general",
           "is_vulnerable": false,
-          "query_snippet": "I am a person from economically weaker section earning Rs. 30000 per month. Police have filed false "
+          "query_snippet": "I am a single parent earning Rs. 30000 per month. I am facing domestic violence and need protection "
         },
         {
-          "index": 5,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
+          "index": 533,
+          "confidence": 0.8963357903063297,
+          "method": "prolog_neural_consensus",
+          "income": 30000,
           "social_category": "general",
           "is_vulnerable": false,
-          "query_snippet": "While working in pharmaceutical company handling hazardous material, machinery maintenance is poor a"
+          "query_snippet": "I am a single parent earning Rs. 30000 per month. My landlord is trying to evict me without proper n"
         },
         {
-          "index": 6,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
+          "index": 787,
+          "confidence": 0.8956170244142413,
+          "method": "prolog_neural_consensus",
+          "income": 30000,
           "social_category": "general",
           "is_vulnerable": false,
-          "query_snippet": "I filed RTI application about government employee recruitment details 1 month ago. denied saying inf"
+          "query_snippet": "I am a single parent earning Rs. 30000 per month. My employer terminated me during maternity leave v"
         },
         {
-          "index": 8,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
+          "index": 42,
+          "confidence": 0.8925546560436487,
+          "method": "prolog_neural_consensus",
+          "income": 30000,
           "social_category": "general",
           "is_vulnerable": false,
-          "query_snippet": "In religious observance at workplace, religious festival celebration was banned without reason. Can "
+          "query_snippet": "I am a single parent earning Rs. 30000 per month. Insurance company is not settling my claim properl"
         },
         {
-          "index": 15,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
+          "index": 1442,
+          "confidence": 0.882544651068747,
+          "method": "prolog_neural_consensus",
+          "income": 30000,
           "social_category": "general",
           "is_vulnerable": false,
-          "query_snippet": "During government job interview, service was denied based on economic status. Can mandamus writ be i"
+          "query_snippet": "I am a person from economically weaker section earning Rs. 30000 per month. My employer terminated m"
         },
         {
-          "index": 21,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
+          "index": 454,
+          "confidence": 0.879428188689053,
+          "method": "prolog_neural_consensus",
+          "income": 28000,
           "social_category": "general",
           "is_vulnerable": false,
-          "query_snippet": "During eating from street food stall, expired products were used in cooking. Spent Rs 50000 on medic"
-        },
-        {
-          "index": 30,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
-          "social_category": "general",
-          "is_vulnerable": false,
-          "query_snippet": "During insurance policy claim settlement, unauthorized transactions occurred and bank is not accepti"
+          "query_snippet": "I am a person from economically weaker section earning Rs. 28000 per month. Police have filed false "
         },
         {
           "index": 37,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
+          "confidence": 0.8787443054839968,
+          "method": "prolog_neural_consensus",
+          "income": 30000,
           "social_category": "general",
           "is_vulnerable": false,
-          "query_snippet": "After organizing peaceful protest/rally, local authorities banned assembly without proper reason. Ca"
+          "query_snippet": "I am a person from economically weaker section earning Rs. 30000 per month. Builder has cheated me u"
         },
         {
-          "index": 38,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
+          "index": 67,
+          "confidence": 0.8783880224451422,
+          "method": "prolog_neural_consensus",
+          "income": 30000,
           "social_category": "general",
           "is_vulnerable": false,
-          "query_snippet": "I bought furniture set from Myntra for Rs 200000. Wrong model delivered and not refunding price diff"
+          "query_snippet": "I am a person from economically weaker section earning Rs. 30000 per month. Insurance company is not"
         },
         {
-          "index": 43,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
+          "index": 576,
+          "confidence": 0.8780952248722315,
+          "method": "prolog_neural_consensus",
+          "income": 28000,
           "social_category": "general",
           "is_vulnerable": false,
-          "query_snippet": "After uncle's natural death, agricultural land division dispute is ongoing. What is procedure when t"
+          "query_snippet": "I am a person from economically weaker section earning Rs. 28000 per month. Government office is dem"
         },
         {
-          "index": 46,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
-          "social_category": "general",
-          "is_vulnerable": false,
-          "query_snippet": "I am factory worker and have been working in private company for 1 year. salary delay for 2-3 months"
-        },
-        {
-          "index": 49,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": "N/A",
-          "social_category": "general",
-          "is_vulnerable": false,
-          "query_snippet": "I booked 2 BHK flat from local builder by paying Rs 10 lakh advance. Builder changed approved plan w"
-        },
-        {
-          "index": 54,
-          "confidence": 0.95,
-          "method": "prolog",
+          "index": 321,
+          "confidence": 0.7262675948091782,
+          "method": "prolog_neural_consensus",
           "income": "N/A",
           "social_category": "general",
           "is_vulnerable": true,
-          "query_snippet": "I got married 2 years ago. Husband drinks alcohol, doesn't work, only beats me. What should I do for"
+          "query_snippet": "After divorce/separation ex-wife took children to different city and cut contact. What is adoption p"
         },
         {
-          "index": 55,
-          "confidence": 0.95,
-          "method": "prolog",
+          "index": 987,
+          "confidence": 0.7236898128408938,
+          "method": "prolog_neural_consensus",
           "income": "N/A",
           "social_category": "general",
-          "is_vulnerable": false,
-          "query_snippet": "While working in chemical factory during shift work, machinery maintenance is poor and worker safety"
+          "is_vulnerable": true,
+          "query_snippet": "After mother-in-law's death, step-mother transferred all property to her children. Can I apply for s"
         },
         {
-          "index": 65,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": 28000,
-          "social_category": "general",
-          "is_vulnerable": false,
-          "query_snippet": "I am a single parent earning Rs. 28000 per month. My employer terminated me during maternity leave v"
-        },
-        {
-          "index": 75,
-          "confidence": 0.95,
-          "method": "prolog",
+          "index": 887,
+          "confidence": 0.7207130866241641,
+          "method": "prolog_neural_consensus",
           "income": "N/A",
           "social_category": "general",
-          "is_vulnerable": false,
-          "query_snippet": "During environment pollution, emergency medical treatment was denied due to lack of money. Can I cla"
+          "is_vulnerable": true,
+          "query_snippet": "After uncle's natural death, step-mother transferred all property to her children. What is my legal "
         },
         {
-          "index": 77,
-          "confidence": 0.95,
-          "method": "prolog",
+          "index": 1008,
+          "confidence": 0.7147826558444649,
+          "method": "prolog_neural_consensus",
           "income": "N/A",
           "social_category": "general",
-          "is_vulnerable": false,
-          "query_snippet": "While working in mining operation with underground work, forced to work overtime 12+ hours daily wit"
+          "is_vulnerable": true,
+          "query_snippet": "I got married 15 years ago. Husband is having extramarital affair and doesn't come home. What should"
         },
         {
-          "index": 84,
-          "confidence": 0.95,
-          "method": "prolog",
-          "income": 28000,
-          "social_category": "general",
-          "is_vulnerable": false,
-          "query_snippet": "I am a single parent earning Rs. 28000 per month. My landlord is trying to evict me without proper n"
-        },
-        {
-          "index": 89,
-          "confidence": 0.95,
-          "method": "prolog",
+          "index": 679,
+          "confidence": 0.7089044043328613,
+          "method": "prolog_neural_consensus",
           "income": "N/A",
           "social_category": "general",
-          "is_vulnerable": false,
-          "query_snippet": "While working as Zomato/Swiggy delivery partner, payment delays and unauthorized deductions are happ"
+          "is_vulnerable": true,
+          "query_snippet": "I got married 8 years ago. Husband is having extramarital affair and doesn't come home. What should "
+        },
+        {
+          "index": 525,
+          "confidence": 0.7078682979568839,
+          "method": "prolog_neural_consensus",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": true,
+          "query_snippet": "I got married 20 years ago. My husband does physical violence and keeps demanding dowry. What should"
+        },
+        {
+          "index": 80,
+          "confidence": 0.7067505778628401,
+          "method": "prolog_neural_consensus",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": true,
+          "query_snippet": "I got married 2 years ago. Husband is having extramarital affair and doesn't come home. What should "
+        },
+        {
+          "index": 830,
+          "confidence": 0.7042070800904184,
+          "method": "prolog_neural_consensus",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": true,
+          "query_snippet": "I got married 10 years ago. My husband does physical violence and keeps demanding dowry. What should"
+        },
+        {
+          "index": 596,
+          "confidence": 0.7035803609411232,
+          "method": "prolog_neural_consensus",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": true,
+          "query_snippet": "After divorce/separation court gave joint custody but ex-husband is not cooperating. How to enforce "
+        },
+        {
+          "index": 744,
+          "confidence": 0.7011185150127858,
+          "method": "prolog_neural_consensus",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": true,
+          "query_snippet": "We are Christian married under Parsi Marriage and Divorce Act. Husband is alcoholic and has became v"
+        },
+        {
+          "index": 333,
+          "confidence": 0.7009954367764294,
+          "method": "prolog_neural_consensus",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": true,
+          "query_snippet": "I got married 15 years ago. Husband is having extramarital affair and doesn't come home. What should"
         }
       ],
       "common_patterns": {
         "by_method": {
-          "prolog": 282
+          "prolog_neural_consensus": 22
         },
         "by_income_range": {
-          "unknown": 271,
-          "25k-40k": 11
+          "25k-40k": 9,
+          "unknown": 13
         },
         "by_category": {
-          "general": 277,
-          "st": 5
+          "general": 22
         },
-        "vulnerable_involved": 21
+        "vulnerable_involved": 13
       }
     },
     "false_negatives": {
-      "count": 0,
-      "top_errors": [],
-      "common_patterns": {}
+      "count": 591,
+      "top_errors": [
+        {
+          "index": 522,
+          "confidence": 0.5684869673848152,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "Hello, I am daily wage laborer of 40 years unemployed since corona pandemic. Government scheme money"
+        },
+        {
+          "index": 1269,
+          "confidence": 0.49335600623860953,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "After brother's accidental death, joint family property not giving daughters equal share. What are w"
+        },
+        {
+          "index": 1288,
+          "confidence": 0.4905070020072162,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "I am security guard and have been working in construction company for 2 years. salary delay for 2-3 "
+        },
+        {
+          "index": 483,
+          "confidence": 0.490129986788767,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "I am office staff and have been working in textile factory for 15 years. salary delay for 2-3 months"
+        },
+        {
+          "index": 34,
+          "confidence": 0.48701249193322527,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "During family dinner at restaurant, expired products were used in cooking. Spent Rs 50000 on medical"
+        },
+        {
+          "index": 1237,
+          "confidence": 0.48012364988215267,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "I am daily wage laborer and have been working in textile factory for 15 years. salary delay for 2-3 "
+        },
+        {
+          "index": 383,
+          "confidence": 0.4796092262367407,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "While working as part-time employee at retail store, platform commission unexpectedly increased with"
+        },
+        {
+          "index": 97,
+          "confidence": 0.4779603080410743,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "During wedding hall food, chemical/pesticide taste was there in food. Spent Rs 50000 on medical trea"
+        },
+        {
+          "index": 1241,
+          "confidence": 0.4779213208612055,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "During home delivery food order, expired products were used in cooking. Spent Rs 50000 on medical tr"
+        },
+        {
+          "index": 23,
+          "confidence": 0.4759361518888423,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "While working in chemical factory during shift work, forced to work overtime 12+ hours daily without"
+        },
+        {
+          "index": 588,
+          "confidence": 0.47413379801747696,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "While working as Amazon/Flipkart delivery associate, platform commission unexpectedly increased with"
+        },
+        {
+          "index": 138,
+          "confidence": 0.4724018176738172,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "After divorce/separation after remarriage step-father wants to legally adopt children. Can father's "
+        },
+        {
+          "index": 139,
+          "confidence": 0.47153575745876875,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "After father's death, in-laws are not giving me share in property. What are women's rights in agricu"
+        },
+        {
+          "index": 307,
+          "confidence": 0.46967553933616724,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "While working as Amazon/Flipkart delivery associate, platform commission unexpectedly increased with"
+        },
+        {
+          "index": 1406,
+          "confidence": 0.46938869996927673,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "st",
+          "is_vulnerable": false,
+          "query_snippet": "I belong to Dalit family and caste threats and violence were used in land dispute. Can I take court "
+        },
+        {
+          "index": 730,
+          "confidence": 0.46643252107547595,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "After divorce/separation after remarriage step-father wants to legally adopt children. How to enforc"
+        },
+        {
+          "index": 236,
+          "confidence": 0.4659944452019408,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "st",
+          "is_vulnerable": false,
+          "query_snippet": "I belong to Dalit family and humiliation occurred during caste certificate verification at governmen"
+        },
+        {
+          "index": 1190,
+          "confidence": 0.46469615350477395,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "st",
+          "is_vulnerable": false,
+          "query_snippet": "During hospital treatment, discrimination was done on caste basis and SC/ST were not given preferenc"
+        },
+        {
+          "index": 1274,
+          "confidence": 0.46377688506928577,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "st",
+          "is_vulnerable": false,
+          "query_snippet": "I belong to Scheduled Caste and caste threats and violence were used in land dispute. Can I apply fo"
+        },
+        {
+          "index": 653,
+          "confidence": 0.46370578537404067,
+          "method": "majority_vote_not_eligible",
+          "income": "N/A",
+          "social_category": "general",
+          "is_vulnerable": false,
+          "query_snippet": "In Jio/Airtel/Vi postpaid connection service, unauthorized value added services were activated. Is c"
+        }
+      ],
+      "common_patterns": {
+        "by_method": {
+          "majority_vote_not_eligible": 591
+        },
+        "by_income_range": {
+          "unknown": 591
+        },
+        "by_category": {
+          "general": 575,
+          "st": 16
+        },
+        "vulnerable_involved": 0
+      }
     }
   },
   "fairness_metrics": {
     "social_category": {
       "general": {
-        "count": 1224,
-        "true_positive_rate": 1.0,
-        "false_positive_rate": 1.0,
-        "selection_rate": 1.0
+        "count": 1246,
+        "true_positive_rate": 0.40965092402464065,
+        "false_positive_rate": 0.08088235294117647,
+        "selection_rate": 0.3378812199036918
+      },
+      "st": {
+        "count": 115,
+        "true_positive_rate": 0.8545454545454545,
+        "false_positive_rate": 0.0,
+        "selection_rate": 0.8173913043478261
       },
       "obc": {
-        "count": 33,
+        "count": 27,
         "true_positive_rate": 1.0,
         "false_positive_rate": 0.0,
         "selection_rate": 1.0
       },
-      "st": {
-        "count": 119,
-        "true_positive_rate": 1.0,
-        "false_positive_rate": 1.0,
-        "selection_rate": 1.0
-      },
       "sc": {
-        "count": 57,
+        "count": 55,
         "true_positive_rate": 1.0,
         "false_positive_rate": 0.0,
         "selection_rate": 1.0
@@ -382,13 +574,13 @@
     },
     "gender": {
       "unknown": {
-        "count": 1331,
-        "true_positive_rate": 1.0,
-        "false_positive_rate": 1.0,
-        "selection_rate": 1.0
+        "count": 1335,
+        "true_positive_rate": 0.4481792717086835,
+        "false_positive_rate": 0.03409090909090909,
+        "selection_rate": 0.36629213483146067
       },
       "female": {
-        "count": 102,
+        "count": 108,
         "true_positive_rate": 1.0,
         "false_positive_rate": 1.0,
         "selection_rate": 1.0
@@ -396,47 +588,71 @@
     },
     "vulnerability_status": {
       "not_vulnerable": {
-        "count": 1297,
-        "true_positive_rate": 1.0,
-        "false_positive_rate": 1.0,
-        "selection_rate": 1.0
+        "count": 1296,
+        "true_positive_rate": 0.4200196270853778,
+        "false_positive_rate": 0.07942238267148015,
+        "selection_rate": 0.3472222222222222
       },
       "vulnerable": {
-        "count": 136,
+        "count": 147,
         "true_positive_rate": 1.0,
         "false_positive_rate": 0.0,
         "selection_rate": 1.0
       }
     },
     "disparate_impact": {
-      "obc_vs_general": {
-        "ratio": 1.0,
-        "fair": true,
-        "category_rate": 1.0,
-        "general_rate": 1.0
-      },
       "st_vs_general": {
-        "ratio": 1.0,
+        "ratio": 2.4191676133429727,
+        "fair": true,
+        "category_rate": 0.8173913043478261,
+        "general_rate": 0.3378812199036918
+      },
+      "obc_vs_general": {
+        "ratio": 2.959619952494062,
         "fair": true,
         "category_rate": 1.0,
-        "general_rate": 1.0
+        "general_rate": 0.3378812199036918
       },
       "sc_vs_general": {
-        "ratio": 1.0,
+        "ratio": 2.959619952494062,
         "fair": true,
         "category_rate": 1.0,
-        "general_rate": 1.0
+        "general_rate": 0.3378812199036918
       }
     }
   },
   "method_comparison": {
-    "prolog": {
-      "count": 1433,
-      "accuracy": 0.8032100488485694,
-      "precision": 0.8032100488485694,
+    "majority_vote_eligible": {
+      "count": 21,
+      "accuracy": 1.0,
+      "precision": 1.0,
       "recall": 1.0,
-      "f1_score": 0.8908668730650154,
-      "avg_confidence": 0.95
+      "f1_score": 1.0,
+      "avg_confidence": 0.7630519620009831
+    },
+    "prolog_neural_consensus": {
+      "count": 390,
+      "accuracy": 0.9435897435897436,
+      "precision": 0.9435897435897436,
+      "recall": 1.0,
+      "f1_score": 0.9709762532981531,
+      "avg_confidence": 0.8595977389464116
+    },
+    "majority_vote_not_eligible": {
+      "count": 846,
+      "accuracy": 0.30141843971631205,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "avg_confidence": 0.39703360940784677
+    },
+    "strong_consensus": {
+      "count": 186,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "avg_confidence": 0.9708772018555673
     }
   }
 }
