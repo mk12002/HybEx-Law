@@ -44,6 +44,17 @@
     "num_samples": 1443
   },
   {
+    "combination": "05_enhanced_bert",
+    "models": [
+      "enhanced_legal_bert"
+    ],
+    "accuracy": 0.7623007623007623,
+    "precision": 0.8148431522570773,
+    "recall": 0.9133790737564322,
+    "f1": 0.8613020622725435,
+    "num_samples": 1443
+  },
+  {
     "combination": "06_domain_eligibility",
     "models": [
       "domain_classifier",
@@ -53,6 +64,30 @@
     "precision": 1.0,
     "recall": 0.4665523156089194,
     "f1": 0.6362573099415205,
+    "num_samples": 1443
+  },
+  {
+    "combination": "07_domain_bert",
+    "models": [
+      "domain_classifier",
+      "enhanced_legal_bert"
+    ],
+    "accuracy": 0.5627165627165627,
+    "precision": 0.9837251356238698,
+    "recall": 0.4665523156089194,
+    "f1": 0.6329261198371146,
+    "num_samples": 1443
+  },
+  {
+    "combination": "08_eligibility_bert",
+    "models": [
+      "eligibility_predictor",
+      "enhanced_legal_bert"
+    ],
+    "accuracy": 0.6340956340956341,
+    "precision": 0.9017632241813602,
+    "recall": 0.614065180102916,
+    "f1": 0.7306122448979592,
     "num_samples": 1443
   },
   {
@@ -77,6 +112,18 @@
     "precision": 0.8963414634146342,
     "recall": 0.630360205831904,
     "f1": 0.7401812688821753,
+    "num_samples": 1443
+  },
+  {
+    "combination": "11_gnn_bert",
+    "models": [
+      "gnn",
+      "enhanced_legal_bert"
+    ],
+    "accuracy": 0.7623007623007623,
+    "precision": 0.8148431522570773,
+    "recall": 0.9133790737564322,
+    "f1": 0.8613020622725435,
     "num_samples": 1443
   },
   {
@@ -116,6 +163,20 @@
     "num_samples": 1443
   },
   {
+    "combination": "15_all_neural",
+    "models": [
+      "domain_classifier",
+      "eligibility_predictor",
+      "enhanced_legal_bert",
+      "gnn"
+    ],
+    "accuracy": 0.6278586278586279,
+    "precision": 0.8916562889165629,
+    "recall": 0.614065180102916,
+    "f1": 0.7272727272727273,
+    "num_samples": 1443
+  },
+  {
     "combination": "16_hybrid_best",
     "models": [
       "prolog",
@@ -126,6 +187,21 @@
     "precision": 0.8772935779816514,
     "recall": 0.6560891938250428,
     "f1": 0.7507360157016683,
+    "num_samples": 1443
+  },
+  {
+    "combination": "17_full_ensemble",
+    "models": [
+      "prolog",
+      "domain_classifier",
+      "eligibility_predictor",
+      "gnn",
+      "enhanced_legal_bert"
+    ],
+    "accuracy": 0.6396396396396397,
+    "precision": 0.8817966903073287,
+    "recall": 0.6397941680960549,
+    "f1": 0.7415506958250497,
     "num_samples": 1443
   }
 ]

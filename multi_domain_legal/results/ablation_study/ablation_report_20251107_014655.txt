@@ -11,70 +11,112 @@ RANKINGS (by F1 Score):
    Precision: 0.8080
    Recall: 1.0000
 
-2. 16_hybrid_best
+2. 05_enhanced_bert
+   Models: enhanced_legal_bert
+   Accuracy: 0.7623
+   F1: 0.8613
+   Precision: 0.8148
+   Recall: 0.9134
+
+3. 11_gnn_bert
+   Models: gnn, enhanced_legal_bert
+   Accuracy: 0.7623
+   F1: 0.8613
+   Precision: 0.8148
+   Recall: 0.9134
+
+4. 16_hybrid_best
    Models: prolog, eligibility_predictor, gnn
    Accuracy: 0.6480
    F1: 0.7507
    Precision: 0.8773
    Recall: 0.6561
 
-3. 04_eligibility
+5. 17_full_ensemble
+   Models: prolog, domain_classifier, eligibility_predictor, gnn, enhanced_legal_bert
+   Accuracy: 0.6396
+   F1: 0.7416
+   Precision: 0.8818
+   Recall: 0.6398
+
+6. 04_eligibility
    Models: eligibility_predictor
    Accuracy: 0.6424
    F1: 0.7402
    Precision: 0.8963
    Recall: 0.6304
 
-4. 10_gnn_eligibility
+7. 10_gnn_eligibility
    Models: gnn, eligibility_predictor
    Accuracy: 0.6424
    F1: 0.7402
    Precision: 0.8963
    Recall: 0.6304
 
-5. 06_domain_eligibility
+8. 08_eligibility_bert
+   Models: eligibility_predictor, enhanced_legal_bert
+   Accuracy: 0.6341
+   F1: 0.7306
+   Precision: 0.9018
+   Recall: 0.6141
+
+9. 15_all_neural
+   Models: domain_classifier, eligibility_predictor, enhanced_legal_bert, gnn
+   Accuracy: 0.6279
+   F1: 0.7273
+   Precision: 0.8917
+   Recall: 0.6141
+
+10. 06_domain_eligibility
    Models: domain_classifier, eligibility_predictor
    Accuracy: 0.5690
    F1: 0.6363
    Precision: 1.0000
    Recall: 0.4666
 
-6. 01_prolog
+11. 01_prolog
    Models: prolog
    Accuracy: 0.5606
    F1: 0.6361
    Precision: 0.9618
    Recall: 0.4751
 
-7. 14_prolog_gnn
+12. 14_prolog_gnn
    Models: prolog, gnn
    Accuracy: 0.5606
    F1: 0.6361
    Precision: 0.9618
    Recall: 0.4751
 
-8. 03_domain
+13. 03_domain
    Models: domain_classifier
    Accuracy: 0.5627
    F1: 0.6329
    Precision: 0.9837
    Recall: 0.4666
 
-9. 09_gnn_domain
+14. 07_domain_bert
+   Models: domain_classifier, enhanced_legal_bert
+   Accuracy: 0.5627
+   F1: 0.6329
+   Precision: 0.9837
+   Recall: 0.4666
+
+15. 09_gnn_domain
    Models: gnn, domain_classifier
    Accuracy: 0.5627
    F1: 0.6329
    Precision: 0.9837
    Recall: 0.4666
 
-10. 13_prolog_eligibility
+16. 13_prolog_eligibility
    Models: prolog, eligibility_predictor
    Accuracy: 0.5551
    F1: 0.6201
    Precision: 1.0000
    Recall: 0.4494
 
-11. 12_prolog_domain
+17. 12_prolog_domain
    Models: prolog, domain_classifier
    Accuracy: 0.5475
    F1: 0.6152
@@ -87,4 +129,4 @@ KEY INSIGHTS:
 --------------------------------------------------------------------------------
 Best Overall: 02_gnn (F1: 0.8938)
 Best Single Model: 02_gnn (F1: 0.8938)
-Best Pair: 10_gnn_eligibility (F1: 0.7402)
+Best Pair: 11_gnn_bert (F1: 0.8613)
