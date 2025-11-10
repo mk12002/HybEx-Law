@@ -487,6 +487,96 @@ class DataPreprocessor:
     # In hybex_system/data_processor.py
 # REPLACE the entire extract_entities method with this final version.
 
+    def extract_income_age_flags(self, text: str) -> dict:
+        """
+        Robust extraction for income, age, BPL, disability, and senior citizen status.
+        Handles edge cases like "no income", "unemployed", "BPL card", etc.
+        """
+        ent = {}
+        txt = text.lower()
+
+        # Age extraction
+        m = re.search(r'(\d{2})\s*(?:years?|yrs?)', text, flags=re.I)
+        if m:
+            age = int(m.group(1))
+            ent['age'] = age
+            # Auto-detect senior citizen
+            if age >= 60:
+                ent['is_senior'] = True
+
+        # No income / unemployed patterns
+        if re.search(r'\b(no income|no job|unemployed|without income|no source of income|i have no income|jobless)\b', txt):
+            ent['income'] = 0
+            ent['annual_income'] = 0
+            ent['income_extracted_confidence'] = 0.95
+        else:
+            # Robust Income Extraction (handles "lakhs", "crores", decimals, and numbers)
+            
+            # --- [START] SNIPPET 1 of 3 ---
+            # Pattern 1: 1.5 lakhs, 15 lakhs, 2 crores (with "monthly" or "annual")
+            m_lakh = re.search(r'([\d\.]+)\s*(lakh|lac|crore)s?\s*(?:per\s*)?(month|year|annum)?', txt)
+            # --- [END] SNIPPET 1 of 3 ---
+
+            # Pattern 2: 15,000, 15000 (with "monthly" or "annual")
+            m_num = re.search(r'(?:rs\.?|₹)\s*([\d,]+)\s*(?:per\s*)?(month|year|annum)?', txt)
+            
+            if m_lakh:
+                try:
+                    amount = float(m_lakh.group(1))
+                    unit = m_lakh.group(2).lower()
+                    period = m_lakh.group(3).lower() if m_lakh.group(3) else None
+                    
+                    # Convert to rupees
+                    if 'lakh' in unit or 'lac' in unit:
+                        amount_rupees = amount * 100000
+                    elif 'crore' in unit:
+                        amount_rupees = amount * 10000000
+                    else:
+                        amount_rupees = amount
+                    
+                    # Determine if monthly or annual
+                    if period and period in ['month']:
+                        ent['income'] = int(amount_rupees)
+                        ent['annual_income'] = int(amount_rupees * 12)
+                    else:
+                        # Default: assume annual for lakhs/crores
+                        ent['annual_income'] = int(amount_rupees)
+                        ent['income'] = int(amount_rupees / 12)
+                except:
+                    pass
+            elif m_num:
+                try:
+                    num = int(m_num.group(1).replace(',', ''))
+                    period = m_num.group(2).lower() if m_num.group(2) else None
+                    
+                    # Heuristic: if 'per year' or 'annum' present -> annual; else assume monthly
+                    if period and period in ['year', 'annum']:
+                        ent['annual_income'] = num
+                        ent['income'] = num // 12  # monthly
+                    else:
+                        ent['income'] = num  # monthly
+                        ent['annual_income'] = num * 12
+                except:
+                    pass
+
+        # BPL card mention
+        if re.search(r'\bbpl\b|\bbelow poverty line\b|\bbpl card\b', txt, flags=re.I):
+            ent['bpl'] = True
+            ent['social_category'] = 'bpl'
+
+        # Chronic / disabled / long-term illness
+        if re.search(r'\b(chronic|long[- ]term (illness|disease)|disabled|divyang|disability|handicapped)\b', txt, flags=re.I):
+            ent['is_disabled'] = True
+
+        # Senior citizen hints
+        if re.search(r'\b(senior citizen|aged|elderly|old man|old woman)\b', txt, flags=re.I):
+            if 'age' not in ent:
+                # Assume 65 if mentioned but no age number
+                ent['age'] = 65
+            ent['is_senior'] = True
+
+        return ent
+
     def extract_entities(self, text: str) -> Dict[str, Any]:
         """
         Extracts a wide range of legal entities using domain-specific regex and spaCy.
@@ -509,12 +599,20 @@ class DataPreprocessor:
         doc = self.nlp(text) if self.nlp else None
 
         # =================================================================
+        # ENHANCED: Use robust extraction first
+        # =================================================================
+        robust_entities = self.extract_income_age_flags(text)
+        entities.update(robust_entities)
+
+        # =================================================================
         # General & Demographic Entities
         # =================================================================
         
         # 1. Income Extraction (Robust: handles monthly vs. annual)
         # ALWAYS store as annual income (normalized)
-        income_patterns = [
+        # Skip if already extracted by robust method
+        if 'annual_income' not in entities:
+            income_patterns = [
             # Monthly patterns - will be multiplied by 12
             (r'(?:monthly|per month)\s+(?:salary|income|wage|earning).*?rs\.?\s*(\d[\d,]+(?:\.\d{2})?)', 'monthly'),
             (r'(?:salary|income|wage|earning).*?rs\.?\s*(\d[\d,]+(?:\.\d{2})?)\s*(?:per month|monthly)', 'monthly'),

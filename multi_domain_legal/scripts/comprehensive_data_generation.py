@@ -27,6 +27,10 @@ class LegalDomain(Enum):
     FUNDAMENTAL_RIGHTS = "fundamental_rights"
     EMPLOYMENT_LAW = "employment_law"
 
+
+
+
+
 @dataclass
 class LegalTrainingExample:
     """Structured training example for legal AI system"""

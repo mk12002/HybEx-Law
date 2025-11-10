@@ -1,48 +1,168 @@
-# Core dependencies for multi-domain legal system
+# ============================================================================
+# HybEx-Law - Multi-Domain Legal Aid Eligibility System
+# Complete Requirements File
+# ============================================================================
+
+# Core Python Libraries
+# ----------------------------------------------------------------------------
 numpy>=1.21.0
 pandas>=1.3.0
-scikit-learn>=1.0.0
-spacy>=3.4.0
-nltk>=3.7
-pyswip>=0.2.10
-flask>=2.0.0
-tqdm>=4.62.0
-colorama>=0.4.4
-click>=8.0.0
-pyyaml>=5.4.0
 python-dateutil>=2.8.0
 regex>=2021.8.3
-joblib>=1.1.0
-
-# Neural/ML components for hybrid system (REQUIRED for hybrid functionality)
-transformers>=4.20.0
-torch>=1.11.0
-datasets>=2.0.0
-
-# Additional ML and evaluation libraries
-matplotlib>=3.5.0
-seaborn>=0.11.0
-scipy>=1.8.0
-
-# Development and testing
-pytest>=7.0.0
-pytest-cov>=3.0.0
-
-# For enhanced data processing
+pyyaml>=5.4.0
 requests>=2.28.0
 
-# Additional neural dependencies
-accelerate>=0.20.0
-sentencepiece>=0.1.95
+# Machine Learning & AI
+# ----------------------------------------------------------------------------
+scikit-learn>=1.0.0
+scipy>=1.8.0
+joblib>=1.1.0
+
+# Deep Learning - PyTorch
+# ----------------------------------------------------------------------------
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+# For GPU support (CUDA), install torch with CUDA:
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# Transformers & NLP
+# ----------------------------------------------------------------------------
+transformers>=4.30.0
 tokenizers>=0.13.0
+sentencepiece>=0.1.99
+accelerate>=0.20.0
+datasets>=2.14.0
 
-# Optional: GPU acceleration (uncomment for CUDA support)
-# torch[cuda]>=1.11.0
+# Natural Language Processing
+# ----------------------------------------------------------------------------
+spacy>=3.5.0
+nltk>=3.8.0
+# For spacy language models:
+# python -m spacy download en_core_web_sm
 
-# Development tools
-black>=22.0.0
-flake8>=4.0.0
-isort>=5.10.0
-torch[cuda]
-torchvision 
-torchaudio
+# Symbolic Reasoning - Prolog
+# ----------------------------------------------------------------------------
+pyswip>=0.2.10
+# Note: Requires SWI-Prolog installed on system
+# Download from: https://www.swi-prolog.org/Download.html
+
+# Web Framework - Streamlit
+# ----------------------------------------------------------------------------
+streamlit>=1.28.0
+streamlit-chat>=0.1.1
+watchdog>=3.0.0
+
+# Google Gemini API
+# ----------------------------------------------------------------------------
+google-generativeai>=0.3.0
+google-ai-generativelanguage>=0.4.0
+google-api-core>=2.11.0
+google-auth>=2.23.0
+protobuf>=4.24.0
+
+# Pydantic for Data Validation
+# ----------------------------------------------------------------------------
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# Azure Translator API (for multilingual support)
+# ----------------------------------------------------------------------------
+azure-ai-translation-text>=1.0.0
+azure-core>=1.29.0
+msrest>=0.7.1
+
+# Visualization & Plotting
+# ----------------------------------------------------------------------------
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.14.0
+
+# Data Processing & Utilities
+# ----------------------------------------------------------------------------
+tqdm>=4.65.0
+colorama>=0.4.6
+click>=8.1.0
+python-dotenv>=1.0.0
+
+# Web & API
+# ----------------------------------------------------------------------------
+flask>=2.3.0
+fastapi>=0.100.0
+uvicorn>=0.23.0
+httpx>=0.24.0
+
+# Database (if needed)
+# ----------------------------------------------------------------------------
+sqlalchemy>=2.0.0
+pymongo>=4.5.0
+
+# Testing & Quality Assurance
+# ----------------------------------------------------------------------------
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-asyncio>=0.21.0
+pytest-mock>=3.11.0
+
+# Code Quality & Formatting
+# ----------------------------------------------------------------------------
+black>=23.7.0
+flake8>=6.1.0
+isort>=5.12.0
+pylint>=2.17.0
+mypy>=1.5.0
+
+# Documentation
+# ----------------------------------------------------------------------------
+sphinx>=7.1.0
+sphinx-rtd-theme>=1.3.0
+
+# Jupyter Notebooks (for development/analysis)
+# ----------------------------------------------------------------------------
+jupyter>=1.0.0
+notebook>=7.0.0
+ipykernel>=6.25.0
+ipywidgets>=8.1.0
+
+# Additional Utilities
+# ----------------------------------------------------------------------------
+python-magic>=0.4.27
+pillow>=10.0.0
+openpyxl>=3.1.0
+xlrd>=2.0.1
+
+# Monitoring & Logging
+# ----------------------------------------------------------------------------
+loguru>=0.7.0
+python-json-logger>=2.0.7
+
+# Optional: OpenAI (for fallback LLM)
+# ----------------------------------------------------------------------------
+openai>=1.3.0
+
+# Optional: LangChain (for advanced LLM chains)
+# ----------------------------------------------------------------------------
+langchain>=0.0.300
+langchain-community>=0.0.10
+
+# Environment Variables
+# ----------------------------------------------------------------------------
+# Create a .env file with:
+# GOOGLE_API_KEY=your_gemini_api_key
+# AZURE_TRANSLATOR_KEY=your_azure_translator_key
+# AZURE_TRANSLATOR_REGION=your_region
+
+# ============================================================================
+# Installation Instructions
+# ============================================================================
+# 1. Install Python 3.9 or higher
+# 2. Create virtual environment: python -m venv venv
+# 3. Activate virtual environment:
+#    - Windows: venv\Scripts\activate
+#    - Linux/Mac: source venv/bin/activate
+# 4. Install requirements: pip install -r requirements.txt
+# 5. Install SWI-Prolog from https://www.swi-prolog.org/Download.html
+# 6. Download spacy model: python -m spacy download en_core_web_sm
+# 7. Set environment variables in .env file
+# 8. Run: streamlit run streamlit_app.py
+# ============================================================================

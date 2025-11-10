@@ -25,7 +25,9 @@ def prolog_escape(text: str) -> str:
     return text.replace("\\", "\\\\").replace("'", "''").replace("\n", " ")
 
 @dataclass
+@dataclass
 class LegalReasoning:
+    """D: Dataclass for legal reasoning that can be easily serialized"""
     case_id: str
     eligible: bool
     confidence: float
@@ -34,6 +36,11 @@ class LegalReasoning:
     applicable_rules: List[str]
     legal_citations: List[str]
     method: str
+    
+    def to_dict(self):
+        """D: Convert to plain dict for JSON serialization"""
+        from dataclasses import asdict
+        return asdict(self)
 
 @dataclass
 class PrologQuery:
@@ -555,6 +562,27 @@ class PrologEngine:
             eligible_for_legal_aid(Person) :-
                 person(Person),
                 applicant_social_category(Person, 'Below Poverty Line').
+            
+            % EXPLICIT INELIGIBILITY RULES - Fix 1
+            not_eligible_for_legal_aid(Person) :-
+                person(Person),
+                annual_income(Person, Income),
+                applicant_social_category(Person, Category),
+                income_threshold(Category, Threshold),
+                Income > Threshold,
+                \\+ categorically_eligible(Person).
+            
+            not_eligible_for_legal_aid(Person) :-
+                person(Person),
+                \\+ annual_income(Person, _),
+                \\+ categorically_eligible(Person).
+            
+            % Helper to check if income exceeds threshold
+            exceeds_threshold(Person) :-
+                annual_income(Person, Income),
+                applicant_social_category(Person, Category),
+                income_threshold(Category, Threshold),
+                Income > Threshold.
             '''
         ]
 
@@ -581,10 +609,17 @@ class PrologEngine:
                 Eligible = true,
                 confidence_score(Person, Confidence).
             
+            % EXPLICIT ineligibility with high confidence - Fix 1
+            eligible_with_confidence(Person, Eligible, Confidence) :-
+                not_eligible_for_legal_aid(Person),
+                Eligible = false,
+                Confidence = 0.95.
+            
             eligible_with_confidence(Person, Eligible, Confidence) :-
                 \\+ eligible_for_legal_aid(Person),
+                \\+ not_eligible_for_legal_aid(Person),
                 Eligible = false,
-                Confidence = 0.9. % Default confidence for ineligibility
+                Confidence = 0.7. % Lower confidence for uncertain cases
 
             confidence_score(Person, Confidence) :-
                 findall(Factor, legal_aid_factor(Person, Factor), Factors),
@@ -615,17 +650,24 @@ class PrologEngine:
             primary_eligibility_reason(Person, Reason) :-
                 categorically_eligible(Person),
                 applicant_social_category(Person, Category),
-                format(atom(Reason), 'Categorically eligible: Due to %w status.', [Category]).
+                format(atom(Reason), 'ELIGIBLE under Legal Services Authorities Act, 1987, Section 12(h): Categorically eligible due to %w status.', [Category]).
             primary_eligibility_reason(Person, Reason) :-
                 \\+ categorically_eligible(Person),
                 income_eligible(Person),
                 annual_income(Person, Income),
                 applicant_social_category(Person, Category),
                 income_threshold(Category, Threshold),
-                format(atom(Reason), 'Income eligible: Annual income Rs. %w is below threshold Rs. %w for %w category.', [Income, Threshold, Category]).
+                format(atom(Reason), 'ELIGIBLE under Legal Services Authorities Act, 1987, Section 12(c): Annual income Rs. %w is below threshold Rs. %w for %w category.', [Income, Threshold, Category]).
+            primary_eligibility_reason(Person, Reason) :-
+                exceeds_threshold(Person),
+                annual_income(Person, Income),
+                applicant_social_category(Person, Category),
+                income_threshold(Category, Threshold),
+                format(atom(Reason), 'NOT ELIGIBLE: Annual income Rs. %w exceeds the legal aid threshold of Rs. %w for %w category under LSA Act 1987, Section 12.', [Income, Threshold, Category]).
             primary_eligibility_reason(Person, Reason) :-
                 \\+ eligible_for_legal_aid(Person),
-                Reason = 'Not eligible: Does not meet income or categorical criteria.'.
+                \\+ exceeds_threshold(Person),
+                Reason = 'NOT ELIGIBLE: Does not meet income or categorical criteria under LSA Act 1987.'.
             
             generate_detailed_reasoning(Person, DetailedReason) :-
                 findall(Reason, individual_reason(Person, Reason), Reasons),
@@ -1623,10 +1665,15 @@ class PrologEngine:
                 
                 eligible = (decision == 'eligible')
                 
+                # Get applicable rules and citations
+                rules_data = self._analyze_applicable_rules(prolog_file, case_id)
+                
                 result = {
                     'eligible': eligible,
                     'confidence': confidence,
-                    'explanation': f"Prolog analysis: {decision}"
+                    'explanation': f"Prolog analysis: {decision}",
+                    'applicable_rules': rules_data.get('applicable_rules', []),
+                    'legal_citations': rules_data.get('legal_citations', [])
                 }
                 
                 logger.info(f"✅ Eligibility for {case_id}: {eligible} (confidence: {confidence})")
@@ -1634,10 +1681,22 @@ class PrologEngine:
             
             # Fallback parsing if format is different
             if 'eligible' in explanation.lower() and 'not_eligible' not in explanation.lower():
-                return {'eligible': True, 'confidence': 0.85, 'explanation': explanation}
+                return {
+                    'eligible': True, 
+                    'confidence': 0.85, 
+                    'explanation': explanation,
+                    'applicable_rules': [],
+                    'legal_citations': []
+                }
         
         logger.warning(f"⚠️ Prolog query failed for {case_id}, using fallback")
-        return {'eligible': False, 'confidence': 0.3, 'explanation': 'Prolog query failed'}
+        return {
+            'eligible': False, 
+            'confidence': 0.3, 
+            'explanation': 'Prolog query failed',
+            'applicable_rules': [],
+            'legal_citations': []
+        }
     
     def _analyze_reasoning(self, prolog_file: str, case_id: str) -> Dict[str, Any]:
         """Analyze detailed reasoning using print predicates - CRITICAL FIX"""
@@ -1764,7 +1823,7 @@ class PrologEngine:
         
         # ================================================================
         # STEP 1: INCOME HANDLING - IMPROVED WITH EXPLICIT LOGIC
-        # START OF FIX
+        # --- [START] SNIPPET 2 of 3 ---
         # ================================================================
         # CRITICAL: This MUST come first and handle all income scenarios explicitly
         try:
@@ -1794,7 +1853,7 @@ class PrologEngine:
             logger.warning(f"⚠️ Income fact generation failed for {case_id}: {e}")
             # Do not assert no_income as a fallback - let Prolog rules handle missing data
         # ================================================================
-        # END OF FIX
+        # --- [END] SNIPPET 2 of 3 ---
         # ================================================================
         
         # ================================================================
@@ -1983,14 +2042,14 @@ class PrologEngine:
         return facts
 
     def _generate_income_threshold_facts(self) -> List[str]:
-        """Generate income threshold facts needed by legal_aid_clean_v2.pl"""
+        """Generate income threshold facts needed by legal_aid_clean_v2.pl - Fix 2"""
         threshold_facts = [
             "income_threshold('sc', 800000).",
             "income_threshold('st', 800000).", 
             "income_threshold('obc', 600000).",
-            "income_threshold('bpl', 0).",
+            "income_threshold('bpl', 9999999).",  # BPL categorically eligible - very high threshold
             "income_threshold('ews', 800000).",
-            "income_threshold('general', 500000)."
+            "income_threshold('general', 300000)."  # Corrected to 3 lakhs as per LSA Act
         ]
         return threshold_facts
     def _get_discontiguous_directives(self) -> List[str]:
@@ -2086,16 +2145,16 @@ class PrologEngine:
         return summary
 
     def _create_fallback_result(self, case_id: str) -> LegalReasoning:
-        """Create a fallback result when Prolog analysis fails."""
+        """Create a conservative fallback result when Prolog analysis fails."""
         return LegalReasoning(
             case_id=case_id,
-            eligible=False,
-            confidence=0.3,
-            primary_reason='Analysis failed - using fallback',
+            eligible=False,      # Conservative default - do not grant eligibility without analysis
+            confidence=0.35,     # Low confidence to trigger review
+            primary_reason='Analysis failed - fallback conservative: manual review recommended',
             detailed_reasoning=[{
                 'type': 'fallback',
-                'content': 'Prolog analysis could not be completed',
-                'confidence': 0.3
+                'content': 'Prolog analysis could not be completed - requires manual review',
+                'confidence': 0.35
             }],
             applicable_rules=[],
             legal_citations=[],
@@ -2128,6 +2187,10 @@ class PrologEngine:
                     # Analyze eligibility for THIS case
                     eligibility = self._analyze_eligibility(prolog_file, case_id)
                     
+                    # Extract actual rules and citations from eligibility result
+                    app_rules = eligibility.get('applicable_rules') or eligibility.get('rules') or []
+                    legal_cites = eligibility.get('legal_citations') or eligibility.get('citations') or []
+                    
                     results.append(LegalReasoning(
                         case_id=case_id,
                         eligible=eligibility['eligible'],
@@ -2135,11 +2198,11 @@ class PrologEngine:
                         primary_reason=eligibility['explanation'],
                         detailed_reasoning=[{
                             'type': 'prolog_reasoning',
-                            'content': eligibility['explanation'],
-                            'confidence': eligibility['confidence']
+                            'content': eligibility.get('explanation'),
+                            'confidence': eligibility.get('confidence')
                         }],
-                        applicable_rules=['LSA Act 1987'],
-                        legal_citations=['Section 12'],
+                        applicable_rules=app_rules,
+                        legal_citations=legal_cites,
                         method='prolog'
                     ))
                 else:

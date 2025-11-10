@@ -1,15 +1,25 @@
 """
 HybEx Advanced Hybrid Prediction System
 Intelligently combines Prolog, GNN, and BERT with learned confidence calibration
+
+[FIXED - 11/09/2025]
+- Rewrote __init__ for robust, CPU-safe model loading to fix "model not loaded" errors.
+- Fixed TypeError in _predict_with_bert_safe and predict_with_domain_classifier_safe
+  by calling models with positional arguments (e.g., model(ids, mask)) instead of
+  keyword arguments (e.g., model(**inputs)).
 """
 
 import torch
 import logging
 from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass, field
+from pathlib import Path
 import numpy as np
 from transformers import AutoTokenizer
-from .neural_models import EligibilityPredictor, DomainClassifier, EnhancedLegalBERT
+# Import all required models
+from .neural_models import (
+    EligibilityPredictor, DomainClassifier, EnhancedLegalBERT
+)
 from .config import HybExConfig
 
 logger = logging.getLogger(__name__)
@@ -153,6 +163,68 @@ class HybridPrediction:
     requires_review: bool = False
     calibrated_confidences: Dict[str, float] = field(default_factory=dict)
     decision_rationale: str = ""
+    prolog_debug_facts: Optional[List[str]] = None
+
+
+# ============================================================================
+# ROBUST MODEL LOADING HELPERS
+# ============================================================================
+
+def _torch_load_cpu_safe(path):
+    """
+    Always load to CPU if CUDA is not available or if device is 'cpu'.
+    Handles checkpoints that include CUDA device metadata.
+    """
+    try:
+        device_str = 'cuda' if torch.cuda.is_available() else 'cpu'
+        map_loc = torch.device(device_str) if device_str == 'cuda' else 'cpu'
+        ckpt = torch.load(path, map_location=map_loc)
+        return ckpt
+    except Exception as e:
+        try:
+            ckpt = torch.load(path, map_location='cpu')
+            return ckpt
+        except Exception as e2:
+            logger.error(f"Failed to load checkpoint {path}: {e}; fallback error: {e2}")
+            raise
+
+def _ensure_model_file(path: Path, name: str):
+    """Check if model file exists and return friendly boolean."""
+    if not path.exists():
+        logger.warning(f"Model file for {name} not found at: {path}")
+        return False
+    return True
+
+def load_model_safely(model, path, device):
+    """
+    Safe model loader with map_location, strict=False fallback, and detailed logging.
+    """
+    try:
+        ckpt = _torch_load_cpu_safe(path)
+        
+        if isinstance(ckpt, dict):
+            state = ckpt.get('model_state_dict', ckpt)
+        else:
+            state = ckpt
+        
+        try:
+            model.load_state_dict(state, strict=True)
+            logger.info(f"Loaded model from {path} (strict=True)")
+        except RuntimeError as e:
+            logger.warning(f"Strict load failed for {path}: {e}. Trying non-strict load.")
+            model.load_state_dict(state, strict=False)
+            logger.info(f"Loaded model from {path} (strict=False)")
+            
+        model.to(device)
+        model.eval()
+        return model
+    except Exception as e:
+        logger.error(f"Model load failed for {path}: {e}")
+        return None
+
+# ============================================================================
+# MAIN PREDICTOR CLASS
+# ============================================================================
 
 class IntelligentHybridPredictor:
     """
@@ -163,98 +235,101 @@ class IntelligentHybridPredictor:
     4. Uncertainty quantification
     """
     
-    # ✅ REPLACE THE ENTIRE __init__ METHOD
-    def __init__(self, prolog_engine, gnn_model, bert_model, config: HybExConfig):
+    def __init__(self, prolog_engine, gnn_model, bert_model, config: HybExConfig, force_cpu: bool = False):
+        """
+        [FIXED 11/09/2025]
+        Rewritten to robustly load all neural models, as streamlit_app
+        initializes this class directly without passing pre-loaded models.
+        """
+        self.prolog_engine = prolog_engine
         self.prolog = prolog_engine
         self.gnn = gnn_model
-        self.bert = bert_model  # This might be None or a wrapper
+        self.bert = bert_model  # This is usually None when called from streamlit
         self.config = config
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        
+        cuda_available = torch.cuda.is_available() and (not force_cpu)
+        self.device = torch.device('cuda' if cuda_available else 'cpu')
+        
+        if force_cpu and torch.cuda.is_available():
+            logger.info("Force CPU mode enabled (CUDA available but not using it)")
+        logger.info(f"Using device: {self.device}")
 
-        # ✅ FIX: Load tokenizer independently
+        # Load tokenizer
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(config.MODEL_CONFIG['base_model'])
             if self.tokenizer.pad_token is None:
-                # Add pad token if missing
                 self.tokenizer.add_special_tokens({'pad_token': '[PAD]'})
             logger.info("HybridPredictor loaded its own tokenizer.")
         except Exception as e:
             logger.error(f"HybridPredictor failed to load tokenizer: {e}")
             self.tokenizer = None
 
-        # ✅ FIX: Load models if bert_model wrapper is not provided
+        # --- [START] ROBUST MODEL LOADING ---
+        # This logic runs because streamlit_app passes bert_model=None
+        
         self.eligibility_model = None
         self.domain_classifier = None
         self.enhanced_bert = None
 
-        if self.bert is None:
-            logger.warning("bert_model is None. HybridPredictor loading models manually.")
-            try:
-                # Load Eligibility Predictor
-                elig_path = self.config.MODELS_DIR / 'eligibility_predictor' / 'model.pt'
-                if elig_path.exists():
-                    self.eligibility_model = EligibilityPredictor(self.config).to(self.device)
-                    self.eligibility_model.load_state_dict(torch.load(elig_path, map_location=self.device))
-                    self.eligibility_model.eval()
-                    logger.info("HybridPredictor loaded EligibilityPredictor.")
-                else:
-                    logger.warning(f"HybridPredictor could not find EligibilityPredictor at {elig_path}")
+        logger.info("IntelligentHybridPredictor loading models manually...")
 
-                # Load Domain Classifier
-                domain_path = self.config.MODELS_DIR / 'domain_classifier' / 'model.pt'
-                if domain_path.exists():
-                    self.domain_classifier = DomainClassifier(self.config).to(self.device)
-                    self.domain_classifier.load_state_dict(torch.load(domain_path, map_location=self.device))
-                    self.domain_classifier.eval()
-                    logger.info("HybridPredictor loaded DomainClassifier.")
-                else:
-                    logger.warning(f"HybridPredictor could not find DomainClassifier at {domain_path}")
+        # Load Eligibility Predictor
+        try:
+            elig_path = self.config.MODELS_DIR / 'eligibility_predictor' / 'model.pt'
+            if _ensure_model_file(elig_path, "EligibilityPredictor"):
+                model_instance = EligibilityPredictor(self.config)
+                self.eligibility_model = load_model_safely(model_instance, elig_path, self.device)
+                if self.eligibility_model:
+                     logger.info("✅ HybridPredictor loaded EligibilityPredictor.")
+            else:
+                logger.error("EligibilityPredictor model.pt not found.")
+        except Exception as e:
+            logger.error(f"Failed to load EligibilityPredictor: {e}", exc_info=True)
 
-                # Load EnhancedLegalBERT
-                enhanced_path = self.config.ENHANCED_BERT_MODEL_PATH
-                if enhanced_path.exists():
-                    self.enhanced_bert = EnhancedLegalBERT(self.config).to(self.device)
-                    # Load checkpoint, which might be a dict
-                    checkpoint = torch.load(enhanced_path, map_location=self.device)
-                    if isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
-                        self.enhanced_bert.load_state_dict(checkpoint['model_state_dict'])
-                    else:
-                        self.enhanced_bert.load_state_dict(checkpoint) # Assume it's just the state_dict
-                    self.enhanced_bert.eval()
-                    logger.info("HybridPredictor loaded EnhancedLegalBERT.")
-                else:
-                     logger.warning(f"HybridPredictor could not find EnhancedLegalBERT at {enhanced_path}")
+        # Load Domain Classifier
+        try:
+            domain_path = self.config.MODELS_DIR / 'domain_classifier' / 'model.pt'
+            if _ensure_model_file(domain_path, "DomainClassifier"):
+                model_instance = DomainClassifier(self.config)
+                self.domain_classifier = load_model_safely(model_instance, domain_path, self.device)
+                if self.domain_classifier:
+                    logger.info("✅ HybridPredictor loaded DomainClassifier.")
+            else:
+                logger.error("DomainClassifier model.pt not found.")
+        except Exception as e:
+            logger.error(f"Failed to load DomainClassifier: {e}", exc_info=True)
 
-            except Exception as e:
-                logger.error(f"HybridPredictor failed to manually load models: {e}", exc_info=True)
-        else:
-            logger.info("HybridPredictor using provided bert_model wrapper.")
-            # Assign models from the wrapper if it exists
-            if hasattr(self.bert, 'eligibility_model'):
-                self.eligibility_model = self.bert.eligibility_model
-            if hasattr(self.bert, 'domain_classifier'):
-                self.domain_classifier = self.bert.domain_classifier
-            if hasattr(self.bert, 'enhanced_bert'):
-                self.enhanced_bert = self.bert.enhanced_bert
-            # Inherit tokenizer from wrapper if it exists
-            if hasattr(self.bert, 'tokenizer'):
-                self.tokenizer = self.bert.tokenizer
+        # Load EnhancedLegalBERT
+        try:
+            enhanced_path = self.config.ENHANCED_BERT_MODEL_PATH
+            if _ensure_model_file(enhanced_path, "EnhancedLegalBERT"):
+                model_instance = EnhancedLegalBERT(self.config)
+                # Note: EnhancedBERT path points to the .pt file directly
+                self.enhanced_bert = load_model_safely(model_instance, enhanced_path, self.device)
+                if self.enhanced_bert:
+                    logger.info("✅ HybridPredictor loaded EnhancedLegalBERT.")
+            else:
+                logger.error("EnhancedLegalBERT .pt file not found.")
+        except Exception as e:
+            logger.error(f"Failed to load EnhancedLegalBERT: {e}", exc_info=True)
+        
+        # --- [END] ROBUST MODEL LOADING ---
         
         # Confidence calibrator
         self.calibrator = ConfidenceCalibrator()
         
-        # Learned ensemble parameters
+        # Learned ensemble parameters - Fix 4: Prolog should dominate (legal rules are deterministic)
         self.ensemble_params = {
             'prolog_threshold': 0.75,
             'gnn_threshold': 0.70,
             'bert_threshold': 0.75,
-            'prolog_weight': 0.15,
-            'bert_weight': 0.40,
-            'gnn_weight': 0.35,
+            'prolog_weight': 0.50,  # INCREASED from 0.15 - Legal rules should dominate
+            'bert_weight': 0.25,     # DECREASED from 0.40
+            'gnn_weight': 0.15,      # DECREASED from 0.35
             'domain_weight': 0.05,
             'enhanced_bert_weight': 0.05,
             'uncertainty_threshold': 0.60,
-            'conflict_penalty': 0.05
+            'conflict_penalty': 0.10  # INCREASED from 0.05 - Penalize disagreements more
         }
         
         self.method_history = {
@@ -293,7 +368,39 @@ class IntelligentHybridPredictor:
             
             # 2. Get predictions from other systems
             bert_result = self._predict_with_bert_safe(case_data)
-            prolog_result = self._predict_with_prolog_safe(case_data)
+            
+            # C: Build Prolog facts and ensure proper dict conversion
+            prolog_debug_facts = None
+            prolog_result = None
+            prolog_result_dict = None
+            try:
+                # Ensure the Prolog engine receives structured entities
+                if self.prolog_engine and hasattr(self.prolog_engine, 'build_facts_from_entities'):
+                    prolog_debug_facts = self.prolog_engine.build_facts_from_entities(entities)
+                    logger.debug(f"Prolog facts for {case_id}: {prolog_debug_facts}")
+
+                # Call prolog predictor passing extracted entities (so rules are applied per-query)
+                prolog_result = self._predict_with_prolog_safe({**case_data, 'extracted_entities': entities})
+
+                # C: If prolog_result is a HybridPrediction, extract its prolog_result field
+                if prolog_result and hasattr(prolog_result, 'prolog_result'):
+                    prolog_obj = prolog_result.prolog_result
+                    # Convert to dict for JSON safety
+                    if hasattr(prolog_obj, 'to_dict'):
+                        prolog_result_dict = prolog_obj.to_dict()
+                    elif hasattr(prolog_obj, '__dict__'):
+                        from dataclasses import is_dataclass, asdict
+                        if is_dataclass(prolog_obj):
+                            prolog_result_dict = asdict(prolog_obj)
+                        else:
+                            prolog_result_dict = prolog_obj.__dict__
+                    else:
+                        prolog_result_dict = prolog_obj
+            except Exception as e:
+                logger.warning(f"Prolog prediction failed for {case_id}: {e}")
+                prolog_result = None
+                prolog_result_dict = None
+            
             gnn_result = self._predict_with_gnn_safe(case_data)
             
             # 3. Get EnhancedBERT prediction, PASSING IN THE DOMAIN
@@ -338,14 +445,34 @@ class IntelligentHybridPredictor:
                 decision['confidence'], uncertainty, entities
             )
             
+            # D: Helper to convert any object to JSON-safe dict
+            def _obj_to_safe(o):
+                if o is None:
+                    return None
+                # Already a simple type
+                if isinstance(o, (str, int, float, bool, list, dict)):
+                    return o
+                # Has to_dict method
+                if hasattr(o, 'to_dict'):
+                    return o.to_dict()
+                # Is a dataclass
+                from dataclasses import is_dataclass, asdict
+                if is_dataclass(o):
+                    return asdict(o)
+                # Has __dict__
+                if hasattr(o, '__dict__'):
+                    return o.__dict__
+                # Fallback: convert to string
+                return str(o)
+            
             return HybridPrediction(
                 case_id=case_id,
                 eligible=decision['eligible'],
                 confidence=decision['confidence'],
                 method_used=decision['method'],
-                bert_result=bert_result.bert_result if bert_result else None,
-                prolog_result=prolog_result.prolog_result if prolog_result else None,
-                gnn_result=gnn_result.gnn_result if gnn_result else None,
+                bert_result=_obj_to_safe(bert_result.bert_result if bert_result else None),
+                prolog_result=_obj_to_safe(prolog_result_dict if prolog_result_dict else None),
+                gnn_result=_obj_to_safe(gnn_result.gnn_result if gnn_result else None),
                 reasoning=decision['reasoning'],
                 uncertainty=uncertainty,
                 requires_review=requires_review,
@@ -354,26 +481,90 @@ class IntelligentHybridPredictor:
                     'prolog': prolog_conf_cal,
                     'gnn': gnn_conf_cal
                 },
-                decision_rationale=decision.get('rationale', '')
+                decision_rationale=decision.get('rationale', ''),
+                prolog_debug_facts=prolog_debug_facts
             )
             
         except Exception as e:
             logger.error(f"Prediction failed for {case_data.get('sample_id')}: {e}")
             return self._fallback_prediction(case_data)
     
-    # ✅ REPLACE THIS ENTIRE METHOD
+    def predict_from_text(self, text: str, ask_for_clarification: bool = False):
+        """
+        High-level convenience method that accepts raw user text and runs:
+         - entity extraction (via DataPreprocessor)
+         - per-component predictions (BERT/GNN/Prolog)
+         - calibration & ensemble decision (existing predict)
+         - returns HybridPrediction dataclass/dict
+        If required entities are missing and ask_for_clarification==True, returns
+        a structured object asking the frontend for clarification.
+        """
+        # 1) extract entities using repo preprocessor if present
+        try:
+            # prefer package-relative import
+            from .data_processor import DataPreprocessor
+            dp = DataPreprocessor(self.config)
+            if hasattr(dp, 'extract_entities'):
+                entities = dp.extract_entities(text)
+            elif hasattr(dp, 'preprocess_text'):
+                pre = dp.preprocess_text(text)
+                entities = pre.get('extracted_entities', {})
+            else:
+                # last resort
+                pre = dp.preprocess_case({'query': text})
+                entities = pre.get('extracted_entities', {})
+        except Exception:
+            # fallback minimal extractor (replicate same heuristics)
+            entities = {}
+            import re
+            m = re.search(r'([\d,]+)\s*(?:rupees|rs|₹)?', text, flags=re.I)
+            if m:
+                try:
+                    entities['income'] = int(m.group(1).replace(',', ''))
+                except:
+                    pass
+            m = re.search(r'(\d{2})\s*(?:years?)', text, flags=re.I)
+            if m:
+                try:
+                    entities['age'] = int(m.group(1))
+                except:
+                    pass
+            if re.search(r'\b(woman|female|she|her)\b', text, flags=re.I):
+                entities['gender'] = 'female'
+            elif re.search(r'\b(man|male|he|him)\b', text, flags=re.I):
+                entities['gender'] = 'male'
+            entities['mentions_eviction'] = bool(re.search(r'\bevict|eviction\b', text, flags=re.I))
+
+        # 2) build minimal case dict the predictor.predict expects
+        case = {
+            'sample_id': 'TEXT_' + str(abs(hash(text)) % (10**8)),
+            'query': text,
+            'extracted_entities': entities
+        }
+
+        # 3) check for required fields for deterministic rules (optional)
+        # e.g., if income is missing but might be needed and ask_for_clarification True -> return clarification request
+        if ask_for_clarification:
+            required_for_rules = ['income', 'gender', 'age']
+            missing = [k for k in required_for_rules if k not in entities]
+            # only ask if all are missing (reduce prompts)
+            if len(missing) >= 2:
+                return {
+                    'type': 'clarify',
+                    'missing': missing,
+                    'message': f'Please clarify the following details for a reliable eligibility check: {missing}'
+                }
+
+        # 4) call existing predictor entrypoint
+        return self.predict(case)
+
     def _make_hybrid_decision(self, bert_res, prolog_res, gnn_res,
                              bert_conf_cal, prolog_conf_cal, gnn_conf_cal, entities,
                              domain_res, enhanced_res, 
-                             domain_conf_cal, enhanced_conf_cal): # <-- ✅ FIX 1: Added all 11 arguments
+                             domain_conf_cal, enhanced_conf_cal):
         """
         UPDATED: Intelligent hybrid decision with ALL 5 models
         """
-        
-        # ✅ FIX 2: Removed redundant calls. Models are now passed as arguments.
-        # case_data = {'extracted_entities': entities, 'query': entities.get('query', '')}
-        # domain_res = self.predict_with_domain_classifier_safe(case_data)
-        # enhanced_res = self.predict_with_enhanced_bert_safe(case_data)
         
         # Strategy 1: Check for HIGH-CONFIDENCE AGREEMENT
         predictions = []
@@ -384,7 +575,6 @@ class IntelligentHybridPredictor:
         if gnn_res:
             predictions.append(('gnn', gnn_res.eligible, gnn_conf_cal))
         
-        # ✅ FIX 3: Use the calibrated confidences passed into the function
         if domain_res:
             predictions.append(('domain_classifier', domain_res.eligible, domain_conf_cal))
         if enhanced_res:
@@ -465,36 +655,26 @@ class IntelligentHybridPredictor:
                 }
         
         # Strategy 4: Default weighted ensemble
-        # ✅ FIX 4: Pass all models and their calibrated confidences
         return self._weighted_ensemble(
             bert_res, prolog_res, gnn_res, domain_res, enhanced_res,
             bert_conf_cal, prolog_conf_cal, gnn_conf_cal,
-            domain_conf_cal, enhanced_conf_cal # <-- Pass the missing args
+            domain_conf_cal, enhanced_conf_cal
         )
     
     def _weighted_ensemble(self, bert_res, prolog_res, gnn_res, domain_res, enhanced_res,
                           bert_conf_cal, prolog_conf_cal, gnn_conf_cal,
+                          domain_conf_cal, enhanced_conf_cal,
                           conflict_penalty=0.0):
         """
         UPDATED: Weighted ensemble with ALL 5 models and adaptive weights.
-        
-        Default weights (can be optimized):
-        - Prolog: 0.30 (legal rules)
-        - BERT (Eligibility): 0.20 (specialized model)
-        - GNN: 0.15 (graph reasoning)
-        - Domain Classifier: 0.15 (domain detection)
-        - EnhancedBERT: 0.20 (multi-task model)
         """
         
-        # ✅ FIXED: Confidence-weighted ensemble
         eligible_score = 0.0
         total_weight = 0.0
         components = []
 
-        # ✅ BERT - Adaptive weighting
         if bert_res:
-            base_weight = 0.30
-            # Scale weight by confidence (0.5-1.5x multiplier)
+            base_weight = self.ensemble_params.get('bert_weight', 0.40)
             conf_multiplier = 0.5 + bert_conf_cal
             conf_weight = base_weight * conf_multiplier
             score = bert_conf_cal if bert_res.eligible else (1 - bert_conf_cal)
@@ -502,19 +682,17 @@ class IntelligentHybridPredictor:
             total_weight += conf_weight
             components.append(f"BERT:{score:.2f}×{conf_weight:.2f}")
 
-        # ✅ Prolog - EQUAL confidence scaling as neural models
         if prolog_res:
-            base_weight = 0.15  # ← ALREADY REDUCED
-            conf_multiplier = 0.5 + prolog_conf_cal  # ✅ SAME AS BERT NOW
+            base_weight = self.ensemble_params.get('prolog_weight', 0.15)
+            conf_multiplier = 0.5 + prolog_conf_cal
             conf_weight = base_weight * conf_multiplier
             score = prolog_conf_cal if prolog_res.eligible else (1 - prolog_conf_cal)
             eligible_score += conf_weight * score
             total_weight += conf_weight
             components.append(f"Prolog:{score:.2f}×{conf_weight:.2f}")
 
-        # ✅ GNN - Higher base weight
         if gnn_res:
-            base_weight = 0.30  # ← INCREASED from 0.25
+            base_weight = self.ensemble_params.get('gnn_weight', 0.35)
             conf_multiplier = 0.5 + gnn_conf_cal
             conf_weight = base_weight * conf_multiplier
             score = gnn_conf_cal if gnn_res.eligible else (1 - gnn_conf_cal)
@@ -522,20 +700,20 @@ class IntelligentHybridPredictor:
             total_weight += conf_weight
             components.append(f"GNN:{score:.2f}×{conf_weight:.2f}")
 
-        # Domain Classifier
         if domain_res:
-            base_weight = 0.10  # ← INCREASED from 0.05
-            conf_weight = base_weight * (0.5 + 0.5 * domain_res.confidence)
-            score = domain_res.confidence if domain_res.eligible else (1 - domain_res.confidence)
+            base_weight = self.ensemble_params.get('domain_weight', 0.05)
+            conf_multiplier = 0.5 + domain_conf_cal
+            conf_weight = base_weight * conf_multiplier
+            score = domain_conf_cal if domain_res.eligible else (1 - domain_conf_cal)
             eligible_score += conf_weight * score
             total_weight += conf_weight
             components.append(f"Domain:{score:.2f}×{conf_weight:.2f}")
 
-        # Enhanced BERT
         if enhanced_res:
-            base_weight = 0.10  # ← REDUCED from 0.15
-            conf_weight = base_weight * (0.8 + 0.4 * enhanced_res.confidence)
-            score = enhanced_res.confidence if enhanced_res.eligible else (1 - enhanced_res.confidence)
+            base_weight = self.ensemble_params.get('enhanced_bert_weight', 0.05)
+            conf_multiplier = 0.5 + enhanced_conf_cal
+            conf_weight = base_weight * conf_multiplier
+            score = enhanced_conf_cal if enhanced_res.eligible else (1 - enhanced_conf_cal)
             eligible_score += conf_weight * score
             total_weight += conf_weight
             components.append(f"Enhanced:{score:.2f}×{conf_weight:.2f}")
@@ -553,48 +731,10 @@ class IntelligentHybridPredictor:
             'reasoning': f"Weighted: {', '.join(components)}",
             'rationale': f"Adaptive weighting {'(penalty applied)' if conflict_penalty > 0 else ''}"
         }
-        
-        # NEW: Domain Classifier
-        if domain_res:
-            weight = self.ensemble_params.get('domain_weight', 0.15)
-            score = domain_res.confidence if domain_res.eligible else (1 - domain_res.confidence)
-            eligible_score += weight * score
-            total_weight += weight
-            components.append(f"Domain={score:.2f}({weight})")
-        
-        # NEW: EnhancedBERT (multi-task)
-        if enhanced_res:
-            weight = self.ensemble_params.get('enhanced_bert_weight', 0.20)
-            score = enhanced_res.confidence if enhanced_res.eligible else (1 - enhanced_res.confidence)
-            eligible_score += weight * score
-            total_weight += weight
-            components.append(f"Enhanced={score:.2f}({weight})")
-        
-        if total_weight > 0:
-            eligible_score /= total_weight
-        
-        # Apply conflict penalty if provided
-        final_confidence = eligible_score * (1 - conflict_penalty)
-        
-        # Decision
-        eligible = eligible_score > 0.5
-        
-        return {
-            'eligible': eligible,
-            'confidence': final_confidence,
-            'method': 'ensemble',
-            'reasoning': f"Weighted ensemble: {', '.join(components)}",
-            'rationale': f"Combined prediction with {'conflict penalty' if conflict_penalty > 0 else 'full confidence'}"
-        }
     
     def _calculate_uncertainty(self, bert_res, prolog_res, gnn_res, entities):
         """
         Calculate prediction uncertainty.
-        
-        Components:
-        1. Model disagreement (epistemic uncertainty)
-        2. Low confidence (aleatoric uncertainty)
-        3. Near decision boundary (income threshold)
         """
         
         # Component 1: Disagreement between methods
@@ -735,12 +875,24 @@ class IntelligentHybridPredictor:
             
             if results and len(results) > 0:
                 prolog_reasoning = results[0]
+                
+                # D: Convert LegalReasoning to dict for JSON serialization
+                from dataclasses import asdict, is_dataclass
+                if is_dataclass(prolog_reasoning):
+                    prolog_dict = asdict(prolog_reasoning)
+                elif hasattr(prolog_reasoning, 'to_dict'):
+                    prolog_dict = prolog_reasoning.to_dict()
+                elif hasattr(prolog_reasoning, '__dict__'):
+                    prolog_dict = prolog_reasoning.__dict__
+                else:
+                    prolog_dict = {'reasoning': str(prolog_reasoning)}
+                
                 return HybridPrediction(
                     case_id=case_id,
                     eligible=prolog_reasoning.eligible,
                     confidence=prolog_reasoning.confidence,
                     method_used='prolog',
-                    prolog_result={'reasoning': prolog_reasoning},
+                    prolog_result=prolog_dict,  # D: Use dict instead of object
                     reasoning=prolog_reasoning.primary_reason
                 )
             return None
@@ -785,14 +937,16 @@ class IntelligentHybridPredictor:
             logger.warning(f"GNN failed for {case_data.get('sample_id')}: {str(e)[:100]}")
             return None
     
-    # ✅ REPLACE _predict_with_bert_safe
     def _predict_with_bert_safe(self, case_data: Dict) -> Optional[HybridPrediction]:
-        """FIX: Use self.tokenizer and self.eligibility_model"""
+        """
+        [FIXED 11/09/2025]
+        - Use self.tokenizer and self.eligibility_model
+        - Call model with positional arguments: model(ids, mask)
+        """
         try:
             case_id = case_data.get('sample_id', 'unknown')
             query = case_data.get('query', '')
             
-            # ✅ FIX: Check for self.tokenizer and self.eligibility_model
             if not query or self.tokenizer is None:
                 logger.warning(f"BERT failed for {case_id}: Missing query or tokenizer.")
                 return None
@@ -809,11 +963,16 @@ class IntelligentHybridPredictor:
                 return_token_type_ids=False
             )
             
-            inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            input_ids = inputs['input_ids'].to(self.device)
+            attention_mask = inputs['attention_mask'].to(self.device)
             
             with torch.no_grad():
                 self.eligibility_model.eval()
-                outputs = self.eligibility_model(**inputs) # This model now returns a dict
+                
+                # --- [START] THE FIX ---
+                # Call with positional arguments, not kwargs
+                outputs = self.eligibility_model(input_ids, attention_mask, return_dict=True)
+                # --- [END] THE FIX ---
                 
                 if isinstance(outputs, dict):
                     logits = outputs.get('logits', outputs.get(list(outputs.keys())[0]))
@@ -849,17 +1008,19 @@ class IntelligentHybridPredictor:
                 )
             
         except Exception as e:
-            logger.warning(f"BERT failed for {case_data.get('sample_id')}: {str(e)[:100]}")
+            logger.error(f"BERT prediction failed for {case_data.get('sample_id')}: {e}", exc_info=True)
             return None
     
-    # ✅ REPLACE predict_with_domain_classifier_safe
     def predict_with_domain_classifier_safe(self, case_data: Dict) -> Optional[HybridPrediction]:
-        """Get domain classification as eligibility proxy"""
+        """
+        [FIXED 11/09/2025]
+        - Use self.tokenizer and self.domain_classifier
+        - Call model with positional arguments: model(ids, mask)
+        """
         try:
             case_id = case_data.get('sample_id', 'unknown')
             query = case_data.get('query', '')
             
-            # ✅ FIX: Check for self.tokenizer and self.domain_classifier
             if not query or self.tokenizer is None:
                 logger.warning(f"Domain classifier failed for {case_id}: Missing query or tokenizer.")
                 return None
@@ -874,16 +1035,20 @@ class IntelligentHybridPredictor:
                 truncation=True,
                 return_tensors='pt'
             )
-            inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            input_ids = inputs['input_ids'].to(self.device)
+            attention_mask = inputs['attention_mask'].to(self.device)
             
             with torch.no_grad():
                 self.domain_classifier.eval()
-                # ✅ FIX: Pass return_dict=True (as per model signature)
+                
+                # --- [START] THE FIX ---
+                # Call with positional arguments, not kwargs
                 logits = self.domain_classifier(
-                    input_ids=inputs['input_ids'], 
-                    attention_mask=inputs['attention_mask'],
+                    input_ids, 
+                    attention_mask,
                     return_dict=True
                 )['logits']
+                # --- [END] THE FIX ---
                 
                 probs = torch.sigmoid(logits)
                 legal_aid_idx = 0
@@ -899,17 +1064,19 @@ class IntelligentHybridPredictor:
                 reasoning=f"Domain classifier confidence: {confidence:.3f}"
             )
         except Exception as e:
-            logger.warning(f"Domain classifier failed: {str(e)[:100]}")
+            logger.error(f"Domain classifier failed: {e}", exc_info=True)
             return None
 
-    # ✅ REPLACE predict_with_enhanced_bert_safe
     def predict_with_enhanced_bert_safe(self, case_data: Dict, domain_index: int = 0) -> Optional[HybridPrediction]:
-        """Get prediction from EnhancedLegalBERT (multi-task model)"""
+        """
+        [FIXED 11/09/2025]
+        - Use self.tokenizer and self.enhanced_bert
+        - Call signature (kwargs) is correct for this model, but check for None.
+        """
         try:
             case_id = case_data.get('sample_id', 'unknown')
             query = case_data.get('query', '')
             
-            # ✅ FIX: Check for self.tokenizer and self.enhanced_bert
             if not query or self.tokenizer is None:
                 logger.warning(f"EnhancedBERT failed for {case_id}: Missing query or tokenizer.")
                 return None
@@ -931,6 +1098,7 @@ class IntelligentHybridPredictor:
             with torch.no_grad():
                 self.enhanced_bert.eval()
                 
+                # This model IS designed to accept kwargs, so this call is correct.
                 outputs = self.enhanced_bert(
                     input_ids=inputs['input_ids'], 
                     attention_mask=inputs['attention_mask'],
@@ -962,7 +1130,7 @@ class IntelligentHybridPredictor:
                 reasoning=f"EnhancedBERT (multi-task) confidence: {prob:.3f}"
             )
         except Exception as e:
-            logger.warning(f"EnhancedBERT failed: {str(e)[:100]}")
+            logger.error(f"EnhancedBERT failed: {e}", exc_info=True)
             return None
     
     def _predict_with_ensemble_safe(self, case_data: Dict) -> HybridPrediction:
@@ -984,19 +1152,19 @@ class IntelligentHybridPredictor:
             total_weight = 0.0
             
             if prolog_pred:
-                weight = self.PROLOG_WEIGHT
+                weight = self.ensemble_params.get('prolog_weight', 0.33)
                 score = prolog_pred.confidence if prolog_pred.eligible else (1 - prolog_pred.confidence)
                 eligible_score += weight * score
                 total_weight += weight
             
             if gnn_pred:
-                weight = self.GNN_WEIGHT
+                weight = self.ensemble_params.get('gnn_weight', 0.33)
                 score = gnn_pred.confidence if gnn_pred.eligible else (1 - gnn_pred.confidence)
                 eligible_score += weight * score
                 total_weight += weight
             
             if bert_pred:
-                weight = self.BERT_WEIGHT
+                weight = self.ensemble_params.get('bert_weight', 0.34)
                 score = bert_pred.confidence if bert_pred.eligible else (1 - bert_pred.confidence)
                 eligible_score += weight * score
                 total_weight += weight
@@ -1030,14 +1198,307 @@ class IntelligentHybridPredictor:
             logger.error(f"Ensemble failed for {case_data.get('sample_id')}: {e}")
             return self._fallback_prediction(case_data)
     
+    def _get_domain_specific_next_steps(self, eligible: bool, domain: str, case_type: str, category: str) -> List[str]:
+        """
+        Generate comprehensive, domain-specific next steps
+        Different for eligible vs ineligible cases
+        """
+        
+        # CRITICAL: Tax law cases are NOT covered under legal aid
+        if domain == 'taxlaw':
+            # Extract income if available (default to 0)
+            income_lakhs = 0.0
+            # This method doesn't have access to entities, so we'll show generic tax guidance
+            return self._get_tax_law_next_steps(income_lakhs)
+        
+        if eligible:
+            # ===== ELIGIBLE CASES - DETAILED ACTIONABLE STEPS =====
+            
+            base_steps = [
+                "## 📋 Step 1: Gather Required Documents",
+                "Collect the following documents before applying:",
+                "- ✅ **Income Proof**: Salary slips (last 3 months) OR Income certificate from Tehsildar",
+                "- ✅ **Identity Proof**: Aadhaar card, Voter ID, or Passport",
+                "- ✅ **Residence Proof**: Electricity bill, rent agreement, or ration card",
+            ]
+            
+            # Add category-specific documents
+            if category in ['SC', 'ST']:
+                base_steps.append("- ✅ **Caste Certificate**: Valid SC/ST certificate from competent authority")
+            elif category == 'OBC':
+                base_steps.append("- ✅ **OBC Certificate**: Non-creamy layer certificate (if applicable)")
+            elif category == 'BPL':
+                base_steps.append("- ✅ **BPL Card**: Valid Below Poverty Line card")
+            
+            base_steps.extend([
+                "",
+                "## 🏛️ Step 2: Locate Your Legal Services Authority",
+                "Visit your nearest Legal Services Authority:",
+            ])
+            
+            # Domain-specific authority guidance
+            if domain == 'familylaw':
+                base_steps.extend([
+                    "- **Family Court**: Most family law cases are handled here",
+                    "- **District Legal Services Authority (DLSA)**: Located at District Court complex",
+                    "- **State Legal Services Authority (SLSA)**: For complex cases or appeals",
+                    "- 📞 **Women's Helpline**: 1091 for immediate domestic violence support"
+                ])
+            elif domain == 'consumerprotection':
+                base_steps.extend([
+                    "- **Consumer Forum**: District/State/National based on claim value",
+                    "- **District Consumer Disputes Redressal Commission**: For claims < ₹1 crore",
+                    "- 📞 **National Consumer Helpline**: 1800-11-4000"
+                ])
+            elif domain == 'employmentlaw':
+                base_steps.extend([
+                    "- **Labor Court**: For termination/wage disputes",
+                    "- **Labor Commissioner Office**: For conciliation",
+                    "- **District Legal Services Authority (DLSA)**: For legal aid",
+                    "- 📞 **Labor Helpline**: 155-214 (varies by state)"
+                ])
+            elif domain == 'criminallaw':
+                base_steps.extend([
+                    "- **District Court**: For criminal cases",
+                    "- **Legal Aid Cell at Police Station**: Available 24/7",
+                    "- **District Legal Services Authority (DLSA)**: For free lawyer",
+                    "- 📞 **Police Helpline**: 100 | **Women Helpline**: 1091"
+                ])
+            else:
+                base_steps.extend([
+                    "- **District Legal Services Authority (DLSA)**: At District Court",
+                    "- **Taluk Legal Services Committee (TLSC)**: At Taluk level",
+                    "- **State Legal Services Authority (SLSA)**: For complex cases",
+                    "- 🌐 **Find Nearest**: Visit https://nalsa.gov.in"
+                ])
+            
+            base_steps.extend([
+                "",
+                "## 📝 Step 3: Submit Legal Aid Application",
+                "Fill out the legal aid application form with:",
+                "- Your personal details and case information",
+                "- Income and category details",
+                "- Nature of legal problem",
+                "- Documents supporting your eligibility",
+                "",
+                "💡 **Tip**: Applications are FREE. Do not pay anyone for legal aid services.",
+            ])
+            
+            # Domain-specific filing guidance
+            if domain == 'familylaw':
+                base_steps.extend([
+                    "",
+                    "## ⚖️ Step 4: File Your Case (Family Law)",
+                    "- **Divorce/Maintenance**: File petition in Family Court",
+                    "- **Domestic Violence**: File under Protection of Women from Domestic Violence Act, 2005",
+                    "- **Child Custody**: File guardianship petition",
+                    "- **Timeline**: Legal aid lawyer assigned within 15-30 days",
+                ])
+            elif domain == 'consumerprotection':
+                base_steps.extend([
+                    "",
+                    "## 🛒 Step 4: File Consumer Complaint",
+                    "- **Online Filing**: Available at https://edaakhil.nic.in",
+                    "- **Offline Filing**: Visit Consumer Forum with copies of:",
+                    "  - Purchase invoice/receipt",
+                    "  - Warranty/guarantee card",
+                    "  - Correspondence with seller/manufacturer",
+                    "- **Fee**: Minimal court fee (₹100-500 depending on claim)",
+                    "- **Timeline**: Hearing within 21 days of filing",
+                ])
+            elif domain == 'employmentlaw':
+                base_steps.extend([
+                    "",
+                    "## 💼 Step 4: File Labor Complaint",
+                    "- **Conciliation**: First attempt settlement with Labor Commissioner",
+                    "- **Labor Court**: If conciliation fails, file case in Labor Court",
+                    "- **Documents Required**: Appointment letter, termination notice, salary slips",
+                    "- **Timeline**: Conciliation within 45 days, court case 6-12 months",
+                ])
+            elif domain == 'criminallaw':
+                base_steps.extend([
+                    "",
+                    "## 🚨 Step 4: Legal Proceedings (Criminal)",
+                    "- **FIR Already Filed**: Approach Legal Aid Cell for defense lawyer",
+                    "- **Need to File FIR**: Police station or online (state-specific portals)",
+                    "- **Bail Application**: Legal aid lawyer will file bail application",
+                    "- **Timeline**: Lawyer assigned within 24 hours for custody cases",
+                ])
+            else:
+                base_steps.extend([
+                    "",
+                    "## ⚖️ Step 4: Proceed with Legal Case",
+                    "- Your assigned lawyer will guide you through court procedures",
+                    "- Attend all hearings (your lawyer will inform you of dates)",
+                    "- Keep all original documents safe, submit only copies",
+                    "- **Timeline**: Case processing varies by court (3-18 months typically)",
+                ])
+            
+            base_steps.extend([
+                "",
+                "## ⏰ Step 5: Priority Processing (if urgent)",
+                "Request expedited processing if:",
+                "- 🚨 **Emergency**: Imminent eviction, arrest, or threat to life",
+                "- 👶 **Child Involved**: Child custody or maintenance",
+                "- 🩹 **Medical Emergency**: Health crisis requiring immediate legal intervention",
+                "- 📅 **Court Deadline**: Nearby court hearing or legal deadline",
+                "",
+                "📞 **24/7 Emergency Legal Aid Helpline**: 15100 (NALSA)",
+            ])
+            
+            # Additional domain-specific resources
+            if domain == 'familylaw':
+                base_steps.extend([
+                    "",
+                    "## 📞 Additional Support for Family Law",
+                    "- **Women's Helpline**: 1091 (24/7)",
+                    "- **Domestic Violence Helpline**: 181",
+                    "- **Child Helpline**: 1098",
+                    "- **NCW (National Commission for Women)**: 011-26944740"
+                ])
+            elif domain == 'criminallaw':
+                base_steps.extend([
+                    "",
+                    "## 📞 Additional Support for Criminal Cases",
+                    "- **Police Helpline**: 100",
+                    "- **Women Helpline**: 1091",
+                    "- **Senior Citizen Helpline**: 14567",
+                    "- **Cyber Crime Helpline**: 1930"
+                ])
+            
+            return base_steps
+        
+        else:
+            # ===== NOT ELIGIBLE CASES - ALTERNATIVE OPTIONS =====
+            
+            not_eligible_steps = [
+                "## ❌ You Do Not Qualify for Free Legal Aid",
+                f"Based on the Legal Services Authorities Act, 1987, Section 12, your case does not meet eligibility criteria for free legal aid.",
+                "",
+                "**Common reasons for ineligibility:**",
+                "- Annual income exceeds the threshold for your category",
+                "- Wealth indicators (business ownership, multiple properties) present",
+                "- Case type not covered under legal aid provisions",
+                "",
+                "---",
+                "",
+                "## 🔄 Alternative Legal Support Options",
+                "",
+                "### 1. 💼 Pro Bono Services",
+                "Many lawyers offer free or reduced-fee services:",
+                "- **Contact Local Bar Association**: Ask for pro bono lawyers list",
+                "- **Law Firms**: Many have CSR initiatives offering free consultations",
+                "- **NGOs**: Legal aid NGOs may help based on case merit",
+                "- 🌐 **Directory**: https://probono-india.in",
+                "",
+                "### 2. 🎓 Law School Legal Clinics",
+                "Free legal advice from law students (supervised by professors):",
+                "- **National Law Universities (NLUs)**: Offer free legal clinics",
+                "- **Government Law Colleges**: Weekend legal aid camps",
+                "- **Legal Literacy Centers**: Basic legal guidance",
+                "",
+                "### 3. 🤝 Specialized NGOs",
+            ]
+            
+            # Domain-specific NGO recommendations
+            if domain == 'familylaw':
+                not_eligible_steps.extend([
+                    "**Family Law NGOs:**",
+                    "- **Lawyers Collective Women's Rights Initiative**",
+                    "- **Majlis Legal Centre** (women's rights)",
+                    "- **Centre for Social Justice** (family matters)",
+                ])
+            elif domain == 'consumerprotection':
+                not_eligible_steps.extend([
+                    "**Consumer Rights NGOs:**",
+                    "- **Consumer Guidance Society of India**",
+                    "- **Voluntary Organization in Interest of Consumer Education (VOICE)**",
+                    "- **Consumer Education and Research Centre**",
+                ])
+            elif domain == 'employmentlaw':
+                not_eligible_steps.extend([
+                    "**Labor Rights NGOs:**",
+                    "- **Centre for Labour Research and Action**",
+                    "- **National Campaign Committee for Unorganised Sector Workers**",
+                    "- **Aajeevika Bureau** (worker rights)",
+                ])
+            else:
+                not_eligible_steps.extend([
+                    "**General Legal NGOs:**",
+                    "- **Human Rights Law Network**",
+                    "- **India Legal Aid and Advice Board**",
+                    "- **Legal Services India** (online guidance)",
+                ])
+            
+            not_eligible_steps.extend([
+                "",
+                "### 4. 💳 Payment Plans & Loans",
+                "Affordable legal fee options:",
+                "- **Installment Plans**: Many lawyers accept monthly payments",
+                "- **Fixed Fee Packages**: For specific case types (₹10,000-50,000)",
+                "- **Legal Insurance**: Some insurance plans cover legal fees",
+                "- **Litigation Financing**: Third-party funding for strong cases",
+                "",
+                "### 5. 📞 Free Legal Helplines & Online Guidance",
+                "Get basic legal advice for free:",
+                "- **Tele-Law Services**: 9in1 Helpline (NALSA) - Basic guidance",
+                "- **MyGov Helpdesk**: https://mygov.in (government queries)",
+                "- **India Code Portal**: https://indiacode.nic.in (read laws)",
+                "- **Legal Services India**: Online legal information",
+                "",
+                "### 6. 🏛️ Court Self-Help Centers",
+                "Many courts have self-help desks:",
+                "- **District Court Self-Help Desk**: Free form filling assistance",
+                "- **eCourts Services Portal**: https://ecourts.gov.in",
+                "- **Case Status Tracking**: Monitor your case online",
+                "",
+                "### 7. 💡 Mediation & Alternative Dispute Resolution (ADR)",
+                "Cheaper than court litigation:",
+                "- **Lok Adalat (People's Court)**: Settle disputes amicably",
+                "- **Mediation Centers**: At District Courts (nominal fee)",
+                "- **Arbitration**: For contract disputes",
+                "- **Negotiation**: Try direct settlement before court",
+                "",
+                "---",
+                "",
+                "## 📋 If You Believe This Assessment Is Incorrect",
+                "You can request a manual review:",
+                "",
+                "**Required documents for review:**",
+                "1. **Income Proof**: Last 3 months salary slips OR Income certificate",
+                "2. **Category Certificate**: SC/ST/OBC certificate (if applicable)",
+                "3. **Asset Declaration**: Details of property, business, investments",
+                "4. **Special Circumstances**: Medical bills, disaster certificate, etc.",
+                "",
+                "**Where to apply:**",
+                "- Visit your **District Legal Services Authority (DLSA)**",
+                "- Submit written application with documents",
+                "- Secretary will review and make final decision",
+                "- Appeal to **State Legal Services Authority (SLSA)** if rejected",
+                "",
+                "🌐 **Find Your DLSA**: https://nalsa.gov.in → State → District",
+                "",
+                "---",
+                "",
+                "## ⚠️ Important Notes",
+                "- ❌ **Do NOT pay agents/middlemen** for legal aid - it's FREE",
+                "- ✅ **Eligibility can change** if your income/situation changes",
+                "- 📞 **Report fraud**: If someone demands money for legal aid services",
+                "- 🔒 **Your data is safe**: Legal aid applications are confidential",
+            ])
+            
+            return not_eligible_steps
+    
     def _fallback_prediction(self, case_data: Dict) -> HybridPrediction:
-        """Absolute last resort - majority class"""
+        """Conservative fallback when all models fail - requires manual review"""
         return HybridPrediction(
             case_id=case_data.get('sample_id', 'unknown'),
-            eligible=True,
-            confidence=0.70,
+            eligible=False,              # Conservative: do not grant eligibility without analysis
+            confidence=0.35,             # Low confidence to trigger review
             method_used='fallback',
-            reasoning="All models failed - using majority class"
+            reasoning="All models failed - fallback conservative: manual review required",
+            requires_review=True,        # Flag for manual review
+            uncertainty=0.85             # High uncertainty
         )
     
     def fit_calibrator(self, validation_data: List[Dict]):
@@ -1141,6 +1602,83 @@ class IntelligentHybridPredictor:
             logger.warning("⚠️  scipy not available, skipping weight optimization")
         except Exception as e:
             logger.warning(f"⚠️  Weight optimization failed: {e}")
+    
+    def _get_tax_law_next_steps(self, annual_income_lakhs: float) -> List[str]:
+        """Tax law alternative options (not eligible)"""
+        return [
+            "## ❌ Income Tax Disputes Are NOT Covered Under Legal Aid",
+            "",
+            f"**Your Income**: ₹{annual_income_lakhs:.1f} lakhs annually",
+            "",
+            "Tax matters are **commercial/financial issues** under the Income Tax Act, 1961, NOT covered by the Legal Services Authorities Act, 1987.",
+            "",
+            "**Why not covered:**",
+            "- Legal aid applies to civil/criminal/family disputes",
+            "- Tax matters require specialized tax professionals (CAs)",
+            "- Income Tax Department has its own grievance mechanisms",
+            "",
+            "---",
+            "",
+            "## 💼 Recommended Actions for Tax Disputes",
+            "",
+            "### 1. 🧾 Hire a Chartered Accountant (CA)",
+            "**Best option for tax disputes:**",
+            "- File revised returns / respond to notices",
+            "- Represent before Income Tax Officer",
+            "- Handle assessment proceedings",
+            "- **Cost**: ₹5,000-50,000 (varies by complexity)",
+            "- **Find CA**: https://icai.org → 'Find a CA'",
+            "",
+            "### 2. 📞 Income Tax Helpdesk (FREE)",
+            "**For basic queries and guidance:**",
+            "- **Helpline**: 1800-180-1961 (toll-free)",
+            "- **Email**: grivcell@incometax.gov.in",
+            "- **e-Filing Support**: https://incometaxindiaefiling.gov.in",
+            "- **Timing**: Monday-Friday, 9 AM - 6 PM",
+            "",
+            "### 3. 🏛️ Income Tax Ombudsman",
+            "**For complaints against IT Department:**",
+            "- File complaint if harassment/illegal notice",
+            "- Free service, no fee",
+            "- **Website**: https://incometaxindia.gov.in/pages/ombudsman.aspx",
+            "- **Jurisdiction**: Appeals within ₹50 lakh disputed amount",
+            "",
+            "### 4. 📊 Tax Consultant / Advocate",
+            "**For complex disputes:**",
+            "- Appeals to Commissioner (Appeals)",
+            "- Income Tax Appellate Tribunal (ITAT) cases",
+            "- Writ petitions in High Court",
+            "- **Cost**: ₹10,000-2,00,000+ (complex cases)",
+            "",
+            "### 5. 📝 E-Nivaran Portal (Online Grievance)",
+            "**Submit online complaints:**",
+            "- **Portal**: https://enivaran.incometax.gov.in",
+            "- Track status of grievance",
+            "- Response within 30 days",
+            "- Escalation to higher authorities",
+            "",
+            "### 6. 💡 Free Tax Advice (Limited)",
+            "**Some organizations offer basic help:**",
+            "- **TaxSpanner**: Free consultation",
+            "- **ClearTax**: Free guidance articles",
+            "- **CA Association Free Camps**: Check local listings",
+            "",
+            "---",
+            "",
+            "## ⚠️ Critical Tax Compliance Tips",
+            "- ❌ **Do NOT ignore tax notices** - respond within 30 days",
+            "- ✅ **File returns on time** - avoid penalties (₹5,000+)",
+            "- 📄 **Keep documents** for 7 years (returns, receipts, proofs)",
+            "- 🔒 **Use official portals** only - avoid fraud/fake websites",
+            "- ⏰ **Respond promptly** - late response reduces appeal chances",
+            "",
+            "## 📞 Emergency Contacts",
+            "- **Tax Helpline**: 1800-180-1961",
+            "- **Cyber Fraud (if scam)**: 1930",
+            "- **Consumer Helpline**: 1800-11-4000",
+            "",
+            "🌐 **Official Income Tax Website**: https://incometaxindia.gov.in"
+        ]
     
     def batch_predict(self, cases: List[Dict]) -> List[HybridPrediction]:
         """FIX: Filter out None predictions"""
