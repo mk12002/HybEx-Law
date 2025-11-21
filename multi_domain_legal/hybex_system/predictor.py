@@ -10,8 +10,7 @@ import time
 import random
 import re
 from typing import Dict, Any, Optional, List
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 from pydantic import BaseModel, Field
 
 # Disable ALL logging for this module
@@ -62,7 +61,7 @@ class GeminiEligibilityPredictor:
         if not self.api_key:
             raise ValueError("API key not configured")
         
-        self.client = genai.Client(api_key=self.api_key)
+        genai.configure(api_key=self.api_key)
         self.model = model
         
         # Income thresholds by category
@@ -191,14 +190,16 @@ class GeminiEligibilityPredictor:
         system_prompt = self._get_balanced_prompt()
         user_prompt = self._get_user_prompt(query)
         
-        response = self.client.models.generate_content(
-            model=self.model,
-            contents=f"{system_prompt}\n\n{user_prompt}",
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                response_schema=EligibilityPrediction.model_json_schema(),
-                temperature=0.2
-            )
+        model = genai.GenerativeModel(
+            model_name=self.model,
+            generation_config={
+                "temperature": 0.2,
+                "response_mime_type": "application/json",
+            }
+        )
+        
+        response = model.generate_content(
+            f"{system_prompt}\n\n{user_prompt}"
         )
         
         return EligibilityPrediction.model_validate_json(response.text)

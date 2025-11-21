@@ -26,13 +26,11 @@ torchaudio>=2.0.0
 # For GPU support (CUDA), install torch with CUDA:
 # pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
-# Graph Neural Networks
+# Graph Neural Networks (optional - only needed for training)
 # ----------------------------------------------------------------------------
-torch-geometric>=2.3.0
-torch-scatter>=2.1.0
-torch-sparse>=0.6.0
-torch-cluster>=1.6.0
-torch-spline-conv>=1.2.0
+# torch-geometric>=2.3.0
+# Note: GNN components disabled for deployment to avoid build issues
+# The app uses Gemini API for predictions instead
 
 # Transformers & NLP
 # ----------------------------------------------------------------------------
@@ -61,13 +59,13 @@ streamlit>=1.28.0
 streamlit-chat>=0.1.1
 watchdog>=3.0.0
 
-# Google Gemini API
+# Google Gemini API (REQUIRED for predictions)
 # ----------------------------------------------------------------------------
-google-generativeai>=0.3.0
-google-ai-generativelanguage>=0.4.0
+google-generativeai>=0.8.0
+google-ai-generativelanguage>=0.6.0
 google-api-core>=2.11.0
 google-auth>=2.23.0
-protobuf>=4.24.0
+protobuf>=4.24.0,<6.0.0
 
 # Pydantic for Data Validation
 # ----------------------------------------------------------------------------
