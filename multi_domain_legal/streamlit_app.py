@@ -550,18 +550,17 @@ def main():
              t("Automatic | Transgender", lang)),
         ]
         
-        # Single expander with all examples
-        with st.expander(t("📋 Examples", lang), expanded=False):
-            st.caption(t("Click any example to auto-fill the query box", lang))
-            for title, query, explanation in all_examples:
-                if st.button(
-                    title,
-                    key=f"example_{title}",
-                    help=explanation,
-                    use_container_width=True
-                ):
-                    st.session_state['example_query'] = query
-                    st.rerun()
+        # Examples section - always visible
+        st.markdown(f"### {t('📋 Examples', lang)} {t('(Click to test)', lang)}")
+        for title, query, explanation in all_examples:
+            if st.button(
+                title,
+                key=f"example_{title}",
+                help=explanation,
+                use_container_width=True
+            ):
+                st.session_state['example_query'] = query
+                st.rerun()
         
         st.divider()
 
