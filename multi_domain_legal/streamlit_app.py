@@ -6,6 +6,10 @@ from pathlib import Path
 from typing import Any, Dict
 from dataclasses import is_dataclass, asdict
 
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
 import streamlit as st
 
 # NEW: Import Gemini predictor
@@ -898,7 +902,7 @@ def main():
                     "prolog": _make_json_safe(res.get("prolog_result")),
                     "gnn_probs": _make_json_safe(res.get("gnn_result")),
                     "bert": _make_json_safe(res.get("bert_result")),
-                    "calibrated_confidences": {k: float(v) for k, v in (res.get("calibrated_confidences") or {}).items()}
+                    "calibrated_confidences": {k: v for k, v in (res.get("calibrated_confidences") or {}).items()}
                 },
                 "prolog_debug_facts": res.get("prolog_debug_facts")  # B2: Show debug facts
             }

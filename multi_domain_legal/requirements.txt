@@ -26,6 +26,14 @@ torchaudio>=2.0.0
 # For GPU support (CUDA), install torch with CUDA:
 # pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
+# Graph Neural Networks
+# ----------------------------------------------------------------------------
+torch-geometric>=2.3.0
+torch-scatter>=2.1.0
+torch-sparse>=0.6.0
+torch-cluster>=1.6.0
+torch-spline-conv>=1.2.0
+
 # Transformers & NLP
 # ----------------------------------------------------------------------------
 transformers>=4.30.0

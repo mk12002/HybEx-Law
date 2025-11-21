@@ -1,8 +1,9 @@
 """
 Azure-powered multilingual translation for HybEx-Law
-Hardcoded API credentials for easy deployment
+Uses environment variables for secure credential management
 """
 
+import os
 from typing import Dict, Optional
 from azure.ai.translation.text import TextTranslationClient
 from azure.core.credentials import AzureKeyCredential
@@ -13,10 +14,10 @@ class MultilingualTranslator:
     Azure Translator integration for 6 Indian languages + English
     """
     
-    # HARDCODED CREDENTIALS (Replace with your actual values)
-    AZURE_API_KEY = "YOUR_AZURE_TRANSLATOR_KEY_HERE"
-    AZURE_REGION = "centralindia"  # or "southeastasia", "eastus", etc.
-    AZURE_ENDPOINT = "https://api.cognitive.microsofttranslator.com"
+    # Load credentials from environment variables
+    AZURE_API_KEY = os.getenv("AZURE_TRANSLATOR_KEY")
+    AZURE_REGION = os.getenv("AZURE_TRANSLATOR_REGION", "centralindia")
+    AZURE_ENDPOINT = os.getenv("AZURE_TRANSLATOR_ENDPOINT", "https://api.cognitive.microsofttranslator.com")
     
     # Supported languages with native scripts
     LANGUAGES = {
@@ -30,12 +31,12 @@ class MultilingualTranslator:
     }
     
     def __init__(self):
-        """Initialize Azure Translator with hardcoded credentials"""
+        """Initialize Azure Translator with environment variables"""
         
         # Check if API key is set
-        if self.AZURE_API_KEY == "YOUR_AZURE_TRANSLATOR_KEY_HERE":
+        if not self.AZURE_API_KEY:
             print("⚠️ Azure API key not configured - Using English only mode")
-            print("👉 Edit translator.py and replace AZURE_API_KEY with your actual key")
+            print("👉 Set AZURE_TRANSLATOR_KEY in your .env file")
             self.client = None
         else:
             try:
